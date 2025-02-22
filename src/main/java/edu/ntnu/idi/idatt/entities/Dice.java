@@ -6,9 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dice {
+  private static final String DIE_NUMBER_OUT_OF_RANGE_ERROR =
+      "Die number must be between 1 and the number of dice.";
+
   List<Die> diceList;
 
-  public Dice(int numberOfDice) {
+  public Dice(int numberOfDice) throws IllegalArgumentException {
+    if (numberOfDice < 1) {
+      throw new IllegalArgumentException("Number of dice must be greater than 0.");
+    }
     diceList = new ArrayList<>();
     for (int i = 0; i < numberOfDice; i++) {
       diceList.add(new Die());
@@ -21,7 +27,10 @@ public class Dice {
     }
   }
 
-  public void rollSingleDie(int dieNumber) {
+  public void rollSingleDie(int dieNumber) throws IllegalArgumentException {
+    if (dieNumber < 1 || dieNumber > diceList.size()) {
+      throw new IllegalArgumentException(DIE_NUMBER_OUT_OF_RANGE_ERROR);
+    }
     diceList.get(dieNumber - 1).roll();
     }
 
@@ -29,7 +38,10 @@ public class Dice {
     return copyOf(diceList);
   }
 
-  public int getDieValue(int dieNumber) {
+  public int getDieValue(int dieNumber) throws IllegalArgumentException {
+    if (dieNumber < 1 || dieNumber > diceList.size()) {
+      throw new IllegalArgumentException(DIE_NUMBER_OUT_OF_RANGE_ERROR);
+    }
     return diceList.get(dieNumber - 1).getValue();
   }
 
