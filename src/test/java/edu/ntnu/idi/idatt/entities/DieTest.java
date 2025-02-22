@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,11 @@ class DieTest {
     @DisplayName("(SETUP) Create a new die.")
     @BeforeEach
     void setUp() {
-      die = new Die();
+      try {
+        die = new Die();
+      } catch (Exception e) {
+        fail();
+      }
     }
 
     @DisplayName("Test roll a die and get the value.")
