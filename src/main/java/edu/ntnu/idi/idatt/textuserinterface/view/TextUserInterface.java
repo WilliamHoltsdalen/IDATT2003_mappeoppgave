@@ -1,12 +1,31 @@
-package edu.ntnu.idi.idatt.textuserinterface;
+package edu.ntnu.idi.idatt.textuserinterface.view;
 
-public class TextUserInterface throws Exception {
+import edu.ntnu.idi.idatt.controllers.GameController;
+import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
+
+public class TextUserInterface {
+  GameController gameController;
 
   public void init() {
-
+    gameController = new GameController();
   }
 
   public void start() {
+    try {
+      gameController.startGame();
+      InterfaceUtils.printWelcomeMessage();
+    } catch (Exception e) {
+      exitByError(e.getMessage());
+    }
 
+    InterfaceUtils.printSpacing();
+  }
+
+  public void exitByError(String errorMessage) {
+    System.out.println("An error occurred: " + errorMessage);
+    System.out.println("Exiting application...");
+    InterfaceUtils.exitApplication();
   }
 }
+
+
