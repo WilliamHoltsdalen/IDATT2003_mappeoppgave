@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.textuserinterface;
+package edu.ntnu.idi.idatt.textuserinterface.utils;
 
 import java.util.Scanner;
 
@@ -28,6 +28,7 @@ public final class InterfaceUtils {
         | Welcome to the ladder game! |
         |-----------------------------|
         """);
+    printSpacing();
   }
 
   /**
@@ -41,6 +42,7 @@ public final class InterfaceUtils {
         | Thank you for playing! Have a great day! :) |
         |---------------------------------------------|
         """);
+    printSpacing();
   }
 
   /**
