@@ -18,7 +18,8 @@ public class TextUserInterface {
       exitByError(e.getMessage());
     }
 
-    InterfaceUtils.printSpacing();
+    System.out.println("Exiting application...");
+    InterfaceUtils.exitApplication();
   }
 
   public void exitByError(String errorMessage) {
