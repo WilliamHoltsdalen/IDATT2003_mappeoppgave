@@ -10,6 +10,6 @@ public class Board {
   }
 
   public Tile getTile(int tileId) {
-
+    return null;
   }
 }

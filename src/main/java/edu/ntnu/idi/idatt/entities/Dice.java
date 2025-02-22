@@ -10,10 +10,10 @@ public class Dice {
   }
 
   public int roll() {
-
+    return 0;
   }
 
   public int getDie(int dieNumber) {
-
+    return 0;
   }
 }

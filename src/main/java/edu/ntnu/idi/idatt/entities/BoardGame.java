@@ -25,7 +25,7 @@ public class BoardGame {
   }
 
   public Player getWinner() {
-
+    return null;
   }
 
 }
