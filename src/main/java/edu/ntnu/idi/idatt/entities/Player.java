@@ -4,10 +4,7 @@ public class Player {
   private String name;
   private Tile currentTile;
 
-  public Player(String name, BoardGame game) {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException("Name cannot be null or blank");
-    }
+  public Player(String name, BoardGame game) throws IllegalArgumentException {
     if (game == null) {
       throw new IllegalArgumentException("Game cannot be null");
     }
@@ -31,7 +28,10 @@ public class Player {
     this.name = name;
   }
 
-  public void placeOnTile(Tile tile) {
+  public void placeOnTile(Tile tile) throws IllegalArgumentException {
+    if (tile == null) {
+      throw new IllegalArgumentException("Tile cannot be null");
+    }
     this.currentTile = tile;
   }
 

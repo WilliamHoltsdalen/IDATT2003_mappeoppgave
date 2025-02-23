@@ -6,7 +6,7 @@ public class Tile {
   private TileAction landAction;
 
   public Tile(int tileId) {
-
+    setTileId(tileId);
   }
 
   public int getTileId() {
@@ -21,11 +21,25 @@ public class Tile {
     return landAction;
   }
 
-  public void setNextTile(Tile nextTile) {
+  private void setTileId(int tileId) throws IllegalArgumentException {
+    if (tileId < 0) {
+      throw new IllegalArgumentException("Tile id must be greater than 0");
+    }
+    this.tileId = tileId;
+  }
+
+  public void setNextTile(Tile nextTile) throws IllegalArgumentException {
     if (nextTile == null) {
       throw new IllegalArgumentException("Next tile cannot be null");
     }
     this.nextTile = nextTile;
+  }
+
+  public void setLandAction(TileAction landAction) throws IllegalArgumentException {
+    if (landAction == null) {
+      throw new IllegalArgumentException("Land action cannot be null");
+    }
+    this.landAction = landAction;
   }
 
   public void landPlayer(Player player) {
