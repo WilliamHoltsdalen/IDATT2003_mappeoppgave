@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.entities;
 
 public class Tile {
   private int tileId;
-  private Tile nextTile;
   private TileAction landAction;
 
   public Tile(int tileId) {
@@ -11,10 +10,6 @@ public class Tile {
 
   public int getTileId() {
     return tileId;
-  }
-
-  public Tile getNextTile() {
-    return nextTile;
   }
 
   public TileAction getLandAction() {
@@ -26,13 +21,6 @@ public class Tile {
       throw new IllegalArgumentException("Tile id must be greater than 0");
     }
     this.tileId = tileId;
-  }
-
-  public void setNextTile(Tile nextTile) throws IllegalArgumentException {
-    if (nextTile == null) {
-      throw new IllegalArgumentException("Next tile cannot be null");
-    }
-    this.nextTile = nextTile;
   }
 
   public void setLandAction(TileAction landAction) throws IllegalArgumentException {
