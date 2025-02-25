@@ -1,14 +1,19 @@
 package edu.ntnu.idi.idatt.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardGame {
   private Board board;
-  private List<Player> players;
+  private final List<Player> players;
   private Dice dice;
   private Player currentPlayer;
+  private int roundNumber;
 
   public BoardGame(int boardRows, int boardColumns, List<Player> players, int diceCount) {
+    this.players = new ArrayList<>();
+    this.roundNumber = 0;
+
     createBoard(boardRows, boardColumns);
     addPlayers(players);
     createDice(diceCount);
@@ -18,7 +23,7 @@ public class BoardGame {
     return board;
   }
 
-  public List<Player> getAllPlayers() {
+  public List<Player> getPlayers() {
     return players;
   }
 
@@ -30,7 +35,16 @@ public class BoardGame {
     return currentPlayer;
   }
 
+  public int getRoundNumber() {
+    return roundNumber;
+  }
+
   public Player getWinner() {
+    for (Player player : players) {
+      if (player.getCurrentTile().getTileId() == this.board.getTileCount()) {
+        return player;
+      }
+    }
     return null;
   }
 
@@ -67,7 +81,44 @@ public class BoardGame {
     this.currentPlayer = player;
   }
 
-  private void play() {
+  public void incrementRoundNumber() {
+    roundNumber++;
+  }
 
+  public void updateCurrentPlayer() {
+    for (int i = 0; i < players.size(); i++) {
+      Player player = players.get(i);
+      if (player.getName().equals(getCurrentPlayer().getName())) {
+        if (i == players.size() - 1) {
+          setCurrentPlayer(players.getFirst());
+          return;
+        }
+        else {
+          setCurrentPlayer(players.get(i + 1));
+          return;
+        }
+      }
+    }
+  }
+
+  private Tile findNextTile(Player player, int diceRoll) {
+    int tileCount = this.board.getTileCount();
+    if (player.getCurrentTile().getTileId() + diceRoll < tileCount) {
+      return this.board.getTile(player.getCurrentTile().getTileId() + diceRoll);
+    }
+    else if (player.getCurrentTile().getTileId() + diceRoll == tileCount) {
+      return this.board.getTile(tileCount);
+    }
+    else {
+      return this.board.getTile(tileCount - ((player.getCurrentTile().getTileId() + diceRoll) - tileCount));
+    }
+  }
+
+  public void rollDiceForCurrentPlayer() {
+    this.dice.rollDice();
+    int diceRoll = dice.getTotalValue();
+    Tile nextTile = findNextTile(getCurrentPlayer(), diceRoll);
+
+    getCurrentPlayer().placeOnTile(nextTile);
   }
 }
