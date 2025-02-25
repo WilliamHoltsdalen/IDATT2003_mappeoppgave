@@ -4,13 +4,8 @@ public class Player {
   private String name;
   private Tile currentTile;
 
-  public Player(String name, BoardGame game) throws IllegalArgumentException {
-    if (game == null) {
-      throw new IllegalArgumentException("Game cannot be null");
-    }
-
+  public Player(String name){
     setName(name);
-    placeOnTile(game.getBoard().getTile(0));
   }
 
   public String getName() {
