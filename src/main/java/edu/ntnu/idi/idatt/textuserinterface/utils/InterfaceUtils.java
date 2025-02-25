@@ -24,9 +24,9 @@ public final class InterfaceUtils {
     printSpacing();
     System.out.println(
         """
-        |-----------------------------|
-        | Welcome to the ladder game! |
-        |-----------------------------|
+        |-----------------------------------------|
+        | Welcome to the ladder game application! |
+        |-----------------------------------------|
         """);
     printSpacing();
   }
@@ -44,6 +44,17 @@ public final class InterfaceUtils {
         """);
     printSpacing();
   }
+
+  public static void printGameClientMenu() {
+    System.out.print("""
+    Main menu
+    --------------
+    1. Start game
+    2. Exit
+    --------------
+    Your choice:\s""");
+  }
+
 
   /**
    * Prints a given error message.
@@ -72,6 +83,27 @@ public final class InterfaceUtils {
       printErrorMessage("Please enter a valid text string.");
       System.out.print("Please try again: ");
       return stringInput();
+    }
+  }
+
+  /** Reads an integer input from the console. If the input is not a valid integer, the method will
+   * print an error message and prompt the user to try again. It will continue to prompt the user
+   * until a valid integer is entered.
+   *
+   * @return the integer input read from the console
+   */
+  public static int integerInput() {
+    try {
+      int input = Integer.parseInt(scanner.nextLine());
+      if (input < 0) {
+        throw new IllegalArgumentException();
+      }
+      return input;
+    } catch (Exception e) {
+      printErrorMessage("Please enter a valid integer (positive whole number).");
+      System.out.print("Please try again: ");
+      return integerInput();
+
     }
   }
 
