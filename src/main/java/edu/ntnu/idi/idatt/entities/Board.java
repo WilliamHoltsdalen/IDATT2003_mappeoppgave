@@ -15,14 +15,21 @@ public class Board {
     if (tileId < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
     }
+    if (tileId >= tiles.size()) {
+      throw new IllegalArgumentException("Tile id must be less than the number of tiles");
+    }
     return tiles.get(tileId);
+  }
+
+  public int getTileCount() {
+    return tiles.size() - 1;
   }
 
   private void populateTiles(int rows, int columns) throws IllegalArgumentException {
     if (rows < 1 || columns < 1) {
       throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
     }
-    for (int i = 0; i < rows * columns; i++) {
+    for (int i = 0; i <= rows * columns; i++) {
       addTile(new Tile(i));
     }
   }
