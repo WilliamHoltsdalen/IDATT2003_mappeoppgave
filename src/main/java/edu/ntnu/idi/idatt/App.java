@@ -7,6 +7,6 @@ public class App {
   public static void main(String[] args) {
     TextUserInterface tui = new TextUserInterface();
     tui.init();
-    tui.startGame();
+    tui.start();
   }
 }

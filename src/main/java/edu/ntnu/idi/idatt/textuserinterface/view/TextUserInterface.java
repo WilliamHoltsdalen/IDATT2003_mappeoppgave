@@ -11,14 +11,12 @@ public class TextUserInterface {
 
   public void init() {
     try {
-    gameController = new GameController();
-    gameController.initController(tuiGetPlayers());
     } catch (Exception e) {
       exitByError(e.getMessage());
     }
   }
 
-  public void startGame() {
+  public void start() {
     try {
       InterfaceUtils.printWelcomeMessage();
       tuiMainMenu();
@@ -36,6 +34,10 @@ public class TextUserInterface {
     InterfaceUtils.exitApplication();
   }
 
+  private void initGameController() {
+    gameController = new GameController();
+    gameController.initController(tuiGetPlayers());
+  }
 
   private List<Player> tuiGetPlayers() {
     List<String> playerNames = getPlayerNames();
@@ -47,7 +49,7 @@ public class TextUserInterface {
   }
 
   private int getPlayerCount() {
-    System.out.print("Enter player count: ");
+    System.out.print("\nEnter player count: ");
     int playerCountInput = InterfaceUtils.integerInput();
     if (playerCountInput < 1) {
       System.out.println("Player count must be greater than 0.");
@@ -69,12 +71,11 @@ public class TextUserInterface {
   private void tuiMainMenu() {
     boolean finished = false;
     while (!finished) {
-      System.out.println("Main client menu:");
-      System.out.println("1. Start game");
-      System.out.println("2. Exit");
+      InterfaceUtils.printGameClientMenu();
       int choice = InterfaceUtils.integerInput();
       switch (choice) {
         case 1:
+          initGameController();
           tuiGameClient();
           break;
         case 2:

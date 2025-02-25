@@ -45,6 +45,17 @@ public final class InterfaceUtils {
     printSpacing();
   }
 
+  public static void printGameClientMenu() {
+    System.out.print("""
+    Main menu
+    --------------
+    1. Start game
+    2. Exit
+    --------------
+    Your choice:\s""");
+  }
+
+
   /**
    * Prints a given error message.
    *
