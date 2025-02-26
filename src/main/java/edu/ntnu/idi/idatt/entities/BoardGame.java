@@ -84,41 +84,4 @@ public class BoardGame {
   public void incrementRoundNumber() {
     roundNumber++;
   }
-
-  public void updateCurrentPlayer() {
-    for (int i = 0; i < players.size(); i++) {
-      Player player = players.get(i);
-      if (player.getName().equals(getCurrentPlayer().getName())) {
-        if (i == players.size() - 1) {
-          setCurrentPlayer(players.getFirst());
-          return;
-        }
-        else {
-          setCurrentPlayer(players.get(i + 1));
-          return;
-        }
-      }
-    }
-  }
-
-  private Tile findNextTile(Player player, int diceRoll) {
-    int tileCount = this.board.getTileCount();
-    if (player.getCurrentTile().getTileId() + diceRoll < tileCount) {
-      return this.board.getTile(player.getCurrentTile().getTileId() + diceRoll);
-    }
-    else if (player.getCurrentTile().getTileId() + diceRoll == tileCount) {
-      return this.board.getTile(tileCount);
-    }
-    else {
-      return this.board.getTile(tileCount - ((player.getCurrentTile().getTileId() + diceRoll) - tileCount));
-    }
-  }
-
-  public void rollDiceForCurrentPlayer() {
-    this.dice.rollDice();
-    int diceRoll = dice.getTotalValue();
-    Tile nextTile = findNextTile(getCurrentPlayer(), diceRoll);
-
-    getCurrentPlayer().placeOnTile(nextTile);
-  }
 }
