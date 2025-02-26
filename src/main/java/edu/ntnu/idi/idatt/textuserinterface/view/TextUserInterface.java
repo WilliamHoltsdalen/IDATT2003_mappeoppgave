@@ -16,7 +16,7 @@ public class TextUserInterface {
     }
   }
 
-  public void start() {
+  public void run() {
     try {
       InterfaceUtils.printWelcomeMessage();
       tuiMainMenu();
@@ -35,37 +35,14 @@ public class TextUserInterface {
   }
 
   private void initGameController() {
-    gameController = new GameController();
-    gameController.initController(tuiGetPlayers());
+    this.gameController = new GameController(tuiGetPlayers());
   }
 
   private List<Player> tuiGetPlayers() {
-    List<String> playerNames = getPlayerNames();
+    List<String> playerNames = InterfaceUtils.getPlayerNames();
     List<Player> players = new ArrayList<>();
-    for (String name : playerNames) {
-      players.add(new Player(name));
-    }
+    playerNames.forEach( pName -> players.add(new Player(pName)));
     return players;
-  }
-
-  private int getPlayerCount() {
-    System.out.print("\nEnter player count: ");
-    int playerCountInput = InterfaceUtils.integerInput();
-    if (playerCountInput < 1) {
-      System.out.println("Player count must be greater than 0.");
-      playerCountInput = getPlayerCount();
-    }
-    return playerCountInput;
-  }
-
-  private List<String> getPlayerNames() {
-    int playerCount = getPlayerCount();
-    List<String> playerNames = new ArrayList<>();
-    for (int i = 1; i <= playerCount; i++) {
-      System.out.printf("%nEnter name of player %d: ", i);
-      playerNames.add(InterfaceUtils.stringInput());
-    }
-    return playerNames;
   }
 
   private void tuiMainMenu() {
@@ -88,12 +65,12 @@ public class TextUserInterface {
   }
 
   private void tuiGameClient() {
-    System.out.println("Welcome to the ladder game!");
+    System.out.println("\n\nWelcome to the ladder game!");
     while (gameController.getWinner() == null) {
       System.out.println("\n-----------------------------------");
       System.out.println("Round number: " + (gameController.getRoundNumber() + 1));
       for (Player player : gameController.getPlayers()) {
-        gameController.playMove();
+        gameController.performPlayerMove();
         System.out.println(player.getName() + " is on tile " + player.getCurrentTile().getTileId());
       }
     }
@@ -108,5 +85,3 @@ public class TextUserInterface {
 
   }
 }
-
-
