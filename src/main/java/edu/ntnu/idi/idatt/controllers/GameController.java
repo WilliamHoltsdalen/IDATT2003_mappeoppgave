@@ -5,6 +5,7 @@ import edu.ntnu.idi.idatt.entities.BoardGame;
 import edu.ntnu.idi.idatt.entities.Player;
 import edu.ntnu.idi.idatt.entities.Tile;
 import edu.ntnu.idi.idatt.entities.Dice;
+import edu.ntnu.idi.idatt.entities.TileAction;
 import java.util.List;
 
 public class GameController {
@@ -109,6 +110,20 @@ public class GameController {
   }
 
   /**
+   * Handles tile actions for the given player. Check if the player's current tile has a tile action
+   * and if so, perform the action.
+   * @param player The player to handle the tile action for.
+   */
+  private void handleTileAction(Player player) {
+    TileAction landAction = player.getCurrentTile().getLandAction();
+    if (landAction == null) {
+      return;
+    }
+
+    landAction.perform(player, getBoard());
+  }
+
+  /**
    * Rolls the dice for the given player and moves them to the new tile.
    *
    * @param player The player to roll the dice for.
@@ -132,13 +147,15 @@ public class GameController {
   }
 
   /**
-   * Performs a player move by calling methods to roll dice and move current player, as well as
-   * updating the current player to the next in the list.
+   * Performs a player move by calling methods to roll dice and move current player. After the move
+   * the new tile for the player is checked for a tile action, and if present, the action is
+   * performed. Finally, the current player is updated to the next in the list.
    */
   public void performPlayerMove() {
     Player currentPlayer = getCurrentPlayer();
     handleRoundNumber();
     rollDiceAndMovePlayer(currentPlayer);
+    handleTileAction(currentPlayer);
     updateCurrentPlayer();
   }
 }
