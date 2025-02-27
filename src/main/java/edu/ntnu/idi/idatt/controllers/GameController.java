@@ -123,14 +123,21 @@ public class GameController {
   }
 
   /**
+   * Checks if round number should be incremented, and if so, increments it.
+   */
+  private void handleRoundNumber() {
+    if (getCurrentPlayer() == this.boardGame.getPlayers().getFirst()) {
+      this.boardGame.incrementRoundNumber();
+    }
+  }
+
+  /**
    * Performs a player move by calling methods to roll dice and move current player, as well as
    * updating the current player to the next in the list.
    */
   public void performPlayerMove() {
     Player currentPlayer = getCurrentPlayer();
-    if (getCurrentPlayer() == this.boardGame.getPlayers().getFirst()) {
-      this.boardGame.incrementRoundNumber();
-    }
+    handleRoundNumber();
     rollDiceAndMovePlayer(currentPlayer);
     updateCurrentPlayer();
   }
