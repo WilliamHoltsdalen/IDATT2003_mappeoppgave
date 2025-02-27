@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextUserInterface {
-  GameController gameController;
+  private GameController gameController;
 
   public void init() {
     try {
@@ -41,7 +41,7 @@ public class TextUserInterface {
   private List<Player> tuiGetPlayers() {
     List<String> playerNames = InterfaceUtils.getPlayerNames();
     List<Player> players = new ArrayList<>();
-    playerNames.forEach( pName -> players.add(new Player(pName)));
+    playerNames.forEach(pName -> players.add(new Player(pName)));
     return players;
   }
 
@@ -64,24 +64,30 @@ public class TextUserInterface {
     }
   }
 
+  private void printWinner() {
+    System.out.printf(
+        """
+            
+            ------------------------------------------------------------
+                The winner of the game is: %s  (after %d rounds)!
+            ------------------------------------------------------------
+            
+            """, gameController.getWinner().getName(), gameController.getRoundNumber());
+  }
+
+  private void printRoundNumber() {
+    System.out.println("\n-----------------------------------");
+    System.out.println("Round number: " + (gameController.getRoundNumber() + 1));
+  }
+
   private void tuiGameClient() {
-    System.out.println("\n\nWelcome to the ladder game!");
     while (gameController.getWinner() == null) {
-      System.out.println("\n-----------------------------------");
-      System.out.println("Round number: " + (gameController.getRoundNumber() + 1));
+      printRoundNumber();
       for (Player player : gameController.getPlayers()) {
         gameController.performPlayerMove();
         System.out.println(player.getName() + " is on tile " + player.getCurrentTile().getTileId());
       }
     }
-    System.out.printf(
-        """
-        
-        ------------------------------------------------------------
-            The winner of the game is: %s  (after %d rounds)!
-        ------------------------------------------------------------
-        
-        """, gameController.getWinner().getName(), gameController.getRoundNumber());
-
+    printWinner();
   }
 }
