@@ -31,7 +31,11 @@ public class LadderAction implements TileAction {
     this.description = description;
   }
 
-  public void perform(Player player) {
 
+  public void perform(Player player, Board board) throws IllegalArgumentException {
+    if (player == null) {
+      throw new IllegalArgumentException("Player cannot be null");
+    }
+    player.placeOnTile(board.getTile(this.destinationTileId));
   }
 }
