@@ -56,4 +56,55 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates the arguments for the createBoard method in BoardGame class.
+   *
+   * @param rows the number of rows
+   * @param columns the number of columns
+   */
+  public static void boardGameCreateBoardValidator(int rows, int columns) {
+    if (rows < 1 || columns < 1) {
+      throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
+    }
+  }
+
+  /**
+   * Validates the arguments for the addPlayers method in BoardGame class.
+   *
+   * @param players the list of players to add
+   */
+  public static void boardGameAddPlayersValidator(List<Player> players) {
+    if (players == null) {
+      throw new IllegalArgumentException("List of players cannot be null");
+    }
+
+    players.forEach(player -> {
+      if (player == null) {
+        throw new IllegalArgumentException("Players in the provided list cannot be null");
+      }
+    });
+  }
+
+  /**
+   * Validates the arguments for the createDice method in BoardGame class.
+   *
+   * @param diceCount the number of dice
+   */
+  public static void boardGameCreateDiceValidator(int diceCount) {
+    if (diceCount < 1) {
+      throw new IllegalArgumentException("Dice count must be greater than 0");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setCurrentPlayer method in BoardGame class.
+   *
+   * @param player the player to set as current
+   */
+  public static void boardGameSetCurrentPlayerValidator(Player player) {
+    if (player == null) {
+      throw new IllegalArgumentException("Player cannot be null");
+    }
+  }
+
 }
