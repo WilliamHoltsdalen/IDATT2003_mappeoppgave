@@ -1,17 +1,17 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceAddDiceValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceGetDieValueValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceRollSingleDieValidator;
 import static java.util.List.copyOf;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Dice {
-  private static final String DIE_NUMBER_OUT_OF_RANGE_ERROR =
-      "Die number must be between 1 and the number of dice.";
-
   private final List<Die> diceList;
 
-  public Dice(int numberOfDice) throws IllegalArgumentException {
+  public Dice(int numberOfDice) {
     diceList = new ArrayList<>();
     addDice(numberOfDice);
   }
@@ -20,10 +20,9 @@ public class Dice {
     return copyOf(diceList);
   }
 
-  public int getDieValue(int dieNumber) throws IllegalArgumentException {
-    if (dieNumber < 1 || dieNumber > diceList.size()) {
-      throw new IllegalArgumentException(DIE_NUMBER_OUT_OF_RANGE_ERROR);
-    }
+  public int getDieValue(int dieNumber) {
+    diceGetDieValueValidator(dieNumber, diceList.size());
+
     return diceList.get(dieNumber - 1).getValue();
   }
 
@@ -39,28 +38,21 @@ public class Dice {
     return diceList.size();
   }
 
-  private void addDice(int numberOfDice) throws IllegalArgumentException {
-    if (numberOfDice < 1) {
-      throw new IllegalArgumentException("Number of dice must be greater than 0.");
-    }
+  private void addDice(int numberOfDice) {
+    diceAddDiceValidator(numberOfDice);
+
     for (int i = 0; i < numberOfDice; i++) {
       diceList.add(new Die());
     }
   }
 
   public void rollDice() {
-    for (Die die : diceList) {
-      die.roll();
-    }
+    diceList.forEach(Die::roll);
   }
 
-  public void rollSingleDie(int dieNumber) throws IllegalArgumentException {
-    if (dieNumber < 1 || dieNumber > diceList.size()) {
-      throw new IllegalArgumentException(DIE_NUMBER_OUT_OF_RANGE_ERROR);
-    }
+  public void rollSingleDie(int dieNumber) {
+    diceRollSingleDieValidator(dieNumber, diceList.size());
+
     diceList.get(dieNumber - 1).roll();
   }
-
-
-
 }

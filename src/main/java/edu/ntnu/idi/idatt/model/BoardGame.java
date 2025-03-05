@@ -1,5 +1,10 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameAddPlayersValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateBoardValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,36 +56,27 @@ public class BoardGame {
     return null;
   }
 
-  private void createBoard(int rows, int columns) throws IllegalArgumentException {
-    if (rows < 1 || columns < 1) {
-      throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
-    }
+  private void createBoard(int rows, int columns) {
+    boardGameCreateBoardValidator(rows, columns);
+
     this.board = new Board(rows, columns);
   }
 
-  private void addPlayers(List<Player> players) throws IllegalArgumentException {
-    if (players == null) {
-      throw new IllegalArgumentException("Player cannot be null");
-    }
-    for (Player player : players) {
-      if (player == null) {
-        throw new IllegalArgumentException("Players in the provided list cannot be null");
-      }
-      this.players.add(player);
-    }
+  private void addPlayers(List<Player> players) {
+    boardGameAddPlayersValidator(players);
+
+    this.players.addAll(players);
   }
 
-  private void createDice(int diceCount) throws IllegalArgumentException {
-    if (diceCount < 1) {
-      throw new IllegalArgumentException("Dice count must be greater than 0");
-    }
+  private void createDice(int diceCount) {
+    boardGameCreateDiceValidator(diceCount);
+
     this.dice = new Dice(diceCount);
   }
 
-  public void setCurrentPlayer(Player player) throws IllegalArgumentException {
-    if (player == null) {
-      throw new IllegalArgumentException("Player cannot be null");
-    }
+  public void setCurrentPlayer(Player player) {
+    boardGameSetCurrentPlayerValidator(player);
+
     this.currentPlayer = player;
   }
 
@@ -105,7 +101,5 @@ public class BoardGame {
     for (Map.Entry<Integer, Integer> entry : slideMap.entrySet()) {
       this.board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(), "Slide"));
     }
-
-
   }
 }

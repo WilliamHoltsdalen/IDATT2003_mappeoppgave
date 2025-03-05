@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.dieSetValueValidator;
+
 import edu.ntnu.idi.idatt.utils.DiceUtils;
 
 public class Die {
@@ -13,10 +15,9 @@ public class Die {
     setValue(DiceUtils.randomDieRoll());
   }
 
-  private void setValue(int value) throws IllegalArgumentException {
-    if (value < 1 || value > 6) {
-      throw new IllegalArgumentException("Value must be between 1 and 6");
-    }
+  private void setValue(int value) {
+    dieSetValueValidator(value);
+
     this.lastRolledValue = value;
   }
 }

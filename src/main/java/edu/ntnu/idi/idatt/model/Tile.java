@@ -1,5 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetLandActionValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetTileIdValidator;
+
 public class Tile {
   private int tileId;
   private TileAction landAction;
@@ -16,17 +19,15 @@ public class Tile {
     return landAction;
   }
 
-  private void setTileId(int tileId) throws IllegalArgumentException {
-    if (tileId < 0) {
-      throw new IllegalArgumentException("Tile id must be greater than 0");
-    }
+  private void setTileId(int tileId) {
+    tileSetTileIdValidator(tileId);
+
     this.tileId = tileId;
   }
 
-  public void setLandAction(TileAction landAction) throws IllegalArgumentException {
-    if (landAction == null) {
-      throw new IllegalArgumentException("Land action cannot be null");
-    }
+  public void setLandAction(TileAction landAction) {
+    tileSetLandActionValidator(landAction);
+
     this.landAction = landAction;
   }
 
