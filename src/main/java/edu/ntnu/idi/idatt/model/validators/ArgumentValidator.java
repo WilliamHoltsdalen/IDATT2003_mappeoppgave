@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.model.validators;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.model.TileAction;
 import java.util.List;
 
 /**
@@ -219,6 +220,30 @@ public class ArgumentValidator {
   public static void playerPlaceOnTileValidator(Tile tile) {
     if (tile == null) {
       throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setTileId method in Tile class.
+   *
+   * @param tileId the id of the tile
+   * @throws IllegalArgumentException if tileId is less than 0
+   */
+  public static void tileSetTileIdValidator(int tileId) {
+    if (tileId < 0) {
+      throw new IllegalArgumentException("Tile id must be greater than 0");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setLandAction method in Tile class.
+   *
+   * @param landAction the land action to set
+   * @throws IllegalArgumentException if landAction is null
+   */
+  public static void tileSetLandActionValidator(TileAction landAction) {
+    if (landAction == null) {
+      throw new IllegalArgumentException("Land action cannot be null");
     }
   }
 }
