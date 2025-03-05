@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionPerformValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionSetDescriptionValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionSetDestinationTileIdValidator;
+
 public class LadderAction implements TileAction {
   private int destinationTileId;
   private String description;
@@ -17,25 +21,21 @@ public class LadderAction implements TileAction {
     return description;
   }
 
-  private void setDestinationTileId(int destinationTileId) throws IllegalArgumentException {
-    if (destinationTileId < 0) {
-      throw new IllegalArgumentException("Destination tile id must be greater than 0");
-    }
+  private void setDestinationTileId(int destinationTileId) {
+    ladderActionSetDestinationTileIdValidator(destinationTileId);
+
     this.destinationTileId = destinationTileId;
   }
 
-  private void setDescription(String description) throws IllegalArgumentException {
-    if (description == null || description.isBlank()) {
-      throw new IllegalArgumentException("Description cannot be null or blank");
-    }
+  private void setDescription(String description) {
+    ladderActionSetDescriptionValidator(description);
+
     this.description = description;
   }
 
+  public void perform(Player player, Board board) {
+    ladderActionPerformValidator(player, board);
 
-  public void perform(Player player, Board board) throws IllegalArgumentException {
-    if (player == null) {
-      throw new IllegalArgumentException("Player cannot be null");
-    }
     player.placeOnTile(board.getTile(this.destinationTileId));
   }
 }

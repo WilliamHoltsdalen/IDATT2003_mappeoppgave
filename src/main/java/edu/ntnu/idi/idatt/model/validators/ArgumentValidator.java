@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model.validators;
 
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import java.util.List;
@@ -154,6 +155,46 @@ public class ArgumentValidator {
   public static void boardGameSetCurrentPlayerValidator(Player player) {
     if (player == null) {
       throw new IllegalArgumentException("Player cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setDestinationTileId method in LadderAction class.
+   *
+   * @param destinationTileId the id of the destination tile
+   * @throws IllegalArgumentException if destinationTileId is less than 0
+   */
+  public static void ladderActionSetDestinationTileIdValidator(int destinationTileId) {
+    if (destinationTileId < 0) {
+      throw new IllegalArgumentException("Destination tile id must be greater than 0");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setDescription method in LadderAction class.
+   *
+   * @param description the description to set
+   * @throws IllegalArgumentException if description is null or blank
+   */
+  public static void ladderActionSetDescriptionValidator(String description) {
+    if (description == null || description.isBlank()) {
+      throw new IllegalArgumentException("Description cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the perform method in LadderAction class.
+   *
+   * @param player the player to perform the action on
+   * @param board the board to perform the action on
+   * @throws IllegalArgumentException if player or board is null
+   */
+  public static void ladderActionPerformValidator(Player player, Board board) {
+    if (player == null) {
+      throw new IllegalArgumentException("Player cannot be null");
+    }
+    if (board == null) {
+      throw new IllegalArgumentException("Board cannot be null");
     }
   }
 
