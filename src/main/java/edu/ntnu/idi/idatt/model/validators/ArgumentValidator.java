@@ -14,6 +14,44 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the getDieValue method in Dice class.
+   *
+   * @param dieNumber the number of the die to get the value of
+   * @param dieCount the total number of dice
+   * @throws IllegalArgumentException if dieNumber is less than 1 or greater than the given dieCount
+   */
+  public static void diceGetDieValueValidator(int dieNumber, int dieCount) {
+    if (dieNumber < 1 || dieNumber > dieCount) {
+      throw new IllegalArgumentException("Die number must be between 1 and the number of dice.");
+    }
+  }
+
+  /**
+   * Validates the arguments for the addDice method in Dice class.
+   *
+   * @param numberOfDice the number of dice to add
+   * @throws IllegalArgumentException if numberOfDice is less than 1
+   */
+  public static void diceAddDiceValidator(int numberOfDice) {
+    if (numberOfDice < 1) {
+      throw new IllegalArgumentException("Number of dice must be greater than 0.");
+    }
+  }
+
+  /**
+   * Validates the arguments for the rollSingleDie method in Dice class.
+   *
+   * @param dieNumber the number of the die to roll
+   * @param dieCount the total number of dice
+   * @throws IllegalArgumentException if dieNumber is less than 1 or greater than the given dieCount
+   */
+  public static void diceRollSingleDieValidator(int dieNumber, int dieCount) {
+    if (dieNumber < 1 || dieNumber > dieCount) {
+      throw new IllegalArgumentException("Die number must be between 1 and the number of dice.");
+    }
+  }
+
+  /**
    * Validates the argument for the getTile method in Board class.
    *
    * @param tileId the id of the tile to get
