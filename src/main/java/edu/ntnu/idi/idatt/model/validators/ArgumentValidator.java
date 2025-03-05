@@ -14,6 +14,18 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setValue method in Die class.
+   *
+   * @param value the value to set
+   * @throws IllegalArgumentException if value is less than 1 or greater than 6
+   */
+  public static void dieSetValueValidator(int value) {
+    if (value < 1 || value > 6) {
+      throw new IllegalArgumentException("Die value must be between 1 and 6");
+    }
+  }
+
+  /**
    * Validates the arguments for the getDieValue method in Dice class.
    *
    * @param dieNumber the number of the die to get the value of
