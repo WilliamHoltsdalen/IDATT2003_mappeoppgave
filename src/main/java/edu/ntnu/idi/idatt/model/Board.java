@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTileValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardPopulateTilesValidator;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,13 +15,8 @@ public class Board {
     populateTiles(rows, columns);
   }
 
-  public Tile getTile(int tileId) throws IllegalArgumentException {
-    if (tileId < 0) {
-      throw new IllegalArgumentException("Tile id must be greater than 0");
-    }
-    if (tileId >= tiles.size()) {
-      throw new IllegalArgumentException("Tile id must be less than the number of tiles");
-    }
+  public Tile getTile(int tileId) {
+    boardGetTileValidator(tileId, tiles.size());
     return tiles.get(tileId);
   }
 
@@ -25,22 +24,17 @@ public class Board {
     return tiles.size() - 1;
   }
 
-  private void populateTiles(int rows, int columns) throws IllegalArgumentException {
-    if (rows < 1 || columns < 1) {
-      throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
-    }
+  private void populateTiles(int rows, int columns) {
+    boardPopulateTilesValidator(rows, columns);
+
     for (int i = 0; i <= rows * columns; i++) {
       addTile(new Tile(i));
     }
   }
 
-  public void addTile(Tile tile) throws IllegalArgumentException {
-    if (tile == null) {
-      throw new IllegalArgumentException("Tile cannot be null");
-    }
-    if (tile.getTileId() < 0) {
-      throw new IllegalArgumentException("Tile id must be greater than 0");
-    }
+  public void addTile(Tile tile) {
+    boardAddTileValidator(tile);
+
     this.tiles.put(tile.getTileId(), tile);
   }
 }

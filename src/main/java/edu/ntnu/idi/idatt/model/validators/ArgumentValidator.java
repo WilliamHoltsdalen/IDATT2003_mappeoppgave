@@ -1,0 +1,59 @@
+package edu.ntnu.idi.idatt.model.validators;
+
+import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.Tile;
+import java.util.List;
+
+/**
+ * <h3> Validator class for arguments passed to model constructors and methods
+ */
+public class ArgumentValidator {
+
+  /** Private constructor to prevent instantiation */
+  private ArgumentValidator() {
+  }
+
+  /**
+   * Validates the argument for the getTile method in Board class.
+   *
+   * @param tileId the id of the tile to get
+   * @throws IllegalArgumentException if tileId is less than 0 or greater than or equal to the number of tiles on the board
+   */
+  public static void boardGetTileValidator(int tileId, int tileCount) {
+    if (tileId < 0) {
+      throw new IllegalArgumentException("Tile id must be greater than 0");
+    }
+    if (tileId >= tileCount) {
+      throw new IllegalArgumentException("Tile id must be less than the number of tiles on the board");
+    }
+  }
+
+  /**
+   * Validates the arguments for the populateTiles method in Board class.
+   *
+   * @param rows    the number of rows
+   * @param columns the number of columns
+   * @throws IllegalArgumentException if rows or columns is less than 1
+   */
+  public static void boardPopulateTilesValidator(int rows, int columns) {
+    if (rows < 1 || columns < 1) {
+      throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
+    }
+  }
+
+  /**
+   * Validates the arguments for the addTile method in Board class.
+   *
+   * @param tile the tile to add
+   * @throws IllegalArgumentException if tile is null or tile id is less than 0
+   */
+  public static void boardAddTileValidator(Tile tile) {
+    if (tile == null) {
+      throw new IllegalArgumentException("Tile cannot be null");
+    }
+    if (tile.getTileId() < 0) {
+      throw new IllegalArgumentException("Tile id must be greater than 0");
+    }
+  }
+
+}
