@@ -1,5 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerPlaceOnTileValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetNameValidator;
+
 public class Player {
   private String name;
   private Tile currentTile;
@@ -16,17 +19,15 @@ public class Player {
     return currentTile;
   }
 
-  public void setName(String name) throws IllegalArgumentException {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException("Name cannot be null or blank");
-    }
+  public void setName(String name) {
+    playerSetNameValidator(name);
+
     this.name = name;
   }
 
-  public void placeOnTile(Tile tile) throws IllegalArgumentException {
-    if (tile == null) {
-      throw new IllegalArgumentException("Tile cannot be null");
-    }
+  public void placeOnTile(Tile tile) {
+    playerPlaceOnTileValidator(tile);
+
     this.currentTile = tile;
   }
 

@@ -198,4 +198,27 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates the arguments for the setName method in Player class.
+   *
+   * @param name the name to set
+   * @throws IllegalArgumentException if name is null or blank
+   */
+  public static void playerSetNameValidator(String name) {
+    if (name == null || name.isBlank()) {
+      throw new IllegalArgumentException("Name cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the placeOnTile method in Player class.
+   *
+   * @param tile the tile to place the player on
+   * @throws IllegalArgumentException if tile is null
+   */
+  public static void playerPlaceOnTileValidator(Tile tile) {
+    if (tile == null) {
+      throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
 }
