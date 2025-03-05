@@ -1,11 +1,11 @@
 package edu.ntnu.idi.idatt.controllers;
 
-import edu.ntnu.idi.idatt.entities.Board;
-import edu.ntnu.idi.idatt.entities.BoardGame;
-import edu.ntnu.idi.idatt.entities.Player;
-import edu.ntnu.idi.idatt.entities.Tile;
-import edu.ntnu.idi.idatt.entities.Dice;
-import edu.ntnu.idi.idatt.entities.TileAction;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.BoardGame;
+import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.model.Dice;
+import edu.ntnu.idi.idatt.model.TileAction;
 import java.util.List;
 
 public class GameController {

@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.entities;
+package edu.ntnu.idi.idatt.model;
 
 import static java.util.List.copyOf;
 

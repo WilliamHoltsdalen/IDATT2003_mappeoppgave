@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.textuserinterface.view;
 
 import edu.ntnu.idi.idatt.controllers.GameController;
-import edu.ntnu.idi.idatt.entities.Player;
+import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class TextUserInterface {
       }
     }
   }
-
+// Stringbuilder
   private void printWinner() {
     System.out.printf(
         """
