@@ -2,7 +2,7 @@ package edu.ntnu.idi.idatt.model;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.dieSetValueValidator;
 
-import edu.ntnu.idi.idatt.utils.DiceUtils;
+import edu.ntnu.idi.idatt.model.utils.DiceUtils;
 
 public class Die {
   private int lastRolledValue;
