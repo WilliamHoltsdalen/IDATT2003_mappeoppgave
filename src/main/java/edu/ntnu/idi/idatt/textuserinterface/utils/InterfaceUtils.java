@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.textuserinterface.utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public final class InterfaceUtils {
@@ -105,28 +103,7 @@ public final class InterfaceUtils {
       printErrorMessage("Please enter a valid integer (positive whole number).");
       System.out.print("Please try again: ");
       return integerInput();
-
     }
-  }
-
-  private static int getPlayerCount() {
-    System.out.print("\nEnter player count: ");
-    int playerCountInput = integerInput();
-    if (playerCountInput < 1) {
-      System.out.println("Player count must be greater than 0.");
-      playerCountInput = getPlayerCount();
-    }
-    return playerCountInput;
-  }
-
-  public static List<String> getPlayerNames() {
-    int playerCount = getPlayerCount();
-    List<String> playerNames = new ArrayList<>();
-    for (int i = 1; i <= playerCount; i++) {
-      System.out.printf("%nEnter name of player %d: ", i);
-      playerNames.add(stringInput());
-    }
-    return playerNames;
   }
 
   /**
