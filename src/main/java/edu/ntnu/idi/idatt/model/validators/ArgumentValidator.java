@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.model.validators;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.model.TileAction;
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.util.List;
 
 /**

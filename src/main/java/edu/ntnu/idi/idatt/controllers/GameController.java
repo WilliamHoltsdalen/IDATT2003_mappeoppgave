@@ -5,7 +5,7 @@ import edu.ntnu.idi.idatt.model.BoardGame;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
-import edu.ntnu.idi.idatt.model.TileAction;
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.util.List;
 
 public class GameController {

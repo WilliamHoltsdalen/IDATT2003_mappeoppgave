@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.ladderActionSetDestinationTileIdValidator;
