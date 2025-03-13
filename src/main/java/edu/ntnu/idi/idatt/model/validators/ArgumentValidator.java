@@ -251,6 +251,22 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setNextTileId method in Tile class.
+   *
+   * @param currentTileId the tile id of the current tile
+   * @param nextTileId the tile id of the next tile
+   * @throws IllegalArgumentException if nextTileId is less than 0
+   */
+  public static void tileSetNextTileIdValidator(int currentTileId, int nextTileId) {
+    if (nextTileId < 0) {
+      throw new IllegalArgumentException("Next tile id must be greater than 0");
+    }
+    if (nextTileId <= currentTileId) {
+      throw new IllegalArgumentException("Next tile id must be greater than current tile id");
+    }
+  }
+
+  /**
    * Validates the arguments for the setLandAction method in Tile class.
    *
    * @param landAction the land action to set
