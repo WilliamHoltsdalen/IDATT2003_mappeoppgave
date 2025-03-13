@@ -46,16 +46,7 @@ public class TextUserInterface {
     InterfaceUtils.exitApplication();
   }
 
-  /**
-   * Prompts the user for player names and returns a list of Player objects.
-   *
-   * @return List of Player objects
-   */
-  private List<Player> tuiGetPlayers() {
-    List<String> playerNames = InterfaceUtils.getPlayerNames();
-    List<Player> players = new ArrayList<>();
-    playerNames.forEach(pname -> players.add(new Player(pname)));
-    return players;
+
   }
 
   /**
@@ -81,9 +72,7 @@ public class TextUserInterface {
     }
   }
 
-  /**
-   * Displays the winner of the game.
-   */
+
   private void printWinner() {
     StringBuilder winnerMessage = new StringBuilder();
     winnerMessage.append("\n------------------------------------------------------------");

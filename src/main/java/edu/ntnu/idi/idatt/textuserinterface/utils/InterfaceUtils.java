@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.textuserinterface.utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -116,39 +114,6 @@ public final class InterfaceUtils {
       return integerInput();
 
     }
-  }
-
-  /**
-   * Prompts the user to enter the number of players. It will ask for the number of players and
-   * validate that it is greater than 0. If the input is invalid, it will prompt the user to try
-   * again.
-   *
-   * @return the number of players entered by the user
-   */
-  private static int getPlayerCount() {
-    System.out.println("Enter player count: ");
-    int playerCountInput = integerInput();
-    if (playerCountInput < 1) {
-      System.out.println("Player count must be greater than 0.");
-      playerCountInput = getPlayerCount();
-    }
-    return playerCountInput;
-  }
-
-  /**
-   * Prompts the user to enter the names of the players. It will ask for the number of players and
-   * then prompt for each player's name. The names are stored in a list and returned.
-   *
-   * @return a list of player names
-   */
-  public static List<String> getPlayerNames() {
-    int playerCount = getPlayerCount();
-    List<String> playerNames = new ArrayList<>();
-    for (int i = 1; i <= playerCount; i++) {
-      System.out.println("Enter name of player " + i + ": ");
-      playerNames.add(stringInput());
-    }
-    return playerNames;
   }
 
   /**
