@@ -25,7 +25,7 @@ public class TextUserInterface {
   public void init() {
     try {
       InterfaceUtils.printWelcomeMessage();
-      this.gameController = new GameController(tuiGetPlayers());
+      this.gameController = new GameController();
     } catch (Exception e) {
       InterfaceUtils.exitByError(e.getMessage());
     }
@@ -46,8 +46,6 @@ public class TextUserInterface {
     InterfaceUtils.exitApplication();
   }
 
-
-  }
 
   /**
    * Displays the main and handles game flow, allowing the user to start a new game or exit the
