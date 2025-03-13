@@ -31,12 +31,4 @@ public class Tile {
 
     this.landAction = landAction;
   }
-
-  public void landPlayer(Player player) {
-
-  }
-
-  public void leavePlayer(Player player) {
-
-  }
 }

@@ -6,17 +6,20 @@ import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.utils.PlayerFileHandler;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
   private BoardGame boardGame;
+  PlayerFileHandler playerFileHandler = new PlayerFileHandler();
 
   /**
-   * Constructor for GameController. Initializes the controller with the given players.
-   * @param players The players for the game.
+   * Constructor for GameController. Initializes the controller with the given player file path.
    */
-  public GameController(List<Player> players) {
-    initController(players);
+  public GameController() {
+    initController("src/main/resources/textfiles/players.csv");
   }
 
   public Player getWinner() {
@@ -44,14 +47,22 @@ public class GameController {
   }
 
   /**
-   * Initializes the controller by creating a new BoardGame instance with the given players.
-   * All players are placed on the 0th tile of the board, and the current player is set to the
+   * Initializes the controller by creating a new BoardGame instance with the players from the
+   * player file at the given path.
+   *
+   * <p>All players are placed on the 0th tile of the board, and the current player is set to the
    * first player. Number of players must be in interval [2, 5].
    *
-   * @param players The players to initialize the controller with. Must be in interval [2, 5].
-   * @throws IllegalArgumentException If the player count is not between 2 and 5.
+   * @param playerFilePath The path to the player file.
    */
-  private void initController(List<Player> players) throws IllegalArgumentException {
+  private void initController(String playerFilePath) {
+    List<Player> players = new ArrayList<>();
+    try {
+      players =  playerFileHandler.readFile(playerFilePath);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     if (players.size() < 2 || players.size() >5) {
       throw new IllegalArgumentException("Player count must be between 2 and 5");
     }

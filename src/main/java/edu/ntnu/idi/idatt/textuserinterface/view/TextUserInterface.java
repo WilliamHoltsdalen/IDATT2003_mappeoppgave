@@ -6,45 +6,53 @@ import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h3>TextUserInterface</h3>
+ *
+ * <p>TextUserInterface is responsible for handling the text-based user interface of the game.
+ * It provides methods to initialize the game, display menus, and handle user input.
+ * It uses a {@link GameController} to manage the game logic and player interactions.
+ *
+ * @author William Holtsdalen
+ */
 public class TextUserInterface {
   private GameController gameController;
 
+  /**
+   * Initializes the game by creating a new GameController instance.
+   * This method should be called before any other method in this class.
+   */
   public void init() {
     try {
+      InterfaceUtils.printWelcomeMessage();
+      this.gameController = new GameController(tuiGetPlayers());
     } catch (Exception e) {
-      exitByError(e.getMessage());
+      InterfaceUtils.exitByError(e.getMessage());
     }
   }
 
+  /**
+   * Starts the text user interface and runs the game loop. This method should be called after
+   * the {@link #init()} method.
+   */
   public void run() {
     try {
-      InterfaceUtils.printWelcomeMessage();
       tuiMainMenu();
     } catch (Exception e) {
-      exitByError(e.getMessage());
+      InterfaceUtils.exitByError(e.getMessage());
     }
 
     System.out.println("Exiting application...");
     InterfaceUtils.exitApplication();
   }
 
-  private void exitByError(String errorMessage) {
-    System.out.println("An error occurred: " + errorMessage);
-    System.out.println("Exiting application...");
-    InterfaceUtils.exitApplication();
+
   }
 
-  private void initGameController() {
-    this.gameController = new GameController(tuiGetPlayers());
-  }
-
-  private List<Player> tuiGetPlayers() {
-    List<String> playerNames = InterfaceUtils.getPlayerNames();
-    List<Player> players = new ArrayList<>();
-    playerNames.forEach(pName -> players.add(new Player(pName)));
-    return players;
-  }
-
+  /**
+   * Displays the main and handles game flow, allowing the user to start a new game or exit the
+   * application.
+   */
   private void tuiMainMenu() {
     boolean finished = false;
     while (!finished) {
@@ -52,7 +60,7 @@ public class TextUserInterface {
       int choice = InterfaceUtils.integerInput();
       switch (choice) {
         case 1:
-          initGameController();
+          init();
           tuiGameClient();
           break;
         case 2:
@@ -63,23 +71,31 @@ public class TextUserInterface {
       }
     }
   }
-// Stringbuilder
+
+
   private void printWinner() {
-    System.out.printf(
-        """
-            
-            ------------------------------------------------------------
-                The winner of the game is: %s  (after %d rounds)!
-            ------------------------------------------------------------
-            
-            """, gameController.getWinner().getName(), gameController.getRoundNumber());
+    StringBuilder winnerMessage = new StringBuilder();
+    winnerMessage.append("\n------------------------------------------------------------");
+    winnerMessage.append("\n    The winner of the game is: ");
+    winnerMessage.append(gameController.getWinner().getName());
+    winnerMessage.append("  (after ");
+    winnerMessage.append(gameController.getRoundNumber());
+    winnerMessage.append(" rounds)!");
+    winnerMessage.append("\n------------------------------------------------------------\n");
+    System.out.println(winnerMessage);
   }
 
+  /**
+   * Displays the current round number.
+   */
   private void printRoundNumber() {
     System.out.println("\n-----------------------------------");
     System.out.println("Round number: " + (gameController.getRoundNumber() + 1));
   }
 
+  /**
+   * Displays the game client and handles player moves until a winner is found.
+   */
   private void tuiGameClient() {
     while (gameController.getWinner() == null) {
       printRoundNumber();

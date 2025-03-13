@@ -129,6 +129,9 @@ public class ArgumentValidator {
     if (players == null) {
       throw new IllegalArgumentException("List of players cannot be null");
     }
+    if (players.isEmpty()) {
+      throw new IllegalArgumentException("List of players cannot be empty");
+    }
 
     players.forEach(player -> {
       if (player == null) {
@@ -208,6 +211,18 @@ public class ArgumentValidator {
   public static void playerSetNameValidator(String name) {
     if (name == null || name.isBlank()) {
       throw new IllegalArgumentException("Name cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setColorHex method in Player class.
+   *
+   * @param colorHex the color hex to set
+   * @throws IllegalArgumentException if colorHex is null or blank
+   */
+  public static void playerSetColorHexValidator(String colorHex) {
+    if (colorHex == null || colorHex.isBlank()) {
+      throw new IllegalArgumentException("Color hex cannot be null or blank");
     }
   }
 
