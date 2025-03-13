@@ -15,8 +15,13 @@ public class Board {
     populateTiles(rows, columns);
   }
 
+  public Board() {
+    this.tiles = new HashMap<>();
+  }
+
   public Tile getTile(int tileId) {
     boardGetTileValidator(tileId, tiles.size());
+
     return tiles.get(tileId);
   }
 
@@ -28,11 +33,11 @@ public class Board {
     boardPopulateTilesValidator(rows, columns);
 
     for (int i = 0; i <= rows * columns; i++) {
-      addTile(new Tile(i));
+      addTile(new Tile(i, i+1));
     }
   }
 
-  private void addTile(Tile tile) {
+  public void addTile(Tile tile) {
     boardAddTileValidator(tile);
 
     this.tiles.put(tile.getTileId(), tile);
