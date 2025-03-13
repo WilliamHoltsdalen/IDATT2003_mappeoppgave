@@ -32,7 +32,7 @@ public class Board {
     }
   }
 
-  public void addTile(Tile tile) {
+  private void addTile(Tile tile) {
     boardAddTileValidator(tile);
 
     this.tiles.put(tile.getTileId(), tile);

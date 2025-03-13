@@ -129,6 +129,9 @@ public class ArgumentValidator {
     if (players == null) {
       throw new IllegalArgumentException("List of players cannot be null");
     }
+    if (players.isEmpty()) {
+      throw new IllegalArgumentException("List of players cannot be empty");
+    }
 
     players.forEach(player -> {
       if (player == null) {
