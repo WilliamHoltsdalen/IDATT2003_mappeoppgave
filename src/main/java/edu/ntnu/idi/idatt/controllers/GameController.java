@@ -6,6 +6,7 @@ import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.utils.BoardFileHandler;
 import edu.ntnu.idi.idatt.utils.PlayerFileHandler;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,12 +15,14 @@ import java.util.List;
 public class GameController {
   private BoardGame boardGame;
   PlayerFileHandler playerFileHandler = new PlayerFileHandler();
+  BoardFileHandler boardFileHandler = new BoardFileHandler();
 
   /**
    * Constructor for GameController. Initializes the controller with the given player file path.
    */
   public GameController() {
-    initController("src/main/resources/textfiles/players.csv");
+    initController("src/main/resources/textfiles/players.csv",
+        "src/main/resources/textfiles/ladderBoard.json");
   }
 
   public Player getWinner() {
@@ -55,10 +58,11 @@ public class GameController {
    *
    * @param playerFilePath The path to the player file.
    */
-  private void initController(String playerFilePath) {
+  private void initController(String playerFilePath, String boardFilePath) {
     List<Player> players = new ArrayList<>();
     try {
       players =  playerFileHandler.readFile(playerFilePath);
+      List<Board> boards = boardFileHandler.readFile(boardFilePath);
     } catch (IOException e) {
       e.printStackTrace();
     }

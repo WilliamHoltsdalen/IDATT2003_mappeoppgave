@@ -4,6 +4,10 @@
   "description": "Standard chutes and ladders game with 90 tiles.",
   "tiles": [
     {
+      "id": 0,
+      "nextTile": 1
+    },
+    {
       "id": 1,
       "nextTile": 2
     },
@@ -360,7 +364,8 @@
       "nextTile": 90
     },
     {
-      "id": 90
+      "id": 90,
+      "nextTile": null,
       "description": "Last tile"
     }
   ]
