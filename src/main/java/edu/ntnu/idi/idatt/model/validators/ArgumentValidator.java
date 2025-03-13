@@ -212,6 +212,18 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setColorHex method in Player class.
+   *
+   * @param colorHex the color hex to set
+   * @throws IllegalArgumentException if colorHex is null or blank
+   */
+  public static void playerSetColorHexValidator(String colorHex) {
+    if (colorHex == null || colorHex.isBlank()) {
+      throw new IllegalArgumentException("Color hex cannot be null or blank");
+    }
+  }
+
+  /**
    * Validates the arguments for the placeOnTile method in Player class.
    *
    * @param tile the tile to place the player on

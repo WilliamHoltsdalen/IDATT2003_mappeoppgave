@@ -35,14 +35,7 @@ public class TextUserInterface {
   }
 
   private void initGameController() {
-    this.gameController = new GameController(tuiGetPlayers());
-  }
-
-  private List<Player> tuiGetPlayers() {
-    List<String> playerNames = InterfaceUtils.getPlayerNames();
-    List<Player> players = new ArrayList<>();
-    playerNames.forEach(pName -> players.add(new Player(pName)));
-    return players;
+    this.gameController = new GameController();
   }
 
   private void tuiMainMenu() {
@@ -63,7 +56,7 @@ public class TextUserInterface {
       }
     }
   }
-// Stringbuilder
+
   private void printWinner() {
     System.out.printf(
         """
