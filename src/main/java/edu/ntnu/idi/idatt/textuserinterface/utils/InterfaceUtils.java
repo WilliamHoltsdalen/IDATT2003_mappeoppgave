@@ -2,6 +2,14 @@ package edu.ntnu.idi.idatt.textuserinterface.utils;
 
 import java.util.Scanner;
 
+/**
+ * <h3>Text User Interface Utility Class</h3>
+ *
+ * <p>
+ * Utility class for handling console input and output in the text user interface.
+ * This class provides methods for printing messages, reading user input, and managing the game
+ * interface.
+ */
 public final class InterfaceUtils {
   private static final Scanner scanner = new Scanner(System.in);
 
@@ -14,7 +22,7 @@ public final class InterfaceUtils {
    * Prints two newlines to act as a spacer between commands.
    */
   public static void printSpacing() {
-    System.out.print("\n\n");
+    System.out.println("\n");
   }
 
   /**
@@ -22,12 +30,11 @@ public final class InterfaceUtils {
    */
   public static void printWelcomeMessage() {
     printSpacing();
-    System.out.println(
-        """
-        |-----------------------------------------|
-        | Welcome to the ladder game application! |
-        |-----------------------------------------|
-        """);
+    StringBuilder welcomeMessage = new StringBuilder();
+    welcomeMessage.append("\n|-----------------------------------------|");
+    welcomeMessage.append("\n| Welcome to the ladder game application! |");
+    welcomeMessage.append("\n|-----------------------------------------|");
+    System.out.println(welcomeMessage);
     printSpacing();
   }
 
@@ -36,25 +43,27 @@ public final class InterfaceUtils {
    */
   public static void printGoodbyeMessage() {
     printSpacing();
-    System.out.println(
-        """
-        |---------------------------------------------|
-        | Thank you for playing! Have a great day! :) |
-        |---------------------------------------------|
-        """);
+    StringBuilder goodbyeMessage = new StringBuilder();
+    goodbyeMessage.append("\n|---------------------------------------------|");
+    goodbyeMessage.append("\n| Thank you for playing! Have a great day! :) |");
+    goodbyeMessage.append("\n|---------------------------------------------|");
+    System.out.println(goodbyeMessage);
     printSpacing();
   }
 
+  /**
+   * Prints the main menu of the game client.
+   */
   public static void printGameClientMenu() {
-    System.out.print("""
-    Main menu
-    --------------
-    1. Start game
-    2. Exit
-    --------------
-    Your choice:\s""");
+    StringBuilder menuMessage = new StringBuilder();
+    menuMessage.append("\nMain menu");
+    menuMessage.append("\n--------------");
+    menuMessage.append("\n1. Start game");
+    menuMessage.append("\n2. Exit");
+    menuMessage.append("\n--------------");
+    menuMessage.append("\nYour choice: ");
+    System.out.println(menuMessage);
   }
-
 
   /**
    * Prints a given error message.
@@ -81,7 +90,7 @@ public final class InterfaceUtils {
       return input.trim();
     } catch (Exception e) {
       printErrorMessage("Please enter a valid text string.");
-      System.out.print("Please try again: ");
+      System.out.println("Please try again: ");
       return stringInput();
     }
   }
@@ -101,13 +110,26 @@ public final class InterfaceUtils {
       return input;
     } catch (Exception e) {
       printErrorMessage("Please enter a valid integer (positive whole number).");
-      System.out.print("Please try again: ");
+      System.out.println("Please try again: ");
       return integerInput();
+
     }
   }
 
   /**
-   * Exits the application by closing the scanner and printing the goodbye message, and then exiting
+   * Exits the application by closing the scanner, printing an error message, and then exiting
+   * the application.
+   *
+   * @param errorMessage the error message to print before exiting
+   */
+  public static void exitByError(String errorMessage) {
+    System.out.println("An error occurred: " + errorMessage);
+    System.out.println("Exiting application...");
+    exitApplication();
+  }
+
+  /**
+   * Exits the application by closing the scanner, printing the goodbye message, and then exiting
    * the application.
    */
   public static void exitApplication() {
