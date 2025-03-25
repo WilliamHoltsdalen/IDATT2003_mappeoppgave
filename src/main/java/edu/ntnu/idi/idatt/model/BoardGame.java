@@ -27,6 +27,17 @@ public class BoardGame {
     createDice(diceCount);
   }
 
+  public BoardGame(Board board, List<Player> players, int diceCount) {
+    this.players = new ArrayList<>();
+    this.roundNumber = 0;
+
+    this.board = board;
+    addTileActions();
+    addPlayers(players);
+    createDice(diceCount);
+  }
+
+
   public Board getBoard() {
     return board;
   }
