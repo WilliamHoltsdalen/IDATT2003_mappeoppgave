@@ -28,7 +28,7 @@
       "action": {
         "type": "LadderAction",
         "destinationTileId": 44,
-        "description": "Ladder from 5 to 14"
+        "description": "Ladder from 5 to 44"
       }
     },
     {

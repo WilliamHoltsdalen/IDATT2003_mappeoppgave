@@ -12,26 +12,29 @@ import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 public class BoardFileHandlerGson implements FileHandler<Board> {
 
+  /**
+   * Reads a file at the given path and returns a list of Board objects. If there is only one board
+   * in the file, it will be returned as a list with one element. If the file does not exist or
+   * cannot be read, an empty list will be returned.
+   *
+   * @param path The path to the file.
+   * @return A list of Board objects or null if the file does not exist or cannot be read.
+   * @throws IOException If an error occurs while reading the file.
+   */
   @Override
   public List<Board> readFile(String path) throws IOException {
-    List<Board> boards = new ArrayList<>();
-
     try {
-      String jsonString = FileUtils.readFileToString(new File(
-          path), StandardCharsets.UTF_8);
-
+      String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
       Board board = deserializeBoard(jsonString);
-      boards.add(board);
+      return List.of(board);
     } catch (IOException e) {
-      e.printStackTrace();
+      return List.of();
     }
-    return boards;
   }
 
   @Override
@@ -43,7 +46,8 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
    * Serializes a Board object to a JSON string.
    *
    * @param board The Board object to serialize.
-   * @return A JSON string representation of the Board object.
+   * @return A JSON string representation of the Board object or null if the given Board object is
+   *         null.
    */
   private JsonObject serializeBoard(Board board) {
     if (board == null) {
@@ -96,11 +100,12 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
         String actionDescription = actionJsonObject.get("description").getAsString();
         tileAction = new LadderAction(destinationTileId, actionDescription);
       } catch (NullPointerException e) {
-        // Handle null pointer exception if tileId or nextTileId is missing
+        // Todo: Handle null pointer exception if any of the tile properties are missing
       }
 
       if (tileAction != null) {
         board.addTile(new Tile(tileId, nextTileId, tileAction));
+        return;
       }
       board.addTile(new Tile(tileId, nextTileId));
     });
