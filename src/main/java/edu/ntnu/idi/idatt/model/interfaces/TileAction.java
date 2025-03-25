@@ -5,5 +5,13 @@ import edu.ntnu.idi.idatt.model.Player;
 
 public interface TileAction {
 
-  public void perform(Player player, Board board);
+  int getDestinationTileId();
+
+  String getDescription();
+
+  void setDestinationTileId(int destinationTileId);
+
+  void setDescription(String description);
+
+  void perform(Player player, Board board);
 }

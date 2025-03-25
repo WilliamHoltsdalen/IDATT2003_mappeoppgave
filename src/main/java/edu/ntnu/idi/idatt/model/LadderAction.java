@@ -14,26 +14,31 @@ public class LadderAction implements TileAction {
     setDescription(description);
   }
 
+  @Override
   public int getDestinationTileId() {
     return destinationTileId;
   }
 
+  @Override
   public String getDescription() {
     return description;
   }
 
-  private void setDestinationTileId(int destinationTileId) {
+  @Override
+  public void setDestinationTileId(int destinationTileId) {
     ladderActionSetDestinationTileIdValidator(destinationTileId);
 
     this.destinationTileId = destinationTileId;
   }
 
-  private void setDescription(String description) {
+  @Override
+  public void setDescription(String description) {
     ladderActionSetDescriptionValidator(description);
 
     this.description = description;
   }
 
+  @Override
   public void perform(Player player, Board board) {
     ladderActionPerformValidator(player, board);
 
