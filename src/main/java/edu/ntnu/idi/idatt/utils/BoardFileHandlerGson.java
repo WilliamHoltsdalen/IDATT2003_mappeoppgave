@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,16 +32,35 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
   public List<Board> readFile(String path) throws IOException {
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-      Board board = deserializeBoard(jsonString);
+      Board board = deserializeBoard(jsonString); // Todo: Support multiple boards
       return List.of(board);
     } catch (IOException e) {
       return List.of();
     }
   }
 
+  /**
+   * Writes a list of Board objects to a JSON file at the given path.
+   *
+   * @param path The path to the file.
+   * @param boards The list of Board objects to write.
+   * @throws IOException If an error occurs while writing to the file.
+   */
   @Override
-  public void writeFile(String path, List<Board> board) throws IOException {
-    // Not yet implemented
+  public void writeFile(String path, List<Board> boards) throws IOException {
+    if (boards == null || boards.isEmpty()) {
+      throw new IllegalArgumentException("Board list is null or empty.");
+    }
+    JsonObject boardJson = serializeBoard(boards.getFirst()); // Todo: Support multiple boards
+    if (boardJson == null) {
+      // Todo: Handle null boardJson, perhaps by throwing a ( custom ? ) exception
+      return;
+    }
+
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    String prettyJson = gson.toJson(boardJson);
+
+    FileUtils.writeStringToFile(new File(path), prettyJson, StandardCharsets.UTF_8, false);
   }
 
   /**
@@ -58,8 +79,17 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
 
     board.getTiles().forEach(tile -> {
       JsonObject tileJson = new JsonObject();
+      JsonObject actionJson = new JsonObject();
+
       tileJson.addProperty("id", tile.getTileId());
       tileJson.addProperty("nextTile", tile.getNextTileId());
+
+      if (tile.getLandAction() != null) {
+        actionJson.addProperty("type", tile.getLandAction().getClass().getSimpleName());
+        actionJson.addProperty("destinationTileId", tile.getLandAction().getDestinationTileId());
+        actionJson.addProperty("description", tile.getLandAction().getDescription());
+        tileJson.add("action", actionJson);
+      }
       tilesJsonArray.add(tileJson);
     });
 
