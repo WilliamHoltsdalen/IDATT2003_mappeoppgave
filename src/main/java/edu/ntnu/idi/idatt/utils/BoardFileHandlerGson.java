@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.LadderAction;
 import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.File;
 import java.io.IOException;
@@ -80,14 +82,27 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     Board board = new Board();
 
     tilesJsonArray.forEach(tileJson -> {
+      JsonObject tileJsonObject = tileJson.getAsJsonObject();
+      int tileId = 0;
+      int nextTileId = 0;
+      TileAction tileAction = null;
+
       try {
-        JsonObject tileJsonObject = tileJson.getAsJsonObject();
-        int tileId = tileJsonObject.get("id").getAsInt();
-        int nextTileId = tileJsonObject.get("nextTile").getAsInt();
-        board.addTile(new Tile(tileId, nextTileId));
-      } catch (UnsupportedOperationException e) {
-        e.printStackTrace();
+        tileId = tileJsonObject.get("id").getAsInt();
+        nextTileId = tileJsonObject.get("nextTile").getAsInt();
+        JsonObject actionJsonObject = tileJsonObject.getAsJsonObject("action");
+
+        int destinationTileId = actionJsonObject.get("destinationTileId").getAsInt();
+        String actionDescription = actionJsonObject.get("description").getAsString();
+        tileAction = new LadderAction(destinationTileId, actionDescription);
+      } catch (NullPointerException e) {
+        // Handle null pointer exception if tileId or nextTileId is missing
       }
+
+      if (tileAction != null) {
+        board.addTile(new Tile(tileId, nextTileId, tileAction));
+      }
+      board.addTile(new Tile(tileId, nextTileId));
     });
 
     return board;
