@@ -24,7 +24,12 @@
     },
     {
       "id": 5,
-      "nextTile": 6
+      "nextTile": 6,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 44,
+        "description": "Ladder from 5 to 14"
+      }
     },
     {
       "id": 6,
@@ -140,7 +145,12 @@
     },
     {
       "id": 34,
-      "nextTile": 35
+      "nextTile": 35,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 13,
+        "description": "Slide from 34 to 13"
+      }
     },
     {
       "id": 35,
@@ -160,7 +170,12 @@
     },
     {
       "id": 39,
-      "nextTile": 40
+      "nextTile": 40,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 58,
+        "description": "Ladder from 39 to 58"
+      }
     },
     {
       "id": 40,
@@ -188,7 +203,12 @@
     },
     {
       "id": 46,
-      "nextTile": 47
+      "nextTile": 47,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 87,
+        "description": "Ladder from 46 to 87"
+      }
     },
     {
       "id": 47,
@@ -332,7 +352,12 @@
     },
     {
       "id": 82,
-      "nextTile": 83
+      "nextTile": 83,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 78,
+        "description": "Slide from 82 to 78"
+      }
     },
     {
       "id": 83,
@@ -360,7 +385,12 @@
     },
     {
       "id": 89,
-      "nextTile": 90
+      "nextTile": 90,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 68,
+        "description": "Slide from 89 to 68"
+      }
     },
     {
       "id": 90
