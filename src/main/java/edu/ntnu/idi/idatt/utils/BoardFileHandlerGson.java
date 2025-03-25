@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 
-public class BoardFileHandler implements FileHandler<Board> {
+public class BoardFileHandlerGson implements FileHandler<Board> {
 
   @Override
   public List<Board> readFile(String path) throws IOException {
@@ -47,7 +47,7 @@ public class BoardFileHandler implements FileHandler<Board> {
     if (board == null) {
       return null;
     }
-    
+
     JsonArray tilesJsonArray = new JsonArray();
 
     board.getTiles().forEach(tile -> {

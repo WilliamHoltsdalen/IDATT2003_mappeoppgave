@@ -11,7 +11,7 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 
-public class PlayerFileHandler implements FileHandler<Player>{
+public class PlayerFileHandlerGson implements FileHandler<Player>{
 
   @Override
   public List<Player> readFile(String path) throws IOException {
