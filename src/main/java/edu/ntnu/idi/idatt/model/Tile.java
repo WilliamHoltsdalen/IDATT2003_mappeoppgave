@@ -15,6 +15,12 @@ public class Tile {
     setNextTileId(nextTileId);
   }
 
+  public Tile(int tileId, int nextTileId, TileAction tileAction) {
+    setTileId(tileId);
+    setNextTileId(nextTileId);
+    setLandAction(tileAction);
+  }
+
   public int getTileId() {
     return tileId;
   }

@@ -132,6 +132,9 @@ public class ArgumentValidator {
     if (players.isEmpty()) {
       throw new IllegalArgumentException("List of players cannot be empty");
     }
+    if (players.size() < 2 || players.size() > 5) {
+      throw new IllegalArgumentException("Player count must be between 2 and 5");
+    }
 
     players.forEach(player -> {
       if (player == null) {
@@ -259,10 +262,10 @@ public class ArgumentValidator {
    */
   public static void tileSetNextTileIdValidator(int currentTileId, int nextTileId) {
     if (nextTileId < 0) {
-      throw new IllegalArgumentException("Next tile id must be greater than 0");
+      throw new IllegalArgumentException("Next tile id must be equal to or greater than 0");
     }
-    if (nextTileId <= currentTileId) {
-      throw new IllegalArgumentException("Next tile id must be greater than current tile id");
+    if (nextTileId > 0 && nextTileId <= currentTileId) {
+      throw new IllegalArgumentException("Next tile id must be 0 or greater than current tile id");
     }
   }
 
