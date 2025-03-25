@@ -4,7 +4,9 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTile
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardPopulateTilesValidator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Board {
@@ -15,9 +17,18 @@ public class Board {
     populateTiles(rows, columns);
   }
 
+  public Board() {
+    this.tiles = new HashMap<>();
+  }
+
   public Tile getTile(int tileId) {
     boardGetTileValidator(tileId, tiles.size());
+
     return tiles.get(tileId);
+  }
+
+  public List<Tile> getTiles() {
+    return new ArrayList<>(tiles.values());
   }
 
   public int getTileCount() {
@@ -28,11 +39,11 @@ public class Board {
     boardPopulateTilesValidator(rows, columns);
 
     for (int i = 0; i <= rows * columns; i++) {
-      addTile(new Tile(i));
+      addTile(new Tile(i, i+1));
     }
   }
 
-  private void addTile(Tile tile) {
+  public void addTile(Tile tile) {
     boardAddTileValidator(tile);
 
     this.tiles.put(tile.getTileId(), tile);
