@@ -6,45 +6,77 @@ import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.utils.BoardFileHandler;
-import edu.ntnu.idi.idatt.utils.PlayerFileHandler;
+import edu.ntnu.idi.idatt.utils.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.utils.PlayerFileHandlerGson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
   private BoardGame boardGame;
-  PlayerFileHandler playerFileHandler = new PlayerFileHandler();
-  BoardFileHandler boardFileHandler = new BoardFileHandler();
+  PlayerFileHandlerGson playerFileHandlerGson = new PlayerFileHandlerGson();
+  BoardFileHandlerGson boardFileHandlerGson = new BoardFileHandlerGson();
 
   /**
-   * Constructor for GameController. Initializes the controller with the given player file path.
+   * Constructor for GameController.
+   * Initializes the controller with the file paths for the csv file with the players and the json
+   * file with the board.
    */
   public GameController() {
     initController("src/main/resources/textfiles/players.csv",
         "src/main/resources/textfiles/ladderBoard.json");
   }
 
+  /**
+   * Returns the winner of the game.
+   *
+   * @return The winner of the game.
+   */
   public Player getWinner() {
     return this.boardGame.getWinner();
   }
 
+  /**
+   * Returns the round number of the game.
+   *
+   * @return The round number of the game.
+   */
   public int getRoundNumber() {
     return this.boardGame.getRoundNumber();
   }
 
+  /**
+   * Returns the players of the game.
+   *
+   * @return The players of the game.
+   */
   public List<Player> getPlayers() {
     return this.boardGame.getPlayers();
   }
 
+  /**
+   * Returns the board object of the game.
+   *
+   * @return The board of the game.
+   */
   private Board getBoard() {
     return this.boardGame.getBoard();
   }
 
+  /**
+   * Returns the dice object of the game.
+   *
+   * @return The dice of the game.
+   */
   private Dice getDice() {
     return this.boardGame.getDice();
   }
 
+  /**
+   * Returns the current player of the game.
+   *
+   * @return The current player of the game.
+   */
   private Player getCurrentPlayer() {
     return this.boardGame.getCurrentPlayer();
   }
@@ -59,27 +91,24 @@ public class GameController {
    * @param playerFilePath The path to the player file.
    */
   private void initController(String playerFilePath, String boardFilePath) {
-    List<Player> players = new ArrayList<>();
+    List<Player> playersFromFile = new ArrayList<>();
+    Board board = null;
+
     try {
-      players =  playerFileHandler.readFile(playerFilePath);
-      List<Board> boards = boardFileHandler.readFile(boardFilePath);
+      playersFromFile =  playerFileHandlerGson.readFile(playerFilePath);
+      board = boardFileHandlerGson.readFile(boardFilePath).getFirst();
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    if (players.size() < 2 || players.size() >5) {
-      throw new IllegalArgumentException("Player count must be between 2 and 5");
-    }
-
-    // Create a new board game with the given players.
-    this.boardGame = new BoardGame(10, 9, players, 2);
+    this.boardGame = new BoardGame(board, playersFromFile, 2);
 
     // Place all players on the 0th tile of the board.
     for (Player player : this.boardGame.getPlayers()) {
       player.placeOnTile(this.boardGame.getBoard().getTile(0));
     }
 
-    // Set the current player to the first player.
+    // Set the current player to the first player in the list of players.
     this.boardGame.setCurrentPlayer(this.boardGame.getPlayers().getFirst());
   }
 
