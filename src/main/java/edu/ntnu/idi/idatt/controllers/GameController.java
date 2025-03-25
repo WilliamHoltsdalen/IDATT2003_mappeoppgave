@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.controllers;
 
+import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.BoardGame;
 import edu.ntnu.idi.idatt.model.Player;
@@ -96,7 +97,7 @@ public class GameController {
 
     try {
       playersFromFile =  playerFileHandlerGson.readFile(playerFilePath);
-      board = boardFileHandlerGson.readFile(boardFilePath).getFirst();
+      board = BoardFactory.createBoardFromFile(boardFilePath);
     } catch (IOException e) {
       e.printStackTrace();
     }

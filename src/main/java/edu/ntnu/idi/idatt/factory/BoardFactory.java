@@ -6,6 +6,7 @@ import edu.ntnu.idi.idatt.model.LadderAction;
 import edu.ntnu.idi.idatt.utils.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,16 +34,18 @@ public class BoardFactory {
    *
    * @param filePath The path to the JSON file containing board data.
    * @return A Board object constructed from the file data.
-   * @throws IOException if an error occurs during file processing.
+   * @throws IOException if an error occurs during file processing
    * @throws IllegalArgumentException if the file does not contain a valid board.
    */
   public static Board createBoardFromFile(String filePath) throws IOException {
-    FileHandler<Board> boardHandler = new BoardFileHandlerGson();
-    List<Board> boards = boardHandler.readFile(filePath);
+    FileHandler<Board> boardFileHandler = new BoardFileHandlerGson();
+    List<Board> boards = boardFileHandler.readFile(filePath);
     if (boards.isEmpty()) {
       throw new IllegalArgumentException("No boards found in file: " + filePath);
     }
-    // Todo: extend to support multiple boards.
+
+    // Todo: support multiple boards.
+
     return boards.getFirst();
   }
 
@@ -53,21 +56,8 @@ public class BoardFactory {
    */
   private static Board createClassicBoard() {
     Board board = new Board();
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 10; j++) {
-        int baseId = i * 10;
-        int tileId;
+    createTiles(9, 10).forEach(board::addTile);
 
-        // Even numbered rows (left to right)
-        if (i % 2 == 0) {
-          tileId = baseId + j + 1;
-        } else { // Odd numbered rows (right to left)
-          tileId = baseId + (10 - j);
-        }
-
-        board.addTile(new Tile(tileId, tileId + 1));
-      }
-    }
     Map<Integer, Integer> ladderMap = new HashMap<>();
     ladderMap.put(5, 44);
     ladderMap.put(39, 58);
@@ -96,7 +86,38 @@ public class BoardFactory {
    */
   private static Board createPortalBoard() {
     Board board = new Board();
+    createTiles(10, 10).forEach(board::addTile);
 
+    Map<Integer, Integer> portalMap = new HashMap<>();
+    portalMap.put(6, 64);
+    portalMap.put(11, 31);
+    portalMap.put(22, 50);
+    portalMap.put(40, 90);
+    portalMap.put(13, 2);
+    portalMap.put(34, 5);
+
+    for (Map.Entry<Integer, Integer> entry : portalMap.entrySet()) {
+      board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(),
+          "Portal from " + entry.getKey() + " to " + entry.getValue()));
+    }
     return board;
+  }
+
+  private static List<Tile> createTiles(int rows, int columns) {
+    List<Tile> tiles = new ArrayList<>();
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        int baseId = i * columns;
+        int tileId;
+        // Even numbered rows (left to right)
+        if (i % 2 == 0) {
+          tileId = baseId + j + 1;
+        } else { // Odd numbered rows (right to left)
+          tileId = baseId + (columns - j);
+        }
+        tiles.add(new Tile(tileId, tileId + 1));
+      }
+    }
+    return tiles;
   }
 }
