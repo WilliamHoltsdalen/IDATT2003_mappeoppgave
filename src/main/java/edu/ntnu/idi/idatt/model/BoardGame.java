@@ -2,15 +2,16 @@ package edu.ntnu.idi.idatt.model;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameAddPlayersValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetBoardValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetPlayersValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardGame {
   private Board board;
-  private final List<Player> players;
+  private List<Player> players;
   private Dice dice;
   private Player currentPlayer;
   private int roundNumber;
@@ -57,8 +58,13 @@ public class BoardGame {
     this.board = board;
   }
 
+  public void setPlayers(List<Player> players) {
+    boardGameSetPlayersValidator(players);
+    this.players = players;
+  }
+
   private void addPlayers(List<Player> players) {
-    boardGameAddPlayersValidator(players);
+    boardGameAddPlayersValidator(players, this.players.size());
 
     this.players.addAll(players);
   }
