@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
@@ -26,12 +27,12 @@ public class PlayerFileHandlerGson implements FileHandler<Player>{
 
         Player player = fromCsvLine(line);
         if (player == null) {
-          return null;
+          return Collections.emptyList();
         }
         players.add(player);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new IOException("Could not read file: " + path);
     }
     return players;
   }
