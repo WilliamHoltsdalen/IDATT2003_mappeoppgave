@@ -1,8 +1,8 @@
 package edu.ntnu.idi.idatt.factory;
 
 import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.LadderAction;
+import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.utils.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.IOException;
@@ -11,6 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <h3>Factory class for creating Board objects.</h3>
+ *
+ * <p>This class provides methods for creating Board objects based on predefined variants.
+ * Board objects can be created from an external file, or from scratch.
+ */
 public class BoardFactory {
 
   /**
@@ -80,9 +86,9 @@ public class BoardFactory {
   }
 
   /**
-   * Creates an alternative board layout.
+   * Creates a board layout with portals.
    *
-   * @return An alternative Board object.
+   * @return A Board object with portals.
    */
   private static Board createPortalBoard() {
     Board board = new Board();
@@ -103,6 +109,15 @@ public class BoardFactory {
     return board;
   }
 
+  /**
+   * Creates a list of Tile objects that are arranged in a grid pattern with alternating directions
+   * in each row. The first tile is in the lower left corner of the grid, and the direction of the
+   * first row is left to right.
+   *
+   * @param rows The number of rows in the grid.
+   * @param columns The number of columns in the grid.
+   * @return The list of Tile objects.
+   */
   private static List<Tile> createTiles(int rows, int columns) {
     List<Tile> tiles = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
