@@ -81,6 +81,30 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setName method in Board class.
+   *
+   * @param name the name to set
+   * @throws IllegalArgumentException if name is null or blank
+   */
+  public static void boardSetnameValidator(String name) {
+    if (name == null || name.isBlank()) {
+      throw new IllegalArgumentException("Name cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setDescription method in Board class.
+   *
+   * @param description the description to set
+   * @throws IllegalArgumentException if description is null or blank
+   */
+  public static void boardSetDescriptionValidator(String description) {
+    if (description == null || description.isBlank()) {
+      throw new IllegalArgumentException("Description cannot be null or blank");
+    }
+  }
+
+  /**
    * Validates the arguments for the populateTiles method in Board class.
    *
    * @param rows    the number of rows
@@ -105,18 +129,6 @@ public class ArgumentValidator {
     }
     if (tile.getTileId() < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
-    }
-  }
-
-  /**
-   * Validates the arguments for the createBoard method in BoardGame class.
-   *
-   * @param rows the number of rows
-   * @param columns the number of columns
-   */
-  public static void boardGameCreateBoardValidator(int rows, int columns) {
-    if (rows < 1 || columns < 1) {
-      throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
     }
   }
 
@@ -162,6 +174,17 @@ public class ArgumentValidator {
   public static void boardGameSetCurrentPlayerValidator(Player player) {
     if (player == null) {
       throw new IllegalArgumentException("Player cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setBoard method in BoardGame class.
+   *
+   * @param board the board to set
+   */
+  public static void boardGameSetBoardValidator(Board board) {
+    if (board == null) {
+      throw new IllegalArgumentException("Board cannot be null");
     }
   }
 
