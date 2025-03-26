@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.textuserinterface.view;
 
 import edu.ntnu.idi.idatt.controllers.GameController;
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * <h3>TextUserInterface</h3>
@@ -46,7 +46,6 @@ public class TextUserInterface {
     InterfaceUtils.exitApplication();
   }
 
-
   /**
    * Displays the main and handles game flow, allowing the user to start a new game or exit the
    * application.
@@ -59,6 +58,7 @@ public class TextUserInterface {
       switch (choice) {
         case 1:
           init();
+          userSelectBoard();
           tuiGameClient();
           break;
         case 0:
@@ -70,6 +70,31 @@ public class TextUserInterface {
     }
   }
 
+  private void userSelectBoard() {
+    Map<Integer, Board> boardVariants = gameController.getBoardVariants();
+
+    StringBuilder prompt = new StringBuilder();
+    prompt.append("\nAvailable board variants");
+    prompt.append("\n------------------------");
+    for (Map.Entry<Integer, Board> entry : boardVariants.entrySet()) {
+      prompt.append("\n").append(entry.getKey()).append(". ").append(entry.getValue().getName());
+    }
+    prompt.append("\n------------------------");
+    prompt.append("\nPlease select a board variant: ");
+
+    System.out.println(prompt);
+
+    int boardVariantIndex = 0;
+    do {
+      int choice = InterfaceUtils.integerInput();
+      if (boardVariants.containsKey(choice)) {
+        boardVariantIndex = choice;
+      }
+        InterfaceUtils.printErrorMessage("Invalid choice. Please try again.");
+    } while (boardVariantIndex == 0);
+
+    gameController.setBoardVariant(boardVariantIndex);
+  }
 
   private void printWinner() {
     StringBuilder winnerMessage = new StringBuilder();

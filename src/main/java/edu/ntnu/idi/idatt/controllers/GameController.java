@@ -19,14 +19,16 @@ public class GameController {
 
   /**
    * Constructor for GameController.
-   * Initializes the controller with the file paths for the csv file with the players and the json
-   * file with the board.
+   *
+   * <p>Initializes the controller by calling the {@link #initController(String)} method with the
+   * given player file path. The board variants are loaded from the json files at the given paths,
+   * by calling the {@link #loadBoardVariants(List)} method.
    */
   public GameController() {
     this.boardVariants = new HashMap<>();
 
-    initController("src/main/resources/textfiles/players.csv",
-        List.of("src/main/resources/textfiles/ladderBoard.json"));
+    initController("src/main/resources/textfiles/players.csv");
+    loadBoardVariants(List.of("src/main/resources/textfiles/ladderBoard.json"));
   }
 
   public Map<Integer, Board> getBoardVariants() {
@@ -89,22 +91,18 @@ public class GameController {
 
   /**
    * Initializes the controller by creating a new BoardGame instance. The players are loaded from
-   * the csv file at the given playerFilePath, and the Board object is created from the contents of
-   * the json file at the boardFilePath.
+   * the csv file at the given playerFilePath, and the board variant is set to the classic
+   * 90 tile chutes and ladders board.
    *
    * <p>All players are placed on the 0th tile of the board, and the current player is set to the
    * first player. Number of players must be in the interval [2, 5].
    *
    * @param playerFilePath The path to the player file.
-   * @param boardFilePath The path to the board file.
    */
-  public void initController(String playerFilePath, List<String> boardFilePath) {
-    loadBoardVariants(boardFilePath);
-
+  public void initController(String playerFilePath) {
     try {
       List<Player> playersFromFile = PlayerFactory.createPlayersFromFile(playerFilePath);
       Board board = BoardFactory.createBoard("classic");
-
       this.boardGame = new BoardGame(board, playersFromFile, 2);
     } catch (IOException | IllegalArgumentException e) {
       e.printStackTrace();
