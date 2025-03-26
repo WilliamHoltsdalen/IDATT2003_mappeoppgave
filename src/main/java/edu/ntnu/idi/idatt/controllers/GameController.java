@@ -1,22 +1,18 @@
 package edu.ntnu.idi.idatt.controllers;
 
 import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.BoardGame;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.utils.BoardFileHandlerGson;
-import edu.ntnu.idi.idatt.utils.PlayerFileHandlerGson;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
   private BoardGame boardGame;
-  PlayerFileHandlerGson playerFileHandlerGson = new PlayerFileHandlerGson();
-  BoardFileHandlerGson boardFileHandlerGson = new BoardFileHandlerGson();
 
   /**
    * Constructor for GameController.
@@ -83,26 +79,24 @@ public class GameController {
   }
 
   /**
-   * Initializes the controller by creating a new BoardGame instance with the players from the
-   * player file at the given path.
+   * Initializes the controller by creating a new BoardGame instance. The players are loaded from
+   * the csv file at the given playerFilePath, and the Board object is created from the contents of
+   * the json file at the boardFilePath.
    *
    * <p>All players are placed on the 0th tile of the board, and the current player is set to the
-   * first player. Number of players must be in interval [2, 5].
+   * first player. Number of players must be in the interval [2, 5].
    *
    * @param playerFilePath The path to the player file.
+   * @param boardFilePath The path to the board file.
    */
   private void initController(String playerFilePath, String boardFilePath) {
-    List<Player> playersFromFile = new ArrayList<>();
-    Board board = null;
-
     try {
-      playersFromFile =  playerFileHandlerGson.readFile(playerFilePath);
-      board = BoardFactory.createBoardFromFile(boardFilePath);
-    } catch (IOException e) {
+      List<Player> playersFromFile = PlayerFactory.createPlayersFromFile(playerFilePath);
+      Board board = BoardFactory.createBoardFromFile(boardFilePath);
+      this.boardGame = new BoardGame(board, playersFromFile, 2);
+    } catch (IOException | IllegalArgumentException e) {
       e.printStackTrace();
     }
-
-    this.boardGame = new BoardGame(board, playersFromFile, 2);
 
     // Place all players on the 0th tile of the board.
     for (Player player : this.boardGame.getPlayers()) {
