@@ -19,6 +19,9 @@ import java.util.Map;
  */
 public class BoardFactory {
 
+  /** Private constructor to prevent instantiation. */
+  private BoardFactory() {}
+
   /**
    * Creates a Board object based on a predefined variant (hardcoded).
    *
@@ -61,7 +64,7 @@ public class BoardFactory {
    * @return A classic Board object.
    */
   private static Board createClassicBoard() {
-    Board board = new Board();
+    Board board = new Board("Classic (default)", "Standard chutes and ladders game with 90 tiles.");
     createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> ladderMap = new HashMap<>();
@@ -91,7 +94,8 @@ public class BoardFactory {
    * @return A Board object with portals.
    */
   private static Board createPortalBoard() {
-    Board board = new Board();
+    Board board = new Board("Teleporting", "Teleport through portals to reach the "
+        + "end of this board, with 100 tiles.");
     createTiles(10, 10).forEach(board::addTile);
 
     Map<Integer, Integer> portalMap = new HashMap<>();
@@ -120,6 +124,8 @@ public class BoardFactory {
    */
   private static List<Tile> createTiles(int rows, int columns) {
     List<Tile> tiles = new ArrayList<>();
+    tiles.add(new Tile(0, 1));
+
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
         int baseId = i * columns;

@@ -4,27 +4,27 @@
   "tiles": [
     {
       "id": 0,
-      "nextTile": 1
+      "nextTileId": 1
     },
     {
       "id": 1,
-      "nextTile": 2
+      "nextTileId": 2
     },
     {
       "id": 2,
-      "nextTile": 3
+      "nextTileId": 3
     },
     {
       "id": 3,
-      "nextTile": 4
+      "nextTileId": 4
     },
     {
       "id": 4,
-      "nextTile": 5
+      "nextTileId": 5
     },
     {
       "id": 5,
-      "nextTile": 6,
+      "nextTileId": 6,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 44,
@@ -33,119 +33,119 @@
     },
     {
       "id": 6,
-      "nextTile": 7
+      "nextTileId": 7
     },
     {
       "id": 7,
-      "nextTile": 8
+      "nextTileId": 8
     },
     {
       "id": 8,
-      "nextTile": 9
+      "nextTileId": 9
     },
     {
       "id": 9,
-      "nextTile": 10
+      "nextTileId": 10
     },
     {
       "id": 10,
-      "nextTile": 11
+      "nextTileId": 11
     },
     {
       "id": 11,
-      "nextTile": 12
+      "nextTileId": 12
     },
     {
       "id": 12,
-      "nextTile": 13
+      "nextTileId": 13
     },
     {
       "id": 13,
-      "nextTile": 14
+      "nextTileId": 14
     },
     {
       "id": 14,
-      "nextTile": 15
+      "nextTileId": 15
     },
     {
       "id": 15,
-      "nextTile": 16
+      "nextTileId": 16
     },
     {
       "id": 16,
-      "nextTile": 17
+      "nextTileId": 17
     },
     {
       "id": 17,
-      "nextTile": 18
+      "nextTileId": 18
     },
     {
       "id": 18,
-      "nextTile": 19
+      "nextTileId": 19
     },
     {
       "id": 19,
-      "nextTile": 20
+      "nextTileId": 20
     },
     {
       "id": 20,
-      "nextTile": 21
+      "nextTileId": 21
     },
     {
       "id": 21,
-      "nextTile": 22
+      "nextTileId": 22
     },
     {
       "id": 22,
-      "nextTile": 23
+      "nextTileId": 23
     },
     {
       "id": 23,
-      "nextTile": 24
+      "nextTileId": 24
     },
     {
       "id": 24,
-      "nextTile": 25
+      "nextTileId": 25
     },
     {
       "id": 25,
-      "nextTile": 26
+      "nextTileId": 26
     },
     {
       "id": 26,
-      "nextTile": 27
+      "nextTileId": 27
     },
     {
       "id": 27,
-      "nextTile": 28
+      "nextTileId": 28
     },
     {
       "id": 28,
-      "nextTile": 29
+      "nextTileId": 29
     },
     {
       "id": 29,
-      "nextTile": 30
+      "nextTileId": 30
     },
     {
       "id": 30,
-      "nextTile": 31
+      "nextTileId": 31
     },
     {
       "id": 31,
-      "nextTile": 32
+      "nextTileId": 32
     },
     {
       "id": 32,
-      "nextTile": 33
+      "nextTileId": 33
     },
     {
       "id": 33,
-      "nextTile": 34
+      "nextTileId": 34
     },
     {
       "id": 34,
-      "nextTile": 35,
+      "nextTileId": 35,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 13,
@@ -154,23 +154,23 @@
     },
     {
       "id": 35,
-      "nextTile": 36
+      "nextTileId": 36
     },
     {
       "id": 36,
-      "nextTile": 37
+      "nextTileId": 37
     },
     {
       "id": 37,
-      "nextTile": 38
+      "nextTileId": 38
     },
     {
       "id": 38,
-      "nextTile": 39
+      "nextTileId": 39
     },
     {
       "id": 39,
-      "nextTile": 40,
+      "nextTileId": 40,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 58,
@@ -179,31 +179,31 @@
     },
     {
       "id": 40,
-      "nextTile": 41
+      "nextTileId": 41
     },
     {
       "id": 41,
-      "nextTile": 42
+      "nextTileId": 42
     },
     {
       "id": 42,
-      "nextTile": 43
+      "nextTileId": 43
     },
     {
       "id": 43,
-      "nextTile": 44
+      "nextTileId": 44
     },
     {
       "id": 44,
-      "nextTile": 45
+      "nextTileId": 45
     },
     {
       "id": 45,
-      "nextTile": 46
+      "nextTileId": 46
     },
     {
       "id": 46,
-      "nextTile": 47,
+      "nextTileId": 47,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 87,
@@ -212,147 +212,147 @@
     },
     {
       "id": 47,
-      "nextTile": 48
+      "nextTileId": 48
     },
     {
       "id": 48,
-      "nextTile": 49
+      "nextTileId": 49
     },
     {
       "id": 49,
-      "nextTile": 50
+      "nextTileId": 50
     },
     {
       "id": 50,
-      "nextTile": 51
+      "nextTileId": 51
     },
     {
       "id": 51,
-      "nextTile": 52
+      "nextTileId": 52
     },
     {
       "id": 52,
-      "nextTile": 53
+      "nextTileId": 53
     },
     {
       "id": 53,
-      "nextTile": 54
+      "nextTileId": 54
     },
     {
       "id": 54,
-      "nextTile": 55
+      "nextTileId": 55
     },
     {
       "id": 55,
-      "nextTile": 56
+      "nextTileId": 56
     },
     {
       "id": 56,
-      "nextTile": 57
+      "nextTileId": 57
     },
     {
       "id": 57,
-      "nextTile": 58
+      "nextTileId": 58
     },
     {
       "id": 58,
-      "nextTile": 59
+      "nextTileId": 59
     },
     {
       "id": 59,
-      "nextTile": 60
+      "nextTileId": 60
     },
     {
       "id": 60,
-      "nextTile": 61
+      "nextTileId": 61
     },
     {
       "id": 61,
-      "nextTile": 62
+      "nextTileId": 62
     },
     {
       "id": 62,
-      "nextTile": 63
+      "nextTileId": 63
     },
     {
       "id": 63,
-      "nextTile": 64
+      "nextTileId": 64
     },
     {
       "id": 64,
-      "nextTile": 65
+      "nextTileId": 65
     },
     {
       "id": 65,
-      "nextTile": 66
+      "nextTileId": 66
     },
     {
       "id": 66,
-      "nextTile": 67
+      "nextTileId": 67
     },
     {
       "id": 67,
-      "nextTile": 68
+      "nextTileId": 68
     },
     {
       "id": 68,
-      "nextTile": 69
+      "nextTileId": 69
     },
     {
       "id": 69,
-      "nextTile": 70
+      "nextTileId": 70
     },
     {
       "id": 70,
-      "nextTile": 71
+      "nextTileId": 71
     },
     {
       "id": 71,
-      "nextTile": 72
+      "nextTileId": 72
     },
     {
       "id": 72,
-      "nextTile": 73
+      "nextTileId": 73
     },
     {
       "id": 73,
-      "nextTile": 74
+      "nextTileId": 74
     },
     {
       "id": 74,
-      "nextTile": 75
+      "nextTileId": 75
     },
     {
       "id": 75,
-      "nextTile": 76
+      "nextTileId": 76
     },
     {
       "id": 76,
-      "nextTile": 77
+      "nextTileId": 77
     },
     {
       "id": 77,
-      "nextTile": 78
+      "nextTileId": 78
     },
     {
       "id": 78,
-      "nextTile": 79
+      "nextTileId": 79
     },
     {
       "id": 79,
-      "nextTile": 80
+      "nextTileId": 80
     },
     {
       "id": 80,
-      "nextTile": 81
+      "nextTileId": 81
     },
     {
       "id": 81,
-      "nextTile": 82
+      "nextTileId": 82
     },
     {
       "id": 82,
-      "nextTile": 83,
+      "nextTileId": 83,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 78,
@@ -361,31 +361,31 @@
     },
     {
       "id": 83,
-      "nextTile": 84
+      "nextTileId": 84
     },
     {
       "id": 84,
-      "nextTile": 85
+      "nextTileId": 85
     },
     {
       "id": 85,
-      "nextTile": 86
+      "nextTileId": 86
     },
     {
       "id": 86,
-      "nextTile": 87
+      "nextTileId": 87
     },
     {
       "id": 87,
-      "nextTile": 88
+      "nextTileId": 88
     },
     {
       "id": 88,
-      "nextTile": 89
+      "nextTileId": 89
     },
     {
       "id": 89,
-      "nextTile": 90,
+      "nextTileId": 90,
       "action": {
         "type": "LadderAction",
         "destinationTileId": 68,

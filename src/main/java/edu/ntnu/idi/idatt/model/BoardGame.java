@@ -1,9 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameAddPlayersValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateBoardValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateDiceValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetBoardValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +15,11 @@ public class BoardGame {
   private Player currentPlayer;
   private int roundNumber;
 
-  public BoardGame(int boardRows, int boardColumns, List<Player> players, int diceCount) {
-    this.players = new ArrayList<>();
-    this.roundNumber = 0;
-
-    createBoard(boardRows, boardColumns);
-    addPlayers(players);
-    createDice(diceCount);
-  }
-
   public BoardGame(Board board, List<Player> players, int diceCount) {
     this.players = new ArrayList<>();
     this.roundNumber = 0;
 
-    this.board = board;
+    setBoard(board);
     addPlayers(players);
     createDice(diceCount);
   }
@@ -56,17 +47,14 @@ public class BoardGame {
 
   public Player getWinner() {
     for (Player player : players) {
-      if (player.getCurrentTile().getTileId() == this.board.getTileCount()) {
-        return player;
-      }
+      if (player.getCurrentTile().getTileId() == this.board.getTileCount()) return player;
     }
     return null;
   }
 
-  private void createBoard(int rows, int columns) {
-    boardGameCreateBoardValidator(rows, columns);
-
-    this.board = new Board(rows, columns);
+  public void setBoard(Board board) {
+    boardGameSetBoardValidator(board);
+    this.board = board;
   }
 
   private void addPlayers(List<Player> players) {

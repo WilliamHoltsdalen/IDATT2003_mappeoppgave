@@ -2,7 +2,8 @@ package edu.ntnu.idi.idatt.model;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardPopulateTilesValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetnameValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetDescriptionValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +11,33 @@ import java.util.List;
 import java.util.Map;
 
 public class Board {
+  private String name;
+  private String description;
   private final Map<Integer, Tile> tiles;
 
-  public Board(int rows, int columns) {
+  public Board(String name, String description) {
+    setName(name);
+    setDescription(description);
+
     this.tiles = new HashMap<>();
-    populateTiles(rows, columns);
   }
 
-  public Board() {
-    this.tiles = new HashMap<>();
+  /**
+   * Returns the name of the board.
+   *
+   * @return The name of the board.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Returns the description of the board.
+   *
+   * @return The description of the board.
+   */
+  public String getDescription() {
+    return description;
   }
 
   public Tile getTile(int tileId) {
@@ -35,12 +54,14 @@ public class Board {
     return tiles.size() - 1;
   }
 
-  private void populateTiles(int rows, int columns) {
-    boardPopulateTilesValidator(rows, columns);
+  private void setName(String name) {
+    boardSetnameValidator(name);
+    this.name = name;
+  }
 
-    for (int i = 0; i <= rows * columns; i++) {
-      addTile(new Tile(i, i+1));
-    }
+  private void setDescription(String description) {
+    boardSetDescriptionValidator(description);
+    this.description = description;
   }
 
   public void addTile(Tile tile) {

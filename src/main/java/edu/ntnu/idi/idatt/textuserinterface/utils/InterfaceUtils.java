@@ -59,7 +59,7 @@ public final class InterfaceUtils {
     menuMessage.append("\nMain menu");
     menuMessage.append("\n--------------");
     menuMessage.append("\n1. Start game");
-    menuMessage.append("\n2. Exit");
+    menuMessage.append("\n0. Exit");
     menuMessage.append("\n--------------");
     menuMessage.append("\nYour choice: ");
     System.out.println(menuMessage);
