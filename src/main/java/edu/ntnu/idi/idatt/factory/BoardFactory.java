@@ -120,6 +120,8 @@ public class BoardFactory {
    */
   private static List<Tile> createTiles(int rows, int columns) {
     List<Tile> tiles = new ArrayList<>();
+    tiles.add(new Tile(0, 1));
+
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
         int baseId = i * columns;
