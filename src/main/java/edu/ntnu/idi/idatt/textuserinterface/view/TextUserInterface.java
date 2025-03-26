@@ -61,7 +61,7 @@ public class TextUserInterface {
           init();
           tuiGameClient();
           break;
-        case 2:
+        case 0:
           finished = true;
           break;
         default:
