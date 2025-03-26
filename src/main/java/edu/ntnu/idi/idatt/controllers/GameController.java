@@ -9,10 +9,13 @@ import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameController {
   private BoardGame boardGame;
+  private final Map<Integer, Board> boardVariants;
 
   /**
    * Constructor for GameController.
@@ -20,8 +23,14 @@ public class GameController {
    * file with the board.
    */
   public GameController() {
+    this.boardVariants = new HashMap<>();
+
     initController("src/main/resources/textfiles/players.csv",
-        "src/main/resources/textfiles/ladderBoard.json");
+        List.of("src/main/resources/textfiles/ladderBoard.json"));
+  }
+
+  public Map<Integer, Board> getBoardVariants() {
+    return this.boardVariants;
   }
 
   /**
@@ -89,10 +98,13 @@ public class GameController {
    * @param playerFilePath The path to the player file.
    * @param boardFilePath The path to the board file.
    */
-  private void initController(String playerFilePath, String boardFilePath) {
+  public void initController(String playerFilePath, List<String> boardFilePath) {
+    loadBoardVariants(boardFilePath);
+
     try {
       List<Player> playersFromFile = PlayerFactory.createPlayersFromFile(playerFilePath);
-      Board board = BoardFactory.createBoardFromFile(boardFilePath);
+      Board board = BoardFactory.createBoard("classic");
+
       this.boardGame = new BoardGame(board, playersFromFile, 2);
     } catch (IOException | IllegalArgumentException e) {
       e.printStackTrace();
@@ -105,6 +117,33 @@ public class GameController {
 
     // Set the current player to the first player in the list of players.
     this.boardGame.setCurrentPlayer(this.boardGame.getPlayers().getFirst());
+  }
+
+  private void loadBoardVariants(List<String> boardFilePaths) {
+    this.boardVariants.put(1, BoardFactory.createBoard("Classic"));
+    this.boardVariants.put(2, BoardFactory.createBoard("Teleporting"));
+
+    if (boardFilePaths.isEmpty()) {
+      return;
+    }
+
+    try {
+      for (String boardFilePath : boardFilePaths) {
+        int variantIndex = this.boardVariants.size() + 1;
+        Board board = BoardFactory.createBoardFromFile(boardFilePath);
+        this.boardVariants.put(variantIndex, board);
+      }
+    } catch (IOException | IllegalArgumentException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void setBoardVariant(int variantIndex) {
+    if (!this.boardVariants.containsKey(variantIndex)) {
+      return;
+    }
+
+    this.boardGame.setBoard(this.boardVariants.get(variantIndex));
   }
 
   /**
