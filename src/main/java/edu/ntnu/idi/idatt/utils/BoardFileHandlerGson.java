@@ -26,10 +26,9 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
    *
    * @param path The path to the file.
    * @return A list of Board objects or null if the file does not exist or cannot be read.
-   * @throws IOException If an error occurs while reading the file.
    */
   @Override
-  public List<Board> readFile(String path) throws IOException {
+  public List<Board> readFile(String path) {
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
       Board board = deserializeBoard(jsonString); // Todo: Support multiple boards
