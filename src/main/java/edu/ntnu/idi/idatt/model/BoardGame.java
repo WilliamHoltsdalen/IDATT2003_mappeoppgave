@@ -6,6 +6,7 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSet
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetPlayersValidator;
 
+import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +16,47 @@ public class BoardGame {
   private Dice dice;
   private Player currentPlayer;
   private int roundNumber;
+  private final List<BoardGameObserver> observers;
 
   public BoardGame(Board board, List<Player> players, int diceCount) {
     this.players = new ArrayList<>();
     this.roundNumber = 0;
+    this.observers = new ArrayList<>();
 
     setBoard(board);
     addPlayers(players);
     createDice(diceCount);
   }
 
+  public void addObserver(BoardGameObserver observer) {
+    observers.add(observer);
+  }
+
+  public void removeObserver(BoardGameObserver observer) {
+    observers.remove(observer);
+  }
+
+  public List<BoardGameObserver> getObservers() {
+    return observers;
+  }
+
+  public void notifyPlayerMoved(Player player, int newTileId) {
+    for (BoardGameObserver observer : observers) {
+      observer.onPlayerMoved(player, newTileId);
+    }
+  }
+
+  public void notifyGameStateChanged(String stateUpdate) {
+    for (BoardGameObserver observer : observers) {
+      observer.onGameStateChanged(stateUpdate);
+    }
+  }
+
+  public void notifyGameFinished(Player winner) {
+    for (BoardGameObserver observer : observers) {
+      observer.onGameFinished(winner);
+    }
+  }
 
   public Board getBoard() {
     return board;

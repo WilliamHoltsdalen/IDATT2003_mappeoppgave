@@ -17,9 +17,9 @@ public interface BoardGameObserver {
   /**
    * Called when the game state changes (e.g., round number increments, special events occur).
    *
-   * @param newState A description of the new game state.
+   * @param stateUpdate A description of the state change.
    */
-  void onGameStateChanged(String newState);
+  void onGameStateChanged(String stateUpdate);
 
   /**
    * Called when the game has finished.
