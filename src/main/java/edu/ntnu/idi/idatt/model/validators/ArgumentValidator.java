@@ -137,15 +137,12 @@ public class ArgumentValidator {
    *
    * @param players the list of players to add
    */
-  public static void boardGameAddPlayersValidator(List<Player> players) {
+  public static void boardGameAddPlayersValidator(List<Player> players, int currentPlayerCount) {
     if (players == null) {
       throw new IllegalArgumentException("List of players cannot be null");
     }
-    if (players.isEmpty()) {
-      throw new IllegalArgumentException("List of players cannot be empty");
-    }
-    if (players.size() < 2 || players.size() > 5) {
-      throw new IllegalArgumentException("Player count must be between 2 and 5");
+    if (players.size() + currentPlayerCount >= 5) {
+      throw new IllegalArgumentException("The number of players must be less than 5");
     }
 
     players.forEach(player -> {
@@ -185,6 +182,20 @@ public class ArgumentValidator {
   public static void boardGameSetBoardValidator(Board board) {
     if (board == null) {
       throw new IllegalArgumentException("Board cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setPlayers method in the BoardGame class.
+   *
+   * @param players the players to set.
+   */
+  public static void boardGameSetPlayersValidator(List<Player> players) {
+    if (players == null) {
+      throw new IllegalArgumentException("Players cannot be null");
+    }
+    if (players.size() < 2 || players.size() > 5) {
+      throw new IllegalArgumentException("The number of players must be between 2 and 5");
     }
   }
 
