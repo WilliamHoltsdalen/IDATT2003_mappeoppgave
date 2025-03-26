@@ -1,9 +1,12 @@
 package edu.ntnu.idi.idatt.textuserinterface.view;
 
 import edu.ntnu.idi.idatt.controllers.GameController;
+import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +62,7 @@ public class TextUserInterface {
         case 1:
           init();
           userSelectBoard();
+          userSelectPlayers();
           tuiGameClient();
           break;
         case 0:
@@ -66,10 +70,15 @@ public class TextUserInterface {
           break;
         default:
           System.out.println("Invalid choice. Please try again.");
+          break;
       }
     }
   }
 
+  /**
+   * Asks the user to select a board variant, and then sets the game to that board by calling the
+   * appropriate method in the {@link GameController} class.
+   */
   private void userSelectBoard() {
     Map<Integer, Board> boardVariants = gameController.getBoardVariants();
 
@@ -89,21 +98,140 @@ public class TextUserInterface {
       int choice = InterfaceUtils.integerInput();
       if (boardVariants.containsKey(choice)) {
         boardVariantIndex = choice;
-      }
+      } else {
         InterfaceUtils.printErrorMessage("Invalid choice. Please try again.");
+      }
     } while (boardVariantIndex == 0);
 
     gameController.setBoardVariant(boardVariantIndex);
   }
 
+  /**
+   * Asks the user to select between creating or importing players, and then calls the appropriate
+   * methods to handle the selection.
+   */
+  private void userSelectPlayers() {
+    StringBuilder createOrImportPrompt = new StringBuilder();
+    createOrImportPrompt.append("\nWould you like to import or create players?")
+        .append("\n1. Create players")
+        .append("\n2. Import players")
+        .append("\nEnter your choice: ");
+    System.out.println(createOrImportPrompt);
+
+    int choice = InterfaceUtils.integerInput();
+    switch (choice) {
+      case 1:
+        userCreatePlayers();
+        break;
+      case 2:
+        userImportPlayers();
+        break;
+      default:
+        System.out.println("Invalid choice. Please try again.");
+        userSelectPlayers();
+        break;
+    }
+  }
+
+  /**
+   * Asks the user to create new players, and then adds them to the list of players, which is then
+   * passed to the {@link GameController} class to be added to the game.
+   */
+  private void userCreatePlayers() {
+    List<Player> players = new ArrayList<>();
+
+    boolean finished = false;
+    while (!finished) {
+      System.out.println("\nPlease enter the name of player #" + (players.size() + 1) + ": ");
+      String playerName = InterfaceUtils.stringInput();
+      if (playerName.isBlank()) {
+        continue;
+      }
+
+      System.out.println("\nPlease enter the hex color of player #" + (players.size() + 1) + ": ");
+      String playerColor = InterfaceUtils.stringInput();
+      if (playerColor == null || playerColor.isBlank()) {
+        System.out.println("Please enter a valid hex color.");
+        continue;
+      }
+
+      Player player = new Player(playerName, playerColor);
+      players.add(player);
+
+      System.out.println("Would you like to add another player? (y/n): ");
+      String choice = InterfaceUtils.stringInput();
+      if (choice.equalsIgnoreCase("n")) {
+        finished = true;
+      }
+    }
+    players.addAll(userCreateBots());
+    gameController.setPlayers(players);
+  }
+
+  /**
+   * Asks the user if they would like to create any bots, and then creates them and adds them to the
+   * list of players. If the user does not want to create any bots, an empty list is returned.
+   *
+   * @return A list of bot players, or an empty list if the user does not want to create any bots.
+   */
+  private List<Player> userCreateBots() {
+    System.out.println("\nWould you like to create any bots? (y/n): ");
+    String choice = InterfaceUtils.stringInput();
+    if (choice.equalsIgnoreCase("n")) {
+      return List.of();
+    }
+
+    List<Player> botPlayers = new ArrayList<>();
+    boolean finished = false;
+    while (!finished) {
+      Player botPlayer = PlayerFactory.createBot(String.valueOf(botPlayers.size() + 1));
+      botPlayers.add(botPlayer);
+      System.out.println("Added bot with name: '" + botPlayer.getName() + "' with color hex: " + botPlayer.getColorHex());
+
+      System.out.println("\nWould you like to add another bot? (y/n)");
+      choice = InterfaceUtils.stringInput();
+      if (choice.equalsIgnoreCase("y")) {
+        continue;
+      }
+      finished = true;
+    }
+    return botPlayers;
+  }
+
+  /**
+   * Asks the user to enter the path to a csv file containing players, and then calls the
+   * appropriate method in the {@link GameController} class to load the players from the file. A
+   * message is printed to the console to confirm that the players were loaded successfully, or
+   * that an error occurred. If an error occurs, the user can choose to try again. If the user
+   * does not want to try again, the method calls the {@link #userSelectPlayers()} method again to
+   * restart the player selection/creation process.
+   */
+  private void userImportPlayers() {
+    System.out.println("Enter the path to the csv file containing the players: ");
+    String filePath = InterfaceUtils.stringInput();
+    if (gameController.loadPlayersFromFile(filePath)) {
+      System.out.println("Players successfully loaded from file.");
+      return;
+    }
+    System.out.println("Failed to load players from file. Try again? (y/n): ");
+    String choice = InterfaceUtils.stringInput();
+    if (choice.equalsIgnoreCase("y")) {
+      userImportPlayers();
+      return;
+    }
+    userSelectPlayers();
+  }
+
+  /**
+   * Prints a message to the console indicating the winner of the game and the number of rounds
+   * played.
+   */
   private void printWinner() {
     StringBuilder winnerMessage = new StringBuilder();
     winnerMessage.append("\n------------------------------------------------------------");
-    winnerMessage.append("\n    The winner of the game is: ");
-    winnerMessage.append(gameController.getWinner().getName());
-    winnerMessage.append("  (after ");
-    winnerMessage.append(gameController.getRoundNumber());
-    winnerMessage.append(" rounds)!");
+    winnerMessage.append("\n    The winner of the game is: ")
+        .append(gameController.getWinner().getName()).append("  (after ")
+        .append(gameController.getRoundNumber()).append(" rounds)!");
     winnerMessage.append("\n------------------------------------------------------------\n");
     System.out.println(winnerMessage);
   }
