@@ -1,6 +1,6 @@
 package edu.ntnu.idi.idatt;
 
-import edu.ntnu.idi.idatt.textuserinterface.view.TextUserInterface;
+import edu.ntnu.idi.idatt.view.tui.TextUserInterface;
 
 public class App {
 

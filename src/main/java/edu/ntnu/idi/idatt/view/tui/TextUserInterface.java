@@ -1,10 +1,9 @@
-package edu.ntnu.idi.idatt.textuserinterface.view;
+package edu.ntnu.idi.idatt.view.tui;
 
-import edu.ntnu.idi.idatt.controllers.GameController;
+import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.textuserinterface.utils.InterfaceUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.controllers;
+package edu.ntnu.idi.idatt.controller;
 
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;

@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.textuserinterface.utils;
+package edu.ntnu.idi.idatt.view.tui;
 
 import java.util.Scanner;
 
