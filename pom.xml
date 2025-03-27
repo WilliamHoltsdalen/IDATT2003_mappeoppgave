@@ -6,8 +6,7 @@
 
   <groupId>edu.ntnu.idi.idatt</groupId>
   <artifactId>IDATT2003_mappeoppgave</artifactId>
-  <!-- TODO: Update version number on release -->
-  <version>1.0-SNAPSHOT</version>
+  <version>V2.0.0</version>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
@@ -29,6 +28,20 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.11.4</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- GSON dependency for JSON parsing -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.18.0</version>
     </dependency>
   </dependencies>
 
@@ -65,8 +78,7 @@
         <version>0.0.8</version>
         <configuration>
           <!-- https://github.com/openjfx/javafx-maven-plugin -->
-          <!-- TODO: Add the main class of the application -->
-          <mainClass></mainClass>
+          <mainClass>edu.ntnu.idi.idatt.App</mainClass>
         </configuration>
       </plugin>
     </plugins>
