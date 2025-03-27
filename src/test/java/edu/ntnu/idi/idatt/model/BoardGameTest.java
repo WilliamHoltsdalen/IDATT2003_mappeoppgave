@@ -1,7 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.factory.BoardFactory;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +17,7 @@ import java.util.Arrays;
  * This class contains tests to verify the functionality of the BoardGame class,
  * including positive and negative test cases.
  */
-public class BoardGameTest {
+class BoardGameTest {
     BoardGame boardGame;
     Player player1;
     Player player2;
@@ -26,9 +28,14 @@ public class BoardGameTest {
      */
     @BeforeEach
     void setUp() {
-        player1 = new Player("Player 1");
-        player2 = new Player("Player 2");
-        boardGame = new BoardGame(10, 10, Arrays.asList(player1, player2), 2);
+        player1 = new Player("Player 1","#00FF00");
+        player2 = new Player("Player 2","#00FF00");
+        Board board = BoardFactory.createBoard("classic");
+        for (int i = 0; i <= 100; i++) {
+            board.addTile(new Tile(i, i + 1));
+        }
+        boardGame = new BoardGame(board, Arrays.asList(player1, player2), 2);
+
     }
 
     @Nested
@@ -59,7 +66,7 @@ public class BoardGameTest {
         @DisplayName("Test that the current player is initially null.")
         @Test
         void testGetCurrentPlayer() {
-            assertEquals(null, boardGame.getCurrentPlayer());
+          assertNull(boardGame.getCurrentPlayer());
         }
 
         /**
@@ -85,24 +92,22 @@ public class BoardGameTest {
     @Nested
     class NegativeBoardGameTests {
         /**
-         * Tests that creating a BoardGame with invalid dimensions throws an exception.
+         * Tests that creating a BoardGame with invalid board throws an exception.
          */
-        @DisplayName("Test creating a BoardGame with invalid dimensions should throw an exception.")
+        @DisplayName("Test creating a BoardGame with invalid board should throw an exception.")
         @Test
-        void testCreateBoardGameWithInvalidDimensions() {
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(0, 0, Arrays.asList(player1), 1));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(-1, 3, Arrays.asList(player1), 1));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(3, -1, Arrays.asList(player1), 1));
+        void testCreateBoardGameWithInvalidBoard() {
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(null, List.of(player1), 1));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("doesNotExist"), Arrays.asList(player1), 1));
         }
 
         /**
-         * Tests that creating a BoardGame with invalid players throws an exception
+         * Tests that creating a BoardGame with player list set to null throws an exception
          */
-        @DisplayName("Test adding invalid players should throw an exception.")
+        @DisplayName("Test creating a BoardGame with player list set to null should throw an exception.")
         @Test
-        void testAddInvalidPlayers() {
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(10, 10, null, 1));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(10, 10, List.of(), 1));
+        void testCreateBoardGameWithNullPlayerList() {
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), null, 1));
         }
 
         /**
@@ -111,8 +116,8 @@ public class BoardGameTest {
         @DisplayName("Test creating a BoardGame with invalid dice count should throw an exception.")
         @Test
         void testCreateBoardGameWithInvalidDiceCount() {
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(10, 10, Arrays.asList(player1), 0));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(10, 10, Arrays.asList(player1), -1));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), Arrays.asList(player1), 0));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), Arrays.asList(player1), -1));
         }
     }
 }

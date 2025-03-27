@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  * This class contains tests to verify the functionality of the Player,
  * including positive and negative test cases.
  */
-public class PlayerTest {
+class PlayerTest {
     Player player;
     Tile tile;
 
@@ -23,8 +23,8 @@ public class PlayerTest {
      */
     @BeforeEach
     void setUp() {
-        player = new Player("Test Player");
-        tile = new Tile(1);
+        player = new Player("Test Player", "#00FF00");
+        tile = new Tile(1, 2);
     }
 
     @Nested
