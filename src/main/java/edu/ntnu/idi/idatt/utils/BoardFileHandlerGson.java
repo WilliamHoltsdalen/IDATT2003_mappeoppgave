@@ -17,6 +17,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 
+/**
+ * <h3>FileHandler implementation for Board objects.</h3>
+ *
+ * <p>This class provides methods for reading and writing Board objects to and from JSON files.
+ * It uses the Gson library for serialization and deserialization.
+ */
 public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
@@ -94,9 +100,12 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       tileJson.addProperty(TILE_NEXT_TILE_ID_PROPERTY, tile.getNextTileId());
 
       if (tile.getLandAction() != null) {
-        actionJson.addProperty(TILE_ACTION_TYPE_PROPERTY, tile.getLandAction().getClass().getSimpleName());
-        actionJson.addProperty(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY, tile.getLandAction().getDestinationTileId());
-        actionJson.addProperty(TILE_ACTION_DESCRIPTION_PROPERTY, tile.getLandAction().getDescription());
+        actionJson.addProperty(TILE_ACTION_TYPE_PROPERTY, tile.getLandAction().getClass()
+            .getSimpleName());
+        actionJson.addProperty(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY, tile.getLandAction()
+            .getDestinationTileId());
+        actionJson.addProperty(TILE_ACTION_DESCRIPTION_PROPERTY, tile.getLandAction()
+            .getDescription());
         tileJson.add(TILE_ACTION_PROPERTY, actionJson);
       }
       tilesJsonArray.add(tileJson);
@@ -137,8 +146,10 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
         nextTileId = tileJsonObject.get(TILE_NEXT_TILE_ID_PROPERTY).getAsInt();
         JsonObject actionJsonObject = tileJsonObject.getAsJsonObject(TILE_ACTION_PROPERTY);
 
-        int destinationTileId = actionJsonObject.get(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY).getAsInt();
-        String actionDescription = actionJsonObject.get(TILE_ACTION_DESCRIPTION_PROPERTY).getAsString();
+        int destinationTileId = actionJsonObject.get(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY)
+            .getAsInt();
+        String actionDescription = actionJsonObject.get(TILE_ACTION_DESCRIPTION_PROPERTY)
+            .getAsString();
         tileAction = new LadderAction(destinationTileId, actionDescription);
       } catch (NullPointerException e) {
         // Todo: Handle null pointer exception if any of the tile properties are missing

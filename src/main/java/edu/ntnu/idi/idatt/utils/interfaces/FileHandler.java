@@ -12,7 +12,7 @@ import java.util.List;
 public interface FileHandler<T> {
 
   /**
-   * Reads the contents of a file and returns the file contents
+   * Reads the contents of a file and returns the file contents.
    *
    * @param filePath the path to the file
    * @return A list of the file contents

@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.utils;
 
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -10,9 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
-
-public class PlayerFileHandlerGson implements FileHandler<Player>{
+/**
+ * <h3>FileHandler implementation for Player objects.</h3>
+ *
+ * <p>This class provides methods for reading and writing Player objects to and from csv formatted
+ * files.
+ */
+public class PlayerFileHandlerGson implements FileHandler<Player> {
 
   @Override
   public List<Player> readFile(String path) throws IOException {

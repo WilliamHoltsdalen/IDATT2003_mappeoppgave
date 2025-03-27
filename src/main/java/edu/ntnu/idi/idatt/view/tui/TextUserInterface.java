@@ -185,7 +185,8 @@ public class TextUserInterface {
     while (!finished) {
       Player botPlayer = PlayerFactory.createBot(String.valueOf(botPlayers.size() + 1));
       botPlayers.add(botPlayer);
-      System.out.println("Added bot with name: '" + botPlayer.getName() + "' with color hex: " + botPlayer.getColorHex());
+      System.out.println("Added bot with name: '" + botPlayer.getName() + "' with color hex: "
+          + botPlayer.getColorHex());
 
       System.out.println("\nWould you like to add another bot? (y/n)");
       choice = InterfaceUtils.stringInput();

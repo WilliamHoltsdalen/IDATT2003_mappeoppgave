@@ -7,11 +7,11 @@ import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.util.List;
 
 /**
- * <h3> Validator class for arguments passed to model constructors and methods
+ * <h3> Validator class for arguments passed to model constructors and methods.</h3>
  */
 public class ArgumentValidator {
 
-  /** Private constructor to prevent instantiation */
+  /** Private constructor to prevent instantiation. */
   private ArgumentValidator() {
   }
 
@@ -69,14 +69,16 @@ public class ArgumentValidator {
    * Validates the argument for the getTile method in Board class.
    *
    * @param tileId the id of the tile to get
-   * @throws IllegalArgumentException if tileId is less than 0 or greater than or equal to the number of tiles on the board
+   * @throws IllegalArgumentException if tileId is less than 0 or greater than or equal to the
+   *         number of tiles on the board
    */
   public static void boardGetTileValidator(int tileId, int tileCount) {
     if (tileId < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
     }
     if (tileId >= tileCount) {
-      throw new IllegalArgumentException("Tile id must be less than the number of tiles on the board");
+      throw new IllegalArgumentException("Tile id must be less than the number of tiles on the "
+          + "board");
     }
   }
 
