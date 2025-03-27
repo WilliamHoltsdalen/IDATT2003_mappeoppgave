@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.controllers;
+package edu.ntnu.idi.idatt.controller;
 
 public class MenuController {
 
