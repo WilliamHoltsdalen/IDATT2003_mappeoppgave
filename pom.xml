@@ -6,8 +6,7 @@
 
   <groupId>edu.ntnu.idi.idatt</groupId>
   <artifactId>IDATT2003_mappeoppgave</artifactId>
-  <!-- TODO: Update version number on release -->
-  <version>1.0-SNAPSHOT</version>
+  <version>V2.0.0</version>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
@@ -79,8 +78,7 @@
         <version>0.0.8</version>
         <configuration>
           <!-- https://github.com/openjfx/javafx-maven-plugin -->
-          <!-- TODO: Add the main class of the application -->
-          <mainClass></mainClass>
+          <mainClass>edu.ntnu.idi.idatt.App</mainClass>
         </configuration>
       </plugin>
     </plugins>
