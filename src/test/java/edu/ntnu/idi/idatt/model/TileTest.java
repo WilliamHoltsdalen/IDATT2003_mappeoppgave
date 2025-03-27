@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * This class contains tests to verify the functionality of the Tile,
  * including positive and negative test cases.
  */
-public class TileTest {
+class TileTest {
   Tile tile;
   Player player;
 
@@ -23,8 +24,8 @@ public class TileTest {
    */
   @BeforeEach
   void setUp() {
-    tile = new Tile(1);
-    player = new Player("Test Player");
+    tile = new Tile(1, 2);
+    player = new Player("Test Player", "#00FF00");
   }
 
   @Nested
@@ -67,7 +68,7 @@ public class TileTest {
     @DisplayName("Test creating a tile with an invalid ID throws an exception.")
     @Test
     void testCreateTileWithInvalidId() {
-      assertThrows(IllegalArgumentException.class, () -> new Tile(-1));
+      assertThrows(IllegalArgumentException.class, () -> new Tile(-1, 1));
       }
 
     /**

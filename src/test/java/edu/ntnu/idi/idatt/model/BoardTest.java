@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  * This class contains tests to verify the functionality of the Board,
  * including positive and negative test cases.
  */
-public class BoardTest {
+class BoardTest {
     Board board;
 
     /**
@@ -22,7 +22,10 @@ public class BoardTest {
     @DisplayName("(SETUP) Create new board.")
     @BeforeEach
     void setUp() {
-        board = new Board(3, 3);
+        board = new Board("Test board", "This board is used for testing");
+        for (int i = 0; i <= 9; i++) {
+            board.addTile(new Tile(i, i + 1));
+        }
     }
 
     @Nested
@@ -67,15 +70,16 @@ public class BoardTest {
         }
 
         /**
-         * Tests that creating a board with invalid dimensions throws an exception.
-         * Asserts that an IllegalArgumentException is thrown for invalid dimensions.
+         * Tests that creating a board with invalid arguments throws an exception.
+         * Asserts that an IllegalArgumentException is thrown for invalid arguments.
          */
-        @DisplayName("Test creating a board with invalid dimensions should throw an exception.")
+        @DisplayName("Test creating a board with invalid arguments should throw an exception.")
         @Test
-        void testCreateBoardWithInvalidDimensions() {
-            assertThrows(IllegalArgumentException.class, () -> new Board(0, 0));
-            assertThrows(IllegalArgumentException.class, () -> new Board(-1, 3));
-            assertThrows(IllegalArgumentException.class, () -> new Board(3, -1));
+        void testCreateBoardWithInvalidArguments() {
+            assertThrows(IllegalArgumentException.class, () -> new Board(null, "Test board description"));
+            assertThrows(IllegalArgumentException.class, () -> new Board("", "Test board description"));
+            assertThrows(IllegalArgumentException.class, () -> new Board("Test board", null));
+            assertThrows(IllegalArgumentException.class, () -> new Board("Test board", ""));
         }
     }
 }
