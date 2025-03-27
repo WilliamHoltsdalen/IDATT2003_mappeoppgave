@@ -10,7 +10,6 @@ public class Die {
 
   public Die() {
     random = new Random();
-    roll();
   }
 
   public int getValue() {
