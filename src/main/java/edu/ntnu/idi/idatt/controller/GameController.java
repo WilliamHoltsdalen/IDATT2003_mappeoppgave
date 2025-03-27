@@ -4,15 +4,22 @@ import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.BoardGame;
+import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <h3>GameController class</h3>
+ *
+ * <p>This class is responsible for managing the game logic and state. It provides methods for
+ * loading and saving board variants and players, as well as for handling player moves and updating
+ * the game state.
+ */
 public class GameController {
   private BoardGame boardGame;
   private final Map<Integer, Board> boardVariants;
@@ -214,16 +221,18 @@ public class GameController {
   /**
    * Finds the next tile for the given player based on the dice roll. There are two unique cases
    * for calculating the next tile.
-   * <p>
-   * In the following cases, the term 'expected tile' refers to the tile that the player is on, plus
-   * the dice roll. (e.g. the player is on tile 20, with a dice roll of 3, the expected tile is 23)
+   *
+   * <p>In the following cases, the term 'expected tile' refers to the tile that the player is on,
+   * plus the dice roll. (e.g. the player is on tile 20, with a dice roll of 3, the expected tile
+   * is 23).
    * <ul>
-   *   <li>If the id of the 'expected tile' is less than or equal to the board's tile count, the next tile is
-   *       the 'expected tile'.
+   *   <li>If the id of the 'expected tile' is less than or equal to the board's tile count, the
+   *       next tile is the 'expected tile'.
    *   <li>If the id of the 'expected tile' is greater than the board's tile count, the next tile
    *       is set as (tileCount - overshoot). E.g. if the player is on tile 85 with a dice roll of
    *       9 and the board has a tile count of 90, the next tile is 86.
    * </ul>
+   *
    * @param player The player to find the next tile for
    * @param diceRoll The value of the dice roll to use in the calculation.
    * @return The next tile for the player, meaning the tile the specified player will move to.
@@ -244,6 +253,7 @@ public class GameController {
   /**
    * Handles tile actions for the given player. Check if the player's current tile has a tile action
    * and if so, perform the action.
+   *
    * @param player The player to handle the tile action for.
    */
   private void handleTileAction(Player player) {

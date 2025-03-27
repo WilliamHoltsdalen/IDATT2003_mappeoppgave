@@ -5,8 +5,7 @@ import java.util.Scanner;
 /**
  * <h3>Text User Interface Utility Class</h3>
  *
- * <p>
- * Utility class for handling console input and output in the text user interface.
+ * <p>Utility class for handling console input and output in the text user interface.
  * This class provides methods for printing messages, reading user input, and managing the game
  * interface.
  */
