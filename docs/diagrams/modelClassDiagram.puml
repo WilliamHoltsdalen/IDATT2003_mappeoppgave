@@ -1,0 +1,146 @@
+@startuml
+
+top to bottom direction
+skinparam linetype ortho
+
+class ArgumentValidator {
+  - ArgumentValidator():
+  + boardSetnameValidator(String): void
+  + boardGameSetBoardValidator(Board): void
+  + boardGameSetCurrentPlayerValidator(Player): void
+  + diceAddDiceValidator(int): void
+  + playerSetNameValidator(String): void
+  + boardSetDescriptionValidator(String): void
+  + diceRollSingleDieValidator(int, int): void
+  + boardGameSetPlayersValidator(List<Player>): void
+  + tileSetLandActionValidator(TileAction): void
+  + dieSetValueValidator(int): void
+  + playerPlaceOnTileValidator(Tile): void
+  + boardGetTileValidator(int, int): void
+  + boardPopulateTilesValidator(int, int): void
+  + ladderActionPerformValidator(Player, Board): void
+  + boardGameAddPlayersValidator(List<Player>, int): void
+  + playerSetColorHexValidator(String): void
+  + tileSetNextTileIdValidator(int, int): void
+  + boardGameCreateDiceValidator(int): void
+  + tileSetTileIdValidator(int): void
+  + diceGetDieValueValidator(int, int): void
+  + boardAddTileValidator(Tile): void
+  + ladderActionSetDestinationTileIdValidator(int): void
+  + ladderActionSetDescriptionValidator(String): void
+}
+class Board {
+  + Board(String, String):
+  - name: String
+  - description: String
+  - tiles: Map<Integer, Tile>
+  + getDescription(): String
+  + getTileCount(): int
+  - setName(String): void
+  + getName(): String
+  + addTile(Tile): void
+  - setDescription(String): void
+  + getTiles(): List<Tile>
+  + getTile(int): Tile
+}
+class BoardGame {
+  + BoardGame(Board, List<Player>, int):
+  - board: Board
+  - observers: List<BoardGameObserver>
+  - players: List<Player>
+  - currentPlayer: Player
+  - dice: Dice
+  - roundNumber: int
+  + getPlayers(): List<Player>
+  + setBoard(Board): void
+  + setPlayers(List<Player>): void
+  + addObserver(BoardGameObserver): void
+  + notifyPlayerMoved(Player, int): void
+  + getBoard(): Board
+  - createDice(int): void
+  + setCurrentPlayer(Player): void
+  + getObservers(): List<BoardGameObserver>
+  + getDice(): Dice
+  + getWinner(): Player
+  + notifyGameStateChanged(String): void
+  + notifyGameFinished(Player): void
+  + getCurrentPlayer(): Player
+  + incrementRoundNumber(): void
+  - addPlayers(List<Player>): void
+  + removeObserver(BoardGameObserver): void
+  + getRoundNumber(): int
+}
+class Dice {
+  + Dice(int):
+  - diceList: List<Die>
+  + getDieValue(int): int
+  + getNumberOfDice(): int
+  + rollDice(): void
+  - addDice(int): void
+  + rollSingleDie(int): void
+  + getTotalValue(): int
+  + getDiceList(): List<Die>
+}
+class Die {
+  + Die():
+  - random: Random
+  - lastRolledValue: int
+  + roll(): void
+  - setValue(int): void
+  + getValue(): int
+}
+class LadderAction {
+  + LadderAction(int, String):
+  - destinationTileId: int
+  - description: String
+  + getDestinationTileId(): int
+  + setDescription(String): void
+  + getDescription(): String
+  + setDestinationTileId(int): void
+  + perform(Player, Board): void
+}
+class Player {
+  + Player(String, String):
+  - currentTile: Tile
+  - name: String
+  - colorHex: String
+  + getName(): String
+  + setName(String): void
+  + setColorHex(String): void
+  + getColorHex(): String
+  + move(int): void
+  + getCurrentTile(): Tile
+  + placeOnTile(Tile): void
+}
+class Tile {
+  + Tile(int, int, TileAction):
+  + Tile(int, int):
+  - tileId: int
+  - landAction: TileAction
+  - nextTileId: int
+  + setLandAction(TileAction): void
+  + getTileId(): int
+  + getLandAction(): TileAction
+  - setTileId(int): void
+  - setNextTileId(int): void
+  + getNextTileId(): int
+}
+interface TileAction << interface >> {
+  + perform(Player, Board): void
+  + getDestinationTileId(): int
+  + getDescription(): String
+  + setDescription(String): void
+  + setDestinationTileId(int): void
+}
+
+Board             "1" *-[#595959,plain]-> "tiles\n*" Tile
+BoardGame         "1" *-[#595959,plain]-> "board\n1" Board
+BoardGame         "1" *-[#595959,plain]-> "dice\n1" Dice
+BoardGame          -[#595959,dashed]->  Dice              : "«create»"
+BoardGame         "1" *-[#595959,plain]-> "players\n*" Player
+Dice              "1" *-[#595959,plain]-> "diceList\n*" Die
+Dice               -[#595959,dashed]->  Die               : "«create»"
+LadderAction       -[#008200,dashed]-^  TileAction
+Player            "1" *-[#595959,plain]-> "currentTile\n1" Tile
+Tile              "1" *-[#595959,plain]-> "landAction\n1" TileAction
+@enduml
