@@ -2,17 +2,23 @@ package edu.ntnu.idi.idatt.model;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.dieSetValueValidator;
 
-import edu.ntnu.idi.idatt.model.utils.DiceUtils;
+import java.util.Random;
 
 public class Die {
+  private final Random random;
   private int lastRolledValue;
+
+  public Die() {
+    random = new Random();
+    roll();
+  }
 
   public int getValue() {
     return lastRolledValue;
   }
 
   public void roll() {
-    setValue(DiceUtils.randomDieRoll());
+    setValue(random.nextInt(6) + 1);
   }
 
   private void setValue(int value) {
