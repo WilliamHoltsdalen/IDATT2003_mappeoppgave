@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+skinparam actor {
+    style awesome
+    BackgroundColor #0077AA
+}
+
+actor "User" as User
+
+rectangle "BoardGame Application" {
+  usecase "Load Board Variant" as UC1
+  usecase "Load Players from CSV" as UC2
+  usecase "Create New Player/Bot" as UC3
+  usecase "Start Game" as UC4
+  usecase "Roll Dice" as UC5
+  usecase "Move Player" as UC6
+  usecase "Perform Tile Action" as UC7
+  usecase "Display Game State" as UC8
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+
+UC4 --> UC5
+UC4 --> UC6
+UC4 --> UC7
+UC8 ..> UC4 : <<include>>
+
+@enduml
