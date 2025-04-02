@@ -5,12 +5,12 @@ package edu.ntnu.idi.idatt.controller;
  *
  * <p>This class is not yet implemented.
  */
-public class MenuController {
+public class MainMenuController {
 
   /**
    * Constructor for MenuController class.
    */
-  public MenuController() {
+  public MainMenuController() {
     init();
   }
 
