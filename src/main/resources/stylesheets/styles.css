@@ -4,6 +4,7 @@
   -button-dark: #4d4d4d;
   -button-dark-hover: #2e2e2e;
   -button-disabled: #939393;
+  -gray-border: #D9D9D9;
 }
 
 .app-view {
@@ -15,14 +16,25 @@
   -fx-padding: 20;
   -fx-spacing: 20;
   -fx-alignment: center;
-  -fx-max-width: 35em;
-  -fx-max-height: 30em;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
   -fx-background-radius: 18;
+}
+
+.main-menu-h-box {
+  -fx-alignment: center;
+  -fx-spacing: 35;
 }
 
 .main-menu-header-box {
   -fx-alignment: center;
-  -fx-spacing: 20;
+  -fx-spacing: 30;
+}
+
+.main-menu-spacer {
+  -fx-pref-width: 3px;
+  -fx-background-color: -gray-border;
+  -fx-min-height: 370px;
 }
 
 .main-menu-more-options-menu {
@@ -34,19 +46,26 @@
   -fx-font-weight: bold;
 }
 
+.main-menu-selection-box-title {
+  -fx-font-size: 20px;
+  -fx-alignment: center;
+}
+
+.main-menu-player-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+}
+
 .main-menu-player-list-box {
   -fx-alignment: center;
-  -fx-padding: 10;
   -fx-spacing: 10;
+  -fx-min-width: 280px;
 }
 
 .main-menu-player-row {
   -fx-alignment: center-left;
-  -fx-max-width: 250px;
+  -fx-max-width: 140x;
   -fx-spacing: 10;
-}
-
-.main-menu-player-circle {
 }
 
 .main-menu-delete-player-button {
@@ -73,6 +92,33 @@
 
 .main-menu-add-player-button:hover {
   -fx-background-color: -button-dark-hover;
+}
+
+.main-menu-board-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+  -fx-max-width: 250px;
+}
+
+.main-menu-board-selection-carousel {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: -gray-border;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-padding: 15 15 10 15;
+  -fx-spacing: 10;
+}
+
+.main-menu-board-selection-image-view {
+  -fx-fit-width: 250px;
+  -fx-preserve-ratio: true;
+}
+
+.main-menu-board-selection-carousel-controls {
+  -fx-font-size: 16px;
+  -fx-alignment: center;
+  -fx-spacing: 10;
 }
 
 Button {

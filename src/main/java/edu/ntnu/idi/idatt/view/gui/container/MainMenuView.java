@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.gui.container;
 
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
 import java.io.File;
@@ -10,7 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -21,10 +25,14 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class MainMenuView extends VBox {
   private Runnable onStartGame;
   private Consumer<String> onImportPlayers;
+  private final Text playerSelectionTitle;
+  private VBox playerSelectionBox;
   private final List<MainMenuPlayerRow> mainMenuPlayerRows;
-  private final HBox headerBox;
   private final VBox playerListBox;
   private final HBox addPlayerButtonsBox;
+  private final VBox boardSelectionBox;
+  private final ImageView boardImageView;
+  private Board selectedBoard;
   private final Button startGameButton;
 
   /**
@@ -32,13 +40,18 @@ public class MainMenuView extends VBox {
    */
   public MainMenuView() {
     this.mainMenuPlayerRows = new ArrayList<>();
-    this.headerBox = new HBox();
+    this.selectedBoard = null;
+
+    this.playerSelectionTitle = new Text();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
-    this.startGameButton = new Button();
+    this.boardImageView = new ImageView();
+    this.startGameButton = getStartGameButton();
+    this.playerSelectionBox = new VBox();
+    this.playerSelectionBox = getPlayerSelectionBox();
+    this.boardSelectionBox = getBoardSelectionBox();
 
     this.getStyleClass().add("main-menu-view");
-
     initialize();
   }
 
@@ -51,22 +64,37 @@ public class MainMenuView extends VBox {
     return this;
   }
 
-  /**
-   * Initializes the main menu view.
-   */
   private void initialize() {
+    Region menuSpacer = new Region();
+    menuSpacer.getStyleClass().add("main-menu-spacer");
+
+    HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
+    hBox.getStyleClass().add("main-menu-h-box");
+    setBoardSelection(null);
+    this.getChildren().setAll(getHeaderBox(), hBox, startGameButton);
+  }
+
+  private HBox getHeaderBox() {
     Text title = new Text("Main Menu");
     title.getStyleClass().add("main-menu-title");
 
     MenuButton moreOptionsMenu = new MenuButton("", new FontIcon("fas-bars"));
     moreOptionsMenu.getStyleClass().add("main-menu-more-options-menu");
     MenuItem importPlayersMenuItem = new MenuItem("Import players");
+
     importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
     moreOptionsMenu.getItems().addAll(importPlayersMenuItem);
     importPlayersMenuItem.setOnAction(event -> handleImportPlayersButtonAction());
 
-    headerBox.getChildren().setAll(title, moreOptionsMenu);
+    HBox headerBox = new HBox(title, moreOptionsMenu);
     headerBox.getStyleClass().add("main-menu-header-box");
+
+    return headerBox;
+  }
+
+  private VBox getPlayerSelectionBox() {
+    playerSelectionTitle.setText("Select players");
+    playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
 
     playerListBox.getStyleClass().add("main-menu-player-list-box");
     addPlayerRow("Player 1", Color.RED, false);
@@ -85,10 +113,39 @@ public class MainMenuView extends VBox {
         .add("main-menu-add-player-button"));
     addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
 
-    startGameButton.setText("Start Game");
-    startGameButton.setOnAction(event -> handleStartGameButtonAction());
+    VBox vBox = new VBox(playerSelectionTitle, playerListBox, addPlayerButtonsBox, startGameButton);
+    vBox.getStyleClass().add("main-menu-player-selection");
 
-    this.getChildren().setAll(headerBox, playerListBox, addPlayerButtonsBox, startGameButton);
+    return vBox;
+  }
+
+  private VBox getBoardSelectionBox() {
+    Text title = new Text("Select a board");
+    title.getStyleClass().add("main-menu-selection-box-title");
+
+    boardImageView.getStyleClass().add("main-menu-board-selection-image-view");
+
+    Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
+    previousButton.getStyleClass().add("icon-only-button");
+    Text boardTitle = new Text("Classic (90 tiles)");
+    Button nextButton = new Button("", new FontIcon("fas-chevron-right"));
+    nextButton.getStyleClass().add("icon-only-button");
+
+    HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
+    carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
+
+    VBox carousel = new VBox(boardImageView, carouselControls);
+    carousel.getStyleClass().add("main-menu-board-selection-carousel");
+
+    VBox vBox = new VBox(title, carousel);
+    vBox.getStyleClass().add("main-menu-board-selection");
+    return vBox;
+  }
+
+  private Button getStartGameButton() {
+    Button button = new Button("Start Game");
+    button.setOnAction(event -> handleStartGameButtonAction());
+    return button;
   }
 
   /**
@@ -124,9 +181,9 @@ public class MainMenuView extends VBox {
    */
   private void updateControls() {
     if (mainMenuPlayerRows.size() == 5) {
-      this.getChildren().remove(addPlayerButtonsBox);
+      playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
     } else if (mainMenuPlayerRows.size() < 5) {
-      this.getChildren().setAll(headerBox, playerListBox, addPlayerButtonsBox, startGameButton);
+      playerSelectionBox.getChildren().setAll(playerSelectionTitle, playerListBox, addPlayerButtonsBox);
     }
 
     if (mainMenuPlayerRows.size() < 2) {
@@ -134,6 +191,12 @@ public class MainMenuView extends VBox {
     } else {
       enableStartGameButton();
     }
+  }
+
+  private void setBoardSelection(Board board) {
+    Image image = new Image("/images/Classic90.png");
+    boardImageView.setImage(image);
+    selectedBoard = board;
   }
 
   /**
