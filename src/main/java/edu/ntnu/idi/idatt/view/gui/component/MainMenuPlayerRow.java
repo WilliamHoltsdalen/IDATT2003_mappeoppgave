@@ -7,13 +7,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class PlayerRow extends HBox {
+public class MainMenuPlayerRow extends HBox {
   TextField nameTextField;
   Circle playerCircle;
   Button deleteButton;
   boolean removable;
 
-  public PlayerRow(String defaultName, Color color, boolean removable) {
+  public MainMenuPlayerRow(String defaultName, Color defaultColor, boolean removable) {
+    this.defaultColor = defaultColor;
     this.removable = removable;
     this.getStyleClass().add("main-menu-player-row");
     initialize(defaultName, color);

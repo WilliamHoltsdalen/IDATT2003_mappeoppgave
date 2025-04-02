@@ -1,7 +1,7 @@
-package edu.ntnu.idi.idatt.view.gui;
+package edu.ntnu.idi.idatt.view.gui.container;
 
 import edu.ntnu.idi.idatt.controller.MainMenuController;
-import edu.ntnu.idi.idatt.view.gui.component.PlayerRow;
+import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -9,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -17,21 +16,20 @@ import javafx.util.Duration;
 
 public class MainMenuView extends VBox {
   private MainMenuController controller;
-  private final List<PlayerRow> playerRows;
+  private final List<MainMenuPlayerRow> mainMenuPlayerRows;
   private final Text title;
   private final VBox playerListBox;
   private final HBox addPlayerButtonsBox;
   private final Button startGameButton;
 
   public MainMenuView() {
-    this.playerRows = new ArrayList<>();
+    this.mainMenuPlayerRows = new ArrayList<>();
     this.title = new Text();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
     this.startGameButton = new Button();
 
     this.getStyleClass().add("main-menu-view");
-    VBox.setVgrow(this, Priority.NEVER);
 
     initialize();
   }
@@ -50,12 +48,12 @@ public class MainMenuView extends VBox {
 
     Button addPlayerButton = new Button("Add Player");
     addPlayerButton.setOnAction(event -> addPlayerRow(
-        "Player " + (playerRows.size() + 1), Color.BLUE, true));
+        "Player " + (mainMenuPlayerRows.size() + 1), Color.BLUE, true));
     addPlayerButton.getStyleClass().add("main-menu-add-player-button");
 
     Button addBotButton = new Button("Add Bot");
     addBotButton.setOnAction(event -> addPlayerRow(
-        "Bot " + (playerRows.size() + 1), Color.PURPLE, true));
+        "Bot " + (mainMenuPlayerRows.size() + 1), Color.PURPLE, true));
     addBotButton.getStyleClass().add("main-menu-add-player-button");
 
     addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
@@ -68,29 +66,29 @@ public class MainMenuView extends VBox {
   }
 
   private void addPlayerRow(String defaultName, Color color, boolean removable) {
-    PlayerRow playerRow = new PlayerRow(defaultName, color, removable);
-    playerRow.setRunnable(() -> removePlayerRow(playerRow));
-    playerRows.add(playerRow);
-    playerListBox.getChildren().add(playerRow);
+    MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, removable);
+    mainMenuPlayerRow.setRunnable(() -> removePlayerRow(mainMenuPlayerRow));
+    mainMenuPlayerRows.add(mainMenuPlayerRow);
+    playerListBox.getChildren().add(mainMenuPlayerRow);
 
     updateControls();
   }
 
-  private void removePlayerRow(PlayerRow playerRow) {
-    playerRows.remove(playerRow);
-    playerListBox.getChildren().remove(playerRow);
+  private void removePlayerRow(MainMenuPlayerRow mainMenuPlayerRow) {
+    mainMenuPlayerRows.remove(mainMenuPlayerRow);
+    playerListBox.getChildren().remove(mainMenuPlayerRow);
 
     updateControls();
   }
 
   private void updateControls() {
-    if (playerRows.size() == 5) {
+    if (mainMenuPlayerRows.size() == 5) {
       this.getChildren().remove(addPlayerButtonsBox);
-    } else if (playerRows.size() < 5) {
+    } else if (mainMenuPlayerRows.size() < 5) {
       this.getChildren().setAll(title, playerListBox, addPlayerButtonsBox, startGameButton);
     }
 
-    if (playerRows.size() == 1) {
+    if (mainMenuPlayerRows.size() == 1) {
       disableStartGameButton();
     } else {
       enableStartGameButton();
@@ -115,7 +113,7 @@ public class MainMenuView extends VBox {
     return event -> System.out.println("Start game");
   }
 
-  public List<PlayerRow> getPlayerRows() {
-    return playerRows;
+  public List<MainMenuPlayerRow> getPlayerRows() {
+    return mainMenuPlayerRows;
   }
 }
