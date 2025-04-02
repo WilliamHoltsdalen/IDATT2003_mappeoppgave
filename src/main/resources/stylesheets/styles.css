@@ -1,0 +1,38 @@
+.app-view {
+  -fx-background-color: #2e7ecb;
+}
+
+.main-menu-view {
+  -fx-background-color: white;
+  -fx-padding: 20;
+  -fx-spacing: 20;
+  -fx-alignment: center;
+  -fx-max-width: 35em;
+  -fx-max-height: 30em;
+  -fx-background-radius: 10;
+}
+
+.main-menu-title {
+  -fx-font-size: 24px;
+  -fx-font-weight: bold;
+}
+
+.player-list-box {
+  -fx-alignment: center;
+  -fx-padding: 10;
+  -fx-spacing: 10;
+}
+
+.main-menu-add-player-buttons-box {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.player-row {
+  -fx-alignment: center-left;
+  -fx-max-width: 250px;
+  -fx-spacing: 10;
+}
+
+
+
