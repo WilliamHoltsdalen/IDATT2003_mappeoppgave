@@ -1,51 +1,19 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.BoardGame;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * <h3>GameController class</h3>
- *
- * <p>This class is responsible for managing the game logic and state. It provides methods for
- * loading and saving board variants and players, as well as for handling player moves and updating
- * the game state.
- */
 public class GameController {
   private BoardGame boardGame;
-  private final Map<Integer, Board> boardVariants;
 
-  /**
-   * Constructor for GameController.
-   *
-   * <p>Initializes the controller by calling the {@link #initController()} method. The available
-   * board variants are loaded from the json files at the given paths, by calling the
-   * {@link #loadBoardVariants(List)} method.
-   */
-  public GameController() {
-    this.boardVariants = new HashMap<>();
+  public GameController(Board board, List<Player> players) {
 
-    initController();
-    loadBoardVariants(List.of("src/main/resources/textfiles/ladderBoard.json"));
-  }
-
-  /**
-   * Returns a map of available board variants, where the key is the index of the board variant and
-   * the value is the board object itself.
-   *
-   * @return A map of available board variants.
-   */
-  public Map<Integer, Board> getBoardVariants() {
-    return this.boardVariants;
+    initialize(board, players);
   }
 
   /**
@@ -102,90 +70,18 @@ public class GameController {
     return this.boardGame.getCurrentPlayer();
   }
 
-  /**
-   * Initializes the controller by creating a new BoardGame instance. The players are set to an
-   * empty list, and the board variant is set to the classic 90 tile chutes and ladders board from
-   * the {@link BoardFactory} class.
-   *
-   * @see BoardFactory#createBoard(String)
-   */
-  public void initController() {
+  public void initialize(Board board, List<Player> players) {
     try {
-      Board board = BoardFactory.createBoard("classic");
-      List<Player> players = List.of();
       this.boardGame = new BoardGame(board, players, 2);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
     }
-  }
 
-  /**
-   * Initializes the game by placing all the players on the 0th tile, and setting the current player
-   * as the first player in the list.
-   */
-  public void initGame() {
     for (Player player : this.boardGame.getPlayers()) {
       player.placeOnTile(this.boardGame.getBoard().getTile(0));
     }
 
     this.boardGame.setCurrentPlayer(this.boardGame.getPlayers().getFirst());
-  }
-
-  /**
-   * Loads the available board variants from the given json files, and adds them to the
-   * {@link #boardVariants} map.
-   *
-   * @see BoardFactory#createBoard(String)
-   * @param boardFilePaths The paths to the json files containing the board variants.
-   */
-  private void loadBoardVariants(List<String> boardFilePaths) {
-    this.boardVariants.put(1, BoardFactory.createBoard("Classic"));
-    this.boardVariants.put(2, BoardFactory.createBoard("Teleporting"));
-
-    if (boardFilePaths.isEmpty()) {
-      return;
-    }
-
-    try {
-      for (String boardFilePath : boardFilePaths) {
-        int variantIndex = this.boardVariants.size() + 1;
-        Board board = BoardFactory.createBoardFromFile(boardFilePath);
-        this.boardVariants.put(variantIndex, board);
-      }
-    } catch (IOException | IllegalArgumentException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Sets the board variant to the one with the given index, by calling the appropriate method in
-   * the {@link BoardGame} class.
-   *
-   * @see BoardGame#setBoard(Board)
-   * @param variantIndex The index of the board variant in the {@link #boardVariants} map to set.
-   */
-  public void setBoardVariant(int variantIndex) {
-    if (!this.boardVariants.containsKey(variantIndex)) {
-      return;
-    }
-
-    this.boardGame.setBoard(this.boardVariants.get(variantIndex));
-  }
-
-  /**
-   * Sets the players in the {@link #boardGame} object to the given list of players. If the list
-   * is null or empty, an {@link IllegalArgumentException} is thrown. After setting the players,
-   * the game is initialized using the {@link #initGame()} method.
-   *
-   * @see BoardGame#setPlayers(List)
-   * @param players The list of players to set.
-   */
-  public void setPlayers(List<Player> players) {
-    if (players == null) {
-      throw new IllegalArgumentException("List of players cannot be null");
-    }
-    this.boardGame.setPlayers(players);
-    initGame();
   }
 
   /**

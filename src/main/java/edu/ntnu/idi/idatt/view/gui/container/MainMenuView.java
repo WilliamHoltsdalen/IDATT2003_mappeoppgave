@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.gui.container;
 
+import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
@@ -23,16 +24,23 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MainMenuView extends VBox {
-  private Runnable onStartGame;
   private Consumer<String> onImportPlayers;
-  private final Text playerSelectionTitle;
+  private Consumer<String> onImportBoard;
+  private Runnable onStartGame;
+  private Runnable onNextBoard;
+  private Runnable onPrevBoard;
+
   private VBox playerSelectionBox;
+  private final Text playerSelectionTitle;
   private final List<MainMenuPlayerRow> mainMenuPlayerRows;
-  private final VBox playerListBox;
   private final HBox addPlayerButtonsBox;
-  private final VBox boardSelectionBox;
+  private final VBox playerListBox;
+
+  private VBox boardSelectionBox;
   private final ImageView boardImageView;
+  private final Text boardTitle;
   private Board selectedBoard;
+
   private final Button startGameButton;
 
   /**
@@ -40,16 +48,14 @@ public class MainMenuView extends VBox {
    */
   public MainMenuView() {
     this.mainMenuPlayerRows = new ArrayList<>();
-    this.selectedBoard = null;
-
     this.playerSelectionTitle = new Text();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
     this.boardImageView = new ImageView();
+    this.boardTitle = new Text();
     this.startGameButton = getStartGameButton();
     this.playerSelectionBox = new VBox();
-    this.playerSelectionBox = getPlayerSelectionBox();
-    this.boardSelectionBox = getBoardSelectionBox();
+    this.boardSelectionBox = new VBox();
 
     this.getStyleClass().add("main-menu-view");
     initialize();
@@ -64,13 +70,26 @@ public class MainMenuView extends VBox {
     return this;
   }
 
+  /**
+   * Returns the list of main menu player rows.
+   *
+   * @return The list of main menu player rows.
+   */
+  public List<MainMenuPlayerRow> getPlayerRows() {
+    return mainMenuPlayerRows;
+  }
+
   private void initialize() {
+    setSelectedBoard(BoardFactory.createBoard("Classic"));
+
     Region menuSpacer = new Region();
     menuSpacer.getStyleClass().add("main-menu-spacer");
 
+    this.playerSelectionBox = getPlayerSelectionBox();
+    this.boardSelectionBox = getBoardSelectionBox();
+
     HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
     hBox.getStyleClass().add("main-menu-h-box");
-    setBoardSelection(null);
     this.getChildren().setAll(getHeaderBox(), hBox, startGameButton);
   }
 
@@ -78,13 +97,18 @@ public class MainMenuView extends VBox {
     Text title = new Text("Main Menu");
     title.getStyleClass().add("main-menu-title");
 
-    MenuButton moreOptionsMenu = new MenuButton("", new FontIcon("fas-bars"));
+    MenuButton moreOptionsMenu = new MenuButton("Import");
     moreOptionsMenu.getStyleClass().add("main-menu-more-options-menu");
-    MenuItem importPlayersMenuItem = new MenuItem("Import players");
 
+    MenuItem importPlayersMenuItem = new MenuItem("Import players");
     importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
     moreOptionsMenu.getItems().addAll(importPlayersMenuItem);
     importPlayersMenuItem.setOnAction(event -> handleImportPlayersButtonAction());
+
+    MenuItem importBoardMenuItem = new MenuItem("Import board");
+    importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
+    moreOptionsMenu.getItems().addAll(importBoardMenuItem);
+    importBoardMenuItem.setOnAction(event -> handleImportBoardButtonAction());
 
     HBox headerBox = new HBox(title, moreOptionsMenu);
     headerBox.getStyleClass().add("main-menu-header-box");
@@ -127,9 +151,13 @@ public class MainMenuView extends VBox {
 
     Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
     previousButton.getStyleClass().add("icon-only-button");
-    Text boardTitle = new Text("Classic (90 tiles)");
+    previousButton.setOnAction(event -> onPrevBoard.run());
+
+    boardTitle.setText(selectedBoard.getName());
+
     Button nextButton = new Button("", new FontIcon("fas-chevron-right"));
     nextButton.getStyleClass().add("icon-only-button");
+    nextButton.setOnAction(event -> onNextBoard.run());
 
     HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
     carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
@@ -193,12 +221,6 @@ public class MainMenuView extends VBox {
     }
   }
 
-  private void setBoardSelection(Board board) {
-    Image image = new Image("/images/Classic90.png");
-    boardImageView.setImage(image);
-    selectedBoard = board;
-  }
-
   /**
    * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum
    * of two players are required to start the game.
@@ -221,6 +243,15 @@ public class MainMenuView extends VBox {
   }
 
   /**
+   * Sets the callback for the 'start game' button.
+   *
+   * @param onStartGame The callback to set.
+   */
+  public void setOnStartGame(Runnable onStartGame) {
+    this.onStartGame = onStartGame;
+  }
+
+  /**
    * Handles the action of the 'start game' button by calling the onStartGame callback if it is
    * not null.
    */
@@ -231,8 +262,17 @@ public class MainMenuView extends VBox {
   }
 
   /**
+   * Sets the callback for the 'import players' button.
+   *
+   * @param onImportPlayers The callback to set.
+   */
+  public void setOnImportPlayers(Consumer<String> onImportPlayers) {
+    this.onImportPlayers = onImportPlayers;
+  }
+
+  /**
    * Handles the action of the 'import players' button by calling the onImportPlayers callback if
-   * it is not null. If the file is null, it does nothing.
+   * it is not null. If the chosen file is null, it does nothing.
    */
   private void handleImportPlayersButtonAction() {
     if (onImportPlayers == null) {
@@ -247,11 +287,11 @@ public class MainMenuView extends VBox {
   }
 
   /**
-   * Imports the players from the given list of players and adds them to the main menu.
+   * Sets the players in the menu to the given list of players.
    *
    * @param players The list of players to import.
    */
-  public void importPlayers(List<Player> players) {
+  public void setPlayers(List<Player> players) {
     mainMenuPlayerRows.clear();
     playerListBox.getChildren().clear();
     players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()),
@@ -259,29 +299,55 @@ public class MainMenuView extends VBox {
   }
 
   /**
-   * Sets the callback for the 'start game' button.
+   * Sets the callback for the 'import board' button.
    *
-   * @param onStartGame The callback to set.
+   * @param onImportBoard The callback to set.
    */
-  public void setOnStartGame(Runnable onStartGame) {
-    this.onStartGame = onStartGame;
+  public void setOnImportBoard(Consumer<String> onImportBoard) {
+    this.onImportBoard = onImportBoard;
   }
 
   /**
-   * Sets the callback for the 'import players' button.
-   *
-   * @param onImportPlayers The callback to set.
+   * Handles the action of the 'import board' button by calling the onImportBoard callback if it is
+   * not null. If the chosen file is null, it does nothing.
    */
-  public void setOnImportPlayers(Consumer<String> onImportPlayers) {
-    this.onImportPlayers = onImportPlayers;
+  private void handleImportBoardButtonAction() {
+    if (onImportBoard == null) {
+      return;
+    }
+    File file = new FileChooser().showOpenDialog(null);
+    if (file == null) {
+      return;
+    }
+    onImportBoard.accept(file.getAbsolutePath());
   }
 
   /**
-   * Returns the list of main menu player rows.
+   * Sets the selected board in the main menu to the given board object.
    *
-   * @return The list of main menu player rows.
+   * @param board The board object to set.
    */
-  public List<MainMenuPlayerRow> getPlayerRows() {
-    return mainMenuPlayerRows;
+  public void setSelectedBoard(Board board) {
+    selectedBoard = board;
+    boardImageView.setImage(new Image("/images/Classic90.png"));
+    boardTitle.setText(board.getName());
+  }
+
+  /**
+   * Sets the callback for the 'next board' button.
+   *
+   * @param onNextBoard The callback to set.
+   */
+  public void setOnNextBoard(Runnable onNextBoard) {
+    this.onNextBoard = onNextBoard;
+  }
+
+  /**
+   * Sets the callback for the 'previous board' button.
+   *
+   * @param onPrevBoard The callback to set.
+   */
+  public void setOnPrevBoard(Runnable onPrevBoard) {
+    this.onPrevBoard = onPrevBoard;
   }
 }

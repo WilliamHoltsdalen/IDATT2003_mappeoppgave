@@ -1,13 +1,23 @@
 package edu.ntnu.idi.idatt.controller;
 
+import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
 import edu.ntnu.idi.idatt.view.gui.container.AppView;
 import edu.ntnu.idi.idatt.view.gui.container.MainMenuView;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainMenuController {
+  private static final int DEFAULT_BOARD_INDEX = 1;
+  private final Map<Integer, Board> boardVariants;
+  private int currentBoardIndex;
+
   private final AppView appView;
   private final MainMenuView mainMenuView;
 
@@ -15,18 +25,26 @@ public class MainMenuController {
    * Constructor for MenuController class.
    */
   public MainMenuController(AppView appView, MainMenuView mainMenuView) {
+    this.boardVariants = new HashMap<>();
+    currentBoardIndex = DEFAULT_BOARD_INDEX;
     this.appView = appView;
     this.mainMenuView = mainMenuView;
 
-    init();
+    initialize();
   }
 
   /**
    * Initializes the main menu controller.
    */
-  private void init() {
+  private void initialize() {
     mainMenuView.setOnStartGame(this::handleStartGame);
     mainMenuView.setOnImportPlayers(this::loadPlayersFromFile);
+    mainMenuView.setOnImportBoard(this::loadBoardFromFile);
+    mainMenuView.setOnNextBoard(this::handleNextBoard);
+    mainMenuView.setOnPrevBoard(this::handlePreviousBoard);
+
+    loadBoardsFromFactory();
+    showBoardVariant(currentBoardIndex);
   }
 
   /**
@@ -35,7 +53,8 @@ public class MainMenuController {
   private void handleStartGame() {
     List<MainMenuPlayerRow> playerRows = mainMenuView.getPlayerRows();
 
-    playerRows.forEach(playerRow -> System.out.println(playerRow.getName() + " is " + playerRow.getColor()));
+    List<Player> players = new ArrayList<>();
+    playerRows.forEach(playerRow -> players.add(new Player(playerRow.getName(), playerRow.getColor().toString())));
 
     appView.showGameView();
   }
@@ -48,9 +67,51 @@ public class MainMenuController {
    */
   public void loadPlayersFromFile(String filePath) {
     try {
-      mainMenuView.importPlayers(PlayerFactory.createPlayersFromFile(filePath));
+      mainMenuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Loads the hardcoded boards from the factory, and adds them to the {@link #boardVariants} map.
+   *
+   * @see BoardFactory#createBoard(String)
+   */
+  private void loadBoardsFromFactory() {
+    this.boardVariants.put(1, BoardFactory.createBoard("Classic"));
+    this.boardVariants.put(2, BoardFactory.createBoard("Teleporting"));
+  }
+
+  /**
+   * Loads the board from the given file path, and adds it to the {@link #boardVariants} map.
+   *
+   * @see BoardFactory#createBoardFromFile(String)
+   * @param filePath The path to the file containing the board.
+   */
+  private void loadBoardFromFile(String filePath) {
+    try {
+      Board board = BoardFactory.createBoardFromFile(filePath);
+      boardVariants.put(boardVariants.size() + 1, board);
+    } catch (IOException | IllegalArgumentException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void handleNextBoard() {
+    currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
+    System.out.println(currentBoardIndex);
+    showBoardVariant(currentBoardIndex);
+  }
+
+  public void handlePreviousBoard() {
+    currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
+    System.out.println(currentBoardIndex);
+    showBoardVariant(currentBoardIndex);
+  }
+
+  private void showBoardVariant(int boardIndex) {
+    Board board = boardVariants.get(boardIndex);
+    mainMenuView.setSelectedBoard(board);
   }
 }
