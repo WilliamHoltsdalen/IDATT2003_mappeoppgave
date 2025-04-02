@@ -1,8 +1,10 @@
 package edu.ntnu.idi.idatt.view.gui.component;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,19 +51,30 @@ public class MainMenuPlayerRow extends HBox {
   }
 
   private void showPlayerColorPickerPopup(double xPos, double yPos) {
-    Text popupText = new Text("Pick a color for " + getName());
-    ColorPicker colorPicker = new ColorPicker(getColor());
-    colorPicker.setOnAction(event ->
-        playerButtonCircle.setStroke(colorPicker.getValue()));
-
-    VBox popupContent = new VBox(popupText, colorPicker);
-    popupContent.getStyleClass().add("main-menu-player-color-picker-popup");
-
     Popup popup = new Popup();
-    popup.getContent().setAll(popupContent);
     popup.setHideOnEscape(true);
     popup.setAutoFix(true);
-    popup.setAutoHide(true);
+
+    Text popupText = new Text("Pick a color for " + getName());
+    ColorPicker colorPicker = new ColorPicker(getColor());
+    colorPicker.setOnAction(event -> {
+      playerButtonCircle.setStroke(colorPicker.getValue());
+      popup.hide();
+    });
+
+    Button closePopupButton = new Button();
+    closePopupButton.setAlignment(Pos.TOP_RIGHT);
+    closePopupButton.setGraphic(new FontIcon("fas-times"));
+    closePopupButton.getStyleClass().add("icon-only-button");
+    closePopupButton.setTooltip(new Tooltip("Close"));
+    closePopupButton.setOnAction(event -> popup.hide());
+
+    VBox innerPopupContent = new VBox(popupText, colorPicker);
+    innerPopupContent.setSpacing(10);
+
+    HBox popupContent = new HBox(innerPopupContent, closePopupButton);
+    popupContent.getStyleClass().add("main-menu-player-color-picker-popup");
+    popup.getContent().setAll(popupContent);
     popup.show(this.getScene().getWindow(), xPos, yPos);
   }
 
