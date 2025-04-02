@@ -4,12 +4,16 @@ import edu.ntnu.idi.idatt.controller.MainMenuController;
 import edu.ntnu.idi.idatt.view.gui.component.PlayerRow;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class MainMenuView extends VBox {
   private MainMenuController controller;
@@ -40,17 +44,19 @@ public class MainMenuView extends VBox {
     title.setText("Main Menu");
     title.getStyleClass().add("main-menu-title");
 
-    playerListBox.getStyleClass().add("player-list-box");
+    playerListBox.getStyleClass().add("main-menu-player-list-box");
     addPlayerRow("Player 1", Color.RED, false);
     addPlayerRow("Player 2", Color.GREEN, true);
 
     Button addPlayerButton = new Button("Add Player");
     addPlayerButton.setOnAction(event -> addPlayerRow(
         "Player " + (playerRows.size() + 1), Color.BLUE, true));
+    addPlayerButton.getStyleClass().add("main-menu-add-player-button");
 
     Button addBotButton = new Button("Add Bot");
     addBotButton.setOnAction(event -> addPlayerRow(
-        "Bot " + (playerRows.size() + 1), Color.YELLOW, true));
+        "Bot " + (playerRows.size() + 1), Color.PURPLE, true));
+    addBotButton.getStyleClass().add("main-menu-add-player-button");
 
     addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
     addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
@@ -67,20 +73,47 @@ public class MainMenuView extends VBox {
     playerRows.add(playerRow);
     playerListBox.getChildren().add(playerRow);
 
-    if (playerRows.size() == 5) {
-      this.getChildren().remove(addPlayerButtonsBox);
-    }
+    updateControls();
   }
 
   private void removePlayerRow(PlayerRow playerRow) {
     playerRows.remove(playerRow);
     playerListBox.getChildren().remove(playerRow);
 
-    if (playerRows.size() < 5) {
+    updateControls();
+  }
+
+  private void updateControls() {
+    if (playerRows.size() == 5) {
+      this.getChildren().remove(addPlayerButtonsBox);
+    } else if (playerRows.size() < 5) {
       this.getChildren().setAll(title, playerListBox, addPlayerButtonsBox, startGameButton);
+    }
+
+    if (playerRows.size() == 1) {
+      disableStartGameButton();
+    } else {
+      enableStartGameButton();
     }
   }
 
+  private void disableStartGameButton() {
+    startGameButton.setOnAction(null);
+    startGameButton.getStyleClass().add("button-disabled");
+    Tooltip tooltip = new Tooltip("You need at least two players.");
+    tooltip.setShowDelay(Duration.millis(0));
+    Tooltip.install(startGameButton, tooltip);
+  }
+
+  private void enableStartGameButton() {
+    startGameButton.setOnAction(handleStartGameButtonAction());
+    startGameButton.getStyleClass().remove("button-disabled");
+    Tooltip.uninstall(startGameButton, startGameButton.getTooltip());
+  }
+
+  private EventHandler<ActionEvent> handleStartGameButtonAction() {
+    return event -> System.out.println("Start game");
+  }
 
   public List<PlayerRow> getPlayerRows() {
     return playerRows;
