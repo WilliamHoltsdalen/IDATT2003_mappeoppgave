@@ -5,6 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class PlayerRow extends HBox {
   TextField nameTextField;
@@ -14,14 +15,19 @@ public class PlayerRow extends HBox {
 
   public PlayerRow(String defaultName, Color color, boolean removable) {
     this.removable = removable;
-    this.getStyleClass().add("player-row");
+    this.getStyleClass().add("main-menu-player-row");
     initialize(defaultName, color);
   }
 
   private void initialize(String defaultName, Color color) {
-    playerCircle = new Circle(14, color);
+    playerCircle = new Circle(10, Color.TRANSPARENT);
+    playerCircle.setStroke(color);
+    playerCircle.setStrokeWidth(8);
+    playerCircle.getStyleClass().add("main-menu-player-circle");
     nameTextField = new TextField(defaultName);
-    deleteButton = new Button("🗑️");
+    deleteButton = new Button();
+    deleteButton.setGraphic(new FontIcon("fas-trash"));
+    deleteButton.getStyleClass().add("main-menu-delete-player-button");
 
     this.getChildren().addAll(playerCircle, nameTextField);
 
