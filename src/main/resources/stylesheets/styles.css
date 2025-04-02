@@ -20,6 +20,15 @@
   -fx-background-radius: 18;
 }
 
+.main-menu-header-box {
+  -fx-alignment: center;
+  -fx-spacing: 20;
+}
+
+.main-menu-more-options-menu {
+  -fx-border-width: 0;
+}
+
 .main-menu-title {
   -fx-font-size: 28px;
   -fx-font-weight: bold;

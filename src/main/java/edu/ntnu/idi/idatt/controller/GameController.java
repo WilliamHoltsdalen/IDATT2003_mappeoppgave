@@ -173,25 +173,6 @@ public class GameController {
   }
 
   /**
-   * Loads the players from the file at the given path, and sets them in the {@link #boardGame}
-   * object. If an error occurs while reading the file, the method returns false,
-   * and the game is not initialized.
-   *
-   * @see PlayerFactory#createPlayersFromFile(String)
-   * @param filePath The path to the file containing the players.
-   * @return True if the players were loaded successfully, false otherwise.
-   */
-  public boolean loadPlayersFromFile(String filePath) {
-    try {
-      setPlayers(PlayerFactory.createPlayersFromFile(filePath));
-    } catch (IOException e) {
-      return false;
-    }
-    initGame();
-    return true;
-  }
-
-  /**
    * Sets the players in the {@link #boardGame} object to the given list of players. If the list
    * is null or empty, an {@link IllegalArgumentException} is thrown. After setting the players,
    * the game is initialized using the {@link #initGame()} method.
