@@ -90,6 +90,11 @@ public class GameView extends HBox implements BoardGameObserver {
   }
 
   @Override
+  public void onCurrentPlayerChanged(Player player) {
+    System.out.println(player.getName() + " is now the current player.");
+  }
+
+  @Override
   public void onTileActionPerformed(edu.ntnu.idi.idatt.model.interfaces.TileAction tileAction) {
     System.out.println(tileAction.getDescription());
   }

@@ -267,6 +267,7 @@ public class BoardGame {
     int currentIndex = players.indexOf(currentPlayer);
     int nextIndex = (currentIndex + 1) % players.size();
     setCurrentPlayer(players.get(nextIndex));
+    notifyCurrentPlayerChanged(currentPlayer);
   }
 
   /**
@@ -302,6 +303,15 @@ public class BoardGame {
    */
   public void notifyGameStateChanged(String stateUpdate) {
     observers.forEach(observer -> observer.onGameStateChanged(stateUpdate));
+  }
+
+  /**
+   * Notifies all observers that the current player has changed.
+   *
+   * @param player The new current player.
+   */
+  public void notifyCurrentPlayerChanged(Player player) {
+    observers.forEach(observer -> observer.onCurrentPlayerChanged(player));
   }
 
   /**

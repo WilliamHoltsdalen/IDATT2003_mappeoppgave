@@ -24,6 +24,13 @@ public interface BoardGameObserver {
   void onGameStateChanged(String stateUpdate);
 
   /**
+   * Called when the current player changes.
+   *
+   * @param player The new current player.
+   */
+  void onCurrentPlayerChanged(Player player);
+
+  /**
    * Called when a tile action, like a ladderAction, has been activated/performed.
    *
    * @param tileAction the tile action that was performed.
