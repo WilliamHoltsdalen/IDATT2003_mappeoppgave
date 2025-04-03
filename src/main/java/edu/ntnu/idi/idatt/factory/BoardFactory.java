@@ -97,7 +97,7 @@ public class BoardFactory {
    */
   private static Board createPortalBoard() {
     Board board = new Board("Teleporting", "Teleport through portals to reach the "
-        + "end of this board, with 100 tiles.");
+        + "end of this board, with 90 tiles.");
     createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> portalMap = new HashMap<>();
