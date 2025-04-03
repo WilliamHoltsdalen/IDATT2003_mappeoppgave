@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.view.gui.container;
 
 import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,13 +15,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-public class GameView extends HBox {
+public class GameView extends HBox implements BoardGameObserver {
   private final GameController gameController;
   private final VBox playersBox;
   private final StackPane boardStackPane;
 
   public GameView(GameController gameController) {
     this.gameController = gameController;
+
+    gameController.addObserver(this);
 
     playersBox = getPlayersBox();
     boardStackPane = getBoardStackPane();
@@ -76,4 +79,23 @@ public class GameView extends HBox {
     return stackPane;
   }
 
+  @Override
+  public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
+    System.out.println(player.getName() + " moved to tile " + newTileId);
+  }
+
+  @Override
+  public void onGameStateChanged(String stateUpdate) {
+    System.out.println(stateUpdate);
+  }
+
+  @Override
+  public void onTileActionPerformed(edu.ntnu.idi.idatt.model.interfaces.TileAction tileAction) {
+    System.out.println(tileAction.getDescription());
+  }
+
+  @Override
+  public void onGameFinished(Player winner) {
+    System.out.println("Game finished! Winner: " + winner.getName());
+  }
 }
