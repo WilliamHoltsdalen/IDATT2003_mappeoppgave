@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * <h3>Factory class for creating Board objects.</h3>
@@ -96,21 +98,35 @@ public class BoardFactory {
   private static Board createPortalBoard() {
     Board board = new Board("Teleporting", "Teleport through portals to reach the "
         + "end of this board, with 100 tiles.");
-    createTiles(10, 10).forEach(board::addTile);
+    createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> portalMap = new HashMap<>();
-    portalMap.put(6, 64);
-    portalMap.put(11, 31);
-    portalMap.put(22, 50);
-    portalMap.put(40, 90);
-    portalMap.put(13, 2);
-    portalMap.put(34, 5);
+    portalMap.put(4, portalDestination());
+    portalMap.put(19, portalDestination());
+    portalMap.put(30, portalDestination());
+    portalMap.put(34, portalDestination());
+    portalMap.put(45, portalDestination());
+    portalMap.put(53, portalDestination());
+    portalMap.put(61, portalDestination());
+    portalMap.put(75, portalDestination());
+    portalMap.put(89, portalDestination());
 
     for (Map.Entry<Integer, Integer> entry : portalMap.entrySet()) {
       board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(),
           "Portal from " + entry.getKey() + " to " + entry.getValue()));
     }
     return board;
+  }
+
+  private static int portalDestination(){
+    final Set<Integer> EXCLUDED_NUMBERS = Set.of(4, 19, 30, 34, 45, 53, 61, 75);
+    final Random rand = new Random();
+
+    int number;
+    do {
+      number = rand.nextInt(88) + 1;
+    } while (EXCLUDED_NUMBERS.contains(number));
+    return number;
   }
 
   /**
