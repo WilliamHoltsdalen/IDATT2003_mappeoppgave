@@ -121,6 +121,54 @@
   -fx-spacing: 10;
 }
 
+.game-view {
+  -fx-padding: 30px;
+  -fx-spacing: 20;
+}
+
+.game-players-box {
+  -fx-background-color: #f5f5f5;
+  -fx-background-radius:10;
+  -fx-border-color: -gray-border;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-alignment: top-left;
+  -fx-spacing: 10;
+  -fx-padding: 15;
+}
+
+.game-players-box-player-row {
+  -fx-max-width: 140x;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+  -fx-padding: 10;
+}
+
+.game-players-box-player-name {
+  -fx-font-size: 24px;
+}
+
+.game-players-box-player-tile {
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+  -fx-border-color: black;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-padding: 0 5;
+}
+
+.game-board-stack-pane {
+  -fx-background-color: #7a4a2a;
+  -fx-background-radius: 25;
+  -fx-fit-height: 600px;
+  -fx-padding: 0 20;
+}
+
+.game-board-image-view {
+  -fx-fit-height: 540px;
+  -fx-preserve-ratio: true;
+}
+
 Button {
   -fx-background-color: -button-blue;
   -fx-text-fill: white;

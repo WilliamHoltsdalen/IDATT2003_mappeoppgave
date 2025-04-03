@@ -11,9 +11,8 @@ import java.util.List;
 public class GameController {
   private BoardGame boardGame;
 
-  public GameController(Board board, List<Player> players) {
+  public GameController() {
 
-    initialize(board, players);
   }
 
   /**
@@ -48,7 +47,7 @@ public class GameController {
    *
    * @return The board of the game.
    */
-  private Board getBoard() {
+  public Board getBoard() {
     return this.boardGame.getBoard();
   }
 
@@ -66,10 +65,18 @@ public class GameController {
    *
    * @return The current player of the game.
    */
-  private Player getCurrentPlayer() {
+  public Player getCurrentPlayer() {
     return this.boardGame.getCurrentPlayer();
   }
 
+  /**
+   * Initializes the game controller by creating a new BoardGame instance with the given board and
+   * list of players. Finally, it initializes the game by placing all players on the 0th tile and
+   * setting the current player to the first player in the list.
+   *
+   * @param board the board to use in the game
+   * @param players the list of players to use in the game
+   */
   public void initialize(Board board, List<Player> players) {
     try {
       this.boardGame = new BoardGame(board, players, 2);
