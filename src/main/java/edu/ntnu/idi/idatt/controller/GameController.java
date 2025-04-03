@@ -6,9 +6,13 @@ import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class GameController {
   private BoardGame boardGame;
+
+  private BiConsumer<Board, List<Player>> onRestartGame;
+  private Runnable onQuitGame;
 
   public GameController(Board board, List<Player> players) {
     initializeBoardGame(board, players);
@@ -81,14 +85,7 @@ public class GameController {
       boardGame = new BoardGame(board, players, 2);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
-      return;
     }
-
-    for (Player player : boardGame.getPlayers()) {
-      player.placeOnTile(boardGame.getBoard().getTile(0));
-    }
-
-    this.boardGame.setCurrentPlayer(boardGame.getPlayers().getFirst());
   }
 
   /**
@@ -105,5 +102,25 @@ public class GameController {
    */
   public void performPlayerTurn() {
     boardGame.performPlayerTurn();
+  }
+
+  public void restartGame() {
+    if (onRestartGame != null) {
+      onRestartGame.accept(boardGame.getBoard(), boardGame.getPlayers());
+    }
+  }
+
+  public void quitGame() {
+    if (onQuitGame != null) {
+      onQuitGame.run();
+    }
+  }
+
+  public void setOnRestartGame(BiConsumer<Board, List<Player>> onRestartGame) {
+    this.onRestartGame = onRestartGame;
+  }
+
+  public void setOnQuitGame(Runnable onQuitGame) {
+    this.onQuitGame = onQuitGame;
   }
 }

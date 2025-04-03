@@ -27,6 +27,8 @@ public class AppView extends StackPane {
 
   public void showGameView(Board board, List<Player> players) {
     gameController = new GameController(board, players);
+    gameController.setOnRestartGame(this::showGameView);
+    gameController.setOnQuitGame(this::showMainMenu);
 
     gameView = new GameView(gameController);
     this.getChildren().setAll(gameView.getView());

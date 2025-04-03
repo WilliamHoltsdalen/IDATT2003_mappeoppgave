@@ -33,13 +33,19 @@ public class BoardGame {
    * @param diceCount The number of dice to use in the game.
    */
   public BoardGame(Board board, List<Player> players, int diceCount) {
-    this.players = new ArrayList<>();
     this.roundNumber = 0;
     this.observers = new ArrayList<>();
 
     setBoard(board);
-    addPlayers(players);
+    setPlayers(players);
     createDice(diceCount);
+
+    initializeGame();
+  }
+
+  private void initializeGame() {
+    players.forEach(player -> player.placeOnTile(board.getTile(0)));
+    setCurrentPlayer(players.getFirst());
   }
 
   /**

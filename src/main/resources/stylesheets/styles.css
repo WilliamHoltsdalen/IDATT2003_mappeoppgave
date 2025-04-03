@@ -64,7 +64,6 @@
 
 .main-menu-player-row {
   -fx-alignment: center-left;
-  -fx-max-width: 140x;
   -fx-spacing: 10;
 }
 
@@ -129,19 +128,17 @@
 .game-players-box {
   -fx-background-color: #f5f5f5;
   -fx-background-radius:10;
-  -fx-border-color: -gray-border;
+  -fx-border-color: black;
   -fx-border-width: 3;
   -fx-border-radius: 10;
   -fx-alignment: top-left;
   -fx-spacing: 10;
-  -fx-padding: 15;
+  -fx-padding: 20;
 }
 
 .game-players-box-player-row {
-  -fx-max-width: 140x;
   -fx-spacing: 10;
   -fx-alignment: center;
-  -fx-padding: 10;
 }
 
 .game-players-box-player-name {
@@ -169,12 +166,53 @@
   -fx-preserve-ratio: true;
 }
 
+.game-menu-box {
+  -fx-background-color: #f5f5f5;
+  -fx-background-radius: 10;
+  -fx-border-color: black;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-padding: 20;
+  -fx-spacing: 15;
+  -fx-alignment: top-center;
+  -fx-max-width: 400px;
+}
+
+.game-menu-buttons-h-box {
+  -fx-alignment: top-center;
+  -fx-spacing: 15;
+}
+
+.game-menu-restart-button {
+  -fx-background-color: rgba(94, 67, 28, 0.67);
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 7;
+}
+
+.game-menu-quit-button {
+  -fx-background-color: rgba(118, 31, 33, 0.81);
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 7;
+}
+
+.game-menu-spacer {
+  -fx-min-height: 3px;
+  -fx-background-color: -gray-border;
+  -fx-max-width: infinity;
+}
+
+.game-menu-game-log-box {
+}
+
+
 Button {
   -fx-background-color: -button-blue;
   -fx-text-fill: white;
   -fx-font-size: 14px;
   -fx-font-weight: bold;
-  -fx-background-radius: 10;
+  -fx-background-radius: 7;
   -fx-padding: 7 10;
 }
 
