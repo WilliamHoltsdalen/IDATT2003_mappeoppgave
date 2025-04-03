@@ -4,7 +4,6 @@ import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.view.gui.container.AppView;
 import edu.ntnu.idi.idatt.view.gui.container.MainMenuView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,18 +16,17 @@ public class MainMenuController {
   private static final int DEFAULT_BOARD_INDEX = 1;
   private final Map<Integer, Board> boardVariants;
   private int currentBoardIndex;
-  private BiConsumer<List<Player>, Board> onStartGame;
 
-  private final AppView appView;
+  private BiConsumer<Board, List<Player>> onStartGame;
+
   private final MainMenuView mainMenuView;
 
   /**
    * Constructor for MenuController class.
    */
-  public MainMenuController(AppView appView, MainMenuView mainMenuView) {
+  public MainMenuController(MainMenuView mainMenuView) {
     this.boardVariants = new HashMap<>();
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
-    this.appView = appView;
     this.mainMenuView = mainMenuView;
 
     initialize();
@@ -48,7 +46,7 @@ public class MainMenuController {
     showBoardVariant(currentBoardIndex);
   }
 
-  public void setOnStartGame(BiConsumer<List<Player>, Board> onStartGame) {
+  public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
     this.onStartGame = onStartGame;
   }
 
@@ -60,7 +58,7 @@ public class MainMenuController {
     mainMenuView.getPlayerRows().forEach(playerRow ->
         players.add(new Player(playerRow.getName(), playerRow.getColor().toString())));
 
-    onStartGame.accept(players, boardVariants.get(currentBoardIndex));
+    onStartGame.accept(boardVariants.get(currentBoardIndex), players);
   }
 
   /**

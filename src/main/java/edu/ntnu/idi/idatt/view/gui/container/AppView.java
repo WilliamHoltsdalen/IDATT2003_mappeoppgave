@@ -14,22 +14,21 @@ public class AppView extends StackPane {
   GameView gameView;
 
   public AppView() {
-    mainMenuView = new MainMenuView();
-    mainMenuController = new MainMenuController(this, mainMenuView);
-    mainMenuController.setOnStartGame(this::showGameView);
-
     this.getStyleClass().add("app-view");
   }
 
   public void showMainMenu() {
+    mainMenuView = new MainMenuView();
+    mainMenuController = new MainMenuController(mainMenuView);
+    mainMenuController.setOnStartGame(this::showGameView);
+
     this.getChildren().setAll(mainMenuView.getView());
   }
 
-  public void showGameView(List<Player> players, Board board) {
-    gameController = new GameController();
-    gameController.initialize(board, players);
+  public void showGameView(Board board, List<Player> players) {
+    gameController = new GameController(board, players);
 
-    gameView = new GameView(this, gameController);
+    gameView = new GameView(gameController);
     this.getChildren().setAll(gameView.getView());
   }
 }

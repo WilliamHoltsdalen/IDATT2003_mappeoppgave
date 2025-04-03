@@ -16,12 +16,10 @@ import javafx.scene.text.Text;
 
 public class GameView extends HBox {
   private final GameController gameController;
-  private final AppView appView;
   private final VBox playersBox;
   private final StackPane boardStackPane;
 
-  public GameView(AppView appView, GameController gameController) {
-    this.appView = appView;
+  public GameView(GameController gameController) {
     this.gameController = gameController;
 
     playersBox = getPlayersBox();
