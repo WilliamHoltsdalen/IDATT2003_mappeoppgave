@@ -4,7 +4,6 @@ import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
 import edu.ntnu.idi.idatt.view.gui.container.AppView;
 import edu.ntnu.idi.idatt.view.gui.container.MainMenuView;
 import java.io.IOException;
@@ -12,11 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class MainMenuController {
   private static final int DEFAULT_BOARD_INDEX = 1;
   private final Map<Integer, Board> boardVariants;
   private int currentBoardIndex;
+  private BiConsumer<List<Player>, Board> onStartGame;
 
   private final AppView appView;
   private final MainMenuView mainMenuView;
@@ -26,7 +27,7 @@ public class MainMenuController {
    */
   public MainMenuController(AppView appView, MainMenuView mainMenuView) {
     this.boardVariants = new HashMap<>();
-    currentBoardIndex = DEFAULT_BOARD_INDEX;
+    this.currentBoardIndex = DEFAULT_BOARD_INDEX;
     this.appView = appView;
     this.mainMenuView = mainMenuView;
 
@@ -47,16 +48,19 @@ public class MainMenuController {
     showBoardVariant(currentBoardIndex);
   }
 
+  public void setOnStartGame(BiConsumer<List<Player>, Board> onStartGame) {
+    this.onStartGame = onStartGame;
+  }
+
   /**
    * Handles the action of the 'start game' button in the main menu.
    */
   private void handleStartGame() {
-    List<MainMenuPlayerRow> playerRows = mainMenuView.getPlayerRows();
-
     List<Player> players = new ArrayList<>();
-    playerRows.forEach(playerRow -> players.add(new Player(playerRow.getName(), playerRow.getColor().toString())));
+    mainMenuView.getPlayerRows().forEach(playerRow ->
+        players.add(new Player(playerRow.getName(), playerRow.getColor().toString())));
 
-    appView.showGameView();
+    onStartGame.accept(players, boardVariants.get(currentBoardIndex));
   }
 
   /**
