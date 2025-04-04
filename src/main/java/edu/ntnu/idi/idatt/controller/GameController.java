@@ -19,6 +19,15 @@ public class GameController {
   }
 
   /**
+   * Returns the path to the image of the board.
+   *
+   * @return The path to the image of the board.
+   */
+  public String getBoardImagePath() {
+    return boardGame.getBoard().getImagePath();
+  }
+
+  /**
    * Returns the winner of the game.
    *
    * @return The winner of the game.

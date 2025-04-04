@@ -329,7 +329,7 @@ public class MainMenuView extends VBox {
    */
   public void setSelectedBoard(Board board) {
     selectedBoard = board;
-    boardImageView.setImage(new Image("/images/Classic90.png"));
+    boardImageView.setImage(new Image(board.getImagePath()));
     boardTitle.setText(board.getName());
   }
 

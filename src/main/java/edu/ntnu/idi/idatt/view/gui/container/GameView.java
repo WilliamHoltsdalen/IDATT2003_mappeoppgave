@@ -89,7 +89,7 @@ public class GameView extends HBox implements BoardGameObserver {
 
   private StackPane getBoardStackPane() {
     ImageView imageView = new ImageView();
-    imageView.setImage(new Image("/images/Classic90.png"));
+    imageView.setImage(new Image(gameController.getBoardImagePath()));
     imageView.getStyleClass().add("game-board-image-view");
 
     StackPane stackPane = new StackPane();
@@ -135,24 +135,22 @@ public class GameView extends HBox implements BoardGameObserver {
     gameLogBox.scrollTo(gameLogBox.getItems().size());
   }
 
-  private void updatePlayerTileNumber(Player player, int newTileId) {
+  private void setPlayerTileNumber(Player player, int newTileId) {
     playersBoxRows.get(gameController.getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
-
   }
 
   @Override
   public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
     addGameLogEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
 
-    updatePlayerTileNumber(player, newTileId);
+    setPlayerTileNumber(player, newTileId);
   }
 
   @Override
   public void onRoundNumberIncremented(int roundNumber) {
     roundNumberText.setText(ROUND_NUMBER_TEXT + roundNumber);
-    gameLogBox.getItems().add(new Text(ROUND_NUMBER_TEXT + roundNumber));
-    gameLogBox.getItems();
+    addGameLogEntry(ROUND_NUMBER_TEXT + roundNumber);
   }
 
   @Override
@@ -163,7 +161,7 @@ public class GameView extends HBox implements BoardGameObserver {
   @Override
   public void onTileActionPerformed(Player player, TileAction tileAction) {
     gameLogBox.getItems().add(new Text(player.getName() + " activated " + tileAction.getDescription()));
-    updatePlayerTileNumber(player, tileAction.getDestinationTileId());
+    setPlayerTileNumber(player, tileAction.getDestinationTileId());
   }
 
   @Override
