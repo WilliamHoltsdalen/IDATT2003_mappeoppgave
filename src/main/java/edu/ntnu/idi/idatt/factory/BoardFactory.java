@@ -69,7 +69,7 @@ public class BoardFactory {
   private static Board createClassicBoard() {
     Board board = new Board("Classic (default)",
         "Standard chutes and ladders game with 90 tiles.",
-        "images/ClassicGameBoard.png");
+        "boardImages/ClassicGameBoard.png");
     createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> ladderMap = new HashMap<>();
@@ -101,7 +101,7 @@ public class BoardFactory {
   private static Board createPortalBoard() {
     Board board = new Board("Teleporting",
         "Teleport through portals to reach the end of this board, with 90 tiles.",
-        "images/PortalGameBoard.png");
+        "boardImages/PortalGameBoard.png");
 
     createTiles(9, 10).forEach(board::addTile);
 
