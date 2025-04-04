@@ -173,9 +173,9 @@
 }
 
 .game-board-stack-pane {
-  -fx-background-color: #7a4a2a;
+  -fx-background-color: #935c37;
   -fx-background-radius: 25;
-  -fx-padding: 40;
+  -fx-padding: 25;
   -fx-alignment: center;
 }
 
