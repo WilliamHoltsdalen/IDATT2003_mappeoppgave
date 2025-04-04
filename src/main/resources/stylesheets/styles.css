@@ -152,13 +152,14 @@
   -fx-border-width: 3;
   -fx-border-radius: 10;
   -fx-padding: 0 5;
+  -fx-alignment: center-left;
 }
 
 .game-board-stack-pane {
   -fx-background-color: #7a4a2a;
   -fx-background-radius: 25;
-  -fx-fit-height: 600px;
-  -fx-padding: 0 20;
+
+  -fx-padding: 40;
 }
 
 .game-board-image-view {
@@ -174,8 +175,13 @@
   -fx-border-radius: 10;
   -fx-padding: 20;
   -fx-spacing: 15;
-  -fx-alignment: top-center;
+  -fx-alignment: center;
   -fx-max-width: 400px;
+}
+
+.game-menu-top-box {
+  -fx-alignment: top-center;
+  -fx-spacing: 15;
 }
 
 .game-menu-buttons-h-box {
@@ -204,6 +210,12 @@
 }
 
 .game-menu-game-log-box {
+  -fx-alignment: top-left;
+}
+
+.game-menu-bottom-box {
+  -fx-alignment: bottom-center;
+  -fx-spacing: 15;
 }
 
 

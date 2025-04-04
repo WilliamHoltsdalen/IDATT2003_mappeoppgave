@@ -78,7 +78,7 @@ public class MainMenuPlayerRow extends HBox {
     popup.show(this.getScene().getWindow(), xPos, yPos);
   }
 
-  public void setRunnable(Runnable deleteRowAction) {
+  public void setOnDelete(Runnable deleteRowAction) {
     deleteButton.setOnAction(event -> deleteRowAction.run());
   }
 

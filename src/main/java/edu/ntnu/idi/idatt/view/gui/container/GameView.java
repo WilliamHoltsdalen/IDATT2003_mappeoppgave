@@ -4,6 +4,9 @@ import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.view.gui.component.GamePlayerRow;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,12 +16,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class GameView extends HBox implements BoardGameObserver {
   private final GameController gameController;
+  private final List<GamePlayerRow> playersBoxRows;
   private final VBox playersBox;
   private final StackPane boardStackPane;
   private final VBox menuBox;
@@ -29,8 +31,8 @@ public class GameView extends HBox implements BoardGameObserver {
     this.gameController = gameController;
     gameController.addObserver(this);
 
+    playersBoxRows = new ArrayList<>();
     gameLogBox = new VBox();
-
     playersBox = getPlayersBox();
     boardStackPane = getBoardStackPane();
     menuBox = getMenuBox();
@@ -52,25 +54,11 @@ public class GameView extends HBox implements BoardGameObserver {
     vBox.getStyleClass().add("game-players-box");
     vBox.maxHeightProperty().bind(vBox.heightProperty());
 
-    for (Player player : gameController.getPlayers()) {
-      Circle playerCircle = new Circle(10, Color.TRANSPARENT);
-      playerCircle.setStroke(Color.web(player.getColorHex()));
-      playerCircle.setStrokeWidth(8);
-
-      Text playerName = new Text(player.getName());
-      playerName.getStyleClass().add("game-players-box-player-name");
-
-      Region spacer = new Region();
-      spacer.getStyleClass().add("game-players-box-player-spacer");
-      HBox.setHgrow(spacer, Priority.ALWAYS);
-
-      Label playerTile = new Label(String.valueOf(player.getCurrentTile().getTileId()));
-      playerTile.getStyleClass().add("game-players-box-player-tile");
-
-      HBox playerRow = new HBox(playerCircle, playerName, spacer, playerTile);
-      playerRow.getStyleClass().add("game-players-box-player-row");
+    gameController.getPlayers().forEach(player -> {
+      GamePlayerRow playerRow = new GamePlayerRow(player);
+      playersBoxRows.add(playerRow);
       vBox.getChildren().add(playerRow);
-    }
+    });
 
     return vBox;
   }
@@ -83,13 +71,11 @@ public class GameView extends HBox implements BoardGameObserver {
     StackPane stackPane = new StackPane();
     stackPane.getChildren().add(imageView);
     stackPane.getStyleClass().add("game-board-stack-pane");
+    stackPane.maxHeightProperty().bind(stackPane.heightProperty());
     return stackPane;
   }
 
   private VBox getMenuBox() {
-    VBox vBox = new VBox();
-    vBox.getStyleClass().add("game-menu-box");
-
     Button restartGameButton = new Button("Restart game");
     restartGameButton.getStyleClass().add("game-menu-restart-button");
     restartGameButton.setOnAction(event -> gameController.restartGame());
@@ -104,6 +90,9 @@ public class GameView extends HBox implements BoardGameObserver {
     Region spacer = new Region();
     spacer.getStyleClass().add("game-menu-spacer");
 
+    VBox menuTopBox = new VBox(hBox, spacer);
+    menuTopBox.getStyleClass().add("game-menu-top-box");
+
     gameLogBox.getChildren().add(new Text("Game log"));
     gameLogBox.maxHeightProperty().bind(gameLogBox.heightProperty());
     gameLogBox.getStyleClass().add("game-menu-game-log-box");
@@ -115,13 +104,20 @@ public class GameView extends HBox implements BoardGameObserver {
     rollDiceButton.getStyleClass().add("game-menu-roll-dice-button");
     rollDiceButton.setOnAction(event -> gameController.performPlayerTurn());
 
-    vBox.getChildren().addAll(hBox, spacer, gameLogBox, spacer2, rollDiceButton);
-    return vBox;
+    VBox menuBottomBox = new VBox(spacer2, rollDiceButton);
+    menuBottomBox.getStyleClass().add("game-menu-bottom-box");
+
+    VBox menuVbox = new VBox(menuTopBox, gameLogBox, menuBottomBox);
+    menuVbox.getStyleClass().add("game-menu-box");
+    VBox.setVgrow(menuBottomBox, Priority.ALWAYS);
+    return menuVbox;
   }
 
   @Override
   public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
     gameLogBox.getChildren().add(new Text(player.getName() + " moved to tile " + newTileId));
+    Label playerTileLabel = playersBoxRows.get(gameController.getPlayers().indexOf(player)).getTileLabel();
+    playerTileLabel.setText(String.valueOf(newTileId));
   }
 
   @Override

@@ -185,7 +185,7 @@ public class MainMenuView extends VBox {
    */
   private void addPlayerRow(String defaultName, Color color, boolean removable) {
     MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, removable);
-    mainMenuPlayerRow.setRunnable(() -> removePlayerRow(mainMenuPlayerRow));
+    mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
 
