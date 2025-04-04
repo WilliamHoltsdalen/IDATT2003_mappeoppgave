@@ -42,7 +42,8 @@ public class GamePlayerRow extends HBox {
     return this;
   }
 
-  public Label getTileLabel() {
-    return playerTile;
+  public void setTileNumber(Player player, int tileNumber) {
+    playerTile.setText(String.valueOf(tileNumber));
+    playerTile.setTooltip(new Tooltip(player.getName() + " is on tile: " + tileNumber));
   }
 }
