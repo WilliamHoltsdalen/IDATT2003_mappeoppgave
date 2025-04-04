@@ -4,7 +4,7 @@ import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.view.gui.container.MainMenuView;
+import edu.ntnu.idi.idatt.view.container.MainMenuView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.gui.component;
+package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.model.Player;
 import javafx.scene.control.Label;

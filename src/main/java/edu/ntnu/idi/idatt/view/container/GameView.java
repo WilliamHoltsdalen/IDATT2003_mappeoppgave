@@ -1,10 +1,10 @@
-package edu.ntnu.idi.idatt.view.gui.container;
+package edu.ntnu.idi.idatt.view.container;
 
 import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
-import edu.ntnu.idi.idatt.view.gui.component.GamePlayerRow;
+import edu.ntnu.idi.idatt.view.component.GamePlayerRow;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;

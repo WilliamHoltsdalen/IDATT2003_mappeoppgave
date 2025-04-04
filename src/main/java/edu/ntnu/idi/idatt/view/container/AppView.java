@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.gui.container;
+package edu.ntnu.idi.idatt.view.container;
 
 import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.controller.MainMenuController;

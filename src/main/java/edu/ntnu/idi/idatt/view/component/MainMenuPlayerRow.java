@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.gui.component;
+package edu.ntnu.idi.idatt.view.component;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

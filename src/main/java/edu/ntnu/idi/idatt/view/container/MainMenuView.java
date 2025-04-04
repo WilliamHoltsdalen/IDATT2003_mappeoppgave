@@ -1,9 +1,9 @@
-package edu.ntnu.idi.idatt.view.gui.container;
+package edu.ntnu.idi.idatt.view.container;
 
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.view.gui.component.MainMenuPlayerRow;
+import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
