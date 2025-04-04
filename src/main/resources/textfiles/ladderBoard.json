@@ -1,6 +1,7 @@
 {
   "name": "Ladder Board 1",
   "description": "Standard chutes and ladders game with 90 tiles.",
+  "imagePath": "images/ClassicGameBoard.png",
   "tiles": [
     {
       "id": 0,
