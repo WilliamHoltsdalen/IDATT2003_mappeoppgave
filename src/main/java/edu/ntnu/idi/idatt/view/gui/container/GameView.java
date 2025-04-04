@@ -150,22 +150,23 @@ public class GameView extends HBox implements BoardGameObserver {
   @Override
   public void onRoundNumberIncremented(int roundNumber) {
     roundNumberText.setText(ROUND_NUMBER_TEXT + roundNumber);
+    addGameLogEntry("");
     addGameLogEntry(ROUND_NUMBER_TEXT + roundNumber);
   }
 
   @Override
   public void onCurrentPlayerChanged(Player player) {
-    gameLogBox.getItems().add(new Text(player.getName() + " is now the current player."));
+    addGameLogEntry(player.getName() + " is now the current player.");
   }
 
   @Override
   public void onTileActionPerformed(Player player, TileAction tileAction) {
-    gameLogBox.getItems().add(new Text(player.getName() + " activated " + tileAction.getDescription()));
+    addGameLogEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
   }
 
   @Override
   public void onGameFinished(Player winner) {
-    gameLogBox.getItems().add(new Text("Game finished! Winner: " + winner.getName()));
+    addGameLogEntry("Game finished! Winner: " + winner.getName());
   }
 }
