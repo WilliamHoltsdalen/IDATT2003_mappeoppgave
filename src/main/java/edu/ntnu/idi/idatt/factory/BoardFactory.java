@@ -20,6 +20,7 @@ import java.util.Set;
  * Board objects can be created from an external file, or from scratch.
  */
 public class BoardFactory {
+  private static final Random random = new Random();
 
   /** Private constructor to prevent instantiation. */
   private BoardFactory() {}
@@ -66,7 +67,9 @@ public class BoardFactory {
    * @return A classic Board object.
    */
   private static Board createClassicBoard() {
-    Board board = new Board("Classic (default)", "Standard chutes and ladders game with 90 tiles.");
+    Board board = new Board("Classic (default)",
+        "Standard chutes and ladders game with 90 tiles.",
+        "boardImages/ClassicGameBoard.png");
     createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> ladderMap = new HashMap<>();
@@ -96,36 +99,27 @@ public class BoardFactory {
    * @return A Board object with portals.
    */
   private static Board createPortalBoard() {
-    Board board = new Board("Teleporting", "Teleport through portals to reach the "
-        + "end of this board, with 90 tiles.");
+    Board board = new Board("Teleporting",
+        "Teleport through portals to reach the end of this board, with 90 tiles.",
+        "boardImages/PortalGameBoard.png");
+
     createTiles(9, 10).forEach(board::addTile);
 
-    Map<Integer, Integer> portalMap = new HashMap<>();
-    portalMap.put(4, portalDestination());
-    portalMap.put(19, portalDestination());
-    portalMap.put(30, portalDestination());
-    portalMap.put(34, portalDestination());
-    portalMap.put(45, portalDestination());
-    portalMap.put(53, portalDestination());
-    portalMap.put(61, portalDestination());
-    portalMap.put(75, portalDestination());
-    portalMap.put(89, portalDestination());
+    final Set<Integer> portalIds = Set.of(4, 19, 30, 34, 45, 53, 61, 75, 89);
 
-    for (Map.Entry<Integer, Integer> entry : portalMap.entrySet()) {
-      board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(),
-          "Portal from " + entry.getKey() + " to " + entry.getValue()));
-    }
+    portalIds.forEach(portalId -> {
+      int randomDestination = randomPortalDestination(portalIds);
+      board.getTile(portalId).setLandAction(new LadderAction(randomDestination,
+          "Portal from " + portalId + " to " + randomDestination));
+    });
     return board;
   }
 
-  private static int portalDestination(){
-    final Set<Integer> EXCLUDED_NUMBERS = Set.of(4, 19, 30, 34, 45, 53, 61, 75);
-    final Random rand = new Random();
-
+  private static int randomPortalDestination(Set<Integer> portalIds){
     int number;
     do {
-      number = rand.nextInt(88) + 1;
-    } while (EXCLUDED_NUMBERS.contains(number));
+      number = random.nextInt(88) + 1;
+    } while (portalIds.contains(number));
     return number;
   }
 

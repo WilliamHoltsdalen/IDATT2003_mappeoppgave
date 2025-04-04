@@ -1,6 +1,10 @@
 package edu.ntnu.idi.idatt;
 
-import edu.ntnu.idi.idatt.view.tui.TextUserInterface;
+import edu.ntnu.idi.idatt.view.container.AppView;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 /**
  * <h3>Main class</h3>
@@ -8,7 +12,9 @@ import edu.ntnu.idi.idatt.view.tui.TextUserInterface;
  * <p>This class is the main class of the application. It initializes the TextUserInterface and
  * runs it.
  */
-public class App {
+public class App extends Application {
+  AppView appView;
+  private BorderPane root;
 
   /**
    * Main method of the application.
@@ -16,8 +22,26 @@ public class App {
    * @param args Command line arguments.
    */
   public static void main(String[] args) {
-    TextUserInterface tui = new TextUserInterface();
-    tui.init();
-    tui.run();
+    launch(args);
+  }
+
+  @Override
+  public void start(Stage primaryStage) {
+    appView = new AppView();
+    root = new BorderPane();
+
+    showMainMenu();
+
+    Scene scene = new Scene(root, 1280, 720);
+    scene.getStylesheets().add("stylesheets/styles.css");
+
+    primaryStage.setTitle("Board Game Application"); // TODO: Find a better title for the app
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  public void showMainMenu() {
+    appView.showMainMenu();
+    root.setCenter(appView);
   }
 }

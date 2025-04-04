@@ -1,0 +1,287 @@
+* {
+  -button-blue: #007AFF;
+  -button-blue-hover: #005A9E;
+  -button-dark: #4d4d4d;
+  -button-dark-hover: #2e2e2e;
+  -button-disabled: #939393;
+  -gray-border: #D9D9D9;
+}
+
+.app-view {
+  -fx-background-color:radial-gradient(focus-distance 0% , center 50% 50% , radius 100% , rgb(108, 156, 164) 30%, rgb(41, 89, 103) 100%);;
+}
+
+.main-menu-view {
+  -fx-background-color: #f5f5f5;
+  -fx-padding: 20;
+  -fx-spacing: 20;
+  -fx-alignment: center;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
+  -fx-background-radius: 18;
+}
+
+.main-menu-h-box {
+  -fx-alignment: center;
+  -fx-spacing: 35;
+}
+
+.main-menu-header-box {
+  -fx-alignment: center;
+  -fx-spacing: 30;
+}
+
+.main-menu-spacer {
+  -fx-pref-width: 3px;
+  -fx-background-color: -gray-border;
+  -fx-min-height: 370px;
+}
+
+.main-menu-more-options-menu {
+  -fx-border-width: 0;
+}
+
+.main-menu-title {
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+}
+
+.main-menu-selection-box-title {
+  -fx-font-size: 20px;
+  -fx-alignment: center;
+}
+
+.main-menu-player-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+}
+
+.main-menu-player-list-box {
+  -fx-alignment: center;
+  -fx-spacing: 10;
+  -fx-min-width: 280px;
+}
+
+.main-menu-player-row {
+  -fx-alignment: center-left;
+  -fx-spacing: 10;
+}
+
+.main-menu-delete-player-button {
+  -fx-background-color: transparent;
+}
+
+.main-menu-add-player-buttons-box {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.main-menu-add-player-button {
+  -fx-background-color: -button-dark;
+}
+
+.main-menu-player-color-picker-popup {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-spacing: 10;
+  -fx-font-size: 18px;
+  -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+}
+
+.main-menu-add-player-button:hover {
+  -fx-background-color: -button-dark-hover;
+}
+
+.main-menu-board-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+  -fx-max-width: 250px;
+}
+
+.main-menu-board-selection-carousel {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: -gray-border;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-padding: 15 15 10 15;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.main-menu-board-selection-image-view {
+  -fx-fit-width: 250px;
+  -fx-preserve-ratio: true;
+}
+
+.main-menu-board-selection-carousel-controls {
+  -fx-font-size: 16px;
+  -fx-alignment: center;
+  -fx-spacing: 10;
+}
+
+.main-menu-board-selection-description {
+  -fx-font-size: 12px;
+  -fx-text-fill: gray;
+}
+
+.game-view {
+  -fx-padding: 20;
+  -fx-alignment: center;
+}
+
+.game-horizontal-divider {
+  -fx-min-height: 3px;
+  -fx-background-color: -gray-border;
+  -fx-max-width: infinity;
+}
+
+.game-players-box {
+  -fx-background-color: #f5f5f5;
+  -fx-background-radius: 12;
+  -fx-border-color: black;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-spacing: 10;
+  -fx-padding: 15;
+  -fx-alignment: center;
+}
+
+.game-players-box-round-number {
+  -fx-font-size: 30px;
+  -fx-font-weight: bold;
+}
+
+.game-players-box-player-row {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.game-players-box-player-name {
+  -fx-font-size: 24px;
+}
+
+.game-players-box-player-tile {
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+  -fx-border-color: black;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-padding: 0 5;
+  -fx-alignment: center-left;
+}
+
+.game-board-stack-pane {
+  -fx-background-color: #935c37;
+  -fx-background-radius: 25;
+  -fx-padding: 25;
+  -fx-alignment: center;
+}
+
+.game-board-image-view {
+  -fx-fit-height: 520px;
+  -fx-preserve-ratio: true;
+}
+
+.game-menu-box {
+  -fx-background-color: #f5f5f5;
+  -fx-background-radius: 12;
+  -fx-border-color: black;
+  -fx-border-width: 3;
+  -fx-border-radius: 10;
+  -fx-padding: 20;
+  -fx-spacing: 15;
+  -fx-alignment: top-right;
+  -fx-max-width: 285px;
+}
+
+.game-menu-top-box {
+  -fx-alignment: top-center;
+  -fx-spacing: 15;
+}
+
+.game-menu-buttons-h-box {
+  -fx-alignment: top-center;
+  -fx-spacing: 15;
+}
+
+.game-menu-restart-button {
+  -fx-background-color: rgba(94, 67, 28, 0.67);
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 7;
+}
+
+.game-menu-quit-button {
+  -fx-background-color: rgba(118, 31, 33, 0.81);
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 7;
+}
+
+.game-menu-spacer {
+  -fx-min-height: 3px;
+  -fx-background-color: -gray-border;
+  -fx-max-width: infinity;
+}
+
+.game-menu-game-log-box {
+  -fx-alignment: top-left;
+}
+
+.game-menu-bottom-box {
+  -fx-alignment: bottom-center;
+  -fx-spacing: 15;
+}
+
+.game-menu-roll-for-all-players-box {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.game-menu-roll-for-all-players-text {
+  -fx-font-size: 12px;
+  -fx-fill: gray;
+}
+
+.game-menu-roll-for-all-players-check-box {
+}
+
+
+Button {
+  -fx-background-color: -button-blue;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 7;
+  -fx-padding: 7 10;
+}
+
+Button:hover {
+  -fx-background-color: -button-blue-hover;
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+}
+
+Button:pressed {
+  -fx-background-color: -button-blue-hover;
+  -fx-scale-x: 0.95;
+  -fx-scale-y: 0.95;
+}
+
+.icon-only-button {
+  -fx-background-color: transparent;
+}
+
+.button-disabled {
+  -fx-background-color: -button-disabled;
+}
+
+.button-disabled:hover {
+  -fx-background-color: -button-disabled;
+  -fx-scale-x: 1;
+  -fx-scale-y: 1;
+}
+
+

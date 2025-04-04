@@ -107,6 +107,18 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setImagePath method in Board class.
+   *
+   * @param imagePath the image path to set
+   * @throws IllegalArgumentException if imagePath is null or blank
+   */
+  public static void boardSetImagePathValidator(String imagePath) {
+    if (imagePath == null || imagePath.isBlank()) {
+      throw new IllegalArgumentException("Image path cannot be null or blank");
+    }
+  }
+
+  /**
    * Validates the arguments for the populateTiles method in Board class.
    *
    * @param rows    the number of rows

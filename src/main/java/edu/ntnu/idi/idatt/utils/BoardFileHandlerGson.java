@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
+  private static final String IMAGE_PATH_PROPERTY = "imagePath";
   private static final String TILES_PROPERTY = "tiles";
   private static final String TILE_ID_PROPERTY = "id";
   private static final String TILE_NEXT_TILE_ID_PROPERTY = "nextTileId";
@@ -33,7 +34,6 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String TILE_ACTION_TYPE_PROPERTY = "type";
   private static final String TILE_ACTION_DESTINATION_TILE_ID_PROPERTY = "destinationTileId";
   private static final String TILE_ACTION_DESCRIPTION_PROPERTY = "description";
-
 
   /**
    * Reads a file at the given path and returns a list of Board objects. If there is only one board
@@ -114,6 +114,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonObject boardJson = new JsonObject();
     boardJson.add(NAME_PROPERTY, new JsonPrimitive(board.getName()));
     boardJson.add(DESCRIPTION_PROPERTY, new JsonPrimitive(board.getDescription()));
+    boardJson.add(IMAGE_PATH_PROPERTY, new JsonPrimitive(board.getImagePath()));
     boardJson.add(TILES_PROPERTY, tilesJsonArray);
     return boardJson;
   }
@@ -132,7 +133,8 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
     String boardName = jsonObject.get(NAME_PROPERTY).getAsString();
     String boardDescription = jsonObject.get(DESCRIPTION_PROPERTY).getAsString();
-    Board board = new Board(boardName, boardDescription);
+    String boardImagePath = jsonObject.get(IMAGE_PATH_PROPERTY).getAsString();
+    Board board = new Board(boardName, boardDescription, boardImagePath);
 
     JsonArray tilesJsonArray = jsonObject.getAsJsonArray(TILES_PROPERTY);
     tilesJsonArray.forEach(tileJson -> {
