@@ -105,7 +105,7 @@ public class BoardFactory {
 
     createTiles(9, 10).forEach(board::addTile);
 
-    final Set<Integer> portalIds = Set.of(4, 19, 30, 34, 45, 53, 61, 75);
+    final Set<Integer> portalIds = Set.of(4, 19, 30, 34, 45, 53, 61, 75, 89);
 
     portalIds.forEach(portalId -> {
       int randomDestination = randomPortalDestination(portalIds);
@@ -116,7 +116,6 @@ public class BoardFactory {
   }
 
   private static int randomPortalDestination(Set<Integer> portalIds){
-
     int number;
     do {
       number = random.nextInt(88) + 1;
