@@ -107,6 +107,7 @@
   -fx-border-width: 1;
   -fx-padding: 15 15 10 15;
   -fx-spacing: 10;
+  -fx-alignment: center;
 }
 
 .main-menu-board-selection-image-view {
@@ -118,6 +119,11 @@
   -fx-font-size: 16px;
   -fx-alignment: center;
   -fx-spacing: 10;
+}
+
+.main-menu-board-selection-description {
+  -fx-font-size: 12px;
+  -fx-text-fill: gray;
 }
 
 .game-view {

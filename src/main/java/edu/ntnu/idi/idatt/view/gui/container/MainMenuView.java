@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
@@ -38,7 +39,8 @@ public class MainMenuView extends VBox {
 
   private VBox boardSelectionBox;
   private final ImageView boardImageView;
-  private final Text boardTitle;
+  private final Label boardTitle;
+  private final Label boardDescription;
   private Board selectedBoard;
 
   private final Button startGameButton;
@@ -52,7 +54,8 @@ public class MainMenuView extends VBox {
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
     this.boardImageView = new ImageView();
-    this.boardTitle = new Text();
+    this.boardTitle = new Label();
+    this.boardDescription = new Label();
     this.startGameButton = getStartGameButton();
     this.playerSelectionBox = new VBox();
     this.boardSelectionBox = new VBox();
@@ -162,7 +165,13 @@ public class MainMenuView extends VBox {
     HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
     carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
 
-    VBox carousel = new VBox(boardImageView, carouselControls);
+    boardDescription.setText(selectedBoard.getDescription());
+    boardDescription.getStyleClass().add("main-menu-board-selection-description");
+    boardDescription.prefWidthProperty().bind(carouselControls.widthProperty().multiply(0.8));
+    boardDescription.setMinHeight(Region.USE_PREF_SIZE);
+    boardDescription.setWrapText(true);
+
+    VBox carousel = new VBox(boardImageView, carouselControls, boardDescription);
     carousel.getStyleClass().add("main-menu-board-selection-carousel");
 
     VBox vBox = new VBox(title, carousel);
@@ -331,6 +340,7 @@ public class MainMenuView extends VBox {
     selectedBoard = board;
     boardImageView.setImage(new Image(board.getImagePath()));
     boardTitle.setText(board.getName());
+    boardDescription.setText(board.getDescription());
   }
 
   /**

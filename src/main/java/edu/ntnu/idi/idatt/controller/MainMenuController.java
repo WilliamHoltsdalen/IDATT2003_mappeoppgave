@@ -102,13 +102,11 @@ public class MainMenuController {
 
   public void handleNextBoard() {
     currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
-    System.out.println(currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
   public void handlePreviousBoard() {
     currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
-    System.out.println(currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
