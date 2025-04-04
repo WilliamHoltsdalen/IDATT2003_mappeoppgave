@@ -33,7 +33,7 @@ public class BoardGame {
    * @param diceCount The number of dice to use in the game.
    */
   public BoardGame(Board board, List<Player> players, int diceCount) {
-    this.roundNumber = 0;
+    this.roundNumber = 1;
     this.observers = new ArrayList<>();
 
     setBoard(board);
@@ -198,7 +198,7 @@ public class BoardGame {
    */
   public void incrementRoundNumber() {
     roundNumber++;
-    notifyGameStateChanged("Round number: " + roundNumber);
+    notifyRoundNumberIncremented(roundNumber);
   }
 
   /**
@@ -262,7 +262,7 @@ public class BoardGame {
       return;
     }
     landAction.perform(currentPlayer, getBoard());
-    notifyTileActionPerformed(landAction);
+    notifyTileActionPerformed(currentPlayer, landAction);
   }
 
   /**
@@ -283,11 +283,11 @@ public class BoardGame {
    * performed. Finally, the current player is updated to the next in the list.
    */
   public void performPlayerTurn() {
-    handleRoundNumber();
     rollDiceAndMovePlayer();
     handleTileAction();
     checkWinCondition();
     updateCurrentPlayer();
+    handleRoundNumber();
   }
 
   /**
@@ -302,13 +302,12 @@ public class BoardGame {
   }
 
   /**
-   * Notifies all observers that the game state has changed. Some examples of state changes are that
-   * the game has started, that the round number has been incremented, or that the game has ended.
+   * Notifies all observers that the round number has been incremented.
    *
-   * @param stateUpdate The updated game state.
+   * @param roundNumber The new round number.
    */
-  public void notifyGameStateChanged(String stateUpdate) {
-    observers.forEach(observer -> observer.onGameStateChanged(stateUpdate));
+  public void notifyRoundNumberIncremented(int roundNumber) {
+    observers.forEach(observer -> observer.onRoundNumberIncremented(roundNumber));
   }
 
   /**
@@ -325,9 +324,10 @@ public class BoardGame {
    * as argument, so the observers can get whatever info from the tile action they may need.
    *
    * @param tileAction the tile action that was performed.
+   * @param player The player who performed the action.
    */
-  public void notifyTileActionPerformed(TileAction tileAction) {
-    observers.forEach(observer -> observer.onTileActionPerformed(tileAction));
+  public void notifyTileActionPerformed(Player player, TileAction tileAction) {
+    observers.forEach(observer -> observer.onTileActionPerformed(player, tileAction));
   }
 
   /**

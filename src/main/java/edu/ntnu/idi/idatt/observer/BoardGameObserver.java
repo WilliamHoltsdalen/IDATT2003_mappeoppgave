@@ -17,11 +17,11 @@ public interface BoardGameObserver {
   void onPlayerMoved(Player player, int diceRoll, int newTileId);
 
   /**
-   * Called when the game state changes (e.g., round number increments, special events occur).
+   * Called when the round number has been incremented.
    *
-   * @param stateUpdate A description of the state change.
+   * @param roundNumber The new round number.
    */
-  void onGameStateChanged(String stateUpdate);
+  void onRoundNumberIncremented(int roundNumber);
 
   /**
    * Called when the current player changes.
@@ -34,8 +34,9 @@ public interface BoardGameObserver {
    * Called when a tile action, like a ladderAction, has been activated/performed.
    *
    * @param tileAction the tile action that was performed.
+   * @param player The player who performed the action.
    */
-  void onTileActionPerformed(TileAction tileAction);
+  void onTileActionPerformed(Player player, TileAction tileAction);
 
   /**
    * Called when the game has finished.
