@@ -4,6 +4,7 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTile
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetnameValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetImagePathValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class Board {
   private String name;
   private String description;
+  private String imagePath;
   private final Map<Integer, Tile> tiles;
 
   /**
@@ -26,10 +28,12 @@ public class Board {
    *
    * @param name The name of the board.
    * @param description The description of the board.
+   * @param imagePath The path to the image of the board.
    */
-  public Board(String name, String description) {
+  public Board(String name, String description, String imagePath) {
     setName(name);
     setDescription(description);
+    setImagePath(imagePath);
 
     this.tiles = new HashMap<>();
   }
@@ -50,6 +54,15 @@ public class Board {
    */
   public String getDescription() {
     return description;
+  }
+
+  /**
+   * Returns the path to the image of the board.
+   *
+   * @return The path to the image of the board.
+   */
+  public String getImagePath() {
+    return imagePath;
   }
 
   /**
@@ -80,6 +93,11 @@ public class Board {
   private void setDescription(String description) {
     boardSetDescriptionValidator(description);
     this.description = description;
+  }
+
+  private void setImagePath(String imagePath) {
+    boardSetImagePathValidator(imagePath);
+    this.imagePath = imagePath;
   }
 
   /**
