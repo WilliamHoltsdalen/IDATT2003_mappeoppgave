@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +28,7 @@ public class GameView extends HBox implements BoardGameObserver {
   private final StackPane boardStackPane;
   private final VBox menuBox;
   private final ListView<Text> gameLogBox;
+  private final CheckBox rollForAllPlayersCheckBox;
   private final Text roundNumberText;
 
   public GameView(GameController gameController) {
@@ -36,6 +38,7 @@ public class GameView extends HBox implements BoardGameObserver {
     playersBoxRows = new ArrayList<>();
     roundNumberText = new Text();
     gameLogBox = new ListView<>();
+    rollForAllPlayersCheckBox = new CheckBox();
     playersBox = getPlayersBox();
     boardStackPane = getBoardStackPane();
     menuBox = getMenuBox();
@@ -114,14 +117,21 @@ public class GameView extends HBox implements BoardGameObserver {
     VBox menuTopBox = new VBox(hBox, getHorizontalDivider());
     menuTopBox.getStyleClass().add("game-menu-top-box");
 
-    gameLogBox.getItems().add(new Text("Game log"));
     gameLogBox.getStyleClass().add("game-menu-game-log-box");
 
     Button rollDiceButton = new Button("Roll dice");
     rollDiceButton.getStyleClass().add("game-menu-roll-dice-button");
-    rollDiceButton.setOnAction(event -> gameController.performPlayerTurn());
+    rollDiceButton.setOnAction(event -> handleRollDiceButtonAction());
 
-    VBox menuBottomBox = new VBox(getHorizontalDivider(), rollDiceButton);
+    Text rollForAllPlayersText = new Text("Roll for all players");
+    rollForAllPlayersText.getStyleClass().add("game-menu-roll-for-all-players-text");
+
+    rollForAllPlayersCheckBox.getStyleClass().add("game-menu-roll-for-all-players-check-box");
+
+    HBox rollForAllPlayersHBox = new HBox(rollForAllPlayersText, rollForAllPlayersCheckBox);
+    rollForAllPlayersHBox.getStyleClass().add("game-menu-roll-for-all-players-box");
+
+    VBox menuBottomBox = new VBox(getHorizontalDivider(), rollDiceButton, rollForAllPlayersHBox);
     menuBottomBox.getStyleClass().add("game-menu-bottom-box");
 
     VBox menuVbox = new VBox(menuTopBox, gameLogBox, menuBottomBox);
@@ -138,6 +148,14 @@ public class GameView extends HBox implements BoardGameObserver {
   private void setPlayerTileNumber(Player player, int newTileId) {
     playersBoxRows.get(gameController.getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
+  }
+
+  private void handleRollDiceButtonAction() {
+    if (rollForAllPlayersCheckBox.isSelected()) {
+      gameController.performPlayerTurnForAllPlayers();
+      return;
+    }
+    gameController.performPlayerTurn();
   }
 
   @Override

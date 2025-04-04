@@ -235,6 +235,19 @@
   -fx-spacing: 15;
 }
 
+.game-menu-roll-for-all-players-box {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.game-menu-roll-for-all-players-text {
+  -fx-font-size: 12px;
+  -fx-fill: gray;
+}
+
+.game-menu-roll-for-all-players-check-box {
+}
+
 
 Button {
   -fx-background-color: -button-blue;

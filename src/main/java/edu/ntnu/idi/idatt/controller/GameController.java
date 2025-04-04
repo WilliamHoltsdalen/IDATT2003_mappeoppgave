@@ -113,6 +113,10 @@ public class GameController {
     boardGame.performPlayerTurn();
   }
 
+  public void performPlayerTurnForAllPlayers() {
+    boardGame.getPlayers().forEach(player -> boardGame.performPlayerTurn());
+  }
+
   public void restartGame() {
     if (onRestartGame != null) {
       onRestartGame.accept(boardGame.getBoard(), boardGame.getPlayers());
