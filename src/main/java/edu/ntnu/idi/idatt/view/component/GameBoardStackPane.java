@@ -141,11 +141,9 @@ public class GameBoardStackPane extends StackPane {
       transition.getChildren().add(pauseTransition);
     } else {
       getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
-        if (tile.getCoordinates() != null && tile.getCoordinates() != null) {
           double[] tilePaneCoordinates = convertCoordinates(tile.getCoordinates());
           path.getElements().add(
               new LineTo(originPos + tilePaneCoordinates[0], tilePaneCoordinates[1] - originPos));
-        }
       });
     }
     Circle playerCircle = playerCircleMap.get(player);
