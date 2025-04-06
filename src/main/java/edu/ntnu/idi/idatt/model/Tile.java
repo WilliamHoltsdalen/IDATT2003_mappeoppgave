@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetCoordinatesValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetLandActionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetNextTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetTileIdValidator;
@@ -16,6 +17,7 @@ import edu.ntnu.idi.idatt.model.interfaces.TileAction;
  */
 public class Tile {
   private int tileId;
+  private int[] coordinates;
   private int nextTileId;
   private TileAction landAction;
 
@@ -25,8 +27,9 @@ public class Tile {
    * @param tileId The ID of the tile.
    * @param nextTileId The ID of the next tile.
    */
-  public Tile(int tileId, int nextTileId) {
+  public Tile(int tileId, int[] coordinates, int nextTileId) {
     setTileId(tileId);
+    setCoordinates(coordinates);
     setNextTileId(nextTileId);
   }
 
@@ -50,6 +53,15 @@ public class Tile {
    */
   public int getTileId() {
     return tileId;
+  }
+
+  /**
+   * Returns the coordinates of the tile.
+   *
+   * @return The coordinates of the tile.
+   */
+  public int[] getCoordinates() {
+    return coordinates;
   }
 
   /**
@@ -79,6 +91,17 @@ public class Tile {
     tileSetTileIdValidator(tileId);
 
     this.tileId = tileId;
+  }
+
+  /**
+   * Sets the coordinates of the tile.
+   *
+   * @param coordinates The coordinates to set.
+   */
+  private void setCoordinates(int[] coordinates) {
+    tileSetCoordinatesValidator(coordinates);
+
+    this.coordinates = coordinates;
   }
 
   /**
