@@ -186,6 +186,14 @@
   -fx-alignment: center;
 }
 
+.game-board-pane {
+  -fx-background-color: red;
+}
+
+.game-players-pane {
+
+}
+
 .game-board-image-view {
   -fx-fit-height: 520px;
   -fx-preserve-ratio: true;
@@ -248,12 +256,13 @@
 .game-menu-game-log-round-box {
   -fx-background-color: white;
   -fx-background-radius: 10;
-  -fx-border-color: black;
+  -fx-border-color: -gray-border;
   -fx-border-radius: 10;
   -fx-border-width: 1;
   -fx-alignment: center-left;
   -fx-spacing: 10;
   -fx-padding: 5;
+  -fx-min-width: 200px;
 }
 
 .game-menu-game-log-round-number {
@@ -263,7 +272,6 @@
 
 .game-menu-game-log-round-box-entry {
   -fx-font-size: 12px;
-  -fx-max-width: 200px;
   -fx-wrap-text: true;
 }
 
@@ -320,5 +328,3 @@ Button:pressed {
   -fx-scale-x: 1;
   -fx-scale-y: 1;
 }
-
-

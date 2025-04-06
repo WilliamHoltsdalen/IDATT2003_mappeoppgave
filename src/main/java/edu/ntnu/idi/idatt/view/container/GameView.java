@@ -4,14 +4,13 @@ import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.view.component.GameBoardStackPane;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 import edu.ntnu.idi.idatt.view.component.GamePlayerRow;
 import edu.ntnu.idi.idatt.view.component.HorizontalDivider;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -25,7 +24,7 @@ public class GameView extends HBox implements BoardGameObserver {
   private final GameController gameController;
   private final List<GamePlayerRow> playersBoxRows;
   private final VBox playersBox;
-  private final StackPane boardStackPane;
+  private final GameBoardStackPane boardStackPane;
   private final GameMenuBox gameMenuBox;
 
   private final Text roundNumberText;
@@ -80,16 +79,11 @@ public class GameView extends HBox implements BoardGameObserver {
     return spacer;
   }
 
-  private StackPane getBoardStackPane() {
-    ImageView imageView = new ImageView();
-    imageView.setImage(new Image(gameController.getBoardImagePath()));
-    imageView.getStyleClass().add("game-board-image-view");
+  private GameBoardStackPane getBoardStackPane() {
+    GameBoardStackPane gameBoardStackPane = new GameBoardStackPane(gameController.getBoard());
+    gameController.getPlayers().forEach(player -> gameBoardStackPane.addPlayer(player, player.getCurrentTile()));
 
-    StackPane stackPane = new StackPane();
-    stackPane.getChildren().add(imageView);
-    stackPane.getStyleClass().add("game-board-stack-pane");
-    stackPane.maxHeightProperty().bind(stackPane.heightProperty());
-    return stackPane;
+    return gameBoardStackPane;
   }
 
   private GameMenuBox getGameMenuBox() {
@@ -118,6 +112,8 @@ public class GameView extends HBox implements BoardGameObserver {
     gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
 
     setPlayerTileNumber(player, newTileId);
+
+    boardStackPane.movePlayer(player, gameController.getBoard().getTile(newTileId));
   }
 
   @Override
@@ -136,6 +132,8 @@ public class GameView extends HBox implements BoardGameObserver {
   public void onTileActionPerformed(Player player, TileAction tileAction) {
     gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
+
+    boardStackPane.movePlayer(player, gameController.getBoard().getTile(tileAction.getDestinationTileId()));
   }
 
   @Override
