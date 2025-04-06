@@ -26,9 +26,12 @@ import org.apache.commons.io.FileUtils;
 public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
+  private static final String ROWS_PROPERTY = "rows";
+  private static final String COLUMNS_PROPERTY = "columns";
   private static final String IMAGE_PATH_PROPERTY = "imagePath";
   private static final String TILES_PROPERTY = "tiles";
   private static final String TILE_ID_PROPERTY = "id";
+  private static final String TILE_COORDINATES_PROPERTY = "coordinates";
   private static final String TILE_NEXT_TILE_ID_PROPERTY = "nextTileId";
   private static final String TILE_ACTION_PROPERTY = "action";
   private static final String TILE_ACTION_TYPE_PROPERTY = "type";
@@ -97,6 +100,10 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       JsonObject actionJson = new JsonObject();
 
       tileJson.addProperty(TILE_ID_PROPERTY, tile.getTileId());
+      JsonArray coordinatesArray = new JsonArray();
+      coordinatesArray.add(tile.getCoordinates()[0]);
+      coordinatesArray.add(tile.getCoordinates()[1]);
+      tileJson.add(TILE_COORDINATES_PROPERTY, coordinatesArray);
       tileJson.addProperty(TILE_NEXT_TILE_ID_PROPERTY, tile.getNextTileId());
 
       if (tile.getLandAction() != null) {
@@ -114,6 +121,8 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonObject boardJson = new JsonObject();
     boardJson.add(NAME_PROPERTY, new JsonPrimitive(board.getName()));
     boardJson.add(DESCRIPTION_PROPERTY, new JsonPrimitive(board.getDescription()));
+    boardJson.addProperty(ROWS_PROPERTY, board.getRowsAndColumns()[0]);
+    boardJson.add(COLUMNS_PROPERTY, new JsonPrimitive(board.getRowsAndColumns()[1]));
     boardJson.add(IMAGE_PATH_PROPERTY, new JsonPrimitive(board.getImagePath()));
     boardJson.add(TILES_PROPERTY, tilesJsonArray);
     return boardJson;
@@ -133,18 +142,27 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
     String boardName = jsonObject.get(NAME_PROPERTY).getAsString();
     String boardDescription = jsonObject.get(DESCRIPTION_PROPERTY).getAsString();
+    int[] rowsAndColumns = new int[2];
+    rowsAndColumns[0] = jsonObject.get(ROWS_PROPERTY).getAsInt();
+    rowsAndColumns[1] = jsonObject.get(COLUMNS_PROPERTY).getAsInt();
     String boardImagePath = jsonObject.get(IMAGE_PATH_PROPERTY).getAsString();
-    Board board = new Board(boardName, boardDescription, boardImagePath);
+    Board board = new Board(boardName, boardDescription, rowsAndColumns, boardImagePath);
 
     JsonArray tilesJsonArray = jsonObject.getAsJsonArray(TILES_PROPERTY);
     tilesJsonArray.forEach(tileJson -> {
       JsonObject tileJsonObject = tileJson.getAsJsonObject();
       int tileId = 0;
+      int[] coordinates = null;
       int nextTileId = 0;
       TileAction tileAction = null;
 
       try {
         tileId = tileJsonObject.get(TILE_ID_PROPERTY).getAsInt();
+        JsonArray coordinatesArray = tileJsonObject.get(TILE_COORDINATES_PROPERTY).getAsJsonArray();
+        coordinates = new int[coordinatesArray.size()];
+        for (int i = 0; i < coordinatesArray.size(); i++) {
+          coordinates[i] = coordinatesArray.get(i).getAsInt();
+        }
         nextTileId = tileJsonObject.get(TILE_NEXT_TILE_ID_PROPERTY).getAsInt();
         JsonObject actionJsonObject = tileJsonObject.getAsJsonObject(TILE_ACTION_PROPERTY);
 
@@ -158,10 +176,10 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       }
 
       if (tileAction != null) {
-        board.addTile(new Tile(tileId, nextTileId, tileAction));
+        board.addTile(new Tile(tileId, coordinates, nextTileId, tileAction));
         return;
       }
-      board.addTile(new Tile(tileId, nextTileId));
+      board.addTile(new Tile(tileId, coordinates, nextTileId));
     });
 
     return board;

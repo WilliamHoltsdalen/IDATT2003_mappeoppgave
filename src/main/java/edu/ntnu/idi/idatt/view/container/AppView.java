@@ -31,6 +31,6 @@ public class AppView extends StackPane {
     gameController.setOnQuitGame(this::showMainMenu);
 
     gameView = new GameView(gameController);
-    this.getChildren().setAll(gameView.getView());
+    this.getChildren().setAll(gameView);
   }
 }

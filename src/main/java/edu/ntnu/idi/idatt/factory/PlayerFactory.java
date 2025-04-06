@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.factory;
 
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.utils.PlayerFileHandlerGson;
+import edu.ntnu.idi.idatt.utils.PlayerFileHandlerCsv;
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +31,7 @@ public class PlayerFactory {
       return List.of();
     }
 
-    final FileHandler<Player> playerFileHandler = new PlayerFileHandlerGson();
+    final FileHandler<Player> playerFileHandler = new PlayerFileHandlerCsv();
     return playerFileHandler.readFile(filePath);
   }
 

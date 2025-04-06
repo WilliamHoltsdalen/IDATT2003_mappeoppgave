@@ -17,7 +17,7 @@ import java.util.List;
  * <p>This class provides methods for reading and writing Player objects to and from csv formatted
  * files.
  */
-public class PlayerFileHandlerGson implements FileHandler<Player> {
+public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
   @Override
   public List<Player> readFile(String path) throws IOException {

@@ -114,7 +114,9 @@ public class GameController {
   }
 
   public void performPlayerTurnForAllPlayers() {
-    boardGame.getPlayers().forEach(player -> boardGame.performPlayerTurn());
+    do {
+      boardGame.performPlayerTurn();
+    } while (!boardGame.getCurrentPlayer().equals(boardGame.getPlayers().getFirst()));
   }
 
   public void restartGame() {

@@ -69,6 +69,7 @@ public class BoardFactory {
   private static Board createClassicBoard() {
     Board board = new Board("Classic (default)",
         "Standard chutes and ladders game with 90 tiles.",
+        new int[]{9, 10},
         "boardImages/ClassicGameBoard.png");
     createTiles(9, 10).forEach(board::addTile);
 
@@ -101,6 +102,7 @@ public class BoardFactory {
   private static Board createPortalBoard() {
     Board board = new Board("Teleporting",
         "Teleport through portals to reach the end of this board, with 90 tiles.",
+        new int[]{9, 10},
         "boardImages/PortalGameBoard.png");
 
     createTiles(9, 10).forEach(board::addTile);
@@ -134,19 +136,20 @@ public class BoardFactory {
    */
   private static List<Tile> createTiles(int rows, int columns) {
     List<Tile> tiles = new ArrayList<>();
-    tiles.add(new Tile(0, 1));
+    tiles.add(new Tile(0, new int[]{0, 0}, 1));
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
         int baseId = i * columns;
         int tileId;
+        int[] coordinates = new int[]{i, j};
         // Even numbered rows (left to right)
         if (i % 2 == 0) {
           tileId = baseId + j + 1;
         } else { // Odd numbered rows (right to left)
           tileId = baseId + (columns - j);
         }
-        tiles.add(new Tile(tileId, tileId + 1));
+        tiles.add(new Tile(tileId, coordinates, tileId + 1));
       }
     }
     return tiles;

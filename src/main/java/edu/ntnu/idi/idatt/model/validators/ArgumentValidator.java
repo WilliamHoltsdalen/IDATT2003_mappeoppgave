@@ -119,6 +119,18 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setRowsAndColumns method in Board class.
+   *
+   * @param rowsAndColumns the rows and columns to set
+   * @throws IllegalArgumentException if rowsAndColumns is null
+   */
+  public static void boardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
+    if (rowsAndColumns == null) {
+      throw new IllegalArgumentException("Rows and columns cannot be null");
+    }
+  }
+
+  /**
    * Validates the arguments for the populateTiles method in Board class.
    *
    * @param rows    the number of rows
@@ -286,6 +298,18 @@ public class ArgumentValidator {
   public static void playerPlaceOnTileValidator(Tile tile) {
     if (tile == null) {
       throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setCoordinates method in Tile class.
+   *
+   * @param coordinates the coordinates to set
+   * @throws IllegalArgumentException if coordinates is null
+   */
+  public static void tileSetCoordinatesValidator(int[] coordinates) {
+    if (coordinates == null) {
+      throw new IllegalArgumentException("Coordinates cannot be null");
     }
   }
 
