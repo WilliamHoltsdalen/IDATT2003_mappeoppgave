@@ -176,7 +176,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       }
 
       if (tileAction != null) {
-        board.addTile(new Tile(tileId, nextTileId, tileAction));
+        board.addTile(new Tile(tileId, coordinates, nextTileId, tileAction));
         return;
       }
       board.addTile(new Tile(tileId, coordinates, nextTileId));

@@ -40,8 +40,9 @@ public class Tile {
    * @param nextTileId The ID of the next tile.
    * @param tileAction The tile action to perform on the tile.
    */
-  public Tile(int tileId, int nextTileId, TileAction tileAction) {
+  public Tile(int tileId, int[] coordinates, int nextTileId, TileAction tileAction) {
     setTileId(tileId);
+    setCoordinates(coordinates);
     setNextTileId(nextTileId);
     setLandAction(tileAction);
   }
