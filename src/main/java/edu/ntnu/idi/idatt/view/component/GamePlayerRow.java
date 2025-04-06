@@ -38,10 +38,6 @@ public class GamePlayerRow extends HBox {
     this.getChildren().addAll(playerCircle, playerName, spacer, playerTile);
   }
 
-  public HBox getView() {
-    return this;
-  }
-
   public void setTileNumber(Player player, int tileNumber) {
     playerTile.setText(String.valueOf(tileNumber));
     playerTile.setTooltip(new Tooltip(player.getName() + " is on tile: " + tileNumber));

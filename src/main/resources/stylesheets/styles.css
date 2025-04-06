@@ -4,6 +4,7 @@
   -button-dark: #4d4d4d;
   -button-dark-hover: #2e2e2e;
   -button-disabled: #939393;
+  -gray-background: #F5F5F5;
   -gray-border: #D9D9D9;
 }
 
@@ -11,8 +12,14 @@
   -fx-background-color:radial-gradient(focus-distance 0% , center 50% 50% , radius 100% , rgb(108, 156, 164) 30%, rgb(41, 89, 103) 100%);;
 }
 
+.horizontal-divider {
+  -fx-min-height: 3px;
+  -fx-background-color: -gray-border;
+  -fx-max-width: infinity;
+}
+
 .main-menu-view {
-  -fx-background-color: #f5f5f5;
+  -fx-background-color: -gray-background;
   -fx-padding: 20;
   -fx-spacing: 20;
   -fx-alignment: center;
@@ -138,7 +145,7 @@
 }
 
 .game-players-box {
-  -fx-background-color: #f5f5f5;
+  -fx-background-color: -gray-background;
   -fx-background-radius: 12;
   -fx-border-color: black;
   -fx-border-width: 3;
@@ -185,7 +192,7 @@
 }
 
 .game-menu-box {
-  -fx-background-color: #f5f5f5;
+  -fx-background-color: -gray-background;
   -fx-background-radius: 12;
   -fx-border-color: black;
   -fx-border-width: 3;
@@ -220,14 +227,44 @@
   -fx-border-radius: 7;
 }
 
-.game-menu-spacer {
-  -fx-min-height: 3px;
-  -fx-background-color: -gray-border;
-  -fx-max-width: infinity;
+.game-menu-game-log-scroll-pane {
+  -fx-background-color: -gray-background;
+  -fx-background-radius: 10;
+  -fx-border-color: black;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-max-height: infinity;
+  -fx-alignment: top-left;
+  -fx-padding: 5;
 }
 
-.game-menu-game-log-box {
-  -fx-alignment: top-left;
+.game-menu-game-log-round-boxes-vbox {
+  -fx-background-color: -gray-background;
+  -fx-background-radius: 10;
+  -fx-spacing: 10;
+  -fx-padding: 5;
+}
+
+.game-menu-game-log-round-box {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: black;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-alignment: center-left;
+  -fx-spacing: 10;
+  -fx-padding: 5;
+}
+
+.game-menu-game-log-round-number {
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+}
+
+.game-menu-game-log-round-box-entry {
+  -fx-font-size: 12px;
+  -fx-max-width: 200px;
+  -fx-wrap-text: true;
 }
 
 .game-menu-bottom-box {
