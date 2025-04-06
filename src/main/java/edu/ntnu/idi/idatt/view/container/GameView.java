@@ -79,10 +79,7 @@ public class GameView extends HBox implements BoardGameObserver {
   }
 
   private GameBoardStackPane getBoardStackPane() {
-    GameBoardStackPane gameBoardStackPane = new GameBoardStackPane(gameController.getBoard());
-    gameController.getPlayers().forEach(player -> gameBoardStackPane.addPlayer(player, player.getCurrentTile()));
-
-    return gameBoardStackPane;
+    return new GameBoardStackPane(gameController.getBoard(), gameController.getPlayers());
   }
 
   private GameMenuBox getGameMenuBox() {

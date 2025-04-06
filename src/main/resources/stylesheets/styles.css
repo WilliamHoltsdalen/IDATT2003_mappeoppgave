@@ -180,18 +180,18 @@
 }
 
 .game-board-stack-pane {
-  -fx-background-color: #935c37;
+  -fx-background-color: #8B8780;
   -fx-background-radius: 25;
+  -fx-border-color: black;
+  -fx-border-width: 2;
+  -fx-border-radius: 25;
+  -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
   -fx-padding: 25;
   -fx-alignment: center;
 }
 
 .game-board-pane {
   -fx-background-color: red;
-}
-
-.game-players-pane {
-
 }
 
 .game-board-image-view {
