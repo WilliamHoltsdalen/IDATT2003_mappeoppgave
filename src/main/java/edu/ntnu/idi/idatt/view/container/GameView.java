@@ -14,7 +14,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -113,7 +112,7 @@ public class GameView extends HBox implements BoardGameObserver {
 
     setPlayerTileNumber(player, newTileId);
 
-    boardStackPane.movePlayer(player, gameController.getBoard().getTile(newTileId));
+    boardStackPane.movePlayer(player, gameController.getBoard().getTile(newTileId), false);
   }
 
   @Override
@@ -133,7 +132,7 @@ public class GameView extends HBox implements BoardGameObserver {
     gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
 
-    boardStackPane.movePlayer(player, gameController.getBoard().getTile(tileAction.getDestinationTileId()));
+    boardStackPane.movePlayer(player, gameController.getBoard().getTile(tileAction.getDestinationTileId()), true);
   }
 
   @Override

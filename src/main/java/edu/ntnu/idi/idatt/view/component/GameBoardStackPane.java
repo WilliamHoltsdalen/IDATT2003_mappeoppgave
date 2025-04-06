@@ -3,7 +3,9 @@ package edu.ntnu.idi.idatt.view.component;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.animation.PathTransition;
 import javafx.scene.image.Image;
@@ -14,7 +16,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 public class GameBoardStackPane extends StackPane {
@@ -25,6 +29,8 @@ public class GameBoardStackPane extends StackPane {
   private final Pane playersPane;
 
   private double[] boardDimensions;
+  private double tileSize;
+  private final double originPos;
 
   public GameBoardStackPane(Board board) {
     this.board = board;
@@ -34,6 +40,10 @@ public class GameBoardStackPane extends StackPane {
     this.playersPane = new Pane();
 
     this.boardDimensions = new double[2];
+    boardDimensions[0] = 578;
+    boardDimensions[1] = 520;
+    this.tileSize = boardDimensions[0] / board.getRowsAndColumns()[1];
+    this.originPos = tileSize / 2;
 
     this.getStyleClass().add("game-board");
     initialize();
@@ -43,8 +53,6 @@ public class GameBoardStackPane extends StackPane {
     ImageView boardImageView = new ImageView();
     boardImageView.setImage(new Image(board.getImagePath()));
     boardImageView.getStyleClass().add("game-board-image-view");
-    boardDimensions[0] = 578;
-    boardDimensions[1] = 520;
 
     playersPane.getStyleClass().add("game-players-pane");
     VBox.setVgrow(playersPane, Priority.NEVER);
@@ -60,30 +68,40 @@ public class GameBoardStackPane extends StackPane {
     Circle playerCircle = new Circle(10, Color.TRANSPARENT);
     playerCircle.setStroke(Color.web(player.getColorHex()));
     playerCircle.setStrokeWidth(8);
+
+    playerCircle.setTranslateX(originPos + convertCoordinates(tile.getCoordinates())[0]);
+    playerCircle.setTranslateY(convertCoordinates(tile.getCoordinates())[1] - originPos);
+
     playersPane.getChildren().add(playerCircle);
     playerCircleMap.put(player, playerCircle);
     playerTileMap.put(player, tile);
-    movePlayer(player, tile);
   }
 
-  public void movePlayer(Player player, Tile newTile) {
+  public void movePlayer(Player player, Tile newTile, boolean straightLine) {
     double[] currentPlaneCoordinates = convertCoordinates(playerTileMap.get(player).getCoordinates());
     double[] newPlaneCoordinates = convertCoordinates(newTile.getCoordinates());
 
-    double originPos = boardDimensions[0] / 10 / 2;
-
     double currentXPos = originPos + currentPlaneCoordinates[0];
     double currentYPos = currentPlaneCoordinates[1] - originPos;
-
     double newXPos = originPos + newPlaneCoordinates[0];
     double newYPos = newPlaneCoordinates[1] - originPos;
 
-    Line line = new Line(currentXPos, currentYPos, newXPos, newYPos);
+    Path path = new Path();
+    path.getElements().add(new MoveTo(currentXPos, currentYPos));
+    if (straightLine) {
+      path.getElements().add(new LineTo(newXPos, newYPos));
+    } else {
+      getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
+        double[] tilePlaneCoordinates = convertCoordinates(tile.getCoordinates());
+        path.getElements().add(new LineTo(originPos + tilePlaneCoordinates[0], tilePlaneCoordinates[1] - originPos));
+      });
+    }
+    Circle playerCircle = playerCircleMap.get(player);
     PathTransition pathTransition = new PathTransition();
     pathTransition.setDuration(Duration.seconds(1));
     pathTransition.setCycleCount(1);
-    pathTransition.setNode(playerCircleMap.get(player));
-    pathTransition.setPath(line);
+    pathTransition.setNode(playerCircle);
+    pathTransition.setPath(path);
     pathTransition.play();
 
     playerTileMap.put(player, newTile);
@@ -102,5 +120,23 @@ public class GameBoardStackPane extends StackPane {
     double y = boardHeight - ((boardHeight / rMax) * r);
 
     return new double[]{x, y};
+  }
+
+  private List<Tile> getPathTiles(Tile startTile, Tile endTile) {
+    int fromId = startTile.getTileId();
+    int toId = endTile.getTileId();
+
+    List<Tile> pathTiles = new ArrayList<>();
+
+    if (fromId < toId) {
+      for (int id = fromId + 1; id <= toId; id++) {
+        pathTiles.add(board.getTile(id));
+      }
+    } else {
+      for (int id = fromId - 1; id >= toId; id--) {
+        pathTiles.add(board.getTile(id));
+      }
+    }
+    return pathTiles;
   }
 }
