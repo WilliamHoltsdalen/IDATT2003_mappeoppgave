@@ -83,4 +83,15 @@ public class GamePlayersBox extends VBox {
   public List<GamePlayerRow> getPlayerRows() {
     return playersBoxRows;
   }
+
+  public void setFocusedPlayer(int playerIndex) {
+    removeFocusedPlayer();
+    playersBoxRows.get(playerIndex).getStyleClass().add("game-players-box-player-row-current-player");
+  }
+
+  public void removeFocusedPlayer() {
+    for (GamePlayerRow playerRow : playersBoxRows) {
+      playerRow.getStyleClass().remove("game-players-box-player-row-current-player");
+    }
+  }
 }

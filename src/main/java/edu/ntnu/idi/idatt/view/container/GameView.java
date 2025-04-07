@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.view.container;
 import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
 import edu.ntnu.idi.idatt.view.component.GameBoardStackPane;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 import edu.ntnu.idi.idatt.view.component.GamePlayersBox;
@@ -88,7 +88,12 @@ public class GameView extends HBox implements BoardGameObserver {
 
   @Override
   public void onCurrentPlayerChanged(Player player) {
-    gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " is now the current player.");
+    if (!gameMenuBox.getRollForAllPlayersSelected()) {
+      playersBox.setFocusedPlayer(gameController.getPlayers().indexOf(player));
+      return;
+    }
+    playersBox.removeFocusedPlayer();
+
   }
 
   @Override

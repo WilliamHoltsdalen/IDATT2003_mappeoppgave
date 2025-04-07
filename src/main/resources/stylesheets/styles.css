@@ -165,6 +165,13 @@
   -fx-alignment: center;
 }
 
+.game-players-box-player-row-current-player {
+  -fx-background-color: rgba(201, 253, 202, 0.63);
+  -fx-background-radius: 10;
+  -fx-effect: dropshadow(three-pass-box, black, 5, 0, 0, 0);
+  -fx-padding: 5;
+}
+
 .game-players-box-player-name {
   -fx-font-size: 24px;
 }
