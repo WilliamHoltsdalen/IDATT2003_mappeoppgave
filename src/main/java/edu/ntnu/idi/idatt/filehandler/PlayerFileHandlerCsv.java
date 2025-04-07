@@ -1,8 +1,7 @@
-package edu.ntnu.idi.idatt.utils;
+package edu.ntnu.idi.idatt.filehandler;
 
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;

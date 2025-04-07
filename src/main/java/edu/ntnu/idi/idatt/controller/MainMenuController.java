@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.factory.PlayerFactory;
+import edu.ntnu.idi.idatt.model.factory.BoardFactory;
+import edu.ntnu.idi.idatt.model.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;

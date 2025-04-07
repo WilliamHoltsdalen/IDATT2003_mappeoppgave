@@ -1,7 +1,6 @@
-package edu.ntnu.idi.idatt.observer;
+package edu.ntnu.idi.idatt.model.interfaces;
 
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 
 /**
  * An interface for observers that wish to be notified about board game events.

@@ -1,10 +1,10 @@
-package edu.ntnu.idi.idatt.factory;
+package edu.ntnu.idi.idatt.model.factory;
 
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.LadderAction;
 import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.utils.BoardFileHandlerGson;
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
+import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

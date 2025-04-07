@@ -4,7 +4,7 @@ import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.BoardGame;
 import edu.ntnu.idi.idatt.model.Dice;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
 import java.util.List;
 import java.util.function.BiConsumer;
 

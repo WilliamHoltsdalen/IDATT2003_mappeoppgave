@@ -1,9 +1,9 @@
-package edu.ntnu.idi.idatt.factory;
+package edu.ntnu.idi.idatt.model.factory;
 
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.utils.PlayerFileHandlerCsv;
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
+import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import java.io.IOException;
 import java.util.List;
 
