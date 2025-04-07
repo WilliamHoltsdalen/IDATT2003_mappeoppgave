@@ -70,7 +70,7 @@
 }
 
 .main-menu-player-row {
-  -fx-alignment: center-left;
+  -fx-alignment: center-right;
   -fx-spacing: 10;
 }
 
@@ -204,6 +204,10 @@
 .game-board-image-view {
   -fx-fit-height: 520px;
   -fx-preserve-ratio: true;
+}
+
+.game-board-player-token {
+  -fx-effect: dropshadow(three-pass-box, black, 3, 0, 0, 0);
 }
 
 .game-menu-box {

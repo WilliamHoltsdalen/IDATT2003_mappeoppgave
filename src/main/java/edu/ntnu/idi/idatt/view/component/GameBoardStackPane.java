@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.view.component;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 /**
@@ -31,7 +32,7 @@ public class GameBoardStackPane extends StackPane {
   private static final Duration TRANSITION_DURATION = Duration.seconds(1);
   private final Board board;
   private final Map<Player, Tile> playerTileMap;
-  private final Map<Player, Circle> playerCircleMap;
+  private final Map<Player, Shape> playerTokenMap;
   private double[] boardDimensions;
   private double originPos;
 
@@ -46,7 +47,7 @@ public class GameBoardStackPane extends StackPane {
   public GameBoardStackPane(Board board, List<Player> players) {
     this.board = board;
     this.playerTileMap = new HashMap<>();
-    this.playerCircleMap = new HashMap<>();
+    this.playerTokenMap = new HashMap<>();
     this.boardDimensions = new double[2];
     this.originPos = 0;
 
@@ -91,14 +92,15 @@ public class GameBoardStackPane extends StackPane {
   public void addGamePieces(List<Player> players) {
     players.forEach(player -> {
       Tile playerTile = player.getCurrentTile();
-      Circle playerCircle = new Circle(10, Color.TRANSPARENT);
-      playerCircle.setStroke(Color.web(player.getColorHex()));
-      playerCircle.setStrokeWidth(8);
-      playerCircle.setTranslateX(originPos + convertCoordinates(playerTile.getCoordinates())[0]);
-      playerCircle.setTranslateY(convertCoordinates(playerTile.getCoordinates())[1] - originPos);
-      playersPane.getChildren().add(playerCircle);
 
-      playerCircleMap.put(player, playerCircle);
+      Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
+          player.getPlayerTokenType());
+      playerToken.getStyleClass().add("game-board-player-token");
+      playerToken.setTranslateX(originPos + convertCoordinates(playerTile.getCoordinates())[0]);
+      playerToken.setTranslateY(convertCoordinates(playerTile.getCoordinates())[1] - originPos);
+      playersPane.getChildren().add(playerToken);
+
+      playerTokenMap.put(player, playerToken);
       playerTileMap.put(player, playerTile);
     });
   }
@@ -146,10 +148,10 @@ public class GameBoardStackPane extends StackPane {
               new LineTo(originPos + tilePaneCoordinates[0], tilePaneCoordinates[1] - originPos));
       });
     }
-    Circle playerCircle = playerCircleMap.get(player);
+    Shape playerToken = playerTokenMap.get(player);
     PathTransition pathTransition = new PathTransition();
     pathTransition.setDuration(TRANSITION_DURATION);
-    pathTransition.setNode(playerCircle);
+    pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
 
     transition.getChildren().add(pathTransition);
