@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.utils;
 
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,7 +44,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   @Override
-  public void writeFile(String path, List<Player> players) throws IOException {
+  public void writeFile(String path, List<Player> players) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
       for (Player player : players) {
         writer.write(toCsvLine(player));
@@ -56,13 +57,14 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
   private Player fromCsvLine(String line) {
     String[] segments = line.split(",");
-    if (segments.length != 2) {
+    if (segments.length != 3) {
       return null;
     }
     try {
       String playerName = segments[0].trim();
       String playerColorHex = segments[1].trim();
-      return new Player(playerName, playerColorHex);
+      String playerTokenType = segments[2].trim();
+      return new Player(playerName, playerColorHex, PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
@@ -70,7 +72,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   private String toCsvLine(Player player) {
-    return String.format("%s,%s", player.getName(), player.getColorHex());
+    return String.format("%s,%s,%s", player.getName(), player.getColorHex(), player.getPlayerTokenType().name());
   }
 
 }
