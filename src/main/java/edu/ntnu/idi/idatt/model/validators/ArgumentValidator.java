@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.model.validators;
 
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.util.List;
@@ -298,6 +299,18 @@ public class ArgumentValidator {
   public static void playerPlaceOnTileValidator(Tile tile) {
     if (tile == null) {
       throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setPlayerTokenType method in Player class.
+   *
+   * @param playerTokenType the player token type to set
+   * @throws IllegalArgumentException if playerTokenType is null
+   */
+  public static void playerSetPlayerTokenTypeValidator(PlayerTokenType playerTokenType) {
+    if (playerTokenType == null) {
+      throw new IllegalArgumentException("Player token type cannot be null");
     }
   }
 

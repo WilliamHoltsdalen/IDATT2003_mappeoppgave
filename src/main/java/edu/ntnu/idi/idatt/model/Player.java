@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.model;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerPlaceOnTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetColorHexValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetNameValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetPlayerTokenTypeValidator;
 
 /**
  * <h3>Player class</h3>
@@ -12,6 +13,7 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetNam
 public class Player {
   private String name;
   private String colorHex;
+  private PlayerTokenType playerTokenType;
   private Tile currentTile;
 
   /**
@@ -20,9 +22,10 @@ public class Player {
    * @param name The name of the player.
    * @param colorHex The color of the player in hex format.
    */
-  public Player(String name, String colorHex) {
+  public Player(String name, String colorHex, PlayerTokenType playerTokenType) {
     setName(name);
     setColorHex(colorHex);
+    setPlayerTokenType(playerTokenType);
   }
 
   /**
@@ -41,6 +44,15 @@ public class Player {
    */
   public String getColorHex() {
     return colorHex;
+  }
+
+  /**
+   * Returns the type of player token to use for the player.
+   *
+   * @return the type of player token to use for the player
+   */
+  public PlayerTokenType getPlayerTokenType() {
+    return playerTokenType;
   }
 
   /**
@@ -72,6 +84,17 @@ public class Player {
     playerSetColorHexValidator(colorHex);
 
     this.colorHex = colorHex;
+  }
+
+  /**
+   * Sets the type of player token to use for the player.
+   *
+   * @param playerTokenType the type of player token to use for the player
+   */
+  public void setPlayerTokenType(PlayerTokenType playerTokenType) {
+    playerSetPlayerTokenTypeValidator(playerTokenType);
+
+    this.playerTokenType = playerTokenType;
   }
 
   /**
