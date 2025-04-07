@@ -56,7 +56,8 @@ public class MainMenuController {
   private void handleStartGame() {
     List<Player> players = new ArrayList<>();
     mainMenuView.getPlayerRows().forEach(playerRow ->
-        players.add(new Player(playerRow.getName(), playerRow.getColor().toString())));
+        players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
+            playerRow.getPlayerTokenType())));
 
     onStartGame.accept(boardVariants.get(currentBoardIndex), players);
   }
