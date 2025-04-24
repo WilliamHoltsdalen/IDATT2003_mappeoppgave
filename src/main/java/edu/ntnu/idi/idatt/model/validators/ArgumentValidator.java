@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.model.validators;
 
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.util.List;
@@ -103,6 +104,30 @@ public class ArgumentValidator {
   public static void boardSetDescriptionValidator(String description) {
     if (description == null || description.isBlank()) {
       throw new IllegalArgumentException("Description cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setImagePath method in Board class.
+   *
+   * @param imagePath the image path to set
+   * @throws IllegalArgumentException if imagePath is null or blank
+   */
+  public static void boardSetImagePathValidator(String imagePath) {
+    if (imagePath == null || imagePath.isBlank()) {
+      throw new IllegalArgumentException("Image path cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setRowsAndColumns method in Board class.
+   *
+   * @param rowsAndColumns the rows and columns to set
+   * @throws IllegalArgumentException if rowsAndColumns is null
+   */
+  public static void boardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
+    if (rowsAndColumns == null) {
+      throw new IllegalArgumentException("Rows and columns cannot be null");
     }
   }
 
@@ -274,6 +299,30 @@ public class ArgumentValidator {
   public static void playerPlaceOnTileValidator(Tile tile) {
     if (tile == null) {
       throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setPlayerTokenType method in Player class.
+   *
+   * @param playerTokenType the player token type to set
+   * @throws IllegalArgumentException if playerTokenType is null
+   */
+  public static void playerSetPlayerTokenTypeValidator(PlayerTokenType playerTokenType) {
+    if (playerTokenType == null) {
+      throw new IllegalArgumentException("Player token type cannot be null");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setCoordinates method in Tile class.
+   *
+   * @param coordinates the coordinates to set
+   * @throws IllegalArgumentException if coordinates is null
+   */
+  public static void tileSetCoordinatesValidator(int[] coordinates) {
+    if (coordinates == null) {
+      throw new IllegalArgumentException("Coordinates cannot be null");
     }
   }
 

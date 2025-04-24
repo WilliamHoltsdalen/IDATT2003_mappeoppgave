@@ -1,8 +1,9 @@
-package edu.ntnu.idi.idatt.factory;
+package edu.ntnu.idi.idatt.model.factory;
 
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.utils.PlayerFileHandlerGson;
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import java.util.List;
  * factory class.
  */
 public class PlayerFactory {
+  private static final String DEFAULT_BOT_NAME_PREFIX = "Bot_";
   private static final String DEFAULT_BOT_COLOR = "#FF0000";
+  private static final PlayerTokenType DEFAULT_BOT_TOKEN_TYPE = PlayerTokenType.SQUARE;
 
   /** Private constructor to prevent instantiation. */
   private PlayerFactory() {}
@@ -31,7 +34,7 @@ public class PlayerFactory {
       return List.of();
     }
 
-    final FileHandler<Player> playerFileHandler = new PlayerFileHandlerGson();
+    final FileHandler<Player> playerFileHandler = new PlayerFileHandlerCsv();
     return playerFileHandler.readFile(filePath);
   }
 
@@ -42,15 +45,18 @@ public class PlayerFactory {
    * @param colorHex  The player's color in hex (e.g. "#FF0000").
    * @return A new Player instance with the given attributes.
    */
-  public static Player createPlayer(String name, String colorHex) {
+  public static Player createPlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
     if (name == null || name.isEmpty()) {
       throw new IllegalArgumentException("Name cannot be null or empty.");
     }
     if (colorHex == null || colorHex.isEmpty()) {
       throw new IllegalArgumentException("Color hex cannot be null or empty.");
     }
+    if (playerTokenType == null) {
+      throw new IllegalArgumentException("Player token type cannot be null.");
+    }
 
-    return new Player(name, colorHex);
+    return new Player(name, colorHex, playerTokenType);
   }
 
   /**
@@ -64,6 +70,6 @@ public class PlayerFactory {
       throw new IllegalArgumentException("Name cannot be null or empty.");
     }
 
-    return new Player("Bot_" + name, DEFAULT_BOT_COLOR);
+    return new Player(DEFAULT_BOT_NAME_PREFIX + name, DEFAULT_BOT_COLOR, DEFAULT_BOT_TOKEN_TYPE);
   }
 }
