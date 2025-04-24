@@ -26,7 +26,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
       String line;
       while ((line = reader.readLine()) != null) {
-        if (line.equals("name, colorHex")) {
+        if (line.equals("name, colorHex, playerTokenType")) {
           continue;
         }
 
