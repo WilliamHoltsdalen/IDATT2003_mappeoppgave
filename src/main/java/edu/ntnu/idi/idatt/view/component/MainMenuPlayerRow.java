@@ -67,7 +67,7 @@ public class MainMenuPlayerRow extends HBox {
 
     HorizontalDivider horizontalDivider = new HorizontalDivider();
 
-    Text popupPickTokenTypeText = new Text("Pick a token for" + getName());
+    Text popupPickTokenTypeText = new Text("Pick a token for " + getName());
     ComboBox<PlayerTokenType> tokenTypeComboBox = new ComboBox<>();
     tokenTypeComboBox.getItems().addAll(PlayerTokenType.values());
     tokenTypeComboBox.setValue(tokenType);
