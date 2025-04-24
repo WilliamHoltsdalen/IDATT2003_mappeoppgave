@@ -1,12 +1,15 @@
 package edu.ntnu.idi.idatt.view.container;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.model.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -124,16 +127,16 @@ public class MainMenuView extends VBox {
     playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
 
     playerListBox.getStyleClass().add("main-menu-player-list-box");
-    addPlayerRow("Player 1", Color.RED, false);
-    addPlayerRow("Player 2", Color.GREEN, true);
+    addPlayerRow("Player 1", Color.RED, PlayerTokenType.CIRCLE,false);
+    addPlayerRow("Player 2", Color.GREEN, PlayerTokenType.DIAMOND, true);
 
     Button addPlayerButton = new Button("Add Player");
     addPlayerButton.setOnAction(event -> addPlayerRow(
-        "Player " + (mainMenuPlayerRows.size() + 1), Color.BLUE, true));
+        "Player " + (mainMenuPlayerRows.size() + 1), Color.BLUE, PlayerTokenType.HEXAGON, true));
 
     Button addBotButton = new Button("Add Bot");
     addBotButton.setOnAction(event -> addPlayerRow(
-        "Bot " + (mainMenuPlayerRows.size() + 1), Color.PURPLE, true));
+        "Bot " + (mainMenuPlayerRows.size() + 1), Color.PURPLE, PlayerTokenType.SQUARE, true));
 
     addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
     addPlayerButtonsBox.getChildren().forEach(button -> button.getStyleClass()
@@ -179,6 +182,10 @@ public class MainMenuView extends VBox {
     return vBox;
   }
 
+  /**
+   *
+   * @return
+   */
   private Button getStartGameButton() {
     Button button = new Button("Start Game");
     button.setOnAction(event -> handleStartGameButtonAction());
@@ -192,9 +199,10 @@ public class MainMenuView extends VBox {
    * @param color The color of the player.
    * @param removable The removable status of the player.
    */
-  private void addPlayerRow(String defaultName, Color color, boolean removable) {
-    MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, removable);
+  private void addPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType, boolean removable) {
+    MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, playerTokenType, removable);
     mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
+    mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
 
@@ -214,19 +222,35 @@ public class MainMenuView extends VBox {
   }
 
   /**
-   * Updates the controls of the main menu view based on the number of players in the main menu.
+   * Updates the controls of the main menu view based on the number of players in the main menu,
+   * and disables the start game button if there are not enough players. The button is also disabled
+   * if there are any players with the same color and token type.
    */
   private void updateControls() {
+    // Hide / show the add player buttons box based on the number of players in the main menu.
     if (mainMenuPlayerRows.size() == 5) {
       playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
     } else if (mainMenuPlayerRows.size() < 5) {
       playerSelectionBox.getChildren().setAll(playerSelectionTitle, playerListBox, addPlayerButtonsBox);
     }
 
+    // Disable the start game button if there are not enough players.
     if (mainMenuPlayerRows.size() < 2) {
-      disableStartGameButton();
+      disableStartGameButton("You need at least two players.");
     } else {
       enableStartGameButton();
+    }
+
+    /* Find all the unique colors and token types in the main menu, and disable the start game button
+     * if there are any duplicates.*/
+    Set<Color> uniqueColors = new HashSet<>(
+        mainMenuPlayerRows.stream().map(MainMenuPlayerRow::getColor).toList());
+    Set<PlayerTokenType> uniqueTokenTypes = new HashSet<>(
+        mainMenuPlayerRows.stream().map(MainMenuPlayerRow::getPlayerTokenType).toList());
+    if (uniqueColors.size() != mainMenuPlayerRows.size()) {
+      disableStartGameButton("You can't have two players with the same color.");
+    } else if (uniqueTokenTypes.size() != mainMenuPlayerRows.size()) {
+      disableStartGameButton("You can't have two players with the same token type.");
     }
   }
 
@@ -234,10 +258,10 @@ public class MainMenuView extends VBox {
    * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum
    * of two players are required to start the game.
    */
-  private void disableStartGameButton() {
+  private void disableStartGameButton(String toolTipText) {
     startGameButton.setOnAction(null);
     startGameButton.getStyleClass().add("button-disabled");
-    Tooltip tooltip = new Tooltip("You need at least two players.");
+    Tooltip tooltip = new Tooltip(toolTipText);
     tooltip.setShowDelay(Duration.millis(0));
     Tooltip.install(startGameButton, tooltip);
   }
@@ -304,7 +328,7 @@ public class MainMenuView extends VBox {
     mainMenuPlayerRows.clear();
     playerListBox.getChildren().clear();
     players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()),
-        !mainMenuPlayerRows.isEmpty()));
+        player.getPlayerTokenType(), !mainMenuPlayerRows.isEmpty()));
   }
 
   /**

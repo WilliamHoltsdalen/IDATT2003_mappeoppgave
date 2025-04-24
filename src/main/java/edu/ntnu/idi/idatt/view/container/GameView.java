@@ -3,40 +3,27 @@ package edu.ntnu.idi.idatt.view.container;
 import edu.ntnu.idi.idatt.controller.GameController;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
 import edu.ntnu.idi.idatt.view.component.GameBoardStackPane;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
-import edu.ntnu.idi.idatt.view.component.GamePlayerRow;
-import edu.ntnu.idi.idatt.view.component.HorizontalDivider;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.geometry.Pos;
+import edu.ntnu.idi.idatt.view.component.GamePlayersBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class GameView extends HBox implements BoardGameObserver {
-  private static final String ROUND_NUMBER_TEXT = "Round ";
-
   private final GameController gameController;
-  private final List<GamePlayerRow> playersBoxRows;
-  private final VBox playersBox;
+  private final GamePlayersBox playersBox;
   private final GameBoardStackPane boardStackPane;
   private final GameMenuBox gameMenuBox;
-
-  private final Text roundNumberText;
 
   public GameView(GameController gameController) {
     this.gameController = gameController;
     gameController.addObserver(this);
-
-    playersBoxRows = new ArrayList<>();
-    roundNumberText = new Text();
-    playersBox = getPlayersBox();
-    boardStackPane = getBoardStackPane();
-    gameMenuBox = getGameMenuBox();
+    this.playersBox = getPlayersBox();
+    this.boardStackPane = getBoardStackPane();
+    this.gameMenuBox = getGameMenuBox();
 
     initialize();
   }
@@ -47,28 +34,8 @@ public class GameView extends HBox implements BoardGameObserver {
     this.getStyleClass().add("game-view");
   }
 
-  private VBox getPlayersBox() {
-    roundNumberText.getStyleClass().add("game-players-box-round-number");
-    roundNumberText.setText(ROUND_NUMBER_TEXT + gameController.getRoundNumber());
-
-    HorizontalDivider horizontalDivider = new HorizontalDivider();
-
-    VBox playersBoxVbox = new VBox(roundNumberText, horizontalDivider);
-    playersBoxVbox.getStyleClass().add("game-players-box");
-    playersBoxVbox.maxHeightProperty().bind(playersBoxVbox.heightProperty());
-
-    gameController.getPlayers().forEach(player -> {
-      GamePlayerRow playerRow = new GamePlayerRow(player);
-      HBox.setHgrow(playerRow, Priority.ALWAYS);
-      playersBoxRows.add(playerRow);
-      playersBoxVbox.getChildren().add(playerRow);
-    });
-
-    VBox vBox = new VBox(playersBoxVbox);
-    VBox.setVgrow(playersBoxVbox, Priority.ALWAYS);
-    HBox.setHgrow(vBox, Priority.NEVER);
-    vBox.setAlignment(Pos.TOP_LEFT);
-    return vBox;
+  private GamePlayersBox getPlayersBox() {
+    return new GamePlayersBox(gameController.getPlayers(), gameController.getRoundNumber());
   }
 
   private Region getInfiniteSpacer() {
@@ -91,7 +58,7 @@ public class GameView extends HBox implements BoardGameObserver {
   }
 
   private void setPlayerTileNumber(Player player, int newTileId) {
-    playersBoxRows.get(gameController.getPlayers().indexOf(player))
+    playersBox.getPlayerRows().get(gameController.getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
   }
 
@@ -114,14 +81,19 @@ public class GameView extends HBox implements BoardGameObserver {
 
   @Override
   public void onRoundNumberIncremented(int roundNumber) {
-    roundNumberText.setText(ROUND_NUMBER_TEXT + roundNumber);
+    playersBox.setRoundNumber(roundNumber);
 
     gameMenuBox.addGameLogRoundBox(roundNumber);
   }
 
   @Override
   public void onCurrentPlayerChanged(Player player) {
-    gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " is now the current player.");
+    if (!gameMenuBox.getRollForAllPlayersSelected()) {
+      playersBox.setFocusedPlayer(gameController.getPlayers().indexOf(player));
+      return;
+    }
+    playersBox.removeFocusedPlayer();
+
   }
 
   @Override

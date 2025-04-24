@@ -1,31 +1,39 @@
 {
   "name": "Ladder Board 1",
   "description": "Standard chutes and ladders game with 90 tiles.",
+  "rows": 9,
+  "columns": 10,
   "imagePath": "boardImages/ClassicGameBoard.png",
   "tiles": [
     {
       "id": 0,
-      "nextTileId": 1
+      "nextTileId": 1,
+      "coordinates": [0, 0]
     },
     {
       "id": 1,
-      "nextTileId": 2
+      "nextTileId": 2,
+      "coordinates": [1, 0]
     },
     {
       "id": 2,
-      "nextTileId": 3
+      "nextTileId": 3,
+      "coordinates": [2, 0]
     },
     {
       "id": 3,
-      "nextTileId": 4
+      "nextTileId": 4,
+      "coordinates": [3, 0]
     },
     {
       "id": 4,
-      "nextTileId": 5
+      "nextTileId": 5,
+      "coordinates": [4, 0]
     },
     {
       "id": 5,
       "nextTileId": 6,
+      "coordinates": [5, 0],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 44,
@@ -34,119 +42,148 @@
     },
     {
       "id": 6,
-      "nextTileId": 7
+      "nextTileId": 7,
+      "coordinates": [6, 0]
     },
     {
       "id": 7,
-      "nextTileId": 8
+      "nextTileId": 8,
+      "coordinates": [7, 0]
     },
     {
       "id": 8,
-      "nextTileId": 9
+      "nextTileId": 9,
+      "coordinates": [8, 0]
     },
     {
       "id": 9,
-      "nextTileId": 10
+      "nextTileId": 10,
+      "coordinates": [9, 0]
     },
     {
       "id": 10,
-      "nextTileId": 11
+      "nextTileId": 11,
+      "coordinates": [9, 1]
     },
     {
       "id": 11,
-      "nextTileId": 12
+      "nextTileId": 12,
+      "coordinates": [8, 1]
     },
     {
       "id": 12,
-      "nextTileId": 13
+      "nextTileId": 13,
+      "coordinates": [7, 1]
     },
     {
       "id": 13,
-      "nextTileId": 14
+      "nextTileId": 14,
+      "coordinates": [6, 1]
     },
     {
       "id": 14,
-      "nextTileId": 15
+      "nextTileId": 15,
+      "coordinates": [5, 1]
     },
     {
       "id": 15,
-      "nextTileId": 16
+      "nextTileId": 16,
+      "coordinates": [4, 1]
     },
     {
       "id": 16,
-      "nextTileId": 17
+      "nextTileId": 17,
+      "coordinates": [3, 1]
     },
     {
       "id": 17,
-      "nextTileId": 18
+      "nextTileId": 18,
+      "coordinates": [2, 1]
     },
     {
       "id": 18,
-      "nextTileId": 19
+      "nextTileId": 19,
+      "coordinates": [1, 1]
     },
     {
       "id": 19,
-      "nextTileId": 20
+      "nextTileId": 20,
+      "coordinates": [0, 1]
     },
     {
       "id": 20,
-      "nextTileId": 21
+      "nextTileId": 21,
+      "coordinates": [0, 2]
     },
     {
       "id": 21,
-      "nextTileId": 22
+      "nextTileId": 22,
+      "coordinates": [1, 2]
     },
     {
       "id": 22,
-      "nextTileId": 23
+      "nextTileId": 23,
+      "coordinates": [2, 2]
     },
     {
       "id": 23,
-      "nextTileId": 24
+      "nextTileId": 24,
+      "coordinates": [3, 2]
     },
     {
       "id": 24,
-      "nextTileId": 25
+      "nextTileId": 25,
+      "coordinates": [4, 2]
     },
     {
       "id": 25,
-      "nextTileId": 26
+      "nextTileId": 26,
+      "coordinates": [5, 2]
     },
     {
       "id": 26,
-      "nextTileId": 27
+      "nextTileId": 27,
+      "coordinates": [6, 2]
     },
     {
       "id": 27,
-      "nextTileId": 28
+      "nextTileId": 28,
+      "coordinates": [7, 2]
     },
     {
       "id": 28,
-      "nextTileId": 29
+      "nextTileId": 29,
+      "coordinates": [8, 2]
     },
     {
       "id": 29,
-      "nextTileId": 30
+      "nextTileId": 30,
+      "coordinates": [9, 2]
     },
     {
       "id": 30,
-      "nextTileId": 31
+      "nextTileId": 31,
+      "coordinates": [9, 3]
     },
     {
       "id": 31,
-      "nextTileId": 32
+      "nextTileId": 32,
+      "coordinates": [8, 3]
     },
     {
       "id": 32,
-      "nextTileId": 33
+      "nextTileId": 33,
+      "coordinates": [7, 3]
     },
     {
       "id": 33,
-      "nextTileId": 34
+      "nextTileId": 34,
+      "coordinates": [6, 3]
     },
     {
       "id": 34,
       "nextTileId": 35,
+      "coordinates": [5, 3],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 13,
@@ -155,23 +192,28 @@
     },
     {
       "id": 35,
-      "nextTileId": 36
+      "nextTileId": 36,
+      "coordinates": [4, 3]
     },
     {
       "id": 36,
-      "nextTileId": 37
+      "nextTileId": 37,
+      "coordinates": [3, 3]
     },
     {
       "id": 37,
-      "nextTileId": 38
+      "nextTileId": 38,
+      "coordinates": [2, 3]
     },
     {
       "id": 38,
-      "nextTileId": 39
+      "nextTileId": 39,
+      "coordinates": [1, 3]
     },
     {
       "id": 39,
       "nextTileId": 40,
+      "coordinates": [0, 3],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 58,
@@ -180,31 +222,38 @@
     },
     {
       "id": 40,
-      "nextTileId": 41
+      "nextTileId": 41,
+      "coordinates": [0, 4]
     },
     {
       "id": 41,
-      "nextTileId": 42
+      "nextTileId": 42,
+      "coordinates": [1, 4]
     },
     {
       "id": 42,
-      "nextTileId": 43
+      "nextTileId": 43,
+      "coordinates": [2, 4]
     },
     {
       "id": 43,
-      "nextTileId": 44
+      "nextTileId": 44,
+      "coordinates": [3, 4]
     },
     {
       "id": 44,
-      "nextTileId": 45
+      "nextTileId": 45,
+      "coordinates": [4, 4]
     },
     {
       "id": 45,
-      "nextTileId": 46
+      "nextTileId": 46,
+      "coordinates": [5, 4]
     },
     {
       "id": 46,
       "nextTileId": 47,
+      "coordinates": [6, 4],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 87,
@@ -213,147 +262,183 @@
     },
     {
       "id": 47,
-      "nextTileId": 48
+      "nextTileId": 48,
+      "coordinates": [7, 4]
     },
     {
       "id": 48,
-      "nextTileId": 49
+      "nextTileId": 49,
+      "coordinates": [8, 4]
     },
     {
       "id": 49,
-      "nextTileId": 50
+      "nextTileId": 50,
+      "coordinates": [9, 4]
     },
     {
       "id": 50,
-      "nextTileId": 51
+      "nextTileId": 51,
+      "coordinates": [9, 5]
     },
     {
       "id": 51,
-      "nextTileId": 52
+      "nextTileId": 52,
+      "coordinates": [8, 5]
     },
     {
       "id": 52,
-      "nextTileId": 53
+      "nextTileId": 53,
+      "coordinates": [7, 5]
     },
     {
       "id": 53,
-      "nextTileId": 54
+      "nextTileId": 54,
+      "coordinates": [6, 5]
     },
     {
       "id": 54,
-      "nextTileId": 55
+      "nextTileId": 55,
+      "coordinates": [5, 5]
     },
     {
       "id": 55,
-      "nextTileId": 56
+      "nextTileId": 56,
+      "coordinates": [4, 5]
     },
     {
       "id": 56,
-      "nextTileId": 57
+      "nextTileId": 57,
+      "coordinates": [3, 5]
     },
     {
       "id": 57,
-      "nextTileId": 58
+      "nextTileId": 58,
+      "coordinates": [2, 5]
     },
     {
       "id": 58,
-      "nextTileId": 59
+      "nextTileId": 59,
+      "coordinates": [1, 5]
     },
     {
       "id": 59,
-      "nextTileId": 60
+      "nextTileId": 60,
+      "coordinates": [0, 5]
     },
     {
       "id": 60,
-      "nextTileId": 61
+      "nextTileId": 61,
+      "coordinates": [0, 6]
     },
     {
       "id": 61,
-      "nextTileId": 62
+      "nextTileId": 62,
+      "coordinates": [1, 6]
     },
     {
       "id": 62,
-      "nextTileId": 63
+      "nextTileId": 63,
+      "coordinates": [2, 6]
     },
     {
       "id": 63,
-      "nextTileId": 64
+      "nextTileId": 64,
+      "coordinates": [3, 6]
     },
     {
       "id": 64,
-      "nextTileId": 65
+      "nextTileId": 65,
+      "coordinates": [4, 6]
     },
     {
       "id": 65,
-      "nextTileId": 66
+      "nextTileId": 66,
+      "coordinates": [5, 6]
     },
     {
       "id": 66,
-      "nextTileId": 67
+      "nextTileId": 67,
+      "coordinates": [6, 6]
     },
     {
       "id": 67,
-      "nextTileId": 68
+      "nextTileId": 68,
+      "coordinates": [7, 6]
     },
     {
       "id": 68,
-      "nextTileId": 69
+      "nextTileId": 69,
+      "coordinates": [8, 6]
     },
     {
       "id": 69,
-      "nextTileId": 70
+      "nextTileId": 70,
+      "coordinates": [9, 6]
     },
     {
       "id": 70,
-      "nextTileId": 71
+      "nextTileId": 71,
+      "coordinates": [9, 7]
     },
     {
       "id": 71,
-      "nextTileId": 72
+      "nextTileId": 72,
+      "coordinates": [8, 7]
     },
     {
       "id": 72,
-      "nextTileId": 73
+      "nextTileId": 73,
+      "coordinates": [7, 7]
     },
     {
       "id": 73,
-      "nextTileId": 74
+      "nextTileId": 74,
+      "coordinates": [6, 7]
     },
     {
       "id": 74,
-      "nextTileId": 75
+      "nextTileId": 75,
+      "coordinates": [5, 7]
     },
     {
       "id": 75,
-      "nextTileId": 76
+      "nextTileId": 76,
+      "coordinates": [4, 7]
     },
     {
       "id": 76,
-      "nextTileId": 77
+      "nextTileId": 77,
+      "coordinates": [3, 7]
     },
     {
       "id": 77,
-      "nextTileId": 78
+      "nextTileId": 78,
+      "coordinates": [2, 7]
     },
     {
       "id": 78,
-      "nextTileId": 79
+      "nextTileId": 79,
+      "coordinates": [1, 7]
     },
     {
       "id": 79,
-      "nextTileId": 80
+      "nextTileId": 80,
+      "coordinates": [0, 7]
     },
     {
       "id": 80,
-      "nextTileId": 81
+      "nextTileId": 81,
+      "coordinates": [0, 8]
     },
     {
       "id": 81,
-      "nextTileId": 82
+      "nextTileId": 82,
+      "coordinates": [1, 8]
     },
     {
       "id": 82,
       "nextTileId": 83,
+      "coordinates": [2, 8],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 78,
@@ -362,31 +447,38 @@
     },
     {
       "id": 83,
-      "nextTileId": 84
+      "nextTileId": 84,
+      "coordinates": [3, 8]
     },
     {
       "id": 84,
-      "nextTileId": 85
+      "nextTileId": 85,
+      "coordinates": [4, 8]
     },
     {
       "id": 85,
-      "nextTileId": 86
+      "nextTileId": 86,
+      "coordinates": [5, 8]
     },
     {
       "id": 86,
-      "nextTileId": 87
+      "nextTileId": 87,
+      "coordinates": [6, 8]
     },
     {
       "id": 87,
-      "nextTileId": 88
+      "nextTileId": 88,
+      "coordinates": [7, 8]
     },
     {
       "id": 88,
-      "nextTileId": 89
+      "nextTileId": 89,
+      "coordinates": [8, 8]
     },
     {
       "id": 89,
       "nextTileId": 90,
+      "coordinates": [9, 8],
       "action": {
         "type": "LadderAction",
         "destinationTileId": 68,
@@ -394,7 +486,8 @@
       }
     },
     {
-      "id": 90
+      "id": 90,
+      "coordinates": [9, 9]
     }
   ]
 }

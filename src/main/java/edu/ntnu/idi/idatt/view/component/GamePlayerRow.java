@@ -1,13 +1,14 @@
 package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
 public class GamePlayerRow extends HBox {
@@ -19,9 +20,9 @@ public class GamePlayerRow extends HBox {
   }
 
   private void initialize(Player player) {
-    Circle playerCircle = new Circle(10, Color.TRANSPARENT);
-    playerCircle.setStroke(Color.web(player.getColorHex()));
-    playerCircle.setStrokeWidth(8);
+    Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
+        player.getPlayerTokenType());
+    playerToken.getStyleClass().add("game-players-box-player-token");
 
     Text playerName = new Text(player.getName());
     playerName.getStyleClass().add("game-players-box-player-name");
@@ -35,7 +36,7 @@ public class GamePlayerRow extends HBox {
     playerTile.setTooltip(new Tooltip(player.getName() + " is on tile: "
         + player.getCurrentTile().getTileId()));
 
-    this.getChildren().addAll(playerCircle, playerName, spacer, playerTile);
+    this.getChildren().addAll(playerToken, playerName, spacer, playerTile);
   }
 
   public void setTileNumber(Player player, int tileNumber) {

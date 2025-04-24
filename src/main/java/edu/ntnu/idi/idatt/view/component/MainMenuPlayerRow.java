@@ -1,14 +1,17 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -16,25 +19,27 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class MainMenuPlayerRow extends HBox {
   TextField nameTextField;
   Button playerButton;
-  Circle playerButtonCircle;
+  Shape playerToken;
   Button deleteButton;
-  Color defaultColor;
+  Color color;
+  PlayerTokenType tokenType;
   boolean removable;
 
-  public MainMenuPlayerRow(String defaultName, Color defaultColor, boolean removable) {
-    this.defaultColor = defaultColor;
+  Runnable onUpdate;
+
+  public MainMenuPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType, boolean removable) {
+    this.color = color;
+    this.tokenType = playerTokenType;
     this.removable = removable;
     this.getStyleClass().add("main-menu-player-row");
-    initialize(defaultName);
+    initialize(defaultName, playerTokenType);
   }
 
-  private void initialize(String defaultName) {
-    playerButtonCircle = new Circle(10, Color.TRANSPARENT);
-    playerButtonCircle.setStroke(defaultColor);
-    playerButtonCircle.setStrokeWidth(8);
+  private void initialize(String defaultName, PlayerTokenType playerTokenType) {
+    playerToken = PlayerTokenFactory.create(10, color, playerTokenType);
 
     playerButton = new Button();
-    playerButton.setGraphic(playerButtonCircle);
+    playerButton.setGraphic(playerToken);
     playerButton.getStyleClass().add("icon-only-button");
     playerButton.setOnMouseClicked(mouseEvent -> showPlayerColorPickerPopup(mouseEvent.getScreenX(), mouseEvent.getScreenY()));
 
@@ -42,12 +47,9 @@ public class MainMenuPlayerRow extends HBox {
     deleteButton = new Button();
     deleteButton.setGraphic(new FontIcon("fas-trash"));
     deleteButton.getStyleClass().add("icon-only-button");
+    deleteButton.setVisible(removable);
 
-    this.getChildren().addAll(playerButton, nameTextField);
-
-    if (removable) {
-      this.getChildren().add(deleteButton);
-    }
+    this.getChildren().addAll(playerButton, nameTextField, deleteButton);
   }
 
   private void showPlayerColorPickerPopup(double xPos, double yPos) {
@@ -55,10 +57,24 @@ public class MainMenuPlayerRow extends HBox {
     popup.setHideOnEscape(true);
     popup.setAutoFix(true);
 
-    Text popupText = new Text("Pick a color for " + getName());
+    Text popupPickColorText = new Text("Pick a color for " + getName());
     ColorPicker colorPicker = new ColorPicker(getColor());
     colorPicker.setOnAction(event -> {
-      playerButtonCircle.setStroke(colorPicker.getValue());
+      color = colorPicker.getValue();
+      updatePlayerToken();
+      popup.hide();
+    });
+
+    HorizontalDivider horizontalDivider = new HorizontalDivider();
+
+    Text popupPickTokenTypeText = new Text("Pick a token for " + getName());
+    ComboBox<PlayerTokenType> tokenTypeComboBox = new ComboBox<>();
+    tokenTypeComboBox.getItems().addAll(PlayerTokenType.values());
+    tokenTypeComboBox.setValue(tokenType);
+    tokenTypeComboBox.setOnAction(event -> {
+      tokenTypeComboBox.getSelectionModel().select(tokenTypeComboBox.getValue());
+      tokenType = tokenTypeComboBox.getValue();
+      updatePlayerToken();
       popup.hide();
     });
 
@@ -69,7 +85,8 @@ public class MainMenuPlayerRow extends HBox {
     closePopupButton.setTooltip(new Tooltip("Close"));
     closePopupButton.setOnAction(event -> popup.hide());
 
-    VBox innerPopupContent = new VBox(popupText, colorPicker);
+    VBox innerPopupContent = new VBox(popupPickColorText, colorPicker, horizontalDivider,
+        popupPickTokenTypeText, tokenTypeComboBox);
     innerPopupContent.setSpacing(10);
 
     HBox popupContent = new HBox(innerPopupContent, closePopupButton);
@@ -78,15 +95,32 @@ public class MainMenuPlayerRow extends HBox {
     popup.show(this.getScene().getWindow(), xPos, yPos);
   }
 
+  private void updatePlayerToken() {
+    playerToken = PlayerTokenFactory.create(10, color, tokenType);
+    playerButton.setGraphic(playerToken);
+
+    if (onUpdate != null) {
+      onUpdate.run();
+    }
+  }
+
   public void setOnDelete(Runnable deleteRowAction) {
     deleteButton.setOnAction(event -> deleteRowAction.run());
+  }
+
+  public void setOnUpdate(Runnable onUpdate) {
+    this.onUpdate = onUpdate;
   }
 
   public String getName() {
     return nameTextField.getText();
   }
 
+  public PlayerTokenType getPlayerTokenType() {
+    return tokenType;
+  }
+
   public Color getColor() {
-    return (Color) playerButtonCircle.getStroke();
+    return color;
   }
 }

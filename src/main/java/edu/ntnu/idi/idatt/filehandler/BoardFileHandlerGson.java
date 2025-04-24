@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.utils;
+package edu.ntnu.idi.idatt.filehandler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +10,6 @@ import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.LadderAction;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.utils.interfaces.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

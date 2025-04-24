@@ -7,7 +7,7 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSet
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetPlayersValidator;
 
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
 import java.util.ArrayList;
 import java.util.List;
 
