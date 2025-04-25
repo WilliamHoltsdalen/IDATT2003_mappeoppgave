@@ -1,111 +1,95 @@
 package edu.ntnu.idi.idatt.view.container;
 
-import edu.ntnu.idi.idatt.controller.GameController;
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
+import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.GameBoardStackPane;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 import edu.ntnu.idi.idatt.view.component.GamePlayersBox;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public class GameView extends HBox implements BoardGameObserver {
-  private final GameController gameController;
-  private final GamePlayersBox playersBox;
-  private final GameBoardStackPane boardStackPane;
-  private final GameMenuBox gameMenuBox;
+public class LadderGameView extends HBox implements ButtonClickSubject {
+  private final List<ButtonClickObserver> observers;
 
-  public GameView(GameController gameController) {
-    this.gameController = gameController;
-    gameController.addObserver(this);
-    this.playersBox = getPlayersBox();
-    this.boardStackPane = getBoardStackPane();
-    this.gameMenuBox = getGameMenuBox();
+  private GamePlayersBox playersBox;
+  private GameBoardStackPane boardStackPane;
+  private GameMenuBox gameMenuBox;
 
-    initialize();
-  }
+  public LadderGameView() {
+    observers = new ArrayList<>();
 
-  private void initialize() {
-    this.getChildren().setAll(playersBox, getInfiniteSpacer(), boardStackPane, getInfiniteSpacer(),
-        gameMenuBox);
     this.getStyleClass().add("game-view");
   }
 
-  private GamePlayersBox getPlayersBox() {
-    return new GamePlayersBox(gameController.getPlayers(), gameController.getRoundNumber());
+  public void initialize(List<Player> players, int roundNumber, Board board) {
+    this.playersBox = createPlayersBox(players, roundNumber);
+    this.boardStackPane = createBoardStackPane(board, players);
+    this.gameMenuBox = createGameMenuBox();
+
+    this.getChildren().setAll(playersBox, createInfiniteSpacer(), boardStackPane, createInfiniteSpacer(),
+        gameMenuBox);
   }
 
-  private Region getInfiniteSpacer() {
+  public GamePlayersBox getPlayersBox() {
+    return playersBox;
+  }
+
+  public GameBoardStackPane getBoardStackPane() {
+    return boardStackPane;
+  }
+
+  public GameMenuBox getGameMenuBox() {
+    return gameMenuBox;
+  }
+
+  public GamePlayersBox createPlayersBox(List<Player> players, int roundNumber) {
+    return new GamePlayersBox(players, roundNumber);
+  }
+
+  public Region createInfiniteSpacer() {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
     VBox.setVgrow(spacer, Priority.ALWAYS);
     return spacer;
   }
 
-  private GameBoardStackPane getBoardStackPane() {
-    return new GameBoardStackPane(gameController.getBoard(), gameController.getPlayers());
+  public GameBoardStackPane createBoardStackPane(Board board, List<Player> players) {
+    return new GameBoardStackPane(board, players);
   }
 
-  private GameMenuBox getGameMenuBox() {
+  public GameMenuBox createGameMenuBox() {
     GameMenuBox box = new GameMenuBox();
-    box.setOnRestartGame(gameController::restartGame);
-    box.setOnQuitGame(gameController::quitGame);
-    box.setOnRollDice(this::handleRollDiceButtonAction);
+    box.setOnRestartGame(() -> notifyObservers("restart_game"));
+    box.setOnQuitGame(() -> notifyObservers("quit_game"));
+    box.setOnRollDice(() -> notifyObservers("roll_dice"));
     return box;
   }
 
-  private void setPlayerTileNumber(Player player, int newTileId) {
-    playersBox.getPlayerRows().get(gameController.getPlayers().indexOf(player))
-        .setTileNumber(player, newTileId);
-  }
-
-  private void handleRollDiceButtonAction() {
-    if (gameMenuBox.getRollForAllPlayersSelected()) {
-      gameController.performPlayerTurnForAllPlayers();
-      return;
-    }
-    gameController.performPlayerTurn();
+  @Override
+  public void addObserver(ButtonClickObserver observer) {
+    observers.add(observer);
   }
 
   @Override
-  public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
-    gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
-
-    setPlayerTileNumber(player, newTileId);
-
-    boardStackPane.movePlayer(player, gameController.getBoard().getTile(newTileId), false);
+  public void removeObserver(ButtonClickObserver observer) {
+    observers.remove(observer);
   }
 
   @Override
-  public void onRoundNumberIncremented(int roundNumber) {
-    playersBox.setRoundNumber(roundNumber);
-
-    gameMenuBox.addGameLogRoundBox(roundNumber);
+  public void notifyObservers(String buttonId) {
+    observers.forEach(observer ->
+        observer.onButtonClicked(buttonId));
   }
 
   @Override
-  public void onCurrentPlayerChanged(Player player) {
-    if (!gameMenuBox.getRollForAllPlayersSelected()) {
-      playersBox.setFocusedPlayer(gameController.getPlayers().indexOf(player));
-      return;
-    }
-    playersBox.removeFocusedPlayer();
-
-  }
-
-  @Override
-  public void onTileActionPerformed(Player player, TileAction tileAction) {
-    gameMenuBox.addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
-    setPlayerTileNumber(player, tileAction.getDestinationTileId());
-
-    boardStackPane.movePlayer(player, gameController.getBoard().getTile(tileAction.getDestinationTileId()), true);
-  }
-
-  @Override
-  public void onGameFinished(Player winner) {
-    gameMenuBox.addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
+  public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
+    // Not needed
   }
 }
