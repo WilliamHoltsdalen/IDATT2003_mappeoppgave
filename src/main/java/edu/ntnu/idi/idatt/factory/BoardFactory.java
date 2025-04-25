@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.model.factory;
+package edu.ntnu.idi.idatt.factory;
 
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.LadderAction;

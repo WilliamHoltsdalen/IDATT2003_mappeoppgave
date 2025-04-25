@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.factory;
+package edu.ntnu.idi.idatt.factory;
 
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import javafx.scene.paint.Color;

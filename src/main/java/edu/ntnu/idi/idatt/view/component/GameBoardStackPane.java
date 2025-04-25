@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.view.component;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

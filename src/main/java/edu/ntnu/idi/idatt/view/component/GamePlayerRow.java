@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
