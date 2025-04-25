@@ -136,7 +136,7 @@ public class BoardFactory {
    */
   private static List<Tile> createTiles(int rows, int columns) {
     List<Tile> tiles = new ArrayList<>();
-    tiles.add(new Tile(0, new int[]{0, 0}, 1));
+    tiles.add(new Tile(0, new int[]{0, -2}, 1)); // Add 0th tile outside of board
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
