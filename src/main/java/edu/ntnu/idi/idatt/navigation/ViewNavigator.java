@@ -24,12 +24,20 @@ public class ViewNavigator implements ButtonClickObserver {
 
   @Override
   public void onButtonClicked(String buttonId) {
-    navigateTo(ViewType.valueOf(buttonId), Collections.emptyMap());
+    try {
+      navigateTo(ViewType.valueOf(buttonId), Collections.emptyMap());
+    } catch (IllegalArgumentException e) {
+      System.err.println("Invalid button ID: " + buttonId);
+    }
   }
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    navigateTo(ViewType.valueOf(buttonId), params);
+    try {
+      navigateTo(ViewType.valueOf(buttonId), params);
+    } catch (IllegalArgumentException e) {
+      System.err.println("Invalid button ID: " + buttonId);
+    }
   }
 
   public void navigateTo(ViewType viewType, Map<String, Object> params) {
