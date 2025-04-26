@@ -1,16 +1,17 @@
 package edu.ntnu.idi.idatt.view.container;
 
-import edu.ntnu.idi.idatt.model.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -23,16 +24,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class MainMenuView extends VBox {
-  private Consumer<String> onImportPlayers;
-  private Consumer<String> onImportBoard;
-  private Runnable onStartGame;
-  private Runnable onNextBoard;
-  private Runnable onPrevBoard;
+public class MainMenuView extends VBox implements ButtonClickSubject {
+  private final List<ButtonClickObserver> observers;
 
   private VBox playerSelectionBox;
   private final Text playerSelectionTitle;
@@ -52,6 +48,7 @@ public class MainMenuView extends VBox {
    * Constructor for MainMenuView class.
    */
   public MainMenuView() {
+    this.observers = new ArrayList<>();
     this.mainMenuPlayerRows = new ArrayList<>();
     this.playerSelectionTitle = new Text();
     this.playerListBox = new VBox();
@@ -59,47 +56,54 @@ public class MainMenuView extends VBox {
     this.boardImageView = new ImageView();
     this.boardTitle = new Label();
     this.boardDescription = new Label();
-    this.startGameButton = getStartGameButton();
+    this.startGameButton = createStartGameButton();
     this.playerSelectionBox = new VBox();
     this.boardSelectionBox = new VBox();
 
     this.getStyleClass().add("main-menu-view");
-    initialize();
   }
 
-  /**
-   * Returns the main menu view.
-   *
-   * @return The main menu view.
-   */
-  public VBox getView() {
-    return this;
+  @Override
+  public void addObserver(ButtonClickObserver observer) {
+    observers.add(observer);
   }
 
-  /**
-   * Returns the list of main menu player rows.
-   *
-   * @return The list of main menu player rows.
-   */
+  @Override
+  public void removeObserver(ButtonClickObserver observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyObservers(String buttonId) {
+    observers.forEach(observer ->
+        observer.onButtonClicked(buttonId));
+  }
+
+  @Override
+  public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
+    observers.forEach(observer ->
+        observer.onButtonClickedWithParams(buttonId, params));
+  }
+
   public List<MainMenuPlayerRow> getPlayerRows() {
     return mainMenuPlayerRows;
   }
 
-  private void initialize() {
+  public void initialize() {
     setSelectedBoard(BoardFactory.createBoard("Classic"));
 
     Region menuSpacer = new Region();
     menuSpacer.getStyleClass().add("main-menu-spacer");
 
-    this.playerSelectionBox = getPlayerSelectionBox();
-    this.boardSelectionBox = getBoardSelectionBox();
+    this.playerSelectionBox = createPlayerSelectionBox();
+    this.boardSelectionBox = createBoardSelectionBox();
 
     HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
     hBox.getStyleClass().add("main-menu-h-box");
-    this.getChildren().setAll(getHeaderBox(), hBox, startGameButton);
+    this.getChildren().setAll(createHeaderBox(), hBox, startGameButton);
   }
 
-  private HBox getHeaderBox() {
+  private HBox createHeaderBox() {
     Text title = new Text("Main Menu");
     title.getStyleClass().add("main-menu-title");
 
@@ -109,12 +113,12 @@ public class MainMenuView extends VBox {
     MenuItem importPlayersMenuItem = new MenuItem("Import players");
     importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
     moreOptionsMenu.getItems().addAll(importPlayersMenuItem);
-    importPlayersMenuItem.setOnAction(event -> handleImportPlayersButtonAction());
+    importPlayersMenuItem.setOnAction(event -> notifyObservers("import_players"));
 
     MenuItem importBoardMenuItem = new MenuItem("Import board");
     importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
     moreOptionsMenu.getItems().addAll(importBoardMenuItem);
-    importBoardMenuItem.setOnAction(event -> handleImportBoardButtonAction());
+    importBoardMenuItem.setOnAction(event -> notifyObservers("import_board"));
 
     HBox headerBox = new HBox(title, moreOptionsMenu);
     headerBox.getStyleClass().add("main-menu-header-box");
@@ -122,7 +126,7 @@ public class MainMenuView extends VBox {
     return headerBox;
   }
 
-  private VBox getPlayerSelectionBox() {
+  private VBox createPlayerSelectionBox() {
     playerSelectionTitle.setText("Select players");
     playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
 
@@ -149,7 +153,7 @@ public class MainMenuView extends VBox {
     return vBox;
   }
 
-  private VBox getBoardSelectionBox() {
+  private VBox createBoardSelectionBox() {
     Text title = new Text("Select a board");
     title.getStyleClass().add("main-menu-selection-box-title");
 
@@ -157,13 +161,13 @@ public class MainMenuView extends VBox {
 
     Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
     previousButton.getStyleClass().add("icon-only-button");
-    previousButton.setOnAction(event -> onPrevBoard.run());
+    previousButton.setOnAction(event -> notifyObservers("previous_board"));
 
     boardTitle.setText(selectedBoard.getName());
 
     Button nextButton = new Button("", new FontIcon("fas-chevron-right"));
     nextButton.getStyleClass().add("icon-only-button");
-    nextButton.setOnAction(event -> onNextBoard.run());
+    nextButton.setOnAction(event -> notifyObservers("next_board"));
 
     HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
     carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
@@ -182,13 +186,9 @@ public class MainMenuView extends VBox {
     return vBox;
   }
 
-  /**
-   *
-   * @return
-   */
-  private Button getStartGameButton() {
+  private Button createStartGameButton() {
     Button button = new Button("Start Game");
-    button.setOnAction(event -> handleStartGameButtonAction());
+    button.setOnAction(event -> notifyObservers("start_game"));
     return button;
   }
 
@@ -219,6 +219,28 @@ public class MainMenuView extends VBox {
     playerListBox.getChildren().remove(mainMenuPlayerRow);
 
     updateControls();
+  }
+
+
+  /**
+   * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum
+   * of two players are required to start the game.
+   */
+  private void disableStartGameButton(String toolTipText) {
+    startGameButton.setOnAction(null);
+    startGameButton.getStyleClass().add("button-disabled");
+    Tooltip tooltip = new Tooltip(toolTipText);
+    tooltip.setShowDelay(Duration.millis(0));
+    Tooltip.install(startGameButton, tooltip);
+  }
+
+  /**
+   * Enables the 'start game' button and removes the tooltip when hovering over it.
+   */
+  private void enableStartGameButton() {
+    startGameButton.setOnAction(event -> notifyObservers("start_game"));
+    startGameButton.getStyleClass().remove("button-disabled");
+    Tooltip.uninstall(startGameButton, startGameButton.getTooltip());
   }
 
   /**
@@ -255,71 +277,6 @@ public class MainMenuView extends VBox {
   }
 
   /**
-   * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum
-   * of two players are required to start the game.
-   */
-  private void disableStartGameButton(String toolTipText) {
-    startGameButton.setOnAction(null);
-    startGameButton.getStyleClass().add("button-disabled");
-    Tooltip tooltip = new Tooltip(toolTipText);
-    tooltip.setShowDelay(Duration.millis(0));
-    Tooltip.install(startGameButton, tooltip);
-  }
-
-  /**
-   * Enables the 'start game' button and removes the tooltip when hovering over it.
-   */
-  private void enableStartGameButton() {
-    startGameButton.setOnAction(event -> handleStartGameButtonAction());
-    startGameButton.getStyleClass().remove("button-disabled");
-    Tooltip.uninstall(startGameButton, startGameButton.getTooltip());
-  }
-
-  /**
-   * Sets the callback for the 'start game' button.
-   *
-   * @param onStartGame The callback to set.
-   */
-  public void setOnStartGame(Runnable onStartGame) {
-    this.onStartGame = onStartGame;
-  }
-
-  /**
-   * Handles the action of the 'start game' button by calling the onStartGame callback if it is
-   * not null.
-   */
-  private void handleStartGameButtonAction() {
-    if (onStartGame != null) {
-      onStartGame.run();
-    }
-  }
-
-  /**
-   * Sets the callback for the 'import players' button.
-   *
-   * @param onImportPlayers The callback to set.
-   */
-  public void setOnImportPlayers(Consumer<String> onImportPlayers) {
-    this.onImportPlayers = onImportPlayers;
-  }
-
-  /**
-   * Handles the action of the 'import players' button by calling the onImportPlayers callback if
-   * it is not null. If the chosen file is null, it does nothing.
-   */
-  private void handleImportPlayersButtonAction() {
-    if (onImportPlayers == null) {
-      return;
-    }
-
-    File file = new FileChooser().showOpenDialog(null);
-    if (file == null) {
-      return;
-    }
-    onImportPlayers.accept(file.getAbsolutePath());
-  }
-
-  /**
    * Sets the players in the menu to the given list of players.
    *
    * @param players The list of players to import.
@@ -332,30 +289,6 @@ public class MainMenuView extends VBox {
   }
 
   /**
-   * Sets the callback for the 'import board' button.
-   *
-   * @param onImportBoard The callback to set.
-   */
-  public void setOnImportBoard(Consumer<String> onImportBoard) {
-    this.onImportBoard = onImportBoard;
-  }
-
-  /**
-   * Handles the action of the 'import board' button by calling the onImportBoard callback if it is
-   * not null. If the chosen file is null, it does nothing.
-   */
-  private void handleImportBoardButtonAction() {
-    if (onImportBoard == null) {
-      return;
-    }
-    File file = new FileChooser().showOpenDialog(null);
-    if (file == null) {
-      return;
-    }
-    onImportBoard.accept(file.getAbsolutePath());
-  }
-
-  /**
    * Sets the selected board in the main menu to the given board object.
    *
    * @param board The board object to set.
@@ -365,23 +298,5 @@ public class MainMenuView extends VBox {
     boardImageView.setImage(new Image(board.getImagePath()));
     boardTitle.setText(board.getName());
     boardDescription.setText(board.getDescription());
-  }
-
-  /**
-   * Sets the callback for the 'next board' button.
-   *
-   * @param onNextBoard The callback to set.
-   */
-  public void setOnNextBoard(Runnable onNextBoard) {
-    this.onNextBoard = onNextBoard;
-  }
-
-  /**
-   * Sets the callback for the 'previous board' button.
-   *
-   * @param onPrevBoard The callback to set.
-   */
-  public void setOnPrevBoard(Runnable onPrevBoard) {
-    this.onPrevBoard = onPrevBoard;
   }
 }

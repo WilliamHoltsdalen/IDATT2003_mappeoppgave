@@ -8,7 +8,8 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetPla
 /**
  * <h3>Player class</h3>
  *
- * <p>This class represents a player in the game. It contains a name, a color, and a current tile.
+ * <p>This class represents a player in the game. It contains a name, a color, a player token type,
+ * and the current tile of the player.
  */
 public class Player {
   private String name;

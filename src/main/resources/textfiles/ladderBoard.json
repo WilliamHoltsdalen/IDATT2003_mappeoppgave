@@ -3,7 +3,7 @@
   "description": "Standard chutes and ladders game with 90 tiles.",
   "rows": 9,
   "columns": 10,
-  "imagePath": "boardImages/ClassicGameBoard.png",
+  "imagePath": "boardImages/BasicLadderBoard.png",
   "tiles": [
     {
       "id": 0,

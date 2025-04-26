@@ -1,13 +1,13 @@
 package edu.ntnu.idi.idatt.model;
 
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameAddPlayersValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateDiceValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetBoardValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetPlayersValidator;
 
-import edu.ntnu.idi.idatt.model.interfaces.BoardGameObserver;
+import edu.ntnu.idi.idatt.observer.BoardGameObserver;
+import edu.ntnu.idi.idatt.observer.BoardGameSubject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * <p>This class represents a game of chutes and ladders. It contains a board, a list of players,
  * Dice, and the current player. It also has a round number and a list of observers.
  */
-public class BoardGame {
+public class BoardGame implements BoardGameSubject {
   private Board board;
   private List<Player> players;
   private Dice dice;
@@ -92,16 +92,6 @@ public class BoardGame {
   public int getRoundNumber() {
     return roundNumber;
   }
-
-  /**
-   * Returns the list of observers.
-   *
-   * @return The list of observers.
-   */
-  public List<BoardGameObserver> getObservers() {
-    return observers;
-  }
-
   /**
    * Returns the winner of the game.
    *
@@ -137,17 +127,6 @@ public class BoardGame {
   }
 
   /**
-   * Adds players to the list of players.
-   *
-   * @param players The players to add.
-   */
-  private void addPlayers(List<Player> players) {
-    boardGameAddPlayersValidator(players, this.players.size());
-
-    this.players.addAll(players);
-  }
-
-  /**
    * Creates the dice.
    *
    * @param diceCount The number of dice to create.
@@ -174,6 +153,7 @@ public class BoardGame {
    *
    * @param observer The observer to add.
    */
+  @Override
   public void addObserver(BoardGameObserver observer) {
     observers.add(observer);
   }
@@ -183,6 +163,7 @@ public class BoardGame {
    *
    * @param observer The observer to remove.
    */
+  @Override
   public void removeObserver(BoardGameObserver observer) {
     observers.remove(observer);
   }
@@ -297,6 +278,7 @@ public class BoardGame {
    * @param diceRoll The value of the dice roll.
    * @param newTileId The ID of the new tile.
    */
+  @Override
   public void notifyPlayerMoved(Player player, int diceRoll, int newTileId) {
     observers.forEach(observer -> observer.onPlayerMoved(player, diceRoll, newTileId));
   }
@@ -306,6 +288,7 @@ public class BoardGame {
    *
    * @param roundNumber The new round number.
    */
+  @Override
   public void notifyRoundNumberIncremented(int roundNumber) {
     observers.forEach(observer -> observer.onRoundNumberIncremented(roundNumber));
   }
@@ -315,6 +298,7 @@ public class BoardGame {
    *
    * @param player The new current player.
    */
+  @Override
   public void notifyCurrentPlayerChanged(Player player) {
     observers.forEach(observer -> observer.onCurrentPlayerChanged(player));
   }
@@ -326,6 +310,7 @@ public class BoardGame {
    * @param tileAction the tile action that was performed.
    * @param player The player who performed the action.
    */
+  @Override
   public void notifyTileActionPerformed(Player player, TileAction tileAction) {
     observers.forEach(observer -> observer.onTileActionPerformed(player, tileAction));
   }
@@ -335,6 +320,7 @@ public class BoardGame {
    *
    * @param winner The player who won the game.
    */
+  @Override
   public void notifyGameFinished(Player winner) {
     observers.forEach(observer -> observer.onGameFinished(winner));
   }

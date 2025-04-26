@@ -160,26 +160,6 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the addPlayers method in BoardGame class.
-   *
-   * @param players the list of players to add
-   */
-  public static void boardGameAddPlayersValidator(List<Player> players, int currentPlayerCount) {
-    if (players == null) {
-      throw new IllegalArgumentException("List of players cannot be null");
-    }
-    if (players.size() + currentPlayerCount >= 5) {
-      throw new IllegalArgumentException("The number of players must be less than 5");
-    }
-
-    players.forEach(player -> {
-      if (player == null) {
-        throw new IllegalArgumentException("Players in the provided list cannot be null");
-      }
-    });
-  }
-
-  /**
    * Validates the arguments for the createDice method in BoardGame class.
    *
    * @param diceCount the number of dice

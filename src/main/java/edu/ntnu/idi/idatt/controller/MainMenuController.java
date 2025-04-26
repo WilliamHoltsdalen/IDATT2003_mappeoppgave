@@ -1,23 +1,26 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.model.factory.BoardFactory;
-import edu.ntnu.idi.idatt.model.factory.PlayerFactory;
+import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.PlayerFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import javafx.stage.FileChooser;
 
-public class MainMenuController {
+public class MainMenuController implements ButtonClickObserver {
   private static final int DEFAULT_BOARD_INDEX = 1;
   private final Map<Integer, Board> boardVariants;
   private int currentBoardIndex;
 
-  private BiConsumer<Board, List<Player>> onStartGame;
+  BiConsumer<Board, List<Player>> onStartGame;
 
   private final MainMenuView mainMenuView;
 
@@ -29,21 +32,26 @@ public class MainMenuController {
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
     this.mainMenuView = mainMenuView;
 
-    initialize();
+    initializeMainMenuView();
   }
 
-  /**
-   * Initializes the main menu controller.
-   */
-  private void initialize() {
-    mainMenuView.setOnStartGame(this::handleStartGame);
-    mainMenuView.setOnImportPlayers(this::loadPlayersFromFile);
-    mainMenuView.setOnImportBoard(this::loadBoardFromFile);
-    mainMenuView.setOnNextBoard(this::handleNextBoard);
-    mainMenuView.setOnPrevBoard(this::handlePreviousBoard);
+  @Override
+  public void onButtonClicked(String buttonId) {
+    switch (buttonId) {
+      case "import_players" -> handleImportPlayersButtonAction();
+      case "import_board" -> handleImportBoardButtonAction();
+      case "next_board" -> handleNextBoard();
+      case "previous_board" -> handlePreviousBoard();
+      case "start_game" -> handleStartGame();
+      default -> {
+        break;
+      }
+    }
+  }
 
-    loadBoardsFromFactory();
-    showBoardVariant(currentBoardIndex);
+  @Override
+  public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
+    // Not needed
   }
 
   public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
@@ -51,15 +59,57 @@ public class MainMenuController {
   }
 
   /**
+   * Initializes the main menu view.
+   */
+  private void initializeMainMenuView() {
+    loadBoardsFromFactory();
+    mainMenuView.initialize();
+
+    showBoardVariant(currentBoardIndex);
+  }
+
+  /**
    * Handles the action of the 'start game' button in the main menu.
    */
   private void handleStartGame() {
+    Board board = boardVariants.get(currentBoardIndex);
     List<Player> players = new ArrayList<>();
     mainMenuView.getPlayerRows().forEach(playerRow ->
         players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
             playerRow.getPlayerTokenType())));
 
-    onStartGame.accept(boardVariants.get(currentBoardIndex), players);
+    onStartGame.accept(board, players);
+  }
+
+  public void handleNextBoard() {
+    currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
+    showBoardVariant(currentBoardIndex);
+  }
+
+  public void handlePreviousBoard() {
+    currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
+    showBoardVariant(currentBoardIndex);
+  }
+
+  private void handleImportPlayersButtonAction() {
+    File file = new FileChooser().showOpenDialog(null);
+    if (file == null) {
+      return;
+    }
+    loadPlayersFromFile(file.getAbsolutePath());
+  }
+
+  private void handleImportBoardButtonAction() {
+    File file = new FileChooser().showOpenDialog(null);
+    if (file == null) {
+      return;
+    }
+    loadBoardFromFile(file.getAbsolutePath());
+  }
+
+  private void showBoardVariant(int boardIndex) {
+    Board board = boardVariants.get(boardIndex);
+    mainMenuView.setSelectedBoard(board);
   }
 
   /**
@@ -101,18 +151,4 @@ public class MainMenuController {
     }
   }
 
-  public void handleNextBoard() {
-    currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
-    showBoardVariant(currentBoardIndex);
-  }
-
-  public void handlePreviousBoard() {
-    currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
-    showBoardVariant(currentBoardIndex);
-  }
-
-  private void showBoardVariant(int boardIndex) {
-    Board board = boardVariants.get(boardIndex);
-    mainMenuView.setSelectedBoard(board);
-  }
 }

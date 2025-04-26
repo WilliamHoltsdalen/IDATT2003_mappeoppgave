@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.view.factory.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
