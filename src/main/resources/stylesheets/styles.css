@@ -339,3 +339,141 @@ Button:pressed {
   -fx-scale-x: 1;
   -fx-scale-y: 1;
 }
+
+.board-creator-view {
+  -fx-background-color: #6C9CA4;
+  -fx-padding: 20;
+  -fx-spacing: 20;
+}
+
+.board-creator-panel {
+  -fx-background-color: white;
+  -fx-background-radius: 20;
+  -fx-padding: 20;
+  -fx-min-width: 300px;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.panel-title {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 0 15 0;
+}
+
+.component-section {
+  -fx-background-color: #F8F8F8;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-margin: 10 0;
+}
+
+.board-config-section {
+  -fx-spacing: 15;
+  -fx-padding: 15;
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+}
+
+.board-config-section .text-field {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+  -fx-padding: 8;
+  -fx-pref-width: -1;
+  -fx-max-width: infinity;
+  -fx-hgrow: always;
+}
+
+.board-config-section .combo-box {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+}
+
+.board-config-section .spinner {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+}
+
+.board-creator-board-container {
+  -fx-background-color: #8B8780;
+  -fx-background-radius: 10;
+  -fx-padding: 20;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+  -fx-alignment: center;
+}
+
+.board-creator-board-wrapper {
+  -fx-alignment: center;
+  -fx-padding: 20 0;
+  -fx-max-width: 800px;
+}
+
+.grid-cell {
+  -fx-cursor: hand;
+}
+
+.grid-cell:hover {
+  -fx-fill: rgba(0, 0, 0, 0.1);
+}
+
+.save-button {
+  -fx-background-color: #007AFF;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-padding: 8 16;
+  -fx-background-radius: 5;
+}
+
+.header-menu-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #000000;
+  -fx-font-size: 20px;
+  -fx-padding: 0 0 0 10;
+}
+
+.component-header {
+  -fx-padding: 0 0 15 0;
+  -fx-alignment: center-right;
+}
+
+.component-item {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-spacing: 10;
+}
+
+.component-item-header {
+  -fx-alignment: center;
+  -fx-spacing: 10;
+}
+
+.from-to-field {
+  -fx-max-width: 60px;
+  -fx-alignment: center;
+}
+
+.delete-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #FF3B30;
+  -fx-padding: 0;
+}
+
+.board-config-spinner {
+  -fx-max-width: 100px;
+}
+
+.board-config-spinner .spinner {
+  -fx-pref-height: 32px;
+}
