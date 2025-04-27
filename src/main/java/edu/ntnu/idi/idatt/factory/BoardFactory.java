@@ -61,6 +61,13 @@ public class BoardFactory {
     return boards.getFirst();
   }
 
+  public static Board createBlankBoard(int rows, int columns) {
+    Board board = new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
+        new int[]{rows, columns}, "media/blankBoard.png");
+    createTiles(rows, columns).forEach(board::addTile);
+    return board;
+  }
+
   /**
    * Creates a classic board layout.
    *
