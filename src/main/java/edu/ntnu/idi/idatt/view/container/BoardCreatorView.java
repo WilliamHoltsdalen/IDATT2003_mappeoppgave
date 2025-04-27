@@ -1,13 +1,19 @@
 package edu.ntnu.idi.idatt.view.container;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
+import edu.ntnu.idi.idatt.view.component.TileActionComponent;
+import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -17,8 +23,13 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -29,6 +40,11 @@ import javafx.scene.text.Text;
 
 public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
+  private final Map<Integer, TileActionComponent> placedComponents;
+  private final Map<Rectangle, Integer> cellToTileId;
+  private Board board;
+  private double[] boardDimensions;
+  private final Pane componentsPane;
 
   private final ImageView boardImageView;
   private final ComboBox<String> backgroundComboBox;
@@ -42,6 +58,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
   public BoardCreatorView() {
     this.observers = new ArrayList<>();
+    this.placedComponents = new HashMap<>();
+    this.cellToTileId = new HashMap<>();
+    this.board = BoardFactory.createBlankBoard(9, 10);
+    this.boardDimensions = new double[2];
+    this.componentsPane = new Pane();
+    this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid
+    this.componentsPane.setMouseTransparent(false); // Allow mouse events on grid
 
     this.boardImageView = new ImageView();
     this.backgroundComboBox = new ComboBox<>();
@@ -66,6 +89,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.setLeft(leftPanel);
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
+
+    gridContainer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
+      if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
+        boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
+        updateBoardVisuals();
+      }
+    });
   }
 
   private VBox createComponentSelectionPanel() {
@@ -76,20 +106,73 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     Text title = new Text("Click to Add components");
     title.getStyleClass().add("panel-title");
 
-    VBox[] sections = new VBox[4];
-    String[] sectionTitles = {"Ladders", "Slides", "Portals", "Other"};
+    VBox laddersSection = createComponentSection("Ladders",
+        new String[]{"media/2R_ladder.png", "media/4R_ladder.png"});
+    VBox slidesSection = createComponentSection("Slides",
+        new String[]{"media/1R_slide.png", "media/2R_slide.png"});
+    VBox portalsSection = createComponentSection("Portals",
+        new String[]{"media/portal1.png", "media/portal2.png", "media/portal3.png"});
+    VBox otherSection = createComponentSection("Other", new String[]{});
 
-    for (int i = 0; i < sections.length; i++) {
-      sections[i] = new VBox(10);
-      sections[i].getStyleClass().add("component-section");
-      Text sectionTitle = new Text(sectionTitles[i]);
-      sections[i].getChildren().add(sectionTitle);
-    }
-
-    panel.getChildren().addAll(title);
-    panel.getChildren().addAll(sections);
+    panel.getChildren().addAll(title, laddersSection, slidesSection, portalsSection, otherSection);
     panel.getStyleClass().add("board-creator-panel");
     return panel;
+  }
+
+  private VBox createComponentSection(String title, String[] imagePaths) {
+    VBox section = new VBox(10);
+    section.getStyleClass().add("component-section");
+
+    Text sectionTitle = new Text(title);
+    section.getChildren().add(sectionTitle);
+
+    HBox componentsBox = new HBox(10);
+    componentsBox.setAlignment(Pos.CENTER_LEFT);
+
+    for (String imagePath : imagePaths) {
+      ImageView componentImage = new ImageView(new Image(imagePath));
+      componentImage.setFitHeight(50);
+      componentImage.setPreserveRatio(true);
+
+      setupDragAndDrop(componentImage, imagePath);
+      componentsBox.getChildren().add(componentImage);
+    }
+
+    section.getChildren().add(componentsBox);
+    return section;
+  }
+
+  private void setupDragAndDrop(ImageView source, String imagePath) {
+    source.setOnDragDetected(event -> {
+      Dragboard db = source.startDragAndDrop(TransferMode.COPY);
+      // Create a snapshot of the component image for drag visual
+      SnapshotParameters params = new SnapshotParameters();
+      params.setFill(Color.TRANSPARENT);
+      WritableImage snapshot = source.snapshot(params, null);
+      db.setDragView(snapshot);
+      // Center the drag view on the mouse cursor
+      db.setDragViewOffsetX(snapshot.getWidth() / 2);
+      db.setDragViewOffsetY(snapshot.getHeight() / 2);
+      
+      ClipboardContent content = new ClipboardContent();
+      String componentType = getComponentType(imagePath);
+      content.putString(componentType + ":" + imagePath);
+      db.setContent(content);
+      event.consume();
+    });
+  }
+
+  private String getComponentType(String imagePath) {
+    if (imagePath.contains("ladder")) {
+      return "LADDER";
+    }
+    if (imagePath.contains("portal")) {
+      return "PORTAL";
+    }
+    if (imagePath.contains("slide")) {
+      return "SLIDE";
+    }
+    return "OTHER";
   }
 
   private VBox createBoardConfigurationPanel() {
@@ -110,12 +193,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     Label backgroundLabel = new Label("Background");
     backgroundComboBox.getItems().addAll("White", "Gray", "Blue");
     backgroundComboBox.setValue("White");
+    backgroundComboBox.setOnAction(event -> updateBackground());
     backgroundSelectionBox.getChildren().addAll(backgroundLabel, backgroundComboBox);
 
     VBox patternSelectionBox = new VBox(5);
     Label patternLabel = new Label("Pattern");
-    patternComboBox.getItems().addAll("Blue checker", "Solid", "Dots");
-    patternComboBox.setValue("Blue checker");
+    patternComboBox.getItems().addAll("None", "Blue checker", "Yellow checker", "Purple checker");
+    patternComboBox.setValue("None");
+    patternComboBox.setOnAction(event -> setPattern());
     patternSelectionBox.getChildren().addAll(patternLabel, patternComboBox);
 
     VBox rowsBox = new VBox(5);
@@ -130,11 +215,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 10));
     colsBox.getChildren().addAll(colsLabel, columnsSpinner);
 
-    boardOptionsBox.getChildren().addAll(backgroundSelectionBox, patternSelectionBox, rowsBox, colsBox);
+    boardOptionsBox.getChildren()
+        .addAll(backgroundSelectionBox, patternSelectionBox, rowsBox, colsBox);
 
     panel.getChildren().setAll(nameAndDescriptionBox, boardOptionsBox);
     panel.getStyleClass().add("board-creator-panel");
+
     setupBoardPreview(); // Setting up the board image preview, so its size can be used.
+
     panel.setMaxWidth(boardImageView.getFitWidth() + 40); // 40px for padding
     return panel;
   }
@@ -174,41 +262,246 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   }
 
   private void setupBoardPreview() {
-    boardImageView.setImage(new Image("boardImages/BasicLadderBoard.png"));
+    boardImageView.setImage(new Image(board.getImagePath()));
     boardImageView.setPreserveRatio(true);
     boardImageView.setFitWidth(500);
 
     rowsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
     columnsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
 
-    boardContainer.getChildren().addAll(boardImageView, gridContainer);
+    boardContainer.getChildren().addAll(boardImageView, gridContainer, componentsPane);
     boardContainer.getStyleClass().add("board-creator-board-container");
-    boardContainer.setMaxWidth(boardImageView.getFitWidth() + 40); // 40px for padding (20px each side)
+    boardContainer.setMaxWidth(
+        boardImageView.getFitWidth() + 40); // 40px for padding (20px each side)
     updateGrid();
+  }
+
+  private void updateBackground() {
+    switch (backgroundComboBox.getValue()) {
+      case "White" -> boardImageView.setImage(new Image("boardImages/WhiteBoard.png"));
+      case "Gray" -> boardImageView.setImage(new Image("boardImages/GrayBoard.png"));
+      case "Blue" -> boardImageView.setImage(new Image("boardImages/BlueBoard.png"));
+      default -> throw new IllegalArgumentException(
+          "Unknown background: " + backgroundComboBox.getValue());
+    }
   }
 
   private void updateGrid() {
     gridContainer.getChildren().clear();
+    cellToTileId.clear();
     int rows = rowsSpinner.getValue();
     int columns = columnsSpinner.getValue();
+    board = BoardFactory.createBlankBoard(rows, columns);
 
     double cellWidth = boardImageView.getFitWidth() / columns;
     double cellHeight = (boardImageView.getFitWidth() / boardImageView.getImage().getWidth()
         * boardImageView.getImage().getHeight()) / rows;
 
-    for (int i = 0; i < rows; i++) {
+    // Making the cells in the grid
+    for (int i = rows - 1; i >= 0; i--) { // Filling rows from top to bottom
       HBox row = new HBox();
       row.setAlignment(Pos.CENTER);
-      for (int j = 0; j < columns; j++) {
-        Rectangle cell = new Rectangle(cellWidth, cellHeight);
-        cell.setFill(Color.TRANSPARENT);
-        cell.setStroke(Color.BLACK);
-        cell.setStrokeWidth(0);
-        cell.getStyleClass().add("grid-cell");
-        row.getChildren().add(cell);
+      for (int j = 0; j < columns; j++) { // Filling columns from left to right
+        row.getChildren().add(
+            createRowCell(cellWidth, cellHeight, ViewUtils.calculateTileId(i, j, columns))
+        );
       }
-      gridContainer.getChildren().add(row);
+      gridContainer.getChildren().add(row); // Adding row to grid container
     }
+    setPattern();
+    updateBoardVisuals();
+  }
+
+  private StackPane createRowCell(double cellWidth, double cellHeight, int tileId) {
+    StackPane cellPane = new StackPane();
+    Rectangle cellRect = new Rectangle(cellWidth, cellHeight);
+    cellRect.getStyleClass().add("grid-cell");
+    cellToTileId.put(cellRect, tileId);
+    setupCellDropHandling(cellRect);
+
+    Label cellLabel = new Label(String.valueOf(tileId));
+    cellLabel.getStyleClass().add("grid-cell-label");
+
+    cellPane.setAlignment(Pos.BOTTOM_RIGHT);
+
+    cellPane.getChildren().setAll(cellRect, cellLabel);
+    return cellPane;
+  }
+
+  private void setupCellDropHandling(Rectangle cell) {
+    cell.setOnDragOver(event -> {
+      if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
+        event.acceptTransferModes(TransferMode.COPY);
+      }
+      event.consume();
+    });
+
+    cell.setOnDragEntered(event -> {
+      if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
+        cell.getStyleClass().add("grid-cell-drag-preview");
+      }
+      event.consume();
+    });
+
+    cell.setOnDragExited(event -> {
+      cell.getStyleClass().remove("grid-cell-drag-preview");
+      event.consume();
+    });
+
+    cell.setOnDragDropped(event -> {
+      Dragboard db = event.getDragboard();
+      boolean success = false;
+
+      if (db.hasString()) {
+        String[] dbStringParts = db.getString().split(":");
+        String componentType = dbStringParts[0];
+        String imagePath = dbStringParts[1];
+        int tileId = cellToTileId.get(cell);
+        int[] coordinates = new int[2];
+        int destinationTileId = -1;
+
+        try {
+          switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
+            case "4R_ladder.png" -> {
+              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 4, board.getTile(tileId).getCoordinates()[1] + 1};
+              if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
+                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+              }
+            }
+            case "2R_ladder.png" -> {
+              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 2, board.getTile(tileId).getCoordinates()[1] + 1};
+              if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
+                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+              }
+            }
+            case "portal1.png", "portal2.png", "portal3.png"  -> destinationTileId = ViewUtils.randomPortalDestination(tileId);
+            case "2R_slide.png" -> {
+              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 2, board.getTile(tileId).getCoordinates()[1] + 1};
+              if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
+                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+              }
+            }
+            case "1R_slide.png" -> {
+              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 1, board.getTile(tileId).getCoordinates()[1] + 1};
+              if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
+                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+              }
+            }
+            default -> {break;}
+          }
+
+          if (placedComponents.containsKey(tileId)) {
+            // TODO: Log this
+            return;
+          }
+          List<Integer> destinations = placedComponents.values().stream().map(TileActionComponent::getDestinationTileId).toList();
+          if (placedComponents.containsKey(destinationTileId) || destinations.contains(tileId)) {
+            // TODO: Log this
+            return;
+          }
+          if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
+            placedComponents.put(tileId,
+                new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
+            success = true;
+          }
+        } catch (Exception e) {
+          // TODO: Log this
+        }
+        
+        updateBoardVisuals();
+        setPattern();
+      }
+
+      event.setDropCompleted(success);
+      event.consume();
+    });
+  }
+
+  private void updateBoardVisuals() {
+    // Clear all existing visual components
+    componentsPane.getChildren().clear();
+
+    // Reset all cell colors
+    gridContainer.getChildren().forEach(row ->
+        ((HBox) row).getChildren().forEach(cellPane ->
+            ((StackPane) cellPane).getChildren().forEach(rect -> {
+              if (rect instanceof Rectangle) {
+                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-portal", "grid-cell-has-slide", "grid-cell-ladder-destination", "grid-cell-slide-destination");
+              }
+            })
+        )
+    );
+
+    // Place the visual tile action components
+    placedComponents.forEach((tileId, component) -> {
+      Rectangle cell = findCellByTileId(tileId);
+      if (cell == null) {
+        return;
+      }
+
+      int destinationTileId = component.getTile().getLandAction().getDestinationTileId();
+      Rectangle destinationCell = findCellByTileId(destinationTileId);
+
+      double[] coordinates = ViewUtils.boardToScreenCoordinates(component.getTile().getCoordinates(), board, boardDimensions[0], boardDimensions[1]);
+
+      // Set component properties like sizing, positioning, and style classes for the cells
+      switch (component.getType()) {
+        case "LADDER" -> {
+          component.setFitWidth(cell.getWidth() * 1.5);
+          component.setTranslateX(coordinates[0] + component.getFitWidth() *0.2);
+          component.setTranslateY(coordinates[1] - (component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth())) - cell.getHeight() * 0.2);
+          cell.getStyleClass().add("grid-cell-has-ladder");
+          destinationCell.getStyleClass().add("grid-cell-ladder-destination");
+        }
+        case "PORTAL" -> {
+          component.setFitWidth(cell.getWidth() * 1);
+          component.setTranslateX(coordinates[0]);
+          component.setTranslateY(coordinates[1] - component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth()));
+          cell.getStyleClass().add("grid-cell-has-portal");
+        }
+        case "SLIDE" -> {
+          component.setFitWidth(cell.getWidth() * 1.35);
+          component.setTranslateX(coordinates[0] + component.getFitWidth() * 0.35);
+          component.setTranslateY(coordinates[1]  - cell.getHeight() * 0.3);
+          cell.getStyleClass().add("grid-cell-has-slide");
+          destinationCell.getStyleClass().add("grid-cell-slide-destination");
+        }
+        default -> {break;}
+      }
+
+      componentsPane.getChildren().add(component);
+    });
+  }
+
+  private Rectangle findCellByTileId(int tileId) {
+    return cellToTileId.entrySet().stream()
+        .filter(entry -> entry.getValue() == tileId)
+        .map(Map.Entry::getKey)
+        .findFirst()
+        .orElse(null);
+  }
+
+  private void setPattern() {
+    String selectedPattern = patternComboBox.getValue();
+    gridContainer.getChildren().forEach(row ->
+        ((HBox) row).getChildren().forEach(cellPane ->
+            ((StackPane) cellPane).getChildren().forEach(node -> {
+              node.getStyleClass().removeAll("blue-checker", "yellow-checker", "purple-checker");
+              List<Integer> destinations = placedComponents.values().stream().map(TileActionComponent::getDestinationTileId).toList();
+              if (node instanceof Rectangle rect
+                  && cellToTileId.get(rect) % 2 == 0
+                  && !placedComponents.containsKey(cellToTileId.get(rect))
+                  && !destinations.contains(cellToTileId.get(rect))) {
+                  switch (selectedPattern) {
+                    case "Blue checker" -> rect.getStyleClass().add("blue-checker");
+                    case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
+                    case "Purple checker" -> rect.getStyleClass().add("purple-checker");
+                    default -> {break;} // No pattern
+                  }
+                }
+            })
+        )
+    );
   }
 
   @Override

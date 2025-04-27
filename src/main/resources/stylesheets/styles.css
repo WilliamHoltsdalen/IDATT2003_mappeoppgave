@@ -410,18 +410,71 @@ Button:pressed {
   -fx-alignment: center;
 }
 
-.board-creator-board-wrapper {
-  -fx-alignment: center;
-  -fx-padding: 20 0;
-  -fx-max-width: 800px;
-}
-
 .grid-cell {
   -fx-cursor: hand;
+  -fx-fill: white;
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
 }
 
-.grid-cell:hover {
-  -fx-fill: rgba(0, 0, 0, 0.1);
+.grid-cell.blue-checker {
+  -fx-fill: rgba(112, 192, 236, 0.82);
+}
+
+.grid-cell.yellow-checker {
+  -fx-fill: rgba(228, 236, 112, 0.78);
+}
+
+.grid-cell.purple-checker {
+  -fx-fill: rgba(162, 112, 236, 0.85);
+}
+
+.grid-cell-label {
+  -fx-font-size: 8px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 3 1 0;
+}
+
+.grid-cell-drag-preview {
+  -fx-stroke: blue;
+  -fx-fill: #939393;
+  -fx-stroke-width: 2;
+}
+
+.grid-cell-has-ladder {
+  -fx-fill: rgb(10, 183, 96);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-portal {
+  -fx-fill: transparent;
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-slide {
+  -fx-fill: rgb(228, 49, 56);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-ladder-destination {
+  -fx-fill: rgb(185, 244, 110);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-slide-destination {
+  -fx-fill: rgb(244, 139, 76);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
 }
 
 .save-button {
