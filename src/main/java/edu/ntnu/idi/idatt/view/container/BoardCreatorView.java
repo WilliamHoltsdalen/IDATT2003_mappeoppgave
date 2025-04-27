@@ -436,12 +436,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     cell.setOnDragEntered(event -> {
       if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
         cell.getStyleClass().add("grid-cell-drag-preview");
+        cell.getStyleClass().remove("grid-cell");
       }
       event.consume();
     });
 
     cell.setOnDragExited(event -> {
       cell.getStyleClass().remove("grid-cell-drag-preview");
+      cell.getStyleClass().add("grid-cell");
       event.consume();
     });
 

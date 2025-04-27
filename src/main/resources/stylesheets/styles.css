@@ -438,9 +438,10 @@ Button:pressed {
 }
 
 .grid-cell-drag-preview {
-  -fx-stroke: blue;
   -fx-fill: #939393;
-  -fx-stroke-width: 2;
+  -fx-stroke: blue;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
 }
 
 .grid-cell-has-ladder {
