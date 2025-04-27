@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
@@ -62,10 +63,8 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.cellToTileId = new HashMap<>();
     this.board = BoardFactory.createBlankBoard(9, 10);
     this.boardDimensions = new double[2];
-    this.componentsPane = new Pane();
-    this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid
-    this.componentsPane.setMouseTransparent(false); // Allow mouse events on grid
 
+    this.componentsPane = new Pane();
     this.boardImageView = new ImageView();
     this.backgroundComboBox = new ComboBox<>();
     this.patternComboBox = new ComboBox<>();
@@ -90,12 +89,17 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
 
+    // Bind boardDimensions to the gridContainer's layoutBounds
+    // boardDimensions is used to calculate the positions of the tiles in the grid
     gridContainer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
         boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
         updateBoardVisuals();
       }
     });
+
+    this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid
+    this.componentsPane.setMouseTransparent(false); // Allow mouse events on grid
   }
 
   private VBox createComponentSelectionPanel() {
@@ -191,7 +195,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     VBox backgroundSelectionBox = new VBox(5);
     Label backgroundLabel = new Label("Background");
-    backgroundComboBox.getItems().addAll("White", "Gray", "Blue");
+    backgroundComboBox.getItems().addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink");
     backgroundComboBox.setValue("White");
     backgroundComboBox.setOnAction(event -> updateBackground());
     backgroundSelectionBox.getChildren().addAll(backgroundLabel, backgroundComboBox);
@@ -278,9 +282,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
   private void updateBackground() {
     switch (backgroundComboBox.getValue()) {
-      case "White" -> boardImageView.setImage(new Image("boardImages/WhiteBoard.png"));
-      case "Gray" -> boardImageView.setImage(new Image("boardImages/GrayBoard.png"));
-      case "Blue" -> boardImageView.setImage(new Image("boardImages/BlueBoard.png"));
+      case "White" -> boardImageView.setImage(new Image("media/boards/whiteBoard.png"));
+      case "Gray" -> boardImageView.setImage(new Image("media/boards/grayBoard.png"));
+      case "Dark blue" -> boardImageView.setImage(new Image("media/boards/darkBlueBoard.png"));
+      case "Green" -> boardImageView.setImage(new Image("media/boards/greenBoard.png"));
+      case "Red" -> boardImageView.setImage(new Image("media/boards/redBoard.png"));
+      case "Yellow" -> boardImageView.setImage(new Image("media/boards/yellowBoard.png"));
+      case "Pink" -> boardImageView.setImage(new Image("media/boards/pinkBoard.png"));
       default -> throw new IllegalArgumentException(
           "Unknown background: " + backgroundComboBox.getValue());
     }
@@ -354,60 +362,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
       if (db.hasString()) {
         String[] dbStringParts = db.getString().split(":");
-        String componentType = dbStringParts[0];
-        String imagePath = dbStringParts[1];
-        int tileId = cellToTileId.get(cell);
-        int[] coordinates = new int[2];
-        int destinationTileId = -1;
-
-        try {
-          switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
-            case "4R_ladder.png" -> {
-              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 4, board.getTile(tileId).getCoordinates()[1] + 1};
-              if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-              }
-            }
-            case "2R_ladder.png" -> {
-              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 2, board.getTile(tileId).getCoordinates()[1] + 1};
-              if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-              }
-            }
-            case "portal1.png", "portal2.png", "portal3.png"  -> destinationTileId = ViewUtils.randomPortalDestination(tileId);
-            case "2R_slide.png" -> {
-              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 2, board.getTile(tileId).getCoordinates()[1] + 1};
-              if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-              }
-            }
-            case "1R_slide.png" -> {
-              coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 1, board.getTile(tileId).getCoordinates()[1] + 1};
-              if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-                destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-              }
-            }
-            default -> {break;}
-          }
-
-          if (placedComponents.containsKey(tileId)) {
-            // TODO: Log this
-            return;
-          }
-          List<Integer> destinations = placedComponents.values().stream().map(TileActionComponent::getDestinationTileId).toList();
-          if (placedComponents.containsKey(destinationTileId) || destinations.contains(tileId)) {
-            // TODO: Log this
-            return;
-          }
-          if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
-            placedComponents.put(tileId,
-                new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
-            success = true;
-          }
-        } catch (Exception e) {
-          // TODO: Log this
-        }
-        
+        success = placeComponent(dbStringParts[0], dbStringParts[1], cellToTileId.get(cell));
         updateBoardVisuals();
         setPattern();
       }
@@ -415,6 +370,55 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
       event.setDropCompleted(success);
       event.consume();
     });
+  }
+
+  private boolean placeComponent(String componentType, String imagePath, int tileId) {
+    int[] coordinates;
+    int destinationTileId = -1;
+    List<Integer> occupiedTiles = Stream.concat(
+        placedComponents.keySet().stream(),
+        placedComponents.values().stream().map(TileActionComponent::getDestinationTileId)
+    ).toList();
+    switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
+      case "4R_ladder.png" -> {
+        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 4, board.getTile(tileId).getCoordinates()[1] + 1};
+        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        }
+      }
+      case "2R_ladder.png" -> {
+        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 2, board.getTile(tileId).getCoordinates()[1] + 1};
+        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        }
+      }
+      case "portal1.png", "portal2.png", "portal3.png" -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), occupiedTiles);
+      case "2R_slide.png" -> {
+        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 2, board.getTile(tileId).getCoordinates()[1] + 1};
+        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        }
+      }
+      case "1R_slide.png" -> {
+        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 1, board.getTile(tileId).getCoordinates()[1] + 1};
+        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        }
+      }
+      default -> {
+        return false;
+      }
+    }
+
+    if (occupiedTiles.contains(tileId) || occupiedTiles.contains(destinationTileId)) {
+      // TODO: Log this
+      return false;
+    }
+    if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
+      placedComponents.put(tileId,
+          new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
+    }
+    return true;
   }
 
   private void updateBoardVisuals() {

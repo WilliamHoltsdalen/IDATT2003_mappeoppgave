@@ -1,6 +1,8 @@
 package edu.ntnu.idi.idatt.view.util;
-import edu.ntnu.idi.idatt.model.Board;
+import java.util.List;
 import java.util.Random;
+
+import edu.ntnu.idi.idatt.model.Board;
 
 /**
  * Utility class containing helper methods for view-related operations. This
@@ -57,11 +59,11 @@ public class ViewUtils {
         return row * columns + (columns - col); // Odd rows go right to left
     }
 
-    public static int randomPortalDestination(int portalId) {
+    public static int randomPortalDestination(int portalId, int tiles, List<Integer> occupiedTiles) {
         int id;
         do {
-            id = random.nextInt(88) + 1;
-        } while (id == portalId);
+            id = random.nextInt(1, tiles);
+        } while (id == portalId || occupiedTiles.contains(id));
         return id;
     }
 }

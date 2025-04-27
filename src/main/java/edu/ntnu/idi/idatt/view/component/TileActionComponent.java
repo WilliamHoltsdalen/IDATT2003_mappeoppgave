@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.model.LadderAction;
 import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -20,7 +19,6 @@ public class TileActionComponent extends ImageView {
 
     setImage(new Image(imagePath));
     setPreserveRatio(true);
-    System.out.println("Setting tile action " + type + " for " + tile.getTileId() + " to " + destinationTileId);
     createTileAction();
     this.getStyleClass().add("tile-action-component");
   }
@@ -44,10 +42,7 @@ public class TileActionComponent extends ImageView {
   private void createTileAction() {
     switch (type) {
       case "LADDER" -> tile.setLandAction(new LadderAction(destinationTileId, "Ladder from " + tile.getTileId() + " to " + destinationTileId));
-      case "PORTAL" -> {
-        int randomDestination = ViewUtils.randomPortalDestination(destinationTileId);
-        tile.setLandAction(new LadderAction(randomDestination, "Portal from " + tile.getTileId() + " to " + randomDestination));
-      }
+      case "PORTAL" -> tile.setLandAction(new LadderAction(destinationTileId, "Portal from " + tile.getTileId() + " to " + destinationTileId));
       case "SLIDE" -> tile.setLandAction(new LadderAction(destinationTileId, "Slide from " + tile.getTileId() + " to " + destinationTileId));
       default -> {break;}
     }

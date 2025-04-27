@@ -63,7 +63,7 @@ public class BoardFactory {
 
   public static Board createBlankBoard(int rows, int columns) {
     Board board = new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
-        new int[]{rows, columns}, "media/blankBoard.png");
+        new int[]{rows, columns}, "media/boards/whiteBoard.png");
     createTiles(rows, columns).forEach(board::addTile);
     return board;
   }
