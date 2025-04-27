@@ -1,13 +1,15 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -169,18 +171,7 @@ public class GameBoardStackPane extends StackPane {
    *         top left corner.
    */
   private double[] convertCoordinates(int[] rc) {
-    int r = rc[0];
-    int c = rc[1];
-
-    double boardWidth = boardDimensions[0];
-    double boardHeight = boardDimensions[1];
-    int rMax = board.getRowsAndColumns()[0];
-    int cMax = board.getRowsAndColumns()[1];
-
-    double x = (boardWidth / cMax) * c;
-    double y = boardHeight - ((boardHeight / rMax) * r);
-
-    return new double[]{x, y};
+    return ViewUtils.boardToScreenCoordinates(rc, board, boardDimensions[0], boardDimensions[1]);
   }
 
   /**
