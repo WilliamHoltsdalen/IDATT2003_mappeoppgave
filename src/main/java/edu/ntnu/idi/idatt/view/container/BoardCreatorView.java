@@ -15,10 +15,13 @@ import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
@@ -45,8 +48,9 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final Map<Rectangle, Integer> cellToTileId;
   private Board board;
   private double[] boardDimensions;
+  
   private final Pane componentsPane;
-
+  private final VBox componentListContent;
   private final ImageView boardImageView;
   private final ComboBox<String> backgroundComboBox;
   private final ComboBox<String> patternComboBox;
@@ -65,6 +69,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.boardDimensions = new double[2];
 
     this.componentsPane = new Pane();
+    this.componentListContent = new VBox(10);
     this.boardImageView = new ImageView();
     this.backgroundComboBox = new ComboBox<>();
     this.patternComboBox = new ComboBox<>();
@@ -107,7 +112,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     panel.setPadding(new Insets(20));
     panel.setMinWidth(300);
 
-    Text title = new Text("Click to Add components");
+    Text title = new Text("Drag components onto the board");
     title.getStyleClass().add("panel-title");
 
     VBox laddersSection = createComponentSection("Ladders",
@@ -187,9 +192,18 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     HBox nameAndDescriptionBox = new HBox(20);
     nameAndDescriptionBox.setAlignment(Pos.CENTER_LEFT);
+
+    VBox nameBox = new VBox(5);
+    Label nameLabel = new Label("Board Name");
     nameField.setPromptText("Board Name");
+    nameBox.getChildren().addAll(nameLabel, nameField);
+
+    VBox descriptionBox = new VBox(5);
+    Label descriptionLabel = new Label("Description");
     descriptionField.setPromptText("Description");
-    nameAndDescriptionBox.getChildren().setAll(nameField, descriptionField);
+    descriptionBox.getChildren().addAll(descriptionLabel, descriptionField);
+
+    nameAndDescriptionBox.getChildren().setAll(nameBox, descriptionBox);
 
     HBox boardOptionsBox = new HBox(20);
 
@@ -255,14 +269,89 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     Text title = new Text("Components");
     title.getStyleClass().add("panel-title");
 
-    ScrollPane componentList = new ScrollPane();
+    ScrollPane componentList = new ScrollPane(componentListContent);
+    componentList.setHbarPolicy(ScrollBarPolicy.NEVER);
+    componentList.setVbarPolicy(ScrollBarPolicy.NEVER);
     componentList.setFitToWidth(true);
-    VBox componentListContent = new VBox(10);
-    componentList.setContent(componentListContent);
+    componentList.getStyleClass().add("component-list-scroll-pane");
+    componentListContent.getStyleClass().add("component-list-content");
 
     panel.getChildren().addAll(header, title, componentList);
     panel.getStyleClass().add("board-creator-panel");
     return panel;
+  }
+
+  private void updateComponentList() {
+    componentListContent.getChildren().clear();
+
+    placedComponents.forEach((tileId, component) -> {
+      VBox componentBox = new VBox(5);
+      componentBox.getStyleClass().add("component-item");
+
+      // Component header with type and delete button
+      HBox header = new HBox();
+      header.getStyleClass().add("component-item-header");
+      header.setAlignment(Pos.CENTER_LEFT);
+
+      // Component type and image
+      String displayName = switch (component.getType()) {
+        case "LADDER" -> {
+          String rows = component.getImagePath().contains("4R") ? "(4R)" : "(2R)";
+          yield "Ladder " + rows;
+        }
+        case "SLIDE" -> {
+          String rows = component.getImagePath().contains("2R") ? "(2R)" : "(1R)";
+          yield "Slide " + rows;
+        }
+        case "PORTAL" -> "Portal";
+        default -> component.getType();
+      };
+
+      Label typeLabel = new Label(displayName);
+      typeLabel.setStyle("-fx-font-weight: bold;");
+
+      ImageView componentImage = new ImageView(component.getImage());
+      componentImage.setFitHeight(40);
+      componentImage.setPreserveRatio(true);
+
+      // Delete button
+      Button deleteButton = new Button("×");
+      deleteButton.getStyleClass().add("delete-button");
+      deleteButton.setOnAction(e -> {
+        placedComponents.remove(tileId);
+        updateBoardVisuals();
+      });
+
+      Region spacer = new Region();
+      HBox.setHgrow(spacer, Priority.ALWAYS);
+      header.getChildren().addAll(typeLabel, spacer, deleteButton);
+
+      // From-To fields
+      HBox fromToBox = new HBox(10);
+      fromToBox.setAlignment(Pos.CENTER_LEFT);
+
+      Label fromLabel = new Label("From");
+      TextField fromField = new TextField(String.valueOf(tileId));
+      fromField.getStyleClass().add("from-to-field");
+      fromField.setEditable(false);
+      VBox fromVBox = new VBox(10);
+      fromVBox.getChildren().addAll(fromLabel, fromField);
+
+      Label toLabel = new Label("To");
+      TextField toField = new TextField(String.valueOf(component.getDestinationTileId()));
+      toField.getStyleClass().add("from-to-field");
+      toField.setEditable(false);
+      VBox toVBox = new VBox(10);
+      toVBox.getChildren().addAll(toLabel, toField);
+
+      fromToBox.getChildren().addAll(fromVBox, toVBox);
+
+      HBox contentBox = new HBox(20);
+      contentBox.getChildren().addAll(componentImage, fromToBox);
+
+      componentBox.getChildren().addAll(header, contentBox);
+      componentListContent.getChildren().add(componentBox);
+    });
   }
 
   private void setupBoardPreview() {
@@ -411,7 +500,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     }
 
     if (occupiedTiles.contains(tileId) || occupiedTiles.contains(destinationTileId)) {
-      // TODO: Log this
+      showErrorAlert("Could not place component", "Tile " + tileId + " or " + destinationTileId + " is already occupied");
       return false;
     }
     if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
@@ -430,7 +519,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
         ((HBox) row).getChildren().forEach(cellPane ->
             ((StackPane) cellPane).getChildren().forEach(rect -> {
               if (rect instanceof Rectangle) {
-                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-portal", "grid-cell-has-slide", "grid-cell-ladder-destination", "grid-cell-slide-destination");
+                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-slide", "grid-cell-ladder-destination", "grid-cell-slide-destination");
               }
             })
         )
@@ -475,6 +564,9 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
       componentsPane.getChildren().add(component);
     });
+
+    // Update the component list in the right panel
+    updateComponentList();
   }
 
   private Rectangle findCellByTileId(int tileId) {
@@ -491,11 +583,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
         ((HBox) row).getChildren().forEach(cellPane ->
             ((StackPane) cellPane).getChildren().forEach(node -> {
               node.getStyleClass().removeAll("blue-checker", "yellow-checker", "purple-checker");
-              List<Integer> destinations = placedComponents.values().stream().map(TileActionComponent::getDestinationTileId).toList();
+
+              List<Integer> occupiedTiles = Stream.concat(
+                placedComponents.keySet().stream().filter(id -> !placedComponents.get(id).getType().equals("PORTAL")),
+                placedComponents.values().stream().filter(component -> !component.getType().equals("PORTAL")).map(TileActionComponent::getDestinationTileId)
+              ).toList();
               if (node instanceof Rectangle rect
                   && cellToTileId.get(rect) % 2 == 0
-                  && !placedComponents.containsKey(cellToTileId.get(rect))
-                  && !destinations.contains(cellToTileId.get(rect))) {
+                  && !occupiedTiles.contains(cellToTileId.get(rect))) {
                   switch (selectedPattern) {
                     case "Blue checker" -> rect.getStyleClass().add("blue-checker");
                     case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
@@ -506,6 +601,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
             })
         )
     );
+  }
+
+  public void showErrorAlert(String headerText, String message) {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message); 
+    alert.showAndWait();
   }
 
   @Override
