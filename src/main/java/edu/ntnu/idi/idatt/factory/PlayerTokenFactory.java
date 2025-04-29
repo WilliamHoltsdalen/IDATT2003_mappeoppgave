@@ -66,14 +66,14 @@ public class PlayerTokenFactory {
   }
 
   private static Shape createSquare(double radius) {
-    return new Rectangle(radius*1.5, radius*1.5);
+    return new Rectangle(radius * 2, radius * 2);
   }
 
   private static Shape createTriangle(double radius) {
     return new Polygon(
-        0, -radius*0.8,
-        radius*0.8, radius*0.8,
-        -radius*0.8, radius*0.8
+        0, -radius,
+        radius, radius,
+        -radius, radius
     );
   }
 
