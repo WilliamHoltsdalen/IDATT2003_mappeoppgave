@@ -7,22 +7,22 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSe
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 
 /**
- * <h3>LadderAction class</h3>
+ * <h3>WormholeAction class</h3>
  *
- * <p>This class represents a ladder action, which is a tile action that moves the player to a
- * different tile. It contains a destination tile ID and a description.
+ * <p>This class represents a Wormhole action, which is a tile action that moves the player to a
+ * random  wormhole tile. It contains a destination tile ID and a description.
  */
-public class LadderAction implements TileAction {
+public class WormholeAction implements TileAction {
   private int destinationTileId;
   private String description;
 
   /**
-   * Constructor for LadderAction class.
+   * Constructor for WormholeAction class.
    *
    * @param destinationTileId The ID of the destination tile.
    * @param description The description of the action.
    */
-  public LadderAction(int destinationTileId, String description) {
+  public WormholeAction(int destinationTileId, String description) {
     setDestinationTileId(destinationTileId);
     setDescription(description);
   }
