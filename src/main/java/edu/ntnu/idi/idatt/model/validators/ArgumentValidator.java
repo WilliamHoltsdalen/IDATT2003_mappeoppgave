@@ -212,7 +212,7 @@ public class ArgumentValidator {
    * @param destinationTileId the id of the destination tile
    * @throws IllegalArgumentException if destinationTileId is less than 0
    */
-  public static void ladderActionSetDestinationTileIdValidator(int destinationTileId) {
+  public static void tileActionSetDestinationTileIdValidator(int destinationTileId) {
     if (destinationTileId < 0) {
       throw new IllegalArgumentException("Destination tile id must be greater than 0");
     }
@@ -224,7 +224,7 @@ public class ArgumentValidator {
    * @param description the description to set
    * @throws IllegalArgumentException if description is null or blank
    */
-  public static void ladderActionSetDescriptionValidator(String description) {
+  public static void tileActionSetDescriptionValidator(String description) {
     if (description == null || description.isBlank()) {
       throw new IllegalArgumentException("Description cannot be null or blank");
     }
@@ -237,7 +237,7 @@ public class ArgumentValidator {
    * @param board the board to perform the action on
    * @throws IllegalArgumentException if player or board is null
    */
-  public static void ladderActionPerformValidator(Player player, Board board) {
+  public static void tileActionPerformValidator(Player player, Board board) {
     if (player == null) {
       throw new IllegalArgumentException("Player cannot be null");
     }
@@ -245,6 +245,7 @@ public class ArgumentValidator {
       throw new IllegalArgumentException("Board cannot be null");
     }
   }
+
 
   /**
    * Validates the arguments for the setName method in Player class.
