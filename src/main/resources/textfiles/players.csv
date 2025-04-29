@@ -2,3 +2,5 @@ name, colorHex, playerTokenType
 Player 1, #FF5733, TRIANGLE
 Player 2, #00FFFF, DIAMOND
 Player 3, #FF00FF, CIRCLE
+Player 4, #FF2288, SQUARE
+Player 5, #123456, HEXAGON
