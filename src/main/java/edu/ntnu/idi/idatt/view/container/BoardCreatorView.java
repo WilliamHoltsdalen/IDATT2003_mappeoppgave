@@ -1,17 +1,14 @@
 package edu.ntnu.idi.idatt.view.container;
 
+import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
-import edu.ntnu.idi.idatt.view.component.TileActionComponent;
-import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
@@ -44,10 +41,9 @@ import javafx.scene.text.Text;
 
 public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
-  private final Map<Integer, TileActionComponent> placedComponents;
-  private final Map<Rectangle, Integer> cellToTileId;
-  private Board board;
-  private double[] boardDimensions;
+  private Consumer<ComponentDropEventData> onComponentDropped;
+
+  private final Map<Rectangle, Integer> cellToTileIdMap;
   
   private final Pane componentsPane;
   private final VBox componentListContent;
@@ -63,10 +59,8 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
   public BoardCreatorView() {
     this.observers = new ArrayList<>();
-    this.placedComponents = new HashMap<>();
-    this.cellToTileId = new HashMap<>();
-    this.board = BoardFactory.createBlankBoard(9, 10);
-    this.boardDimensions = new double[2];
+
+    this.cellToTileIdMap = new HashMap<>();
 
     this.componentsPane = new Pane();
     this.componentListContent = new VBox(10);
@@ -81,10 +75,62 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.descriptionField = new TextField();
   }
 
-  public void initialize() {
+  public Map<Rectangle, Integer> getCellToTileIdMap() {
+    return cellToTileIdMap;
+  }
+
+  public VBox getGridContainer() {
+    return gridContainer;
+  }
+
+  public Pane getComponentsPane() {
+    return componentsPane;
+  }
+
+  public VBox getComponentListContent() {
+    return componentListContent;
+  }
+
+  public ImageView getBoardImageView() {
+    return boardImageView;
+  }
+
+  public TextField getNameField() {
+    return nameField;
+  }
+
+  public TextField getDescriptionField() {
+    return descriptionField;
+  }
+
+  public ComboBox<String> getBackgroundComboBox() {
+    return backgroundComboBox;
+  }
+
+  public ComboBox<String> getPatternComboBox() {
+    return patternComboBox;
+  }
+
+  public Spinner<Integer> getRowsSpinner() {
+    return rowsSpinner;
+  }
+
+  public Spinner<Integer> getColumnsSpinner() {
+    return columnsSpinner;
+  }
+
+  public void setBoardImage(Image image) {
+    boardImageView.setImage(image);
+  }
+
+  public void setOnComponentDropped(Consumer<ComponentDropEventData> onComponentDropped) {
+    this.onComponentDropped = onComponentDropped;
+  }
+
+  public void initializeView(Map<String, String[]> components) {
     this.getStyleClass().add("board-creator-view");
 
-    VBox leftPanel = createComponentSelectionPanel();
+    VBox leftPanel = createComponentSelectionPanel(components);
     VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardContainer);
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
@@ -94,20 +140,17 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
 
-    // Bind boardDimensions to the gridContainer's layoutBounds
-    // boardDimensions is used to calculate the positions of the tiles in the grid
-    gridContainer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
-      if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
-        boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
-        updateBoardVisuals();
-      }
-    });
-
     this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid
     this.componentsPane.setMouseTransparent(false); // Allow mouse events on grid
   }
 
-  private VBox createComponentSelectionPanel() {
+  public void initializeBoardImage(Image image) {
+    boardImageView.setImage(image);
+    boardImageView.setPreserveRatio(true);
+    boardImageView.setFitWidth(500);
+  }
+
+  private VBox createComponentSelectionPanel(Map<String, String[]> components) {
     VBox panel = new VBox(15);
     panel.setPadding(new Insets(20));
     panel.setMinWidth(300);
@@ -115,15 +158,11 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     Text title = new Text("Drag components onto the board");
     title.getStyleClass().add("panel-title");
 
-    VBox laddersSection = createComponentSection("Ladders",
-        new String[]{"media/2R_ladder.png", "media/4R_ladder.png"});
-    VBox slidesSection = createComponentSection("Slides",
-        new String[]{"media/1R_slide.png", "media/2R_slide.png"});
-    VBox portalsSection = createComponentSection("Portals",
-        new String[]{"media/portal1.png", "media/portal2.png", "media/portal3.png"});
-    VBox otherSection = createComponentSection("Other", new String[]{});
+    components.forEach((key, value) -> {
+      VBox section = createComponentSection(key, value);
+      panel.getChildren().add(section);
+    });
 
-    panel.getChildren().addAll(title, laddersSection, slidesSection, portalsSection, otherSection);
     panel.getStyleClass().add("board-creator-panel");
     return panel;
   }
@@ -211,14 +250,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     Label backgroundLabel = new Label("Background");
     backgroundComboBox.getItems().addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink");
     backgroundComboBox.setValue("White");
-    backgroundComboBox.setOnAction(event -> updateBackground());
+    backgroundComboBox.setOnAction(event -> notifyObservers("update_background"));
     backgroundSelectionBox.getChildren().addAll(backgroundLabel, backgroundComboBox);
 
     VBox patternSelectionBox = new VBox(5);
     Label patternLabel = new Label("Pattern");
     patternComboBox.getItems().addAll("None", "Blue checker", "Yellow checker", "Purple checker");
     patternComboBox.setValue("None");
-    patternComboBox.setOnAction(event -> setPattern());
+    patternComboBox.setOnAction(event -> notifyObservers("update_pattern"));
     patternSelectionBox.getChildren().addAll(patternLabel, patternComboBox);
 
     VBox rowsBox = new VBox(5);
@@ -281,139 +320,19 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return panel;
   }
 
-  private void updateComponentList() {
-    componentListContent.getChildren().clear();
-
-    placedComponents.forEach((tileId, component) -> {
-      VBox componentBox = new VBox(5);
-      componentBox.getStyleClass().add("component-item");
-
-      // Component header with type and delete button
-      HBox header = new HBox();
-      header.getStyleClass().add("component-item-header");
-      header.setAlignment(Pos.CENTER_LEFT);
-
-      // Component type and image
-      String displayName = switch (component.getType()) {
-        case "LADDER" -> {
-          String rows = component.getImagePath().contains("4R") ? "(4R)" : "(2R)";
-          yield "Ladder " + rows;
-        }
-        case "SLIDE" -> {
-          String rows = component.getImagePath().contains("2R") ? "(2R)" : "(1R)";
-          yield "Slide " + rows;
-        }
-        case "PORTAL" -> "Portal";
-        default -> component.getType();
-      };
-
-      Label typeLabel = new Label(displayName);
-      typeLabel.setStyle("-fx-font-weight: bold;");
-
-      ImageView componentImage = new ImageView(component.getImage());
-      componentImage.setFitHeight(40);
-      componentImage.setPreserveRatio(true);
-
-      // Delete button
-      Button deleteButton = new Button("×");
-      deleteButton.getStyleClass().add("delete-button");
-      deleteButton.setOnAction(e -> {
-        placedComponents.remove(tileId);
-        updateBoardVisuals();
-      });
-
-      Region spacer = new Region();
-      HBox.setHgrow(spacer, Priority.ALWAYS);
-      header.getChildren().addAll(typeLabel, spacer, deleteButton);
-
-      // From-To fields
-      HBox fromToBox = new HBox(10);
-      fromToBox.setAlignment(Pos.CENTER_LEFT);
-
-      Label fromLabel = new Label("From");
-      TextField fromField = new TextField(String.valueOf(tileId));
-      fromField.getStyleClass().add("from-to-field");
-      fromField.setEditable(false);
-      VBox fromVBox = new VBox(10);
-      fromVBox.getChildren().addAll(fromLabel, fromField);
-
-      Label toLabel = new Label("To");
-      TextField toField = new TextField(String.valueOf(component.getDestinationTileId()));
-      toField.getStyleClass().add("from-to-field");
-      toField.setEditable(false);
-      VBox toVBox = new VBox(10);
-      toVBox.getChildren().addAll(toLabel, toField);
-
-      fromToBox.getChildren().addAll(fromVBox, toVBox);
-
-      HBox contentBox = new HBox(20);
-      contentBox.getChildren().addAll(componentImage, fromToBox);
-
-      componentBox.getChildren().addAll(header, contentBox);
-      componentListContent.getChildren().add(componentBox);
-    });
-  }
-
   private void setupBoardPreview() {
-    boardImageView.setImage(new Image(board.getImagePath()));
-    boardImageView.setPreserveRatio(true);
-    boardImageView.setFitWidth(500);
-
-    rowsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
-    columnsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
-
     boardContainer.getChildren().addAll(boardImageView, gridContainer, componentsPane);
     boardContainer.getStyleClass().add("board-creator-board-container");
     boardContainer.setMaxWidth(
         boardImageView.getFitWidth() + 40); // 40px for padding (20px each side)
-    updateGrid();
+    notifyObservers("update_grid");
   }
 
-  private void updateBackground() {
-    switch (backgroundComboBox.getValue()) {
-      case "White" -> boardImageView.setImage(new Image("media/boards/whiteBoard.png"));
-      case "Gray" -> boardImageView.setImage(new Image("media/boards/grayBoard.png"));
-      case "Dark blue" -> boardImageView.setImage(new Image("media/boards/darkBlueBoard.png"));
-      case "Green" -> boardImageView.setImage(new Image("media/boards/greenBoard.png"));
-      case "Red" -> boardImageView.setImage(new Image("media/boards/redBoard.png"));
-      case "Yellow" -> boardImageView.setImage(new Image("media/boards/yellowBoard.png"));
-      case "Pink" -> boardImageView.setImage(new Image("media/boards/pinkBoard.png"));
-      default -> throw new IllegalArgumentException(
-          "Unknown background: " + backgroundComboBox.getValue());
-    }
-  }
-
-  private void updateGrid() {
-    gridContainer.getChildren().clear();
-    cellToTileId.clear();
-    int rows = rowsSpinner.getValue();
-    int columns = columnsSpinner.getValue();
-    board = BoardFactory.createBlankBoard(rows, columns);
-
-    double cellWidth = boardImageView.getFitWidth() / columns;
-    double cellHeight = (boardImageView.getFitWidth() / boardImageView.getImage().getWidth()
-        * boardImageView.getImage().getHeight()) / rows;
-
-    // Making the cells in the grid
-    for (int i = rows - 1; i >= 0; i--) { // Filling rows from top to bottom
-      HBox row = new HBox();
-      row.setAlignment(Pos.CENTER);
-      for (int j = 0; j < columns; j++) { // Filling columns from left to right
-        row.getChildren().add(
-            createRowCell(cellWidth, cellHeight, ViewUtils.calculateTileId(i, j, columns))
-        );
-      }
-      gridContainer.getChildren().add(row); // Adding row to grid container
-    }
-    setPattern();
-    updateBoardVisuals();
-  }
-
-  private StackPane createRowCell(double cellWidth, double cellHeight, int tileId) {
+  public StackPane createRowCell(double cellWidth, double cellHeight, int tileId) {
     StackPane cellPane = new StackPane();
     Rectangle cellRect = new Rectangle(cellWidth, cellHeight);
     cellRect.getStyleClass().add("grid-cell");
-    cellToTileId.put(cellRect, tileId);
+    cellToTileIdMap.put(cellRect, tileId);
     setupCellDropHandling(cellRect);
 
     Label cellLabel = new Label(String.valueOf(tileId));
@@ -451,158 +370,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
       Dragboard db = event.getDragboard();
       boolean success = false;
 
-      if (db.hasString()) {
+      if (db.hasString() && onComponentDropped != null) {
         String[] dbStringParts = db.getString().split(":");
-        success = placeComponent(dbStringParts[0], dbStringParts[1], cellToTileId.get(cell));
-        updateBoardVisuals();
-        setPattern();
+        onComponentDropped.accept(new ComponentDropEventData(dbStringParts[0], dbStringParts[1], cell));
       }
 
       event.setDropCompleted(success);
       event.consume();
     });
-  }
-
-  private boolean placeComponent(String componentType, String imagePath, int tileId) {
-    int[] coordinates;
-    int destinationTileId = -1;
-    List<Integer> occupiedTiles = Stream.concat(
-        placedComponents.keySet().stream(),
-        placedComponents.values().stream().map(TileActionComponent::getDestinationTileId)
-    ).toList();
-    switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
-      case "4R_ladder.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 4, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case "2R_ladder.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 2, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case "portal1.png", "portal2.png", "portal3.png" -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), occupiedTiles);
-      case "2R_slide.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 2, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case "1R_slide.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 1, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      default -> {
-        return false;
-      }
-    }
-
-    if (occupiedTiles.contains(tileId) || occupiedTiles.contains(destinationTileId)) {
-      showErrorAlert("Could not place component", "Tile " + tileId + " or " + destinationTileId + " is already occupied");
-      return false;
-    }
-    if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
-      placedComponents.put(tileId,
-          new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
-    }
-    return true;
-  }
-
-  private void updateBoardVisuals() {
-    // Clear all existing visual components
-    componentsPane.getChildren().clear();
-
-    // Reset all cell colors
-    gridContainer.getChildren().forEach(row ->
-        ((HBox) row).getChildren().forEach(cellPane ->
-            ((StackPane) cellPane).getChildren().forEach(rect -> {
-              if (rect instanceof Rectangle) {
-                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-slide", "grid-cell-ladder-destination", "grid-cell-slide-destination");
-              }
-            })
-        )
-    );
-
-    // Place the visual tile action components
-    placedComponents.forEach((tileId, component) -> {
-      Rectangle cell = findCellByTileId(tileId);
-      if (cell == null) {
-        return;
-      }
-
-      int destinationTileId = component.getTile().getLandAction().getDestinationTileId();
-      Rectangle destinationCell = findCellByTileId(destinationTileId);
-
-      double[] coordinates = ViewUtils.boardToScreenCoordinates(component.getTile().getCoordinates(), board, boardDimensions[0], boardDimensions[1]);
-
-      // Set component properties like sizing, positioning, and style classes for the cells
-      switch (component.getType()) {
-        case "LADDER" -> {
-          component.setFitWidth(cell.getWidth() * 1.5);
-          component.setTranslateX(coordinates[0] + component.getFitWidth() *0.2);
-          component.setTranslateY(coordinates[1] - (component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth())) - cell.getHeight() * 0.2);
-          cell.getStyleClass().add("grid-cell-has-ladder");
-          destinationCell.getStyleClass().add("grid-cell-ladder-destination");
-        }
-        case "PORTAL" -> {
-          component.setFitWidth(cell.getWidth() * 1);
-          component.setTranslateX(coordinates[0]);
-          component.setTranslateY(coordinates[1] - component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth()));
-          cell.getStyleClass().add("grid-cell-has-portal");
-        }
-        case "SLIDE" -> {
-          component.setFitWidth(cell.getWidth() * 1.35);
-          component.setTranslateX(coordinates[0] + component.getFitWidth() * 0.35);
-          component.setTranslateY(coordinates[1]  - cell.getHeight() * 0.3);
-          cell.getStyleClass().add("grid-cell-has-slide");
-          destinationCell.getStyleClass().add("grid-cell-slide-destination");
-        }
-        default -> {break;}
-      }
-
-      componentsPane.getChildren().add(component);
-    });
-
-    // Update the component list in the right panel
-    updateComponentList();
-  }
-
-  private Rectangle findCellByTileId(int tileId) {
-    return cellToTileId.entrySet().stream()
-        .filter(entry -> entry.getValue() == tileId)
-        .map(Map.Entry::getKey)
-        .findFirst()
-        .orElse(null);
-  }
-
-  private void setPattern() {
-    String selectedPattern = patternComboBox.getValue();
-    gridContainer.getChildren().forEach(row ->
-        ((HBox) row).getChildren().forEach(cellPane ->
-            ((StackPane) cellPane).getChildren().forEach(node -> {
-              node.getStyleClass().removeAll("blue-checker", "yellow-checker", "purple-checker");
-
-              List<Integer> occupiedTiles = Stream.concat(
-                placedComponents.keySet().stream().filter(id -> !placedComponents.get(id).getType().equals("PORTAL")),
-                placedComponents.values().stream().filter(component -> !component.getType().equals("PORTAL")).map(TileActionComponent::getDestinationTileId)
-              ).toList();
-              if (node instanceof Rectangle rect
-                  && cellToTileId.get(rect) % 2 == 0
-                  && !occupiedTiles.contains(cellToTileId.get(rect))) {
-                  switch (selectedPattern) {
-                    case "Blue checker" -> rect.getStyleClass().add("blue-checker");
-                    case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
-                    case "Purple checker" -> rect.getStyleClass().add("purple-checker");
-                    default -> {break;} // No pattern
-                  }
-                }
-            })
-        )
-    );
   }
 
   public void showErrorAlert(String headerText, String message) {
