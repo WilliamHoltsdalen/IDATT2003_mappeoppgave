@@ -111,27 +111,52 @@ public class Board {
     return pattern;
   }
 
-  private void setName(String name) {
+  /**
+   * Sets the name of the board.
+   *
+   * @param name The name to set.
+   */
+  public void setName(String name) {
     boardSetnameValidator(name);
     this.name = name;
   }
 
-  private void setDescription(String description) {
+  /**
+   * Sets the description of the board.
+   *
+   * @param description The description to set.
+   */
+  public void setDescription(String description) {
     boardSetDescriptionValidator(description);
     this.description = description;
   }
 
-  private void setRowsAndColumns(int[] rowsAndColumns) {
+  /**
+   * Sets the number of rows and columns in the board.
+   *
+   * @param rowsAndColumns The number of rows and columns to set.
+   */
+  public void setRowsAndColumns(int[] rowsAndColumns) {
     boardSetRowsAndColumnsValidator(rowsAndColumns);
     this.rowsAndColumns = rowsAndColumns;
   }
 
-  private void setBackground(String background) {
+  /**
+   * Sets the string representing the background of the board.
+   *
+   * @param background The background to set.
+   */
+  public void setBackground(String background) {
     boardSetBackgroundValidator(background);
     this.background = background;
   }
 
-  private void setPattern(String pattern) {
+  /**
+   * Sets the string representing the pattern of the board.
+   *
+   * @param pattern The pattern to set.
+   */
+  public void setPattern(String pattern) {
     boardSetPatternValidator(pattern);
     this.pattern = pattern;
   }
