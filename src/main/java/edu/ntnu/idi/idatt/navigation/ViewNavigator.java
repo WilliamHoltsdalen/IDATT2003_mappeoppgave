@@ -15,6 +15,7 @@ import edu.ntnu.idi.idatt.view.container.AppView;
 import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.container.LadderGameView;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
+import javafx.application.Platform;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {
@@ -84,7 +85,6 @@ public class ViewNavigator implements ButtonClickObserver {
     BoardCreatorView view = new BoardCreatorView();
     BoardCreatorController controller = new BoardCreatorController(view);
     controller.setOnBackToMenu(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
-    view.addObserver(controller);
     return view;
   }
 }

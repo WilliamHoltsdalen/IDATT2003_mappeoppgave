@@ -78,7 +78,12 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String prettyJson = gson.toJson(boardJson);
 
-    FileUtils.writeStringToFile(new File(path), prettyJson, StandardCharsets.UTF_8, false);
+    File file = new File(path);
+
+    if (!file.createNewFile()) {
+      throw new IOException("A file with the same name already exists");
+    }
+    FileUtils.writeStringToFile(file, prettyJson, StandardCharsets.UTF_8, false);
   }
 
   /**
@@ -121,11 +126,11 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonObject boardJson = new JsonObject();
     boardJson.add(NAME_PROPERTY, new JsonPrimitive(board.getName()));
     boardJson.add(DESCRIPTION_PROPERTY, new JsonPrimitive(board.getDescription()));
-    boardJson.addProperty(ROWS_PROPERTY, board.getRowsAndColumns()[0]);
+    boardJson.add(ROWS_PROPERTY, new JsonPrimitive(board.getRowsAndColumns()[0]));
     boardJson.add(COLUMNS_PROPERTY, new JsonPrimitive(board.getRowsAndColumns()[1]));
-    boardJson.add(TILES_PROPERTY, tilesJsonArray);
     boardJson.add(BACKGROUND_PROPERTY, new JsonPrimitive(board.getBackground()));
     boardJson.add(PATTERN_PROPERTY, new JsonPrimitive(board.getPattern()));
+    boardJson.add(TILES_PROPERTY, tilesJsonArray);
     return boardJson;
   }
 

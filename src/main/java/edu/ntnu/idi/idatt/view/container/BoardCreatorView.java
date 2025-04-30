@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.container;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
@@ -298,7 +301,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     Button saveButton = new Button("Save board");
     saveButton.getStyleClass().add("save-button");
-    saveButton.setOnAction(e -> notifyObservers("save_board"));
+    saveButton.setOnAction(e -> handleSaveBoardClicked());
 
     Button menuButton = new Button("≡");
     menuButton.setOnAction(e -> notifyObservers("back_to_menu"));
@@ -382,6 +385,29 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
       event.setDropCompleted(success);
       event.consume();
     });
+  }
+
+  private void handleSaveBoardClicked() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Board");
+    fileChooser.setInitialFileName(nameField.getText() + ".json");
+
+    File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Save Board", "Invalid file path");
+      return;
+    }
+    Map<String, Object> params = new HashMap<>();
+    params.put("path", file.getAbsolutePath());
+    notifyObserversWithParams("save_board", params);
+  }
+
+  public void showInfoAlert(String headerText, String message) {
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle("Info");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 
   public void showErrorAlert(String headerText, String message) {

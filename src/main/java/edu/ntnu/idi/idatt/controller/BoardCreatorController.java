@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.controller;
 
+import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,6 +34,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladders/";
   private static final String SLIDES_PATH_PREFIX = "media/assets/slides/";
   private static final String PORTALS_PATH_PREFIX = "media/assets/portals/";
+
   private final BoardCreatorView view;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
@@ -99,7 +103,7 @@ public class BoardCreatorController implements ButtonClickObserver {
     TileCoordinates coordinates = view.getCellToCoordinatesMap().get(data.cell());
     placeComponent(data.componentType(), data.imagePath(), coordinates);
     updateBoardVisuals();
-    setPattern();
+    updatePattern();
   }
 
   private void updateComponentList() {
@@ -177,16 +181,17 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void updateBackground() {
     switch (view.getBackgroundComboBox().getValue()) {
-      case "White" -> view.setBoardImage(new Image("media/boards/whiteBoard.png"));
-      case "Gray" -> view.setBoardImage(new Image("media/boards/grayBoard.png"));
-      case "Dark blue" -> view.setBoardImage(new Image("media/boards/darkBlueBoard.png"));
-      case "Green" -> view.setBoardImage(new Image("media/boards/greenBoard.png"));
-      case "Red" -> view.setBoardImage(new Image("media/boards/redBoard.png"));
-      case "Yellow" -> view.setBoardImage(new Image("media/boards/yellowBoard.png"));
-      case "Pink" -> view.setBoardImage(new Image("media/boards/pinkBoard.png"));
+      case "White" -> board.setBackground("media/boards/whiteBoard.png");
+      case "Gray" -> board.setBackground("media/boards/grayBoard.png");
+      case "Dark blue" -> board.setBackground("media/boards/darkBlueBoard.png");
+      case "Green" -> board.setBackground("media/boards/greenBoard.png");
+      case "Red" -> board.setBackground("media/boards/redBoard.png");
+      case "Yellow" -> board.setBackground("media/boards/yellowBoard.png");
+      case "Pink" -> board.setBackground("media/boards/pinkBoard.png");
       default -> throw new IllegalArgumentException(
           "Unknown background: " + view.getBackgroundComboBox().getValue());
     }
+    view.getBoardImageView().setImage(new Image(board.getBackground()));
   }
 
   private void updateGrid() {
@@ -234,7 +239,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       }
       view.getGridContainer().getChildren().add(row); // Adding row to grid container
     }
-    setPattern();
+    updatePattern();
     updateBoardVisuals();
   }
 
@@ -385,8 +390,9 @@ public class BoardCreatorController implements ButtonClickObserver {
         .orElse(null);
   }
 
-  private void setPattern() {
+  private void updatePattern() {
     String selectedPattern = view.getPatternComboBox().getValue();
+    board.setPattern(selectedPattern);
     view.getGridContainer().getChildren().forEach(row ->
         ((HBox) row).getChildren().forEach(cellPane ->
             ((StackPane) cellPane).getChildren().forEach(node -> {
@@ -422,11 +428,10 @@ public class BoardCreatorController implements ButtonClickObserver {
   @Override
   public void onButtonClicked(String buttonId) {
     switch (buttonId) {
-      case "save_board" -> handleSaveBoard();
       case "back_to_menu" -> handleBackToMenu();
       case "update_grid" -> updateGrid();
       case "update_background" -> updateBackground();
-      case "update_pattern" -> setPattern();
+      case "update_pattern" -> updatePattern();
       default -> {
         break;
       }
@@ -435,13 +440,25 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    // Not needed for now
+    if (buttonId.equals("save_board")) {
+      handleSaveBoard(params);
+    }
   }
 
-  private void handleSaveBoard() {
-    // TODO: Implement board saving functionality
-    // Maybe we can use the snapshot functionality for the board stack pane to save as image,
-    // or maybe we should just save as JSON to later be able to load it again and customize it.
+  private void handleSaveBoard(Map<String, Object> params) {
+    try {
+      board.setName(view.getNameField().getText());
+      board.setDescription(view.getDescriptionField().getText());
+
+      String path = (String) params.get("path");
+      BoardFileHandlerGson fileHandler = new BoardFileHandlerGson();
+      fileHandler.writeFile(path, List.of(board));
+
+      Platform.runLater(() -> view.showInfoAlert("Board saved successfully!",
+          "You can now load the board from the main menu, and start playing!"));
+    } catch (IOException | IllegalArgumentException e) {
+      Platform.runLater(() -> view.showErrorAlert("Failed to save board", e.getMessage()));
+    }
   }
 
   private void handleBackToMenu() {
