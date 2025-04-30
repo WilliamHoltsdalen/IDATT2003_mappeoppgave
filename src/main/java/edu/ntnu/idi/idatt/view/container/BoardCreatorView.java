@@ -181,7 +181,9 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     for (String imagePath : imagePaths) {
       ImageView componentImage = new ImageView(new Image(imagePath));
-      componentImage.setFitHeight(50);
+      String imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+      int widthTiles = Integer.parseInt(imageName.substring(0, 1));
+      componentImage.setFitWidth(25.0 * widthTiles);
       componentImage.setPreserveRatio(true);
 
       setupDragAndDrop(componentImage, imagePath);

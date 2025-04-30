@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
+import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
@@ -27,6 +28,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 public class BoardCreatorController implements ButtonClickObserver {
+  private static final String LADDERS_PATH_PREFIX = "media/assets/ladders/";
+  private static final String SLIDES_PATH_PREFIX = "media/assets/slides/";
+  private static final String PORTALS_PATH_PREFIX = "media/assets/portals/";
   private final BoardCreatorView view;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
@@ -46,9 +50,25 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private void initializeAvailableComponents() {
-    availableComponents.put("Ladder", new String[]{"media/2R_ladder.png", "media/4R_ladder.png"});
-    availableComponents.put("Slide", new String[]{"media/1R_slide.png", "media/2R_slide.png"});
-    availableComponents.put("Portal", new String[]{"media/portal1.png", "media/portal2.png", "media/portal3.png"});
+    availableComponents.put("Ladder", new String[]{
+      LADDERS_PATH_PREFIX + "1R_1U_ladder.png",
+      LADDERS_PATH_PREFIX + "1L_1U_ladder.png",
+      LADDERS_PATH_PREFIX + "1R_2U_ladder.png",
+      LADDERS_PATH_PREFIX + "1L_2U_ladder.png",
+      LADDERS_PATH_PREFIX + "2R_4U_ladder.png",
+      LADDERS_PATH_PREFIX + "2L_4U_ladder.png"
+    });
+    availableComponents.put("Slide", new String[]{
+      SLIDES_PATH_PREFIX + "1R_1D_slide.png",
+      SLIDES_PATH_PREFIX + "1L_1D_slide.png",
+      SLIDES_PATH_PREFIX + "1R_2D_slide.png",
+      SLIDES_PATH_PREFIX + "1L_2D_slide.png"
+    });
+    availableComponents.put("Portal", new String[]{
+      PORTALS_PATH_PREFIX + "1R_1U_portal_1.png",
+      PORTALS_PATH_PREFIX + "1R_1U_portal_2.png",
+      PORTALS_PATH_PREFIX + "1R_1U_portal_3.png"
+    });
     availableComponents.put("Other", new String[]{});
   }
 
@@ -174,6 +194,21 @@ public class BoardCreatorController implements ButtonClickObserver {
     view.getCellToCoordinatesMap().clear();
     int rows = view.getRowsSpinner().getValue();
     int columns = view.getColumnsSpinner().getValue();
+
+    // Remove components that are outside the new grid bounds
+    placedComponents.entrySet().removeIf(entry -> {
+      TileCoordinates origin = entry.getKey();
+      TileActionComponent component = entry.getValue();
+      int[] destCoords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
+      TileCoordinates destination = new TileCoordinates(destCoords[0], destCoords[1]);
+      
+      return origin.row() >= rows || origin.col() >= columns || 
+      destination.row() >= rows || destination.col() >= columns;
+    });
+
+    // Creating new board after removing components that are outside the new grid bounds
+    // because the destination tile for a component might not be in the new grid, 
+    // which would cause an exception when getting its coordinates above.  
     board = BoardFactory.createBlankBoard(rows, columns);
 
     double cellWidth = view.getBoardImageView().getFitWidth() / columns;
@@ -196,8 +231,10 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private boolean placeComponent(String componentType, String imagePath, TileCoordinates coordinates) {
+    ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
     int[] destinationCoords;
     int destinationTileId = -1;
+    
     List<TileCoordinates> occupiedTiles = Stream.concat(
         placedComponents.keySet().stream(),
         placedComponents.values().stream()
@@ -209,36 +246,32 @@ public class BoardCreatorController implements ButtonClickObserver {
     
     int tileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
     
-    switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
-      case "4R_ladder.png" -> {
-        destinationCoords = new int[]{coordinates.row() + 4, coordinates.col() + 1};
-        if (destinationCoords[0] < board.getRowsAndColumns()[0] && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+    // Calculate destination based on component specification
+    switch (spec.type()) {
+      case LADDER -> {
+        destinationCoords = new int[]{
+            coordinates.row() + spec.heightTiles(),
+            coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+        };
+        if (destinationCoords[0] < board.getRowsAndColumns()[0] && 
+            destinationCoords[1] >= 0 && 
+            destinationCoords[1] < board.getRowsAndColumns()[1]) {
           destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
-      case "2R_ladder.png" -> {
-        destinationCoords = new int[]{coordinates.row() + 2, coordinates.col() + 1};
-        if (destinationCoords[0] < board.getRowsAndColumns()[0] && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+      case SLIDE -> {
+        destinationCoords = new int[]{
+            coordinates.row() - spec.heightTiles(),
+            coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+        };
+        if (destinationCoords[0] >= 0 && 
+            destinationCoords[1] >= 0 && 
+            destinationCoords[1] < board.getRowsAndColumns()[1]) {
           destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
-      case "portal1.png", "portal2.png", "portal3.png" -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), 
+      case PORTAL -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), 
           occupiedTiles.stream().map(coords -> ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1])).toList());
-      case "2R_slide.png" -> {
-        destinationCoords = new int[]{coordinates.row() - 2, coordinates.col() + 1};
-        if (destinationCoords[0] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case "1R_slide.png" -> {
-        destinationCoords = new int[]{coordinates.row() - 1, coordinates.col() + 1};
-        if (destinationCoords[0] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      default -> {
-        return false;
-      }
     }
 
     if (occupiedTiles.contains(coordinates) || (destinationTileId != -1 && occupiedTiles.contains(new TileCoordinates(
@@ -271,8 +304,8 @@ public class BoardCreatorController implements ButtonClickObserver {
 
     // Place the visual tile action components
     placedComponents.forEach((coordinates, component) -> {
-      Rectangle cell = findCellByCoordinates(coordinates);
-      if (cell == null) {
+      Rectangle originCell = findCellByCoordinates(coordinates);
+      if (originCell == null) {
         return;
       }
 
@@ -280,28 +313,26 @@ public class BoardCreatorController implements ButtonClickObserver {
       int[] destCoords = board.getTile(destinationTileId).getCoordinates();
       Rectangle destinationCell = findCellByCoordinates(new TileCoordinates(destCoords[0], destCoords[1]));
 
-      double[] screenCoords = ViewUtils.boardToScreenCoordinates(new int[]{coordinates.row(), coordinates.col()}, board, boardDimensions[0], boardDimensions[1]);
+      // Get the base position for this tile
+      double[] screenCoords = ViewUtils.boardToScreenCoordinates(
+          new int[]{coordinates.row(), coordinates.col()}, 
+          board, 
+          boardDimensions[0], 
+          boardDimensions[1]
+      );
 
-      // Set component properties like sizing, positioning, and style classes for the cells
+      // Update component size and position based on tile dimensions and base position
+      component.updateSizeAndPosition(originCell.getWidth(), originCell.getHeight(), screenCoords[0], screenCoords[1]);
+
+      // Add style classes based on component type
       switch (component.getType()) {
         case "LADDER" -> {
-          component.setFitWidth(cell.getWidth() * 1.5);
-          component.setTranslateX(screenCoords[0] + component.getFitWidth() *0.2);
-          component.setTranslateY(screenCoords[1] - (component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth())) - cell.getHeight() * 0.2);
-          cell.getStyleClass().add("grid-cell-has-ladder");
+          originCell.getStyleClass().add("grid-cell-has-ladder");
           destinationCell.getStyleClass().add("grid-cell-ladder-destination");
         }
-        case "PORTAL" -> {
-          component.setFitWidth(cell.getWidth() * 1);
-          component.setTranslateX(screenCoords[0]);
-          component.setTranslateY(screenCoords[1] - component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth()));
-          cell.getStyleClass().add("grid-cell-has-portal");
-        }
+        case "PORTAL" -> originCell.getStyleClass().add("grid-cell-has-portal");
         case "SLIDE" -> {
-          component.setFitWidth(cell.getWidth() * 1.35);
-          component.setTranslateX(screenCoords[0] + component.getFitWidth() * 0.35);
-          component.setTranslateY(screenCoords[1]  - cell.getHeight() * 0.3);
-          cell.getStyleClass().add("grid-cell-has-slide");
+          originCell.getStyleClass().add("grid-cell-has-slide");
           destinationCell.getStyleClass().add("grid-cell-slide-destination");
         }
         default -> {break;}
