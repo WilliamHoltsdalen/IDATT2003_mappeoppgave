@@ -195,21 +195,29 @@ public class BoardCreatorController implements ButtonClickObserver {
     int rows = view.getRowsSpinner().getValue();
     int columns = view.getColumnsSpinner().getValue();
 
-    // Remove components that are outside the new grid bounds
-    placedComponents.entrySet().removeIf(entry -> {
-      TileCoordinates origin = entry.getKey();
-      TileActionComponent component = entry.getValue();
-      int[] destCoords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
-      TileCoordinates destination = new TileCoordinates(destCoords[0], destCoords[1]);
-      
-      return origin.row() >= rows || origin.col() >= columns || 
-      destination.row() >= rows || destination.col() >= columns;
-    });
-
-    // Creating new board after removing components that are outside the new grid bounds
-    // because the destination tile for a component might not be in the new grid, 
-    // which would cause an exception when getting its coordinates above.  
+    // Create a new board with the new dimensions
     board = BoardFactory.createBlankBoard(rows, columns);
+
+    // Recalculate destination tiles for all placed components and remove those that have origin or
+    // destination outside the new grid bounds.
+    Map<TileCoordinates, TileActionComponent> newPlacedComponents = new HashMap<>();
+    placedComponents.forEach((coordinates, component) -> {
+      if (coordinates.row() < rows && coordinates.col() < columns) {
+        ComponentSpec spec = ComponentSpec.fromFilename(component.getImagePath().substring(component.getImagePath().lastIndexOf("/") + 1));
+        int[] destinationCoords = calculateDestinationCoordinates(coordinates, spec);
+
+        if (destinationCoords[0] >= 0 && destinationCoords[0] < rows &&
+            destinationCoords[1] >= 0 && destinationCoords[1] < columns) {
+          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], columns);
+          newPlacedComponents.put(coordinates, 
+              new TileActionComponent(component.getType(), component.getImagePath(),
+                  board.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), columns)), 
+                  destinationTileId));
+        }
+      }
+    });
+    placedComponents.clear();
+    placedComponents.putAll(newPlacedComponents);
 
     double cellWidth = view.getBoardImageView().getFitWidth() / columns;
     double cellHeight = (view.getBoardImageView().getFitWidth() / view.getBoardImageView().getImage().getWidth()
@@ -230,7 +238,32 @@ public class BoardCreatorController implements ButtonClickObserver {
     updateBoardVisuals();
   }
 
-  private boolean placeComponent(String componentType, String imagePath, TileCoordinates coordinates) {
+  private int[] calculateDestinationCoordinates(TileCoordinates origin, ComponentSpec spec) {
+    return switch (spec.type()) {
+      case LADDER -> new int[]{
+          origin.row() + spec.heightTiles(),
+          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+      };
+      case SLIDE -> new int[]{
+          origin.row() - spec.heightTiles(),
+          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+      };
+      case PORTAL -> {
+        // Portals get a new random destination every time.
+        int rows = view.getRowsSpinner().getValue();
+        int columns = view.getColumnsSpinner().getValue();
+        int originTileId = ViewUtils.calculateTileId(origin.row(), origin.col(), columns);
+        List<Integer> occupiedTiles = placedComponents.values().stream()
+            .map(TileActionComponent::getDestinationTileId)
+            .toList();
+        int destinationTileId = ViewUtils.randomPortalDestination(originTileId, rows * columns, occupiedTiles);
+        int[] coords = board.getTile(destinationTileId).getCoordinates();
+        yield new int[]{coords[0], coords[1]};
+      }
+    };
+  }
+
+  private void placeComponent(String componentType, String imagePath, TileCoordinates coordinates) {
     ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
     int[] destinationCoords;
     int destinationTileId = -1;
@@ -278,13 +311,12 @@ public class BoardCreatorController implements ButtonClickObserver {
         board.getTile(destinationTileId).getCoordinates()[0],
         board.getTile(destinationTileId).getCoordinates()[1])))) {
       view.showErrorAlert("Could not place component", "Tile is already occupied");
-      return false;
+      return;
     }
     if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
       placedComponents.put(coordinates,
           new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
     }
-    return true;
   }
 
   private void updateBoardVisuals() {
