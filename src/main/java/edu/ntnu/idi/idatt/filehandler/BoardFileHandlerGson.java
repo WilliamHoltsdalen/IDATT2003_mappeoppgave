@@ -27,7 +27,8 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String DESCRIPTION_PROPERTY = "description";
   private static final String ROWS_PROPERTY = "rows";
   private static final String COLUMNS_PROPERTY = "columns";
-  private static final String IMAGE_PATH_PROPERTY = "imagePath";
+  private static final String BACKGROUND_PROPERTY = "background";
+  private static final String PATTERN_PROPERTY = "pattern";
   private static final String TILES_PROPERTY = "tiles";
   private static final String TILE_ID_PROPERTY = "id";
   private static final String TILE_COORDINATES_PROPERTY = "coordinates";
@@ -122,8 +123,9 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     boardJson.add(DESCRIPTION_PROPERTY, new JsonPrimitive(board.getDescription()));
     boardJson.addProperty(ROWS_PROPERTY, board.getRowsAndColumns()[0]);
     boardJson.add(COLUMNS_PROPERTY, new JsonPrimitive(board.getRowsAndColumns()[1]));
-    boardJson.add(IMAGE_PATH_PROPERTY, new JsonPrimitive(board.getImagePath()));
     boardJson.add(TILES_PROPERTY, tilesJsonArray);
+    boardJson.add(BACKGROUND_PROPERTY, new JsonPrimitive(board.getBackground()));
+    boardJson.add(PATTERN_PROPERTY, new JsonPrimitive(board.getPattern()));
     return boardJson;
   }
 
@@ -144,8 +146,9 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     int[] rowsAndColumns = new int[2];
     rowsAndColumns[0] = jsonObject.get(ROWS_PROPERTY).getAsInt();
     rowsAndColumns[1] = jsonObject.get(COLUMNS_PROPERTY).getAsInt();
-    String boardImagePath = jsonObject.get(IMAGE_PATH_PROPERTY).getAsString();
-    Board board = new Board(boardName, boardDescription, rowsAndColumns, boardImagePath);
+    String boardBackground = jsonObject.get(BACKGROUND_PROPERTY).getAsString();
+    String boardPattern = jsonObject.get(PATTERN_PROPERTY).getAsString();
+    Board board = new Board(boardName, boardDescription, rowsAndColumns, boardBackground, boardPattern);
 
     JsonArray tilesJsonArray = jsonObject.getAsJsonArray(TILES_PROPERTY);
     tilesJsonArray.forEach(tileJson -> {

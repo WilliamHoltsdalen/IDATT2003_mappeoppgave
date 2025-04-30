@@ -63,7 +63,7 @@ public class BoardFactory {
 
   public static Board createBlankBoard(int rows, int columns) {
     Board board = new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
-        new int[]{rows, columns}, "media/boards/whiteBoard.png");
+        new int[]{rows, columns}, "media/boards/whiteBoard.png", "None");
     createTiles(rows, columns).forEach(board::addTile);
     return board;
   }
@@ -77,7 +77,7 @@ public class BoardFactory {
     Board board = new Board("Classic (default)",
         "Standard chutes and ladders game with 90 tiles.",
         new int[]{9, 10},
-        "boardImages/ClassicGameBoard.png");
+        "boardImages/ClassicGameBoard.png", "None");
     createTiles(9, 10).forEach(board::addTile);
 
     Map<Integer, Integer> ladderMap = new HashMap<>();
@@ -110,7 +110,7 @@ public class BoardFactory {
     Board board = new Board("Teleporting",
         "Teleport through portals to reach the end of this board, with 90 tiles.",
         new int[]{9, 10},
-        "boardImages/PortalGameBoard.png");
+        "boardImages/PortalGameBoard.png", "None");
 
     createTiles(9, 10).forEach(board::addTile);
 

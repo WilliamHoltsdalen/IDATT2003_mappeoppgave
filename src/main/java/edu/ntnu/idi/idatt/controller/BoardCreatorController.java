@@ -74,7 +74,7 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void initializeBoardCreatorView() {
     view.addObserver(this);
-    view.initializeBoardImage(new Image(board.getImagePath()));
+    view.initializeBoardImage(new Image(board.getBackground()));
     view.initializeView(availableComponents);
     view.setOnComponentDropped(this::handleComponentDropped);
     setNodeListeners();

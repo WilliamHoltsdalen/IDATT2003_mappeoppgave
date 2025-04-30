@@ -301,7 +301,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
    */
   public void setSelectedBoard(Board board) {
     selectedBoard = board;
-    boardImageView.setImage(new Image(board.getImagePath()));
+    boardImageView.setImage(new Image(board.getBackground()));
     boardTitle.setText(board.getName());
     boardDescription.setText(board.getDescription());
   }
