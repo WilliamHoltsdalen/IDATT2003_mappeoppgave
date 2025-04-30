@@ -1,14 +1,16 @@
 package edu.ntnu.idi.idatt.view.container;
 
-import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
+import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
+import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
@@ -43,7 +45,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
   private Consumer<ComponentDropEventData> onComponentDropped;
 
-  private final Map<Rectangle, Integer> cellToTileIdMap;
+  private final Map<Rectangle, TileCoordinates> cellToCoordinatesMap;
   
   private final Pane componentsPane;
   private final VBox componentListContent;
@@ -60,7 +62,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   public BoardCreatorView() {
     this.observers = new ArrayList<>();
 
-    this.cellToTileIdMap = new HashMap<>();
+    this.cellToCoordinatesMap = new HashMap<>();
 
     this.componentsPane = new Pane();
     this.componentListContent = new VBox(10);
@@ -75,8 +77,8 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.descriptionField = new TextField();
   }
 
-  public Map<Rectangle, Integer> getCellToTileIdMap() {
-    return cellToTileIdMap;
+  public Map<Rectangle, TileCoordinates> getCellToCoordinatesMap() {
+    return cellToCoordinatesMap;
   }
 
   public VBox getGridContainer() {
@@ -328,14 +330,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     notifyObservers("update_grid");
   }
 
-  public StackPane createRowCell(double cellWidth, double cellHeight, int tileId) {
+  public StackPane createRowCell(double cellWidth, double cellHeight, int row, int col) {
     StackPane cellPane = new StackPane();
     Rectangle cellRect = new Rectangle(cellWidth, cellHeight);
     cellRect.getStyleClass().add("grid-cell");
-    cellToTileIdMap.put(cellRect, tileId);
+    cellToCoordinatesMap.put(cellRect, new TileCoordinates(row, col));
     setupCellDropHandling(cellRect);
 
-    Label cellLabel = new Label(String.valueOf(tileId));
+    Label cellLabel = new Label(String.valueOf(ViewUtils.calculateTileId(row, col, columnsSpinner.getValue())));
     cellLabel.getStyleClass().add("grid-cell-label");
 
     cellPane.setAlignment(Pos.BOTTOM_RIGHT);

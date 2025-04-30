@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
+import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
@@ -29,7 +30,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private final BoardCreatorView view;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
-  private final Map<Integer, TileActionComponent> placedComponents;
+  private final Map<TileCoordinates, TileActionComponent> placedComponents;
   private Board board;
   private double[] boardDimensions;
 
@@ -75,7 +76,8 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private void handleComponentDropped(ComponentDropEventData data) {
-    placeComponent(data.componentType(), data.imagePath(), view.getCellToTileIdMap().get((Rectangle)data.cell()));
+    TileCoordinates coordinates = view.getCellToCoordinatesMap().get(data.cell());
+    placeComponent(data.componentType(), data.imagePath(), coordinates);
     updateBoardVisuals();
     setPattern();
   }
@@ -83,7 +85,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private void updateComponentList() {
     view.getComponentListContent().getChildren().clear();
 
-    placedComponents.forEach((tileId, component) -> {
+    placedComponents.forEach((coordinates, component) -> {
       VBox componentBox = new VBox(5);
       componentBox.getStyleClass().add("component-item");
 
@@ -117,7 +119,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       Button deleteButton = new Button("×");
       deleteButton.getStyleClass().add("delete-button");
       deleteButton.setOnAction(e -> {
-        placedComponents.remove(tileId);
+        placedComponents.remove(coordinates);
         updateBoardVisuals();
       });
 
@@ -130,7 +132,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       fromToBox.setAlignment(Pos.CENTER_LEFT);
 
       Label fromLabel = new Label("From");
-      TextField fromField = new TextField(String.valueOf(tileId));
+      TextField fromField = new TextField(String.valueOf(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1])));
       fromField.getStyleClass().add("from-to-field");
       fromField.setEditable(false);
       VBox fromVBox = new VBox(10);
@@ -169,7 +171,7 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void updateGrid() {
     view.getGridContainer().getChildren().clear();
-    view.getCellToTileIdMap().clear();
+    view.getCellToCoordinatesMap().clear();
     int rows = view.getRowsSpinner().getValue();
     int columns = view.getColumnsSpinner().getValue();
     board = BoardFactory.createBlankBoard(rows, columns);
@@ -184,7 +186,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       row.setAlignment(Pos.CENTER);
       for (int j = 0; j < columns; j++) { // Filling columns from left to right
         row.getChildren().add(
-            view.createRowCell(cellWidth, cellHeight, ViewUtils.calculateTileId(i, j, columns))
+            view.createRowCell(cellWidth, cellHeight, i, j)
         );
       }
       view.getGridContainer().getChildren().add(row); // Adding row to grid container
@@ -193,37 +195,45 @@ public class BoardCreatorController implements ButtonClickObserver {
     updateBoardVisuals();
   }
 
-  private boolean placeComponent(String componentType, String imagePath, int tileId) {
-    int[] coordinates;
+  private boolean placeComponent(String componentType, String imagePath, TileCoordinates coordinates) {
+    int[] destinationCoords;
     int destinationTileId = -1;
-    List<Integer> occupiedTiles = Stream.concat(
+    List<TileCoordinates> occupiedTiles = Stream.concat(
         placedComponents.keySet().stream(),
-        placedComponents.values().stream().map(TileActionComponent::getDestinationTileId)
+        placedComponents.values().stream()
+            .map(component -> {
+              int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
+              return new TileCoordinates(coords[0], coords[1]);
+            })
     ).toList();
+    
+    int tileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
+    
     switch (imagePath.substring(imagePath.lastIndexOf("/") + 1)) {
       case "4R_ladder.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 4, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        destinationCoords = new int[]{coordinates.row() + 4, coordinates.col() + 1};
+        if (destinationCoords[0] < board.getRowsAndColumns()[0] && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
       case "2R_ladder.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] + 2, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] < board.getRowsAndColumns()[0] && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        destinationCoords = new int[]{coordinates.row() + 2, coordinates.col() + 1};
+        if (destinationCoords[0] < board.getRowsAndColumns()[0] && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
-      case "portal1.png", "portal2.png", "portal3.png" -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), occupiedTiles);
+      case "portal1.png", "portal2.png", "portal3.png" -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), 
+          occupiedTiles.stream().map(coords -> ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1])).toList());
       case "2R_slide.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 2, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        destinationCoords = new int[]{coordinates.row() - 2, coordinates.col() + 1};
+        if (destinationCoords[0] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
       case "1R_slide.png" -> {
-        coordinates = new int[]{board.getTile(tileId).getCoordinates()[0] - 1, board.getTile(tileId).getCoordinates()[1] + 1};
-        if (coordinates[0] >= 0 && coordinates[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(coordinates[0], coordinates[1], board.getRowsAndColumns()[1]);
+        destinationCoords = new int[]{coordinates.row() - 1, coordinates.col() + 1};
+        if (destinationCoords[0] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
       default -> {
@@ -231,12 +241,14 @@ public class BoardCreatorController implements ButtonClickObserver {
       }
     }
 
-    if (occupiedTiles.contains(tileId) || occupiedTiles.contains(destinationTileId)) {
-      view.showErrorAlert("Could not place component", "Tile " + tileId + " or " + destinationTileId + " is already occupied");
+    if (occupiedTiles.contains(coordinates) || (destinationTileId != -1 && occupiedTiles.contains(new TileCoordinates(
+        board.getTile(destinationTileId).getCoordinates()[0],
+        board.getTile(destinationTileId).getCoordinates()[1])))) {
+      view.showErrorAlert("Could not place component", "Tile is already occupied");
       return false;
     }
     if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
-      placedComponents.put(tileId,
+      placedComponents.put(coordinates,
           new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
     }
     return true;
@@ -258,36 +270,37 @@ public class BoardCreatorController implements ButtonClickObserver {
     );
 
     // Place the visual tile action components
-    placedComponents.forEach((tileId, component) -> {
-      Rectangle cell = findCellByTileId(tileId);
+    placedComponents.forEach((coordinates, component) -> {
+      Rectangle cell = findCellByCoordinates(coordinates);
       if (cell == null) {
         return;
       }
 
       int destinationTileId = component.getTile().getLandAction().getDestinationTileId();
-      Rectangle destinationCell = findCellByTileId(destinationTileId);
+      int[] destCoords = board.getTile(destinationTileId).getCoordinates();
+      Rectangle destinationCell = findCellByCoordinates(new TileCoordinates(destCoords[0], destCoords[1]));
 
-      double[] coordinates = ViewUtils.boardToScreenCoordinates(component.getTile().getCoordinates(), board, boardDimensions[0], boardDimensions[1]);
+      double[] screenCoords = ViewUtils.boardToScreenCoordinates(new int[]{coordinates.row(), coordinates.col()}, board, boardDimensions[0], boardDimensions[1]);
 
       // Set component properties like sizing, positioning, and style classes for the cells
       switch (component.getType()) {
         case "LADDER" -> {
           component.setFitWidth(cell.getWidth() * 1.5);
-          component.setTranslateX(coordinates[0] + component.getFitWidth() *0.2);
-          component.setTranslateY(coordinates[1] - (component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth())) - cell.getHeight() * 0.2);
+          component.setTranslateX(screenCoords[0] + component.getFitWidth() *0.2);
+          component.setTranslateY(screenCoords[1] - (component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth())) - cell.getHeight() * 0.2);
           cell.getStyleClass().add("grid-cell-has-ladder");
           destinationCell.getStyleClass().add("grid-cell-ladder-destination");
         }
         case "PORTAL" -> {
           component.setFitWidth(cell.getWidth() * 1);
-          component.setTranslateX(coordinates[0]);
-          component.setTranslateY(coordinates[1] - component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth()));
+          component.setTranslateX(screenCoords[0]);
+          component.setTranslateY(screenCoords[1] - component.getImage().getHeight() * (component.getFitWidth() / component.getImage().getWidth()));
           cell.getStyleClass().add("grid-cell-has-portal");
         }
         case "SLIDE" -> {
           component.setFitWidth(cell.getWidth() * 1.35);
-          component.setTranslateX(coordinates[0] + component.getFitWidth() * 0.35);
-          component.setTranslateY(coordinates[1]  - cell.getHeight() * 0.3);
+          component.setTranslateX(screenCoords[0] + component.getFitWidth() * 0.35);
+          component.setTranslateY(screenCoords[1]  - cell.getHeight() * 0.3);
           cell.getStyleClass().add("grid-cell-has-slide");
           destinationCell.getStyleClass().add("grid-cell-slide-destination");
         }
@@ -301,9 +314,9 @@ public class BoardCreatorController implements ButtonClickObserver {
     updateComponentList();
   }
 
-  private Rectangle findCellByTileId(int tileId) {
-    return view.getCellToTileIdMap().entrySet().stream()
-        .filter(entry -> entry.getValue() == tileId)
+  private Rectangle findCellByCoordinates(TileCoordinates coordinates) {
+    return view.getCellToCoordinatesMap().entrySet().stream()
+        .filter(entry -> entry.getValue().equals(coordinates))
         .map(Map.Entry::getKey)
         .findFirst()
         .orElse(null);
@@ -316,18 +329,26 @@ public class BoardCreatorController implements ButtonClickObserver {
             ((StackPane) cellPane).getChildren().forEach(node -> {
               node.getStyleClass().removeAll("blue-checker", "yellow-checker", "purple-checker");
 
-              List<Integer> occupiedTiles = Stream.concat(
-                  placedComponents.keySet().stream().filter(id -> !placedComponents.get(id).getType().equals("PORTAL")),
-                  placedComponents.values().stream().filter(component -> !component.getType().equals("PORTAL")).map(TileActionComponent::getDestinationTileId)
+              List<TileCoordinates> occupiedTiles = Stream.concat(
+                  placedComponents.keySet().stream().filter(coords -> !placedComponents.get(coords).getType().equals("PORTAL")),
+                  placedComponents.values().stream()
+                      .filter(component -> !component.getType().equals("PORTAL"))
+                      .map(component -> {
+                        int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
+                        return new TileCoordinates(coords[0], coords[1]);
+                      })
               ).toList();
-              if (node instanceof Rectangle rect
-                  && view.getCellToTileIdMap().get(rect) % 2 == 0
-                  && !occupiedTiles.contains(view.getCellToTileIdMap().get(rect))) {
-                switch (selectedPattern) {
-                  case "Blue checker" -> rect.getStyleClass().add("blue-checker");
-                  case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
-                  case "Purple checker" -> rect.getStyleClass().add("purple-checker");
-                  default -> {break;} // No pattern
+              
+              if (node instanceof Rectangle rect) {
+                TileCoordinates coords = view.getCellToCoordinatesMap().get(rect);
+                int tileId = ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1]);
+                if (tileId % 2 == 0 && !occupiedTiles.contains(coords)) {
+                  switch (selectedPattern) {
+                    case "Blue checker" -> rect.getStyleClass().add("blue-checker");
+                    case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
+                    case "Purple checker" -> rect.getStyleClass().add("purple-checker");
+                    default -> {break;} // No pattern
+                  }
                 }
               }
             })
