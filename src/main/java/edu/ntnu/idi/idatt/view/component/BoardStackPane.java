@@ -249,7 +249,7 @@ public class BoardStackPane extends StackPane {
     Label cellLabel = new Label(String.valueOf(ViewUtils.calculateTileId(row, col, board.getRowsAndColumns()[1])));
     cellLabel.getStyleClass().add("grid-cell-label");
 
-    cellPane.setAlignment(Pos.BOTTOM_RIGHT);
+    cellPane.setAlignment(Pos.BOTTOM_CENTER);
 
     cellPane.getChildren().setAll(cellRect, cellLabel);
     return cellPane;
