@@ -416,6 +416,7 @@ Button:pressed {
   -fx-stroke: black;
   -fx-stroke-width: 1.5;
   -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 8, 0, 0, 0);
 }
 
 .grid-cell.blue-checker {
