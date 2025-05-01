@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.ntnu.idi.idatt.controller.BoardCreatorController;
 import edu.ntnu.idi.idatt.controller.LadderGameController;
 import edu.ntnu.idi.idatt.controller.MainMenuController;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.container.AppView;
+import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.container.LadderGameView;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
+import javafx.application.Platform;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {
@@ -44,6 +47,7 @@ public class ViewNavigator implements ButtonClickObserver {
     switch (viewType) {
       case MAIN_MENU -> appView.showView(createMainMenuView());
       case LADDER_GAME -> appView.showView(createLadderGameView(params));
+      case BOARD_CREATOR -> appView.showView(createBoardCreatorView());
       default -> throw new IllegalArgumentException("Unknown view type: " + viewType);
     }
   }
@@ -61,6 +65,7 @@ public class ViewNavigator implements ButtonClickObserver {
       params.put("players", players);
       navigateTo(ViewType.LADDER_GAME, params);
     });
+    controller.setOnCreateBoard(() -> navigateTo(ViewType.BOARD_CREATOR));
     view.addObserver(controller);
     return view;
   }
@@ -73,6 +78,13 @@ public class ViewNavigator implements ButtonClickObserver {
         view, board, players);
     controller.setOnQuitGame(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
     view.addObserver(controller);
+    return view;
+  }
+
+  private Node createBoardCreatorView() {
+    BoardCreatorView view = new BoardCreatorView();
+    BoardCreatorController controller = new BoardCreatorController(view);
+    controller.setOnBackToMenu(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
     return view;
   }
 }

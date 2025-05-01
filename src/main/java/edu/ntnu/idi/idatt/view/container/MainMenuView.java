@@ -1,31 +1,33 @@
 package edu.ntnu.idi.idatt.view.container;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
+import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MainMenuView extends VBox implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
@@ -37,7 +39,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
   private final VBox playerListBox;
 
   private VBox boardSelectionBox;
-  private final ImageView boardImageView;
+  private BoardStackPane boardStackpane;
   private final Label boardTitle;
   private final Label boardDescription;
   private Board selectedBoard;
@@ -53,7 +55,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     this.playerSelectionTitle = new Text();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
-    this.boardImageView = new ImageView();
+    this.boardStackpane = new BoardStackPane();
     this.boardTitle = new Label();
     this.boardDescription = new Label();
     this.startGameButton = createStartGameButton();
@@ -120,7 +122,11 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     moreOptionsMenu.getItems().addAll(importBoardMenuItem);
     importBoardMenuItem.setOnAction(event -> notifyObservers("import_board"));
 
-    HBox headerBox = new HBox(title, moreOptionsMenu);
+    Button createBoardButton = new Button("Create Board");
+    createBoardButton.getStyleClass().add("main-menu-create-board-button");
+    createBoardButton.setOnAction(event -> notifyObservers("create_board"));
+
+    HBox headerBox = new HBox(title, moreOptionsMenu, createBoardButton);
     headerBox.getStyleClass().add("main-menu-header-box");
 
     return headerBox;
@@ -157,7 +163,9 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     Text title = new Text("Select a board");
     title.getStyleClass().add("main-menu-selection-box-title");
 
-    boardImageView.getStyleClass().add("main-menu-board-selection-image-view");
+    boardStackpane.initialize(selectedBoard, selectedBoard.getBackground());
+    boardStackpane.getBackgroundImageView().setFitWidth(250);
+    boardStackpane.getStyleClass().add("main-menu-board-selection-board-view");
 
     Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
     previousButton.getStyleClass().add("icon-only-button");
@@ -178,7 +186,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     boardDescription.setMinHeight(Region.USE_PREF_SIZE);
     boardDescription.setWrapText(true);
 
-    VBox carousel = new VBox(boardImageView, carouselControls, boardDescription);
+    VBox carousel = new VBox(boardStackpane, carouselControls, boardDescription);
     carousel.getStyleClass().add("main-menu-board-selection-carousel");
 
     VBox vBox = new VBox(title, carousel);
@@ -295,8 +303,16 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
    */
   public void setSelectedBoard(Board board) {
     selectedBoard = board;
-    boardImageView.setImage(new Image(board.getImagePath()));
+    boardStackpane = new BoardStackPane();
+    boardStackpane.initialize(selectedBoard, selectedBoard.getBackground());
+    boardStackpane.getBackgroundImageView().setFitWidth(250);
+    boardStackpane.getStyleClass().add("main-menu-board-selection-board-view");
     boardTitle.setText(board.getName());
     boardDescription.setText(board.getDescription());
+    Platform.runLater(() -> {
+      // Update the board in the carousel
+      VBox carousel = (VBox) boardSelectionBox.getChildren().get(1);
+      carousel.getChildren().set(0, boardStackpane);
+    });
   }
 }

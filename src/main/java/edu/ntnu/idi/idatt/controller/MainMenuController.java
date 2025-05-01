@@ -1,11 +1,5 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.factory.PlayerFactory;
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.container.MainMenuView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+
+import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.PlayerFactory;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.view.container.MainMenuView;
 import javafx.stage.FileChooser;
 
 public class MainMenuController implements ButtonClickObserver {
@@ -21,6 +22,7 @@ public class MainMenuController implements ButtonClickObserver {
   private int currentBoardIndex;
 
   BiConsumer<Board, List<Player>> onStartGame;
+  Runnable onCreateBoard;
 
   private final MainMenuView mainMenuView;
 
@@ -43,6 +45,7 @@ public class MainMenuController implements ButtonClickObserver {
       case "next_board" -> handleNextBoard();
       case "previous_board" -> handlePreviousBoard();
       case "start_game" -> handleStartGame();
+      case "create_board" -> handleCreateBoard();
       default -> {
         break;
       }
@@ -151,4 +154,11 @@ public class MainMenuController implements ButtonClickObserver {
     }
   }
 
+  private void handleCreateBoard() {
+    onCreateBoard.run();
+  }
+
+  public void setOnCreateBoard(Runnable onCreateBoard) {
+    this.onCreateBoard = onCreateBoard;
+  }
 }

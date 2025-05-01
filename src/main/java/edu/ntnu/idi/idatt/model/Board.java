@@ -4,7 +4,8 @@ import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTile
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetnameValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetImagePathValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetBackgroundValidator;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetPatternValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetRowsAndColumnsValidator;
 
 import java.util.ArrayList;
@@ -22,21 +23,25 @@ public class Board {
   private String name;
   private String description;
   private int[] rowsAndColumns;
-  private String imagePath;
   private final Map<Integer, Tile> tiles;
+  private String background;
+  private String pattern;
 
   /**
    * Constructor for Board class.
    *
    * @param name The name of the board.
    * @param description The description of the board.
-   * @param imagePath The path to the image of the board.
+   * @param rowsAndColumns The number of rows and columns in the board.
+   * @param background The background of the board.
+   * @param pattern The pattern of the board.
    */
-  public Board(String name, String description, int[] rowsAndColumns, String imagePath) {
+  public Board(String name, String description, int[] rowsAndColumns, String background, String pattern) {
     setName(name);
     setDescription(description);
     setRowsAndColumns(rowsAndColumns);
-    setImagePath(imagePath);
+    setBackground(background);
+    setPattern(pattern);
 
     this.tiles = new HashMap<>();
   }
@@ -69,15 +74,6 @@ public class Board {
   }
 
   /**
-   * Returns the path to the image of the board.
-   *
-   * @return The path to the image of the board.
-   */
-  public String getImagePath() {
-    return imagePath;
-  }
-
-  /**
    * Returns the tile with the given ID if it exists.
    *
    * @param tileId The ID of the tile to retrieve.
@@ -97,24 +93,72 @@ public class Board {
     return tiles.size() - 1;
   }
 
-  private void setName(String name) {
+  /**
+   * Returns the string representing the background of the board.
+   *
+   * @return The string representing the background of the board.
+   */
+  public String getBackground() {
+    return background;
+  }
+
+  /**
+   * Returns the string representing the pattern of the board.
+   *
+   * @return The string representing the pattern of the board.
+   */
+  public String getPattern() {
+    return pattern;
+  }
+
+  /**
+   * Sets the name of the board.
+   *
+   * @param name The name to set.
+   */
+  public void setName(String name) {
     boardSetnameValidator(name);
     this.name = name;
   }
 
-  private void setDescription(String description) {
+  /**
+   * Sets the description of the board.
+   *
+   * @param description The description to set.
+   */
+  public void setDescription(String description) {
     boardSetDescriptionValidator(description);
     this.description = description;
   }
 
-  private void setRowsAndColumns(int[] rowsAndColumns) {
+  /**
+   * Sets the number of rows and columns in the board.
+   *
+   * @param rowsAndColumns The number of rows and columns to set.
+   */
+  public void setRowsAndColumns(int[] rowsAndColumns) {
     boardSetRowsAndColumnsValidator(rowsAndColumns);
     this.rowsAndColumns = rowsAndColumns;
   }
 
-  private void setImagePath(String imagePath) {
-    boardSetImagePathValidator(imagePath);
-    this.imagePath = imagePath;
+  /**
+   * Sets the string representing the background of the board.
+   *
+   * @param background The background to set.
+   */
+  public void setBackground(String background) {
+    boardSetBackgroundValidator(background);
+    this.background = background;
+  }
+
+  /**
+   * Sets the string representing the pattern of the board.
+   *
+   * @param pattern The pattern to set.
+   */
+  public void setPattern(String pattern) {
+    boardSetPatternValidator(pattern);
+    this.pattern = pattern;
   }
 
   /**
