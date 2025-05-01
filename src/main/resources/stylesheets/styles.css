@@ -117,7 +117,7 @@
   -fx-alignment: center;
 }
 
-.main-menu-board-selection-image-view {
+.main-menu-board-selection-board-view {
   -fx-fit-width: 250px;
   -fx-preserve-ratio: true;
 }

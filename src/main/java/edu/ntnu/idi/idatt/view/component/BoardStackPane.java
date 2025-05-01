@@ -104,7 +104,6 @@ public class BoardStackPane extends StackPane {
     this.board.setBackground(backgroundImagePath);
     backgroundImageView.setImage(new Image(backgroundImagePath));
     backgroundImageView.setPreserveRatio(true);
-    backgroundImageView.setFitWidth(500);
   }
 
   public void setPattern(String pattern) {
@@ -142,10 +141,26 @@ public class BoardStackPane extends StackPane {
   private void loadComponents() {
     board.getTiles().forEach(tile -> {
       if (tile.getLandAction() != null) {
-        String imagePath = getImagePath(tile.getLandAction().getIdentifier());
+        String identifier = tile.getLandAction().getIdentifier();
+        String imagePath = getImagePath(identifier);
         ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
-        components.put(new TileCoordinates(tile.getCoordinates()[0], tile.getCoordinates()[1]),
-          new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), tile.getLandAction().getDestinationTileId()));
+        TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), tile.getLandAction().getDestinationTileId());
+        
+        // Set portal color number if it's a portal
+        if (spec.type() == ComponentSpec.ComponentType.PORTAL) {
+          String[] parts = identifier.split("_");
+          if (parts.length >= 4) {
+            try {
+              int colorNumber = Integer.parseInt(parts[3]);
+              component.setPortalColorNumber(colorNumber);
+            } catch (NumberFormatException e) {
+              // If no valid color number is found, keep the default (1)
+              // TODO: Handle NumberFormatException
+            }
+          }
+        }
+        
+        components.put(new TileCoordinates(tile.getCoordinates()[0], tile.getCoordinates()[1]), component);
       }
     });
     updateBoardVisuals();

@@ -92,6 +92,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       case "Red" -> "media/boards/redBoard.png";
       case "Yellow" -> "media/boards/yellowBoard.png";
       case "Pink" -> "media/boards/pinkBoard.png";
+      case "Space" -> "media/boards/spaceBoard.png";
       default -> "media/boards/whiteBoard.png"; // for white and default
     };
   }

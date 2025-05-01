@@ -99,6 +99,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     VBox leftPanel = createComponentSelectionPanel(components);
     
     boardStackPane.initialize(board, backgroundImagePath);
+    boardStackPane.getBackgroundImageView().setFitWidth(500);
     VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardStackPane);
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
@@ -198,7 +199,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     VBox backgroundSelectionBox = new VBox(5);
     Label backgroundLabel = new Label("Background");
-    backgroundComboBox.getItems().addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink");
+    backgroundComboBox.getItems().addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink", "Space");
     backgroundComboBox.setValue("White");
     backgroundComboBox.setOnAction(event -> notifyObservers("update_background"));
     backgroundSelectionBox.getChildren().addAll(backgroundLabel, backgroundComboBox);

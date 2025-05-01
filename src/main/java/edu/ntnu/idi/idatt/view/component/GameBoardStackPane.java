@@ -66,6 +66,7 @@ public class GameBoardStackPane extends StackPane {
   private void initialize(List<Player> players) {
     BoardStackPane boardStackPane = new BoardStackPane();
     boardStackPane.initialize(board, board.getBackground());
+    boardStackPane.getBackgroundImageView().setFitWidth(500);
     boardStackPane.getStyleClass().add("game-board-image-view");
 
     StackPane stackPane = new StackPane();

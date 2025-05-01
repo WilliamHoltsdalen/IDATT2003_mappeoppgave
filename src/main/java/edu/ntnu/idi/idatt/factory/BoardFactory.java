@@ -1,17 +1,14 @@
 package edu.ntnu.idi.idatt.factory;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.LadderAction;
-import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
-import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
+
+import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Tile;
 
 /**
  * <h3>Factory class for creating Board objects.</h3>
@@ -74,32 +71,12 @@ public class BoardFactory {
    * @return A classic Board object.
    */
   private static Board createClassicBoard() {
-    Board board = new Board("Classic (default)",
-        "Standard chutes and ladders game with 90 tiles.",
-        new int[]{9, 10},
-        "boardImages/ClassicGameBoard.png", "None");
-    createTiles(9, 10).forEach(board::addTile);
-
-    Map<Integer, Integer> ladderMap = new HashMap<>();
-    ladderMap.put(5, 44);
-    ladderMap.put(39, 58);
-    ladderMap.put(46, 87);
-
-    Map<Integer, Integer> slideMap = new HashMap<>();
-    slideMap.put(34, 13);
-    slideMap.put(82, 78);
-    slideMap.put(89, 68);
-
-    // TODO: Add correct identifiers for the actions here, this is just placeholder code to get the app working.
-    for (Map.Entry<Integer, Integer> entry : ladderMap.entrySet()) {
-      board.getTile(entry.getKey()).setLandAction(new LadderAction("1R_1U_ladder", entry.getValue(),
-          "Ladder from " + entry.getKey() + " to " + entry.getValue()));
+    try {
+      return createBoardFromFile("src/main/resources/boards/ClassicBoard.json");
+    } catch (IOException e) {
+      e.printStackTrace(); // TODO: Handle exception
     }
-    for (Map.Entry<Integer, Integer> entry : slideMap.entrySet()) {
-      board.getTile(entry.getKey()).setLandAction(new LadderAction("1R_1D_slide", entry.getValue(),
-          "Slide from " + entry.getKey() + " to " + entry.getValue()));
-    }
-    return board;
+    return null;
   }
 
   /**
@@ -108,30 +85,12 @@ public class BoardFactory {
    * @return A Board object with portals.
    */
   private static Board createPortalBoard() {
-    Board board = new Board("Teleporting",
-        "Teleport through portals to reach the end of this board, with 90 tiles.",
-        new int[]{9, 10},
-        "boardImages/PortalGameBoard.png", "None");
-
-    createTiles(9, 10).forEach(board::addTile);
-
-    final Set<Integer> portalIds = Set.of(4, 19, 30, 34, 45, 53, 61, 75, 89);
-
-    // TODO: Add correct identifiers for the actions here, this is just placeholder code to get the app working.
-    portalIds.forEach(portalId -> {
-      int randomDestination = randomPortalDestination(portalIds);
-      board.getTile(portalId).setLandAction(new LadderAction("1R_1U_portal", randomDestination,
-          "Portal from " + portalId + " to " + randomDestination));
-    });
-    return board;
-  }
-
-  private static int randomPortalDestination(Set<Integer> portalIds){
-    int number;
-    do {
-      number = random.nextInt(88) + 1;
-    } while (portalIds.contains(number));
-    return number;
+    try {
+      return createBoardFromFile("src/main/resources/boards/PortalBoard.json");
+    } catch (IOException e) {
+      e.printStackTrace(); // TODO: Handle exception
+    }
+    return null;
   }
 
   /**
