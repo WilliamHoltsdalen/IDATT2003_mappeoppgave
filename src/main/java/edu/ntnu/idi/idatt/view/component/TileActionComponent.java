@@ -2,6 +2,8 @@ package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.model.LadderAction;
+import edu.ntnu.idi.idatt.model.PortalAction;
+import edu.ntnu.idi.idatt.model.SlideAction;
 import edu.ntnu.idi.idatt.model.Tile;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +14,7 @@ public class TileActionComponent extends ImageView {
   private final Tile tile;
   private final int destinationTileId;
   private final ComponentSpec spec;
+  private int portalColorNumber = 1; // Default to color 1
 
   public TileActionComponent(String type, String imagePath, Tile tile, int destinationTileId) {
     super(new Image(imagePath));
@@ -40,6 +43,18 @@ public class TileActionComponent extends ImageView {
     return destinationTileId;
   }
 
+  public void setPortalColorNumber(int colorNumber) {
+    if (colorNumber < 1 || colorNumber > 3) {
+      throw new IllegalArgumentException("Portal color number must be between 1 and 3");
+    }
+    this.portalColorNumber = colorNumber;
+    createTileAction(); // Recreate the action with the new color
+  }
+
+  public int getPortalColorNumber() {
+    return portalColorNumber;
+  }
+
   public void updateSizeAndPosition(double tileWidth, double tileHeight, double baseX, double baseY) {
     double width = spec.calculateWidth(tileWidth);
     double height = spec.calculateHeight(tileHeight);
@@ -65,7 +80,17 @@ public class TileActionComponent extends ImageView {
     identifier.append(spec.heightDirection() == ComponentSpec.Direction.DOWN ? "D" : "U");
     identifier.append("_");
     identifier.append(type.toLowerCase());
+    if (type.equals("PORTAL")) {
+        identifier.append("_").append(portalColorNumber); // Add the color number suffix for portals
+    }
 
-    tile.setLandAction(new LadderAction(identifier.toString(), destinationTileId, typeName + " from " + tile.getTileId() + " to " + destinationTileId));
+    String description = typeName + " from " + tile.getTileId() + " to " + destinationTileId;
+    
+    switch (type) {
+        case "LADDER" -> tile.setLandAction(new LadderAction(identifier.toString(), destinationTileId, description));
+        case "SLIDE" -> tile.setLandAction(new SlideAction(identifier.toString(), destinationTileId, description));
+        case "PORTAL" -> tile.setLandAction(new PortalAction(identifier.toString(), destinationTileId, description));
+        default -> throw new IllegalArgumentException("Unknown tile action type: " + type);
+    }
   }
 }

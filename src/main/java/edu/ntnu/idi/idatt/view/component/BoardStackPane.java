@@ -58,10 +58,11 @@ public class BoardStackPane extends StackPane {
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
   }
 
-  public void initialize(Board board, Image backgroundImage) {
+  public void initialize(Board board, String backgroundImagePath) {
     this.board = board;
-    setBackground(backgroundImage);
+    setBackground(backgroundImagePath);
     Platform.runLater(() -> {
+      setPattern(board.getPattern());
       loadComponents();
       updateGrid();
     });
@@ -99,14 +100,16 @@ public class BoardStackPane extends StackPane {
     return pattern;
   }
 
-  public void setBackground(Image background) {
-    backgroundImageView.setImage(background);
+  public void setBackground(String backgroundImagePath) {
+    this.board.setBackground(backgroundImagePath);
+    backgroundImageView.setImage(new Image(backgroundImagePath));
     backgroundImageView.setPreserveRatio(true);
     backgroundImageView.setFitWidth(500);
   }
 
   public void setPattern(String pattern) {
     this.pattern = pattern;
+    this.board.setPattern(pattern);
   }
 
   public void setBoardDimensions(double[] boardDimensions) {
@@ -139,9 +142,13 @@ public class BoardStackPane extends StackPane {
   private void loadComponents() {
     board.getTiles().forEach(tile -> {
       if (tile.getLandAction() != null) {
-        addComponent(tile.getLandAction().getIdentifier(), new TileCoordinates(tile.getCoordinates()[0], tile.getCoordinates()[1]));
+        String imagePath = getImagePath(tile.getLandAction().getIdentifier());
+        ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
+        components.put(new TileCoordinates(tile.getCoordinates()[0], tile.getCoordinates()[1]),
+          new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), tile.getLandAction().getDestinationTileId()));
       }
     });
+    updateBoardVisuals();
   }
 
   private String getImagePath(String componentIdentifier) {

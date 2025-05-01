@@ -95,10 +95,10 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return boardStackPane;
   }
 
-  public void initializeView(Map<String, String[]> components, Board board, Image backgroundImage) {
+  public void initializeView(Map<String, String[]> components, Board board, String backgroundImagePath) {
     VBox leftPanel = createComponentSelectionPanel(components);
     
-    boardStackPane.initialize(board, backgroundImage);
+    boardStackPane.initialize(board, backgroundImagePath);
     VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardStackPane);
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);

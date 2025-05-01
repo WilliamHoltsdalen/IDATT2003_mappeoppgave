@@ -13,8 +13,6 @@ import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -66,12 +64,12 @@ public class GameBoardStackPane extends StackPane {
    * @param players the list of players to display
    */
   private void initialize(List<Player> players) {
-    ImageView boardImageView = new ImageView();
-    boardImageView.setImage(new Image(board.getBackground()));
-    boardImageView.getStyleClass().add("game-board-image-view");
+    BoardStackPane boardStackPane = new BoardStackPane();
+    boardStackPane.initialize(board, board.getBackground());
+    boardStackPane.getStyleClass().add("game-board-image-view");
 
     StackPane stackPane = new StackPane();
-    stackPane.getChildren().setAll(boardImageView, playersPane);
+    stackPane.getChildren().setAll(boardStackPane, playersPane);
     stackPane.getStyleClass().add("game-board-stack-pane");
     stackPane.maxHeightProperty().bind(stackPane.heightProperty());
     this.getChildren().add(stackPane);

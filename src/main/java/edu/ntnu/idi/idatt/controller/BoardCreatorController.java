@@ -17,7 +17,6 @@ import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 
 public class BoardCreatorController implements ButtonClickObserver {
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
@@ -67,7 +66,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private void initializeBoardCreatorView() {
     view.addObserver(this);
     
-    view.initializeView(availableComponents, board, new Image("media/boards/whiteBoard.png"));
+    view.initializeView(availableComponents, board, "media/boards/whiteBoard.png");
     Platform.runLater(() -> {
       boardPane.setOnComponentDropped(this::handleComponentDropped);
       boardPane.setOnRemoveComponentsOutsideGrid(this::removeComponentsOutsideGrid);
@@ -82,18 +81,18 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private void updateBackground() {
-    boardPane.setBackground(getBackgroundImage());
+    boardPane.setBackground(getBackgroundImagePath());
   }
 
-  private Image getBackgroundImage() {
+  private String getBackgroundImagePath() {
     return switch (view.getBackgroundComboBox().getValue()) {
-      case "Gray" -> new Image("media/boards/grayBoard.png");
-      case "Dark blue" -> new Image("media/boards/darkBlueBoard.png");
-      case "Green" -> new Image("media/boards/greenBoard.png");
-      case "Red" -> new Image("media/boards/redBoard.png");
-      case "Yellow" -> new Image("media/boards/yellowBoard.png");
-      case "Pink" -> new Image("media/boards/pinkBoard.png");
-      default -> new Image("media/boards/whiteBoard.png"); // for white and default
+      case "Gray" -> "media/boards/grayBoard.png";
+      case "Dark blue" -> "media/boards/darkBlueBoard.png";
+      case "Green" -> "media/boards/greenBoard.png";
+      case "Red" -> "media/boards/redBoard.png";
+      case "Yellow" -> "media/boards/yellowBoard.png";
+      case "Pink" -> "media/boards/pinkBoard.png";
+      default -> "media/boards/whiteBoard.png"; // for white and default
     };
   }
 
