@@ -1,11 +1,12 @@
 package edu.ntnu.idi.idatt.model.validators;
 
+import java.util.List;
+
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import java.util.List;
 
 /**
  * <h3> Validator class for arguments passed to model constructors and methods.</h3>
@@ -108,14 +109,26 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setImagePath method in Board class.
+   * Validates the arguments for the setBackground method in Board class.
    *
-   * @param imagePath the image path to set
-   * @throws IllegalArgumentException if imagePath is null or blank
+   * @param background the background to set
+   * @throws IllegalArgumentException if background is null or blank
    */
-  public static void boardSetImagePathValidator(String imagePath) {
-    if (imagePath == null || imagePath.isBlank()) {
-      throw new IllegalArgumentException("Image path cannot be null or blank");
+  public static void boardSetBackgroundValidator(String background) {
+    if (background == null || background.isBlank()) {
+      throw new IllegalArgumentException("Background cannot be null or blank");
+    }
+  }
+
+  /** 
+   * Validates the arguments for the setPattern method in Board class.
+   *
+   * @param pattern the pattern to set
+   * @throws IllegalArgumentException if pattern is null or blank
+   */
+  public static void boardSetPatternValidator(String pattern) {
+    if (pattern == null || pattern.isBlank()) {
+      throw new IllegalArgumentException("Pattern cannot be null or blank");
     }
   }
 
@@ -207,7 +220,7 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setDestinationTileId method in LadderAction class.
+   * Validates the arguments for the setDestinationTileId method in TileAction class.
    *
    * @param destinationTileId the id of the destination tile
    * @throws IllegalArgumentException if destinationTileId is less than 0
@@ -219,7 +232,7 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setDescription method in LadderAction class.
+   * Validates the arguments for the setDescription method in TileAction class.
    *
    * @param description the description to set
    * @throws IllegalArgumentException if description is null or blank
@@ -230,6 +243,18 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates the arguments for the setIdentifier method in TileAction class.
+   *
+   * @param identifier the identifier to set
+   * @throws IllegalArgumentException if identifier is null or blank
+   */
+  public static void tileActionSetIdentifierValidator(String identifier) {
+    if (identifier == null || identifier.isBlank()) {
+      throw new IllegalArgumentException("Identifier cannot be null or blank");
+    }
+  }
+  
   /**
    * Validates the arguments for the perform method in LadderAction class.
    *

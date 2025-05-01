@@ -11,6 +11,11 @@ import edu.ntnu.idi.idatt.model.Player;
 public interface TileAction {
 
   /**
+  * Returns the identifier of the tile action.
+  */ 
+  String getIdentifier();
+
+  /**
    * Returns the destination tile ID.
    */
   int getDestinationTileId();
@@ -19,6 +24,13 @@ public interface TileAction {
    * Returns the description of the action.
    */
   String getDescription();
+
+  /**
+   * Sets the identifier of the tile action.
+   *
+   * @param identifier The identifier to set.
+   */
+  void setIdentifier(String identifier);
 
   /**
    * Sets the destination tile ID.

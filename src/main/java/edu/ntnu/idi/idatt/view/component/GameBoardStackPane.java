@@ -1,18 +1,18 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -64,12 +64,13 @@ public class GameBoardStackPane extends StackPane {
    * @param players the list of players to display
    */
   private void initialize(List<Player> players) {
-    ImageView boardImageView = new ImageView();
-    boardImageView.setImage(new Image(board.getImagePath()));
-    boardImageView.getStyleClass().add("game-board-image-view");
+    BoardStackPane boardStackPane = new BoardStackPane();
+    boardStackPane.initialize(board, board.getBackground());
+    boardStackPane.getBackgroundImageView().setFitWidth(500);
+    boardStackPane.getStyleClass().add("game-board-image-view");
 
     StackPane stackPane = new StackPane();
-    stackPane.getChildren().setAll(boardImageView, playersPane);
+    stackPane.getChildren().setAll(boardStackPane, playersPane);
     stackPane.getStyleClass().add("game-board-stack-pane");
     stackPane.maxHeightProperty().bind(stackPane.heightProperty());
     this.getChildren().add(stackPane);
@@ -169,18 +170,7 @@ public class GameBoardStackPane extends StackPane {
    *         top left corner.
    */
   private double[] convertCoordinates(int[] rc) {
-    int r = rc[0];
-    int c = rc[1];
-
-    double boardWidth = boardDimensions[0];
-    double boardHeight = boardDimensions[1];
-    int rMax = board.getRowsAndColumns()[0];
-    int cMax = board.getRowsAndColumns()[1];
-
-    double x = (boardWidth / cMax) * c;
-    double y = boardHeight - ((boardHeight / rMax) * r);
-
-    return new double[]{x, y};
+    return ViewUtils.boardToScreenCoordinates(rc, board, boardDimensions[0], boardDimensions[1]);
   }
 
   /**

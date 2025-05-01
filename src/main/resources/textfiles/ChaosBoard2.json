@@ -1,0 +1,848 @@
+{
+  "name": "ChaosBoard2",
+  "description": "Chaotic ladder game board with lots of crazy action!",
+  "rows": 9,
+  "columns": 10,
+  "background": "media/boards/darkBlueBoard.png",
+  "pattern": "Purple checker",
+  "tiles": [
+    {
+      "id": 0,
+      "coordinates": [
+        0,
+        -2
+      ],
+      "nextTileId": 1
+    },
+    {
+      "id": 1,
+      "coordinates": [
+        0,
+        0
+      ],
+      "nextTileId": 2
+    },
+    {
+      "id": 2,
+      "coordinates": [
+        0,
+        1
+      ],
+      "nextTileId": 3
+    },
+    {
+      "id": 3,
+      "coordinates": [
+        0,
+        2
+      ],
+      "nextTileId": 4,
+      "action": {
+        "identifier": "1R_1U_portal_2",
+        "destinationTileId": 21,
+        "description": "Portal from 3 to 21"
+      }
+    },
+    {
+      "id": 4,
+      "coordinates": [
+        0,
+        3
+      ],
+      "nextTileId": 5,
+      "action": {
+        "identifier": "1R_1U_portal_1",
+        "destinationTileId": 86,
+        "description": "Portal from 4 to 86"
+      }
+    },
+    {
+      "id": 5,
+      "coordinates": [
+        0,
+        4
+      ],
+      "nextTileId": 6,
+      "action": {
+        "identifier": "1R_1U_portal_3",
+        "destinationTileId": 27,
+        "description": "Portal from 5 to 27"
+      }
+    },
+    {
+      "id": 6,
+      "coordinates": [
+        0,
+        5
+      ],
+      "nextTileId": 7
+    },
+    {
+      "id": 7,
+      "coordinates": [
+        0,
+        6
+      ],
+      "nextTileId": 8,
+      "action": {
+        "identifier": "2R_4U_ladder",
+        "destinationTileId": 49,
+        "description": "Ladder from 7 to 49"
+      }
+    },
+    {
+      "id": 8,
+      "coordinates": [
+        0,
+        7
+      ],
+      "nextTileId": 9
+    },
+    {
+      "id": 9,
+      "coordinates": [
+        0,
+        8
+      ],
+      "nextTileId": 10
+    },
+    {
+      "id": 10,
+      "coordinates": [
+        0,
+        9
+      ],
+      "nextTileId": 11
+    },
+    {
+      "id": 11,
+      "coordinates": [
+        1,
+        9
+      ],
+      "nextTileId": 12
+    },
+    {
+      "id": 12,
+      "coordinates": [
+        1,
+        8
+      ],
+      "nextTileId": 13
+    },
+    {
+      "id": 13,
+      "coordinates": [
+        1,
+        7
+      ],
+      "nextTileId": 14
+    },
+    {
+      "id": 14,
+      "coordinates": [
+        1,
+        6
+      ],
+      "nextTileId": 15
+    },
+    {
+      "id": 15,
+      "coordinates": [
+        1,
+        5
+      ],
+      "nextTileId": 16,
+      "action": {
+        "identifier": "1L_2U_ladder",
+        "destinationTileId": 36,
+        "description": "Ladder from 15 to 36"
+      }
+    },
+    {
+      "id": 16,
+      "coordinates": [
+        1,
+        4
+      ],
+      "nextTileId": 17
+    },
+    {
+      "id": 17,
+      "coordinates": [
+        1,
+        3
+      ],
+      "nextTileId": 18
+    },
+    {
+      "id": 18,
+      "coordinates": [
+        1,
+        2
+      ],
+      "nextTileId": 19
+    },
+    {
+      "id": 19,
+      "coordinates": [
+        1,
+        1
+      ],
+      "nextTileId": 20
+    },
+    {
+      "id": 20,
+      "coordinates": [
+        1,
+        0
+      ],
+      "nextTileId": 21
+    },
+    {
+      "id": 21,
+      "coordinates": [
+        2,
+        0
+      ],
+      "nextTileId": 22
+    },
+    {
+      "id": 22,
+      "coordinates": [
+        2,
+        1
+      ],
+      "nextTileId": 23,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 1,
+        "description": "Slide from 22 to 1"
+      }
+    },
+    {
+      "id": 23,
+      "coordinates": [
+        2,
+        2
+      ],
+      "nextTileId": 24
+    },
+    {
+      "id": 24,
+      "coordinates": [
+        2,
+        3
+      ],
+      "nextTileId": 25
+    },
+    {
+      "id": 25,
+      "coordinates": [
+        2,
+        4
+      ],
+      "nextTileId": 26
+    },
+    {
+      "id": 26,
+      "coordinates": [
+        2,
+        5
+      ],
+      "nextTileId": 27
+    },
+    {
+      "id": 27,
+      "coordinates": [
+        2,
+        6
+      ],
+      "nextTileId": 28
+    },
+    {
+      "id": 28,
+      "coordinates": [
+        2,
+        7
+      ],
+      "nextTileId": 29,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 9,
+        "description": "Slide from 28 to 9"
+      }
+    },
+    {
+      "id": 29,
+      "coordinates": [
+        2,
+        8
+      ],
+      "nextTileId": 30,
+      "action": {
+        "identifier": "1R_1U_portal_1",
+        "destinationTileId": 54,
+        "description": "Portal from 29 to 54"
+      }
+    },
+    {
+      "id": 30,
+      "coordinates": [
+        2,
+        9
+      ],
+      "nextTileId": 31
+    },
+    {
+      "id": 31,
+      "coordinates": [
+        3,
+        9
+      ],
+      "nextTileId": 32
+    },
+    {
+      "id": 32,
+      "coordinates": [
+        3,
+        8
+      ],
+      "nextTileId": 33
+    },
+    {
+      "id": 33,
+      "coordinates": [
+        3,
+        7
+      ],
+      "nextTileId": 34
+    },
+    {
+      "id": 34,
+      "coordinates": [
+        3,
+        6
+      ],
+      "nextTileId": 35
+    },
+    {
+      "id": 35,
+      "coordinates": [
+        3,
+        5
+      ],
+      "nextTileId": 36,
+      "action": {
+        "identifier": "1R_1U_portal_3",
+        "destinationTileId": 75,
+        "description": "Portal from 35 to 75"
+      }
+    },
+    {
+      "id": 36,
+      "coordinates": [
+        3,
+        4
+      ],
+      "nextTileId": 37
+    },
+    {
+      "id": 37,
+      "coordinates": [
+        3,
+        3
+      ],
+      "nextTileId": 38,
+      "action": {
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 56,
+        "description": "Ladder from 37 to 56"
+      }
+    },
+    {
+      "id": 38,
+      "coordinates": [
+        3,
+        2
+      ],
+      "nextTileId": 39
+    },
+    {
+      "id": 39,
+      "coordinates": [
+        3,
+        1
+      ],
+      "nextTileId": 40
+    },
+    {
+      "id": 40,
+      "coordinates": [
+        3,
+        0
+      ],
+      "nextTileId": 41
+    },
+    {
+      "id": 41,
+      "coordinates": [
+        4,
+        0
+      ],
+      "nextTileId": 42,
+      "action": {
+        "identifier": "1R_1U_portal_1",
+        "destinationTileId": 22,
+        "description": "Portal from 41 to 22"
+      }
+    },
+    {
+      "id": 42,
+      "coordinates": [
+        4,
+        1
+      ],
+      "nextTileId": 43
+    },
+    {
+      "id": 43,
+      "coordinates": [
+        4,
+        2
+      ],
+      "nextTileId": 44,
+      "action": {
+        "identifier": "2L_4U_ladder",
+        "destinationTileId": 81,
+        "description": "Ladder from 43 to 81"
+      }
+    },
+    {
+      "id": 44,
+      "coordinates": [
+        4,
+        3
+      ],
+      "nextTileId": 45,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 25,
+        "description": "Slide from 44 to 25"
+      }
+    },
+    {
+      "id": 45,
+      "coordinates": [
+        4,
+        4
+      ],
+      "nextTileId": 46
+    },
+    {
+      "id": 46,
+      "coordinates": [
+        4,
+        5
+      ],
+      "nextTileId": 47
+    },
+    {
+      "id": 47,
+      "coordinates": [
+        4,
+        6
+      ],
+      "nextTileId": 48
+    },
+    {
+      "id": 48,
+      "coordinates": [
+        4,
+        7
+      ],
+      "nextTileId": 49
+    },
+    {
+      "id": 49,
+      "coordinates": [
+        4,
+        8
+      ],
+      "nextTileId": 50
+    },
+    {
+      "id": 50,
+      "coordinates": [
+        4,
+        9
+      ],
+      "nextTileId": 51
+    },
+    {
+      "id": 51,
+      "coordinates": [
+        5,
+        9
+      ],
+      "nextTileId": 52
+    },
+    {
+      "id": 52,
+      "coordinates": [
+        5,
+        8
+      ],
+      "nextTileId": 53
+    },
+    {
+      "id": 53,
+      "coordinates": [
+        5,
+        7
+      ],
+      "nextTileId": 54,
+      "action": {
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 72,
+        "description": "Ladder from 53 to 72"
+      }
+    },
+    {
+      "id": 54,
+      "coordinates": [
+        5,
+        6
+      ],
+      "nextTileId": 55
+    },
+    {
+      "id": 55,
+      "coordinates": [
+        5,
+        5
+      ],
+      "nextTileId": 56
+    },
+    {
+      "id": 56,
+      "coordinates": [
+        5,
+        4
+      ],
+      "nextTileId": 57
+    },
+    {
+      "id": 57,
+      "coordinates": [
+        5,
+        3
+      ],
+      "nextTileId": 58
+    },
+    {
+      "id": 58,
+      "coordinates": [
+        5,
+        2
+      ],
+      "nextTileId": 59
+    },
+    {
+      "id": 59,
+      "coordinates": [
+        5,
+        1
+      ],
+      "nextTileId": 60
+    },
+    {
+      "id": 60,
+      "coordinates": [
+        5,
+        0
+      ],
+      "nextTileId": 61
+    },
+    {
+      "id": 61,
+      "coordinates": [
+        6,
+        0
+      ],
+      "nextTileId": 62
+    },
+    {
+      "id": 62,
+      "coordinates": [
+        6,
+        1
+      ],
+      "nextTileId": 63,
+      "action": {
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 83,
+        "description": "Ladder from 62 to 83"
+      }
+    },
+    {
+      "id": 63,
+      "coordinates": [
+        6,
+        2
+      ],
+      "nextTileId": 64
+    },
+    {
+      "id": 64,
+      "coordinates": [
+        6,
+        3
+      ],
+      "nextTileId": 65
+    },
+    {
+      "id": 65,
+      "coordinates": [
+        6,
+        4
+      ],
+      "nextTileId": 66
+    },
+    {
+      "id": 66,
+      "coordinates": [
+        6,
+        5
+      ],
+      "nextTileId": 67,
+      "action": {
+        "identifier": "1L_2U_ladder",
+        "destinationTileId": 85,
+        "description": "Ladder from 66 to 85"
+      }
+    },
+    {
+      "id": 67,
+      "coordinates": [
+        6,
+        6
+      ],
+      "nextTileId": 68,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 46,
+        "description": "Slide from 67 to 46"
+      }
+    },
+    {
+      "id": 68,
+      "coordinates": [
+        6,
+        7
+      ],
+      "nextTileId": 69
+    },
+    {
+      "id": 69,
+      "coordinates": [
+        6,
+        8
+      ],
+      "nextTileId": 70,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 50,
+        "description": "Slide from 69 to 50"
+      }
+    },
+    {
+      "id": 70,
+      "coordinates": [
+        6,
+        9
+      ],
+      "nextTileId": 71
+    },
+    {
+      "id": 71,
+      "coordinates": [
+        7,
+        9
+      ],
+      "nextTileId": 72
+    },
+    {
+      "id": 72,
+      "coordinates": [
+        7,
+        8
+      ],
+      "nextTileId": 73
+    },
+    {
+      "id": 73,
+      "coordinates": [
+        7,
+        7
+      ],
+      "nextTileId": 74
+    },
+    {
+      "id": 74,
+      "coordinates": [
+        7,
+        6
+      ],
+      "nextTileId": 75
+    },
+    {
+      "id": 75,
+      "coordinates": [
+        7,
+        5
+      ],
+      "nextTileId": 76
+    },
+    {
+      "id": 76,
+      "coordinates": [
+        7,
+        4
+      ],
+      "nextTileId": 77,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 57,
+        "description": "Slide from 76 to 57"
+      }
+    },
+    {
+      "id": 77,
+      "coordinates": [
+        7,
+        3
+      ],
+      "nextTileId": 78
+    },
+    {
+      "id": 78,
+      "coordinates": [
+        7,
+        2
+      ],
+      "nextTileId": 79
+    },
+    {
+      "id": 79,
+      "coordinates": [
+        7,
+        1
+      ],
+      "nextTileId": 80
+    },
+    {
+      "id": 80,
+      "coordinates": [
+        7,
+        0
+      ],
+      "nextTileId": 81
+    },
+    {
+      "id": 81,
+      "coordinates": [
+        8,
+        0
+      ],
+      "nextTileId": 82
+    },
+    {
+      "id": 82,
+      "coordinates": [
+        8,
+        1
+      ],
+      "nextTileId": 83,
+      "action": {
+        "identifier": "1R_1U_portal_2",
+        "destinationTileId": 58,
+        "description": "Portal from 82 to 58"
+      }
+    },
+    {
+      "id": 83,
+      "coordinates": [
+        8,
+        2
+      ],
+      "nextTileId": 84
+    },
+    {
+      "id": 84,
+      "coordinates": [
+        8,
+        3
+      ],
+      "nextTileId": 85
+    },
+    {
+      "id": 85,
+      "coordinates": [
+        8,
+        4
+      ],
+      "nextTileId": 86
+    },
+    {
+      "id": 86,
+      "coordinates": [
+        8,
+        5
+      ],
+      "nextTileId": 87
+    },
+    {
+      "id": 87,
+      "coordinates": [
+        8,
+        6
+      ],
+      "nextTileId": 88,
+      "action": {
+        "identifier": "1R_1U_portal_1",
+        "destinationTileId": 86,
+        "description": "Portal from 87 to 86"
+      }
+    },
+    {
+      "id": 88,
+      "coordinates": [
+        8,
+        7
+      ],
+      "nextTileId": 89
+    },
+    {
+      "id": 89,
+      "coordinates": [
+        8,
+        8
+      ],
+      "nextTileId": 90,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 70,
+        "description": "Slide from 89 to 70"
+      }
+    },
+    {
+      "id": 90,
+      "coordinates": [
+        8,
+        9
+      ],
+      "nextTileId": 91
+    }
+  ]
+}
