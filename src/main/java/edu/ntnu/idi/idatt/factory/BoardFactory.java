@@ -90,12 +90,13 @@ public class BoardFactory {
     slideMap.put(82, 78);
     slideMap.put(89, 68);
 
+    // TODO: Add correct identifiers for the actions here, this is just placeholder code to get the app working.
     for (Map.Entry<Integer, Integer> entry : ladderMap.entrySet()) {
-      board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(),
+      board.getTile(entry.getKey()).setLandAction(new LadderAction("1R_1U_ladder", entry.getValue(),
           "Ladder from " + entry.getKey() + " to " + entry.getValue()));
     }
     for (Map.Entry<Integer, Integer> entry : slideMap.entrySet()) {
-      board.getTile(entry.getKey()).setLandAction(new LadderAction(entry.getValue(),
+      board.getTile(entry.getKey()).setLandAction(new LadderAction("1R_1D_slide", entry.getValue(),
           "Slide from " + entry.getKey() + " to " + entry.getValue()));
     }
     return board;
@@ -116,9 +117,10 @@ public class BoardFactory {
 
     final Set<Integer> portalIds = Set.of(4, 19, 30, 34, 45, 53, 61, 75, 89);
 
+    // TODO: Add correct identifiers for the actions here, this is just placeholder code to get the app working.
     portalIds.forEach(portalId -> {
       int randomDestination = randomPortalDestination(portalIds);
-      board.getTile(portalId).setLandAction(new LadderAction(randomDestination,
+      board.getTile(portalId).setLandAction(new LadderAction("1R_1U_portal", randomDestination,
           "Portal from " + portalId + " to " + randomDestination));
     });
     return board;

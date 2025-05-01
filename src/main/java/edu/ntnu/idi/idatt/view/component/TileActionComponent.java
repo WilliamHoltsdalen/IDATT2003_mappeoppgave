@@ -41,14 +41,13 @@ public class TileActionComponent extends ImageView {
   }
 
   public void updateSizeAndPosition(double tileWidth, double tileHeight, double baseX, double baseY) {
-    // Calculate size based on tile dimensions
     double width = spec.calculateWidth(tileWidth);
     double height = spec.calculateHeight(tileHeight);
 
     setFitWidth(width);
     setFitHeight(height);
 
-    // Adjust offset for other components than portals, to make them start from the center of the tile
+    // Adjust offset for components that start from the center of the tile (portals are exceptions as they take up one tile.)
     double offsetX = !type.equals("PORTAL") ? tileWidth / 2 : 0;
     double offsetY = !type.equals("PORTAL") ? -tileHeight / 2 : 0;
 
@@ -58,7 +57,15 @@ public class TileActionComponent extends ImageView {
 
   private void createTileAction() {
     String typeName = type.substring(0, 1) + type.substring(1).toLowerCase();
-    
-    tile.setLandAction(new LadderAction(destinationTileId, typeName + " from " + tile.getTileId() + " to " + destinationTileId));
+    StringBuilder identifier = new StringBuilder();
+    identifier.append(spec.widthTiles());
+    identifier.append(spec.widthDirection() == ComponentSpec.Direction.LEFT ? "L" : "R");
+    identifier.append("_");
+    identifier.append(spec.heightTiles());
+    identifier.append(spec.heightDirection() == ComponentSpec.Direction.DOWN ? "D" : "U");
+    identifier.append("_");
+    identifier.append(type.toLowerCase());
+
+    tile.setLandAction(new LadderAction(identifier.toString(), destinationTileId, typeName + " from " + tile.getTileId() + " to " + destinationTileId));
   }
 }

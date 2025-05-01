@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;
-
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetIdentifierValidator;
 
 /**
  * <h3>LadderAction class</h3>
@@ -13,18 +13,31 @@ import edu.ntnu.idi.idatt.model.interfaces.TileAction;
  * different tile. It contains a destination tile ID and a description.
  */
 public class LadderAction implements TileAction {
+  private String identifier;
   private int destinationTileId;
   private String description;
 
   /**
    * Constructor for LadderAction class.
    *
+   * @param identifier The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
    * @param description The description of the action.
    */
-  public LadderAction(int destinationTileId, String description) {
+  public LadderAction(String identifier, int destinationTileId, String description) {
+    setIdentifier(identifier);
     setDestinationTileId(destinationTileId);
     setDescription(description);
+  }
+
+  /**
+   * Returns the identifier of the action.
+   *
+   * @return The identifier of the action.
+   */
+  @Override
+  public String getIdentifier() {
+    return identifier;
   }
 
   /**
@@ -45,6 +58,18 @@ public class LadderAction implements TileAction {
   @Override
   public String getDescription() {
     return description;
+  }
+
+  /**
+   * Sets the identifier of the action.
+   *
+   * @param identifier The identifier to set.
+   */
+  @Override
+  public void setIdentifier(String identifier) {
+    tileActionSetIdentifierValidator(identifier);
+
+    this.identifier = identifier;
   }
 
   /**

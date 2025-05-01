@@ -220,7 +220,7 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setDestinationTileId method in LadderAction class.
+   * Validates the arguments for the setDestinationTileId method in TileAction class.
    *
    * @param destinationTileId the id of the destination tile
    * @throws IllegalArgumentException if destinationTileId is less than 0
@@ -232,7 +232,7 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setDescription method in LadderAction class.
+   * Validates the arguments for the setDescription method in TileAction class.
    *
    * @param description the description to set
    * @throws IllegalArgumentException if description is null or blank
@@ -243,6 +243,18 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates the arguments for the setIdentifier method in TileAction class.
+   *
+   * @param identifier the identifier to set
+   * @throws IllegalArgumentException if identifier is null or blank
+   */
+  public static void tileActionSetIdentifierValidator(String identifier) {
+    if (identifier == null || identifier.isBlank()) {
+      throw new IllegalArgumentException("Identifier cannot be null or blank");
+    }
+  }
+  
   /**
    * Validates the arguments for the perform method in LadderAction class.
    *
