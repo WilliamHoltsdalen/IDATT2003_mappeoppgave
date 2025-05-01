@@ -63,7 +63,7 @@ public class ViewUtils {
         int id;
         do {
             id = random.nextInt(1, tiles);
-        } while (id == portalId || occupiedTiles.contains(id));
+        } while (id == portalId || occupiedTiles.contains(id) || id == tiles - 1);
         return id;
     }
 }

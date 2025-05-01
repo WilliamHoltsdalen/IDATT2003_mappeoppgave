@@ -1,59 +1,47 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 
 public class BoardCreatorController implements ButtonClickObserver {
-  private static final String LADDERS_PATH_PREFIX = "media/assets/ladders/";
-  private static final String SLIDES_PATH_PREFIX = "media/assets/slides/";
-  private static final String PORTALS_PATH_PREFIX = "media/assets/portals/";
+  private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
+  private static final String SLIDES_PATH_PREFIX = "media/assets/slide/";
+  private static final String PORTALS_PATH_PREFIX = "media/assets/portal/";
 
   private final BoardCreatorView view;
+  private final BoardStackPane boardPane;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
-  private final Map<TileCoordinates, TileActionComponent> placedComponents;
   private Board board;
-  private double[] boardDimensions;
 
   public BoardCreatorController(BoardCreatorView view) {
     this.view = view;
     this.availableComponents = new HashMap<>();
-    this.placedComponents = new HashMap<>();
     this.board = BoardFactory.createBlankBoard(9, 10);
-    this.boardDimensions = new double[2];
 
-    initializeAvailableComponents();
+    setAvailableComponents();
     initializeBoardCreatorView();
+
+    this.boardPane = view.getBoardStackPane();
   }
 
-  private void initializeAvailableComponents() {
+  private void setAvailableComponents() {
     availableComponents.put("Ladder", new String[]{
       LADDERS_PATH_PREFIX + "1R_1U_ladder.png",
       LADDERS_PATH_PREFIX + "1L_1U_ladder.png",
@@ -78,169 +66,58 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void initializeBoardCreatorView() {
     view.addObserver(this);
-    view.initializeBoardImage(new Image(board.getBackground()));
-    view.initializeView(availableComponents);
-    view.setOnComponentDropped(this::handleComponentDropped);
-    setNodeListeners();
-    }
-
-  private void setNodeListeners() {
-    // Bind boardDimensions to the gridContainer's layoutBounds
-    // boardDimensions is used to calculate the positions of the tiles in the grid
-    view.getGridContainer().layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
-      if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
-        boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
-        updateBoardVisuals();
-      }
+    
+    view.initializeView(availableComponents, board, new Image("media/boards/whiteBoard.png"));
+    Platform.runLater(() -> {
+      boardPane.setOnComponentDropped(this::handleComponentDropped);
+      boardPane.setOnRemoveComponentsOutsideGrid(this::removeComponentsOutsideGrid);
     });
-
-    // For updating the grid when the rows or columns are changed
-    view.getRowsSpinner().valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
-    view.getColumnsSpinner().valueProperty().addListener((obs, oldVal, newVal) -> updateGrid());
   }
 
   private void handleComponentDropped(ComponentDropEventData data) {
-    TileCoordinates coordinates = view.getCellToCoordinatesMap().get(data.cell());
-    placeComponent(data.componentType(), data.imagePath(), coordinates);
-    updateBoardVisuals();
-    updatePattern();
-  }
-
-  private void updateComponentList() {
-    view.getComponentListContent().getChildren().clear();
-
-    placedComponents.forEach((coordinates, component) -> {
-      VBox componentBox = new VBox(5);
-      componentBox.getStyleClass().add("component-item");
-
-      // Component header with type and delete button
-      HBox header = new HBox();
-      header.getStyleClass().add("component-item-header");
-      header.setAlignment(Pos.CENTER_LEFT);
-
-      // Component type and image
-      String displayName = switch (component.getType()) {
-        case "LADDER" -> {
-          String rows = component.getImagePath().contains("4R") ? "(4R)" : "(2R)";
-          yield "Ladder " + rows;
-        }
-        case "SLIDE" -> {
-          String rows = component.getImagePath().contains("2R") ? "(2R)" : "(1R)";
-          yield "Slide " + rows;
-        }
-        case "PORTAL" -> "Portal";
-        default -> component.getType();
-      };
-
-      Label typeLabel = new Label(displayName);
-      typeLabel.setStyle("-fx-font-weight: bold;");
-
-      ImageView componentImage = new ImageView(component.getImage());
-      componentImage.setFitHeight(40);
-      componentImage.setPreserveRatio(true);
-
-      // Delete button
-      Button deleteButton = new Button("×");
-      deleteButton.getStyleClass().add("delete-button");
-      deleteButton.setOnAction(e -> {
-        placedComponents.remove(coordinates);
-        updateBoardVisuals();
-      });
-
-      Region spacer = new Region();
-      HBox.setHgrow(spacer, Priority.ALWAYS);
-      header.getChildren().addAll(typeLabel, spacer, deleteButton);
-
-      // From-To fields
-      HBox fromToBox = new HBox(10);
-      fromToBox.setAlignment(Pos.CENTER_LEFT);
-
-      Label fromLabel = new Label("From");
-      TextField fromField = new TextField(String.valueOf(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1])));
-      fromField.getStyleClass().add("from-to-field");
-      fromField.setEditable(false);
-      VBox fromVBox = new VBox(10);
-      fromVBox.getChildren().addAll(fromLabel, fromField);
-
-      Label toLabel = new Label("To");
-      TextField toField = new TextField(String.valueOf(component.getDestinationTileId()));
-      toField.getStyleClass().add("from-to-field");
-      toField.setEditable(false);
-      VBox toVBox = new VBox(10);
-      toVBox.getChildren().addAll(toLabel, toField);
-
-      fromToBox.getChildren().addAll(fromVBox, toVBox);
-
-      HBox contentBox = new HBox(20);
-      contentBox.getChildren().addAll(componentImage, fromToBox);
-
-      componentBox.getChildren().addAll(header, contentBox);
-      view.getComponentListContent().getChildren().add(componentBox);
-    });
+    TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap().get(data.cell());
+    placeComponent(data.componentIdentifier(), coordinates);
+    boardPane.updateBoardVisuals();
+    boardPane.applyPattern();
   }
 
   private void updateBackground() {
-    switch (view.getBackgroundComboBox().getValue()) {
-      case "White" -> board.setBackground("media/boards/whiteBoard.png");
-      case "Gray" -> board.setBackground("media/boards/grayBoard.png");
-      case "Dark blue" -> board.setBackground("media/boards/darkBlueBoard.png");
-      case "Green" -> board.setBackground("media/boards/greenBoard.png");
-      case "Red" -> board.setBackground("media/boards/redBoard.png");
-      case "Yellow" -> board.setBackground("media/boards/yellowBoard.png");
-      case "Pink" -> board.setBackground("media/boards/pinkBoard.png");
-      default -> throw new IllegalArgumentException(
-          "Unknown background: " + view.getBackgroundComboBox().getValue());
-    }
-    view.getBoardImageView().setImage(new Image(board.getBackground()));
+    boardPane.setBackground(getBackgroundImage());
   }
 
-  private void updateGrid() {
-    view.getGridContainer().getChildren().clear();
-    view.getCellToCoordinatesMap().clear();
-    int rows = view.getRowsSpinner().getValue();
-    int columns = view.getColumnsSpinner().getValue();
+  private Image getBackgroundImage() {
+    return switch (view.getBackgroundComboBox().getValue()) {
+      case "Gray" -> new Image("media/boards/grayBoard.png");
+      case "Dark blue" -> new Image("media/boards/darkBlueBoard.png");
+      case "Green" -> new Image("media/boards/greenBoard.png");
+      case "Red" -> new Image("media/boards/redBoard.png");
+      case "Yellow" -> new Image("media/boards/yellowBoard.png");
+      case "Pink" -> new Image("media/boards/pinkBoard.png");
+      default -> new Image("media/boards/whiteBoard.png"); // for white and default
+    };
+  }
 
-    // Create a new board with the new dimensions
-    board = BoardFactory.createBlankBoard(rows, columns);
-
+  public void removeComponentsOutsideGrid() {
     // Recalculate destination tiles for all placed components and remove those that have origin or
     // destination outside the new grid bounds.
     Map<TileCoordinates, TileActionComponent> newPlacedComponents = new HashMap<>();
-    placedComponents.forEach((coordinates, component) -> {
-      if (coordinates.row() < rows && coordinates.col() < columns) {
+    boardPane.getComponents().forEach((coordinates, component) -> {
+      if (coordinates.row() < board.getRowsAndColumns()[0] && coordinates.col() < board.getRowsAndColumns()[1]) {
         ComponentSpec spec = ComponentSpec.fromFilename(component.getImagePath().substring(component.getImagePath().lastIndexOf("/") + 1));
         int[] destinationCoords = calculateDestinationCoordinates(coordinates, spec);
 
-        if (destinationCoords[0] >= 0 && destinationCoords[0] < rows &&
-            destinationCoords[1] >= 0 && destinationCoords[1] < columns) {
-          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], columns);
+        if (destinationCoords[0] >= 0 && destinationCoords[0] < board.getRowsAndColumns()[0] &&
+            destinationCoords[1] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
+          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
           newPlacedComponents.put(coordinates, 
               new TileActionComponent(component.getType(), component.getImagePath(),
-                  board.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), columns)), 
+                  board.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1])), 
                   destinationTileId));
         }
       }
     });
-    placedComponents.clear();
-    placedComponents.putAll(newPlacedComponents);
-
-    double cellWidth = view.getBoardImageView().getFitWidth() / columns;
-    double cellHeight = (view.getBoardImageView().getFitWidth() / view.getBoardImageView().getImage().getWidth()
-        * view.getBoardImageView().getImage().getHeight()) / rows;
-
-    // Making the cells in the grid
-    for (int i = rows - 1; i >= 0; i--) { // Filling rows from top to bottom
-      HBox row = new HBox();
-      row.setAlignment(Pos.CENTER);
-      for (int j = 0; j < columns; j++) { // Filling columns from left to right
-        row.getChildren().add(
-            view.createRowCell(cellWidth, cellHeight, i, j)
-        );
-      }
-      view.getGridContainer().getChildren().add(row); // Adding row to grid container
-    }
-    updatePattern();
-    updateBoardVisuals();
+    boardPane.getComponents().clear();
+    boardPane.getComponents().putAll(newPlacedComponents);
   }
 
   private int[] calculateDestinationCoordinates(TileCoordinates origin, ComponentSpec spec) {
@@ -258,7 +135,7 @@ public class BoardCreatorController implements ButtonClickObserver {
         int rows = view.getRowsSpinner().getValue();
         int columns = view.getColumnsSpinner().getValue();
         int originTileId = ViewUtils.calculateTileId(origin.row(), origin.col(), columns);
-        List<Integer> occupiedTiles = placedComponents.values().stream()
+        List<Integer> occupiedTiles = boardPane.getComponents().values().stream()
             .map(TileActionComponent::getDestinationTileId)
             .toList();
         int destinationTileId = ViewUtils.randomPortalDestination(originTileId, rows * columns, occupiedTiles);
@@ -268,170 +145,37 @@ public class BoardCreatorController implements ButtonClickObserver {
     };
   }
 
-  private void placeComponent(String componentType, String imagePath, TileCoordinates coordinates) {
-    ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
-    int[] destinationCoords;
-    int destinationTileId = -1;
-    
-    List<TileCoordinates> occupiedTiles = Stream.concat(
-        placedComponents.keySet().stream(),
-        placedComponents.values().stream()
-            .map(component -> {
-              int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
-              return new TileCoordinates(coords[0], coords[1]);
-            })
-    ).toList();
-    
-    int tileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
-    
-    // Calculate destination based on component specification
-    switch (spec.type()) {
-      case LADDER -> {
-        destinationCoords = new int[]{
-            coordinates.row() + spec.heightTiles(),
-            coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
-        };
-        if (destinationCoords[0] < board.getRowsAndColumns()[0] && 
-            destinationCoords[1] >= 0 && 
-            destinationCoords[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case SLIDE -> {
-        destinationCoords = new int[]{
-            coordinates.row() - spec.heightTiles(),
-            coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
-        };
-        if (destinationCoords[0] >= 0 && 
-            destinationCoords[1] >= 0 && 
-            destinationCoords[1] < board.getRowsAndColumns()[1]) {
-          destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
-        }
-      }
-      case PORTAL -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), 
-          occupiedTiles.stream().map(coords -> ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1])).toList());
-    }
-
-    if (occupiedTiles.contains(coordinates) || (destinationTileId != -1 && occupiedTiles.contains(new TileCoordinates(
-        board.getTile(destinationTileId).getCoordinates()[0],
-        board.getTile(destinationTileId).getCoordinates()[1])))) {
-      view.showErrorAlert("Could not place component", "Tile is already occupied");
-      return;
-    }
-    if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
-      placedComponents.put(coordinates,
-          new TileActionComponent(componentType, imagePath, board.getTile(tileId), destinationTileId));
+  private void placeComponent(String componentIdentifier, TileCoordinates coordinates) {
+    try {
+      boardPane.addComponent(componentIdentifier, coordinates);
+      updateViewComponentList();
+    } catch (IllegalArgumentException e) {
+      Platform.runLater(() -> view.showErrorAlert("Could not place component", e.getMessage()));
     }
   }
 
-  private void updateBoardVisuals() {
-    // Clear all existing visual components
-    view.getComponentsPane().getChildren().clear();
+  private void removeComponent(TileCoordinates coordinates) {
+    boardPane.removeComponent(coordinates);
+    updateViewComponentList();
+  }
 
-    // Reset all cell colors
-    view.getGridContainer().getChildren().forEach(row ->
-        ((HBox) row).getChildren().forEach(cellPane ->
-            ((StackPane) cellPane).getChildren().forEach(rect -> {
-              if (rect instanceof Rectangle) {
-                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-slide", "grid-cell-ladder-destination", "grid-cell-slide-destination");
-              }
-            })
-        )
-    );
-
-    // Place the visual tile action components
-    placedComponents.forEach((coordinates, component) -> {
-      Rectangle originCell = findCellByCoordinates(coordinates);
-      if (originCell == null) {
-        return;
-      }
-
-      int destinationTileId = component.getTile().getLandAction().getDestinationTileId();
-      int[] destCoords = board.getTile(destinationTileId).getCoordinates();
-      Rectangle destinationCell = findCellByCoordinates(new TileCoordinates(destCoords[0], destCoords[1]));
-
-      // Get the base position for this tile
-      double[] screenCoords = ViewUtils.boardToScreenCoordinates(
-          new int[]{coordinates.row(), coordinates.col()}, 
-          board, 
-          boardDimensions[0], 
-          boardDimensions[1]
-      );
-
-      // Update component size and position based on tile dimensions and base position
-      component.updateSizeAndPosition(originCell.getWidth(), originCell.getHeight(), screenCoords[0], screenCoords[1]);
-
-      // Add style classes based on component type
-      switch (component.getType()) {
-        case "LADDER" -> {
-          originCell.getStyleClass().add("grid-cell-has-ladder");
-          destinationCell.getStyleClass().add("grid-cell-ladder-destination");
-        }
-        case "PORTAL" -> originCell.getStyleClass().add("grid-cell-has-portal");
-        case "SLIDE" -> {
-          originCell.getStyleClass().add("grid-cell-has-slide");
-          destinationCell.getStyleClass().add("grid-cell-slide-destination");
-        }
-        default -> {break;}
-      }
-
-      view.getComponentsPane().getChildren().add(component);
+  private void updateViewComponentList() {
+    view.getComponentListContent().getChildren().clear();
+    boardPane.getComponents().forEach((coordinates, component) -> {
+      String displayName = component.getType().substring(0, 1).toUpperCase() + component.getType().substring(1);
+      int originTileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
+      int destinationTileId = component.getDestinationTileId();
+      view.addToComponentList(displayName, component.getImage(), () -> removeComponent(coordinates), originTileId, destinationTileId);
     });
-
-    // Update the component list in the right panel
-    updateComponentList();
-  }
-
-  private Rectangle findCellByCoordinates(TileCoordinates coordinates) {
-    return view.getCellToCoordinatesMap().entrySet().stream()
-        .filter(entry -> entry.getValue().equals(coordinates))
-        .map(Map.Entry::getKey)
-        .findFirst()
-        .orElse(null);
-  }
-
-  private void updatePattern() {
-    String selectedPattern = view.getPatternComboBox().getValue();
-    board.setPattern(selectedPattern);
-    view.getGridContainer().getChildren().forEach(row ->
-        ((HBox) row).getChildren().forEach(cellPane ->
-            ((StackPane) cellPane).getChildren().forEach(node -> {
-              node.getStyleClass().removeAll("blue-checker", "yellow-checker", "purple-checker");
-
-              List<TileCoordinates> occupiedTiles = Stream.concat(
-                  placedComponents.keySet().stream().filter(coords -> !placedComponents.get(coords).getType().equals("PORTAL")),
-                  placedComponents.values().stream()
-                      .filter(component -> !component.getType().equals("PORTAL"))
-                      .map(component -> {
-                        int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
-                        return new TileCoordinates(coords[0], coords[1]);
-                      })
-              ).toList();
-              
-              if (node instanceof Rectangle rect) {
-                TileCoordinates coords = view.getCellToCoordinatesMap().get(rect);
-                int tileId = ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1]);
-                if (tileId % 2 == 0 && !occupiedTiles.contains(coords)) {
-                  switch (selectedPattern) {
-                    case "Blue checker" -> rect.getStyleClass().add("blue-checker");
-                    case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
-                    case "Purple checker" -> rect.getStyleClass().add("purple-checker");
-                    default -> {break;} // No pattern
-                  }
-                }
-              }
-            })
-        )
-    );
   }
 
   @Override
   public void onButtonClicked(String buttonId) {
     switch (buttonId) {
       case "back_to_menu" -> handleBackToMenu();
-      case "update_grid" -> updateGrid();
+      case "update_grid" -> handleUpdateGrid();
       case "update_background" -> updateBackground();
-      case "update_pattern" -> updatePattern();
+      case "update_pattern" -> handleUpdatePattern();
       default -> {
         break;
       }
@@ -445,8 +189,26 @@ public class BoardCreatorController implements ButtonClickObserver {
     }
   }
 
+  private void handleBackToMenu() {
+    if (onBackToMenu != null) {
+      onBackToMenu.run();
+    }
+  }
+
+  private void handleUpdateGrid() {
+    board = BoardFactory.createBlankBoard(view.getRowsSpinner().getValue(), view.getColumnsSpinner().getValue());
+    boardPane.setBoard(board);
+    boardPane.updateGrid();
+  }
+
+  private void handleUpdatePattern() {
+    boardPane.setPattern(view.getPatternComboBox().getValue());
+    boardPane.applyPattern();
+  }
+
   private void handleSaveBoard(Map<String, Object> params) {
     try {
+      board = boardPane.getBoard();
       board.setName(view.getNameField().getText());
       board.setDescription(view.getDescriptionField().getText());
 
@@ -458,12 +220,6 @@ public class BoardCreatorController implements ButtonClickObserver {
           "You can now load the board from the main menu, and start playing!"));
     } catch (IOException | IllegalArgumentException e) {
       Platform.runLater(() -> view.showErrorAlert("Failed to save board", e.getMessage()));
-    }
-  }
-
-  private void handleBackToMenu() {
-    if (onBackToMenu != null) {
-      onBackToMenu.run();
     }
   }
 

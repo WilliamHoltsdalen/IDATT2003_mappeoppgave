@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
-import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
-import edu.ntnu.idi.idatt.dto.TileCoordinates;
+import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
-import edu.ntnu.idi.idatt.view.util.ViewUtils;
+import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
@@ -33,71 +31,40 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final List<ButtonClickObserver> observers;
-  private Consumer<ComponentDropEventData> onComponentDropped;
-
-  private final Map<Rectangle, TileCoordinates> cellToCoordinatesMap;
   
-  private final Pane componentsPane;
   private final VBox componentListContent;
-  private final ImageView boardImageView;
   private final ComboBox<String> backgroundComboBox;
   private final ComboBox<String> patternComboBox;
   private final Spinner<Integer> rowsSpinner;
   private final Spinner<Integer> columnsSpinner;
-  private final StackPane boardContainer;
-  private final VBox gridContainer;
   private final TextField nameField;
   private final TextField descriptionField;
+  private final BoardStackPane boardStackPane;
 
   public BoardCreatorView() {
     this.observers = new ArrayList<>();
 
-    this.cellToCoordinatesMap = new HashMap<>();
-
-    this.componentsPane = new Pane();
     this.componentListContent = new VBox(10);
-    this.boardImageView = new ImageView();
     this.backgroundComboBox = new ComboBox<>();
     this.patternComboBox = new ComboBox<>();
     this.rowsSpinner = new Spinner<>();
     this.columnsSpinner = new Spinner<>();
-    this.boardContainer = new StackPane();
-    this.gridContainer = new VBox();
     this.nameField = new TextField();
     this.descriptionField = new TextField();
-  }
-
-  public Map<Rectangle, TileCoordinates> getCellToCoordinatesMap() {
-    return cellToCoordinatesMap;
-  }
-
-  public VBox getGridContainer() {
-    return gridContainer;
-  }
-
-  public Pane getComponentsPane() {
-    return componentsPane;
+    this.boardStackPane = createBoardStackPane();
   }
 
   public VBox getComponentListContent() {
     return componentListContent;
-  }
-
-  public ImageView getBoardImageView() {
-    return boardImageView;
   }
 
   public TextField getNameField() {
@@ -124,35 +91,24 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return columnsSpinner;
   }
 
-  public void setBoardImage(Image image) {
-    boardImageView.setImage(image);
+  public BoardStackPane getBoardStackPane() {
+    return boardStackPane;
   }
 
-  public void setOnComponentDropped(Consumer<ComponentDropEventData> onComponentDropped) {
-    this.onComponentDropped = onComponentDropped;
-  }
-
-  public void initializeView(Map<String, String[]> components) {
-    this.getStyleClass().add("board-creator-view");
-
+  public void initializeView(Map<String, String[]> components, Board board, Image backgroundImage) {
     VBox leftPanel = createComponentSelectionPanel(components);
-    VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardContainer);
+    
+    boardStackPane.initialize(board, backgroundImage);
+    VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardStackPane);
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
+    
     VBox rightPanel = createComponentListPanel();
-
+    
     this.setLeft(leftPanel);
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
-
-    this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid
-    this.componentsPane.setMouseTransparent(false); // Allow mouse events on grid
-  }
-
-  public void initializeBoardImage(Image image) {
-    boardImageView.setImage(image);
-    boardImageView.setPreserveRatio(true);
-    boardImageView.setFitWidth(500);
+    this.getStyleClass().add("board-creator-view");
   }
 
   private VBox createComponentSelectionPanel(Map<String, String[]> components) {
@@ -210,24 +166,11 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
       db.setDragViewOffsetY(snapshot.getHeight() / 2);
       
       ClipboardContent content = new ClipboardContent();
-      String componentType = getComponentType(imagePath);
-      content.putString(componentType + ":" + imagePath);
+      String componentIdentifier = imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.lastIndexOf("."));
+      content.putString(componentIdentifier);
       db.setContent(content);
       event.consume();
     });
-  }
-
-  private String getComponentType(String imagePath) {
-    if (imagePath.contains("ladder")) {
-      return "LADDER";
-    }
-    if (imagePath.contains("portal")) {
-      return "PORTAL";
-    }
-    if (imagePath.contains("slide")) {
-      return "SLIDE";
-    }
-    return "OTHER";
   }
 
   private VBox createBoardConfigurationPanel() {
@@ -271,12 +214,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     rowsBox.getStyleClass().add("board-config-spinner");
     Label rowsLabel = new Label("Rows");
     rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 9));
+    rowsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> notifyObservers("update_grid"));
     rowsBox.getChildren().addAll(rowsLabel, rowsSpinner);
 
     VBox colsBox = new VBox(5);
     colsBox.getStyleClass().add("board-config-spinner");
     Label colsLabel = new Label("Columns");
     columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 10));
+    columnsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> notifyObservers("update_grid"));
     colsBox.getChildren().addAll(colsLabel, columnsSpinner);
 
     boardOptionsBox.getChildren()
@@ -285,9 +230,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     panel.getChildren().setAll(nameAndDescriptionBox, boardOptionsBox);
     panel.getStyleClass().add("board-creator-panel");
 
-    setupBoardPreview(); // Setting up the board image preview, so its size can be used.
-
-    panel.setMaxWidth(boardImageView.getFitWidth() + 40); // 40px for padding
+    panel.setMaxWidth(boardStackPane.getBackgroundImageView().getFitWidth() + 40); // 40px for padding
     return panel;
   }
 
@@ -327,64 +270,60 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return panel;
   }
 
-  private void setupBoardPreview() {
-    boardContainer.getChildren().addAll(boardImageView, gridContainer, componentsPane);
+  public void addToComponentList(String displayName, Image componentImage, Runnable onDelete, int originTileId, int destinationTileId) {
+    VBox componentBox = new VBox(5);
+    componentBox.getStyleClass().add("component-item");
+
+    HBox header = new HBox();
+    header.getStyleClass().add("component-item-header");
+    header.setAlignment(Pos.CENTER_LEFT);
+
+    Label typeLabel = new Label(displayName);
+    typeLabel.setStyle("-fx-font-weight: bold;");
+
+    ImageView componentImageView = new ImageView(componentImage);
+    componentImageView.setFitHeight(40);
+    componentImageView.setPreserveRatio(true);
+
+    Button deleteButton = new Button("×");
+    deleteButton.getStyleClass().add("delete-button");
+    deleteButton.setOnAction(e -> onDelete.run());
+
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+    header.getChildren().addAll(typeLabel, spacer, deleteButton);
+
+    HBox fromToBox = new HBox(10);
+    fromToBox.setAlignment(Pos.CENTER_LEFT);
+
+    Label fromLabel = new Label("From");
+    TextField fromField = new TextField(String.valueOf(originTileId));
+    fromField.getStyleClass().add("from-to-field");
+    fromField.setEditable(false);
+    VBox fromVBox = new VBox(10);
+    fromVBox.getChildren().addAll(fromLabel, fromField);
+
+    Label toLabel = new Label("To");
+    TextField toField = new TextField(String.valueOf(destinationTileId));
+    toField.getStyleClass().add("from-to-field");
+    toField.setEditable(false);
+    VBox toVBox = new VBox(10);
+    toVBox.getChildren().addAll(toLabel, toField);
+
+    fromToBox.getChildren().addAll(fromVBox, toVBox);
+
+    HBox contentBox = new HBox(20);
+    contentBox.getChildren().addAll(componentImageView, fromToBox);
+
+    componentBox.getChildren().addAll(header, contentBox);
+    componentListContent.getChildren().add(componentBox);
+  }
+
+
+  private BoardStackPane createBoardStackPane() {
+    BoardStackPane boardContainer = new BoardStackPane();
     boardContainer.getStyleClass().add("board-creator-board-container");
-    boardContainer.setMaxWidth(
-        boardImageView.getFitWidth() + 40); // 40px for padding (20px each side)
-    notifyObservers("update_grid");
-  }
-
-  public StackPane createRowCell(double cellWidth, double cellHeight, int row, int col) {
-    StackPane cellPane = new StackPane();
-    Rectangle cellRect = new Rectangle(cellWidth, cellHeight);
-    cellRect.getStyleClass().add("grid-cell");
-    cellToCoordinatesMap.put(cellRect, new TileCoordinates(row, col));
-    setupCellDropHandling(cellRect);
-
-    Label cellLabel = new Label(String.valueOf(ViewUtils.calculateTileId(row, col, columnsSpinner.getValue())));
-    cellLabel.getStyleClass().add("grid-cell-label");
-
-    cellPane.setAlignment(Pos.BOTTOM_RIGHT);
-
-    cellPane.getChildren().setAll(cellRect, cellLabel);
-    return cellPane;
-  }
-
-  private void setupCellDropHandling(Rectangle cell) {
-    cell.setOnDragOver(event -> {
-      if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
-        event.acceptTransferModes(TransferMode.COPY);
-      }
-      event.consume();
-    });
-
-    cell.setOnDragEntered(event -> {
-      if (event.getGestureSource() != cell && event.getDragboard().hasString()) {
-        cell.getStyleClass().add("grid-cell-drag-preview");
-        cell.getStyleClass().remove("grid-cell");
-      }
-      event.consume();
-    });
-
-    cell.setOnDragExited(event -> {
-      cell.getStyleClass().remove("grid-cell-drag-preview");
-      cell.getStyleClass().add("grid-cell");
-      event.consume();
-    });
-
-    cell.setOnDragDropped(event -> {
-      Dragboard db = event.getDragboard();
-      boolean success = false;
-
-      if (db.hasString() && onComponentDropped != null) {
-        String[] dbStringParts = db.getString().split(":");
-        onComponentDropped.accept(new ComponentDropEventData(dbStringParts[0], dbStringParts[1], cell));
-      }
-
-      event.setDropCompleted(success);
-      event.consume();
-    });
+    return boardContainer;
   }
 
   private void handleSaveBoardClicked() {

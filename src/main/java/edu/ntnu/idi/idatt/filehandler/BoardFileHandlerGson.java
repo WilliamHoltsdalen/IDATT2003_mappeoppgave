@@ -8,6 +8,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.LadderAction;
+import edu.ntnu.idi.idatt.model.PortalAction;
+import edu.ntnu.idi.idatt.model.SlideAction;
 import edu.ntnu.idi.idatt.model.Tile;
 import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 import java.io.File;
@@ -34,7 +36,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
   private static final String TILE_COORDINATES_PROPERTY = "coordinates";
   private static final String TILE_NEXT_TILE_ID_PROPERTY = "nextTileId";
   private static final String TILE_ACTION_PROPERTY = "action";
-  private static final String TILE_ACTION_TYPE_PROPERTY = "type";
+  private static final String TILE_ACTION_IDENTIFIER_PROPERTY = "identifier";
   private static final String TILE_ACTION_DESTINATION_TILE_ID_PROPERTY = "destinationTileId";
   private static final String TILE_ACTION_DESCRIPTION_PROPERTY = "description";
 
@@ -112,8 +114,8 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       tileJson.addProperty(TILE_NEXT_TILE_ID_PROPERTY, tile.getNextTileId());
 
       if (tile.getLandAction() != null) {
-        actionJson.addProperty(TILE_ACTION_TYPE_PROPERTY, tile.getLandAction().getClass()
-            .getSimpleName());
+        actionJson.addProperty(TILE_ACTION_IDENTIFIER_PROPERTY, tile.getLandAction()
+            .getIdentifier());
         actionJson.addProperty(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY, tile.getLandAction()
             .getDestinationTileId());
         actionJson.addProperty(TILE_ACTION_DESCRIPTION_PROPERTY, tile.getLandAction()
@@ -173,11 +175,14 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
         nextTileId = tileJsonObject.get(TILE_NEXT_TILE_ID_PROPERTY).getAsInt();
         JsonObject actionJsonObject = tileJsonObject.getAsJsonObject(TILE_ACTION_PROPERTY);
 
+        String actionIdentifier = actionJsonObject.get(TILE_ACTION_IDENTIFIER_PROPERTY)
+            .getAsString();
         int destinationTileId = actionJsonObject.get(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY)
             .getAsInt();
         String actionDescription = actionJsonObject.get(TILE_ACTION_DESCRIPTION_PROPERTY)
             .getAsString();
-        tileAction = new LadderAction(destinationTileId, actionDescription);
+
+        tileAction = createTileAction(actionIdentifier, destinationTileId, actionDescription);
       } catch (NullPointerException e) {
         // Todo: Handle null pointer exception if any of the tile properties are missing
       }
@@ -190,5 +195,16 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     });
 
     return board;
+  }
+
+  private static TileAction createTileAction(String actionIdentifier, int destinationTileId, String actionDescription) {
+    TileAction tileAction;
+    switch (actionIdentifier.split("_")[2]) {
+      case "ladder" -> tileAction = new LadderAction(actionIdentifier, destinationTileId, actionDescription);
+      case "slide" -> tileAction = new SlideAction(actionIdentifier, destinationTileId, actionDescription);
+      case "portal" -> tileAction = new PortalAction(actionIdentifier, destinationTileId, actionDescription);
+      default -> tileAction = null;
+    }
+    return tileAction;
   }
 }

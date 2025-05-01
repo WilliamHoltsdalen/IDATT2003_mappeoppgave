@@ -1,10 +1,10 @@
- {
-  "name": "ChaosBoard",
-  "description": "Ladder game with lots of action!",
+{
+  "name": "ChaosBoard2",
+  "description": "Chaotic ladder game board with lots of crazy action!",
   "rows": 9,
   "columns": 10,
   "background": "media/boards/whiteBoard.png",
-  "pattern": "Blue checker",
+  "pattern": "Purple checker",
   "tiles": [
     {
       "id": 0,
@@ -36,7 +36,12 @@
         0,
         2
       ],
-      "nextTileId": 4
+      "nextTileId": 4,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 21,
+        "description": "Portal from 3 to 21"
+      }
     },
     {
       "id": 4,
@@ -44,7 +49,12 @@
         0,
         3
       ],
-      "nextTileId": 5
+      "nextTileId": 5,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 86,
+        "description": "Portal from 4 to 86"
+      }
     },
     {
       "id": 5,
@@ -52,7 +62,12 @@
         0,
         4
       ],
-      "nextTileId": 6
+      "nextTileId": 6,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 27,
+        "description": "Portal from 5 to 27"
+      }
     },
     {
       "id": 6,
@@ -70,9 +85,9 @@
       ],
       "nextTileId": 8,
       "action": {
-        "identifier": "1R_1U_portal",
-        "destinationTileId": 37,
-        "description": "Portal from 7 to 37"
+        "identifier": "2R_4U_ladder",
+        "destinationTileId": 49,
+        "description": "Ladder from 7 to 49"
       }
     },
     {
@@ -121,12 +136,7 @@
         1,
         7
       ],
-      "nextTileId": 14,
-      "action": {
-        "identifier": "1R_1D_slide",
-        "destinationTileId": 9,
-        "description": "Slide from 13 to 9"
-      }
+      "nextTileId": 14
     },
     {
       "id": 14,
@@ -142,7 +152,12 @@
         1,
         5
       ],
-      "nextTileId": 16
+      "nextTileId": 16,
+      "action": {
+        "identifier": "1L_2U_ladder",
+        "destinationTileId": 36,
+        "description": "Ladder from 15 to 36"
+      }
     },
     {
       "id": 16,
@@ -150,12 +165,7 @@
         1,
         4
       ],
-      "nextTileId": 17,
-      "action": {
-        "identifier": "1R_1U_ladder",
-        "destinationTileId": 54,
-        "description": "Ladder from 16 to 54"
-      }
+      "nextTileId": 17
     },
     {
       "id": 17,
@@ -163,12 +173,7 @@
         1,
         3
       ],
-      "nextTileId": 18,
-      "action": {
-        "identifier": "1R_1U_portal",
-        "destinationTileId": 52,
-        "description": "Portal from 17 to 52"
-      }
+      "nextTileId": 18
     },
     {
       "id": 18,
@@ -200,12 +205,7 @@
         2,
         0
       ],
-      "nextTileId": 22,
-      "action": {
-        "identifier": "1R_2U_slide",
-        "destinationTileId": 2,
-        "description": "Slide from 21 to 2"
-      }
+      "nextTileId": 22
     },
     {
       "id": 22,
@@ -213,7 +213,12 @@
         2,
         1
       ],
-      "nextTileId": 23
+      "nextTileId": 23,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 1,
+        "description": "Slide from 22 to 1"
+      }
     },
     {
       "id": 23,
@@ -237,12 +242,7 @@
         2,
         4
       ],
-      "nextTileId": 26,
-      "action": {
-        "identifier": "1R_1U_ladder",
-        "destinationTileId": 63,
-        "description": "Ladder from 25 to 63"
-      }
+      "nextTileId": 26
     },
     {
       "id": 26,
@@ -266,7 +266,12 @@
         2,
         7
       ],
-      "nextTileId": 29
+      "nextTileId": 29,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 9,
+        "description": "Slide from 28 to 9"
+      }
     },
     {
       "id": 29,
@@ -274,7 +279,12 @@
         2,
         8
       ],
-      "nextTileId": 30
+      "nextTileId": 30,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 54,
+        "description": "Portal from 29 to 54"
+      }
     },
     {
       "id": 30,
@@ -322,7 +332,12 @@
         3,
         5
       ],
-      "nextTileId": 36
+      "nextTileId": 36,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 75,
+        "description": "Portal from 35 to 75"
+      }
     },
     {
       "id": 36,
@@ -338,7 +353,12 @@
         3,
         3
       ],
-      "nextTileId": 38
+      "nextTileId": 38,
+      "action": {
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 56,
+        "description": "Ladder from 37 to 56"
+      }
     },
     {
       "id": 38,
@@ -354,12 +374,7 @@
         3,
         1
       ],
-      "nextTileId": 40,
-      "action": {
-        "identifier": "1R_1U_ladder",
-        "destinationTileId": 58,
-        "description": "Ladder from 39 to 58"
-      }
+      "nextTileId": 40
     },
     {
       "id": 40,
@@ -367,12 +382,7 @@
         3,
         0
       ],
-      "nextTileId": 41,
-      "action": {
-        "identifier": "1R_1U_ladder",
-        "destinationTileId": 78,
-        "description": "Ladder from 40 to 78"
-      }
+      "nextTileId": 41
     },
     {
       "id": 41,
@@ -380,7 +390,12 @@
         4,
         0
       ],
-      "nextTileId": 42
+      "nextTileId": 42,
+      "action": {
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 22,
+        "description": "Portal from 41 to 22"
+      }
     },
     {
       "id": 42,
@@ -398,9 +413,9 @@
       ],
       "nextTileId": 44,
       "action": {
-        "identifier": "1R_1U_portal",
-        "destinationTileId": 3,
-        "description": "Portal from 43 to 3"
+        "identifier": "2L_4U_ladder",
+        "destinationTileId": 81,
+        "description": "Ladder from 43 to 81"
       }
     },
     {
@@ -409,7 +424,12 @@
         4,
         3
       ],
-      "nextTileId": 45
+      "nextTileId": 45,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 25,
+        "description": "Slide from 44 to 25"
+      }
     },
     {
       "id": 45,
@@ -441,12 +461,7 @@
         4,
         7
       ],
-      "nextTileId": 49,
-      "action": {
-        "identifier": "1R_1U_slide",
-        "destinationTileId": 34,
-        "description": "Slide from 48 to 34"
-      }
+      "nextTileId": 49
     },
     {
       "id": 49,
@@ -462,12 +477,7 @@
         4,
         9
       ],
-      "nextTileId": 51,
-      "action": {
-        "identifier": "1R_1U_ladder",
-        "destinationTileId": 88,
-        "description": "Ladder from 50 to 88"
-      }
+      "nextTileId": 51
     },
     {
       "id": 51,
@@ -491,7 +501,12 @@
         5,
         7
       ],
-      "nextTileId": 54
+      "nextTileId": 54,
+      "action": {
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 72,
+        "description": "Ladder from 53 to 72"
+      }
     },
     {
       "id": 54,
@@ -507,12 +522,7 @@
         5,
         5
       ],
-      "nextTileId": 56,
-      "action": {
-        "identifier": "1R_1U_slide",
-        "destinationTileId": 45,
-        "description": "Slide from 55 to 45"
-      }
+      "nextTileId": 56
     },
     {
       "id": 56,
@@ -570,9 +580,9 @@
       ],
       "nextTileId": 63,
       "action": {
-        "identifier": "1R_1U_slide",
-        "destinationTileId": 41,
-        "description": "Slide from 62 to 41"
+        "identifier": "1R_2U_ladder",
+        "destinationTileId": 83,
+        "description": "Ladder from 62 to 83"
       }
     },
     {
@@ -605,7 +615,12 @@
         6,
         5
       ],
-      "nextTileId": 67
+      "nextTileId": 67,
+      "action": {
+        "identifier": "1L_2U_ladder",
+        "destinationTileId": 85,
+        "description": "Ladder from 66 to 85"
+      }
     },
     {
       "id": 67,
@@ -613,7 +628,12 @@
         6,
         6
       ],
-      "nextTileId": 68
+      "nextTileId": 68,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 46,
+        "description": "Slide from 67 to 46"
+      }
     },
     {
       "id": 68,
@@ -629,7 +649,12 @@
         6,
         8
       ],
-      "nextTileId": 70
+      "nextTileId": 70,
+      "action": {
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 50,
+        "description": "Slide from 69 to 50"
+      }
     },
     {
       "id": 70,
@@ -645,12 +670,7 @@
         7,
         9
       ],
-      "nextTileId": 72,
-      "action": {
-        "identifier": "1R_1U_portal",
-        "destinationTileId": 11,
-        "description": "Portal from 71 to 11"
-      }
+      "nextTileId": 72
     },
     {
       "id": 72,
@@ -690,7 +710,12 @@
         7,
         4
       ],
-      "nextTileId": 77
+      "nextTileId": 77,
+      "action": {
+        "identifier": "1L_2D_slide",
+        "destinationTileId": 57,
+        "description": "Slide from 76 to 57"
+      }
     },
     {
       "id": 77,
@@ -741,8 +766,8 @@
       "nextTileId": 83,
       "action": {
         "identifier": "1R_1U_portal",
-        "destinationTileId": 5,
-        "description": "Portal from 82 to 5"
+        "destinationTileId": 58,
+        "description": "Portal from 82 to 58"
       }
     },
     {
@@ -767,12 +792,7 @@
         8,
         4
       ],
-      "nextTileId": 86,
-      "action": {
-        "identifier": "1L_1U_slide",
-        "destinationTileId": 77,
-        "description": "Slide from 85 to 77"
-      }
+      "nextTileId": 86
     },
     {
       "id": 86,
@@ -790,9 +810,9 @@
       ],
       "nextTileId": 88,
       "action": {
-        "identifier": "1L_1U_slide",
-        "destinationTileId": 66,
-        "description": "Slide from 87 to 66"
+        "identifier": "1R_1U_portal",
+        "destinationTileId": 86,
+        "description": "Portal from 87 to 86"
       }
     },
     {
@@ -811,9 +831,9 @@
       ],
       "nextTileId": 90,
       "action": {
-        "identifier": "1L_1U_slide",
-        "destinationTileId": 68,
-        "description": "Slide from 89 to 68"
+        "identifier": "1R_2D_slide",
+        "destinationTileId": 70,
+        "description": "Slide from 89 to 70"
       }
     },
     {
