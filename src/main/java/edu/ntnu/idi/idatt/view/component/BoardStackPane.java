@@ -180,8 +180,8 @@ public class BoardStackPane extends StackPane {
             coordinates.row() + spec.heightTiles(),
             coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
         };
-        if (destinationCoords[0] < board.getRowsAndColumns()[0] && 
-            destinationCoords[1] >= 0 && 
+        if (destinationCoords[0] < board.getRowsAndColumns()[0] &&
+            destinationCoords[1] >= 0 &&
             destinationCoords[1] < board.getRowsAndColumns()[1]) {
           destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
@@ -191,13 +191,13 @@ public class BoardStackPane extends StackPane {
             coordinates.row() - spec.heightTiles(),
             coordinates.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
         };
-        if (destinationCoords[0] >= 0 && 
-            destinationCoords[1] >= 0 && 
+        if (destinationCoords[0] >= 0 &&
+            destinationCoords[1] >= 0 &&
             destinationCoords[1] < board.getRowsAndColumns()[1]) {
           destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
         }
       }
-      case PORTAL -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(), 
+      case PORTAL -> destinationTileId = ViewUtils.randomPortalDestination(tileId, board.getTiles().size(),
           occupiedTiles.stream().map(coords -> ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1])).toList());
     }
 
@@ -208,8 +208,21 @@ public class BoardStackPane extends StackPane {
     }
 
     if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
-      components.put(coordinates,
-          new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tileId), destinationTileId));
+      TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tileId), destinationTileId);
+      
+      // Set portal color number if it's a portal
+      if (spec.type() == ComponentSpec.ComponentType.PORTAL) {
+        String[] parts = componentIdentifier.split("_");
+        if (parts.length >= 4) {
+          try {
+            int colorNumber = Integer.parseInt(parts[3]);
+            component.setPortalColorNumber(colorNumber);
+          } catch (NumberFormatException e) {
+            // If no valid color number is found, keep the default (1)
+          }
+        }
+      }
+      components.put(coordinates, component);
     }
     updateBoardVisuals();
   }

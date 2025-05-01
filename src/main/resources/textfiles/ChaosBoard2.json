@@ -3,7 +3,7 @@
   "description": "Chaotic ladder game board with lots of crazy action!",
   "rows": 9,
   "columns": 10,
-  "background": "media/boards/whiteBoard.png",
+  "background": "media/boards/darkBlueBoard.png",
   "pattern": "Purple checker",
   "tiles": [
     {
@@ -38,7 +38,7 @@
       ],
       "nextTileId": 4,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_2",
         "destinationTileId": 21,
         "description": "Portal from 3 to 21"
       }
@@ -51,7 +51,7 @@
       ],
       "nextTileId": 5,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_1",
         "destinationTileId": 86,
         "description": "Portal from 4 to 86"
       }
@@ -64,7 +64,7 @@
       ],
       "nextTileId": 6,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_3",
         "destinationTileId": 27,
         "description": "Portal from 5 to 27"
       }
@@ -281,7 +281,7 @@
       ],
       "nextTileId": 30,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_1",
         "destinationTileId": 54,
         "description": "Portal from 29 to 54"
       }
@@ -334,7 +334,7 @@
       ],
       "nextTileId": 36,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_3",
         "destinationTileId": 75,
         "description": "Portal from 35 to 75"
       }
@@ -392,7 +392,7 @@
       ],
       "nextTileId": 42,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_1",
         "destinationTileId": 22,
         "description": "Portal from 41 to 22"
       }
@@ -765,7 +765,7 @@
       ],
       "nextTileId": 83,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_2",
         "destinationTileId": 58,
         "description": "Portal from 82 to 58"
       }
@@ -810,7 +810,7 @@
       ],
       "nextTileId": 88,
       "action": {
-        "identifier": "1R_1U_portal",
+        "identifier": "1R_1U_portal_1",
         "destinationTileId": 86,
         "description": "Portal from 87 to 86"
       }
