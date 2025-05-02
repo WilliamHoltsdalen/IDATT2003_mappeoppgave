@@ -116,14 +116,6 @@ public class BoardCreatorController implements ButtonClickObserver {
     return availableBackgrounds.get(view.getBackgroundComboBox().getValue());
   }
 
-  private String getBackgroundFromPath() {
-    return availableBackgrounds.entrySet().stream()
-        .filter(entry -> entry.getValue().equals(getBackgroundImagePath()))
-        .map(Map.Entry::getKey)
-        .findFirst()
-        .orElse("White");
-  }
-
   public void removeComponentsOutsideGrid() {
     logger.debug("Removing components outside grid");
     // Recalculate destination tiles for all placed components and remove those that have origin or
@@ -256,7 +248,11 @@ public class BoardCreatorController implements ButtonClickObserver {
     }
     board = boards.getFirst();
 
-    String backgroundName = getBackgroundFromPath();
+    String backgroundName = availableBackgrounds.entrySet().stream()
+        .filter(entry -> entry.getValue().equals(board.getBackground()))
+        .map(Map.Entry::getKey)
+        .findFirst()
+        .orElse("White");
     String pattern = board.getPattern();
     int rows = board.getRowsAndColumns()[0];
     int columns = board.getRowsAndColumns()[1];
