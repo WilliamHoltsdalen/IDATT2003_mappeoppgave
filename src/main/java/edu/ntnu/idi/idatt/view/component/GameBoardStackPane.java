@@ -36,9 +36,13 @@ public class GameBoardStackPane extends StackPane {
   private final Map<Player, Shape> playerTokenMap;
   private double[] boardDimensions;
   private double originPos;
-
+  private final List<Player> players;
   private final Pane playersPane;
 
+  double tileSizeX;
+  double tileSizeY;
+  double[] tilePositionX;
+  double[] tilePositionY;
   /**
    * Constructor for GameBoardStackPane class.
    *
@@ -51,6 +55,7 @@ public class GameBoardStackPane extends StackPane {
     this.playerTokenMap = new HashMap<>();
     this.boardDimensions = new double[2];
     this.originPos = 0;
+    this.players = players;
 
     this.playersPane = new Pane();
 
@@ -80,7 +85,12 @@ public class GameBoardStackPane extends StackPane {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
         boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
         originPos = boardDimensions[0] / board.getRowsAndColumns()[1] / 2;
+        this.tileSizeX = boardDimensions[0] / board.getRowsAndColumns()[1];
+        this.tileSizeY = boardDimensions[1] / board.getRowsAndColumns()[0];
+        this.tilePositionX = new double[]{(tileSizeX / 4) , (tileSizeX / 2), (tileSizeX / 4) * 3, (tileSizeX / 4), (tileSizeX / 4) * 3};
+        this.tilePositionY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4), (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
         addGamePieces(players);
+
       }
     });
   }
@@ -93,13 +103,17 @@ public class GameBoardStackPane extends StackPane {
    */
   public void addGamePieces(List<Player> players) {
     players.forEach(player -> {
+
       Tile playerTile = player.getCurrentTile();
 
-      Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
+      double posX = tilePositionX[players.indexOf(player)];
+      double posY = tilePositionY[players.indexOf(player)];
+
+      Shape playerToken = PlayerTokenFactory.create(7, Color.web(player.getColorHex()),
           player.getPlayerTokenType());
       playerToken.getStyleClass().add("game-board-player-token");
-      playerToken.setTranslateX(originPos + convertCoordinates(playerTile.getCoordinates())[0]);
-      playerToken.setTranslateY(convertCoordinates(playerTile.getCoordinates())[1] - originPos);
+      playerToken.setTranslateX(posX + convertCoordinates(playerTile.getCoordinates())[0]);
+      playerToken.setTranslateY(convertCoordinates(playerTile.getCoordinates())[1] - posY);
       playersPane.getChildren().add(playerToken);
 
       playerTokenMap.put(player, playerToken);
@@ -123,14 +137,16 @@ public class GameBoardStackPane extends StackPane {
     if (playerTileMap.get(player).getTileId() == newTile.getTileId()) {
       return;
     }
+    double posX = tilePositionX[players.indexOf(player)];
+    double posY = tilePositionY[players.indexOf(player)];
 
     double[] currentPaneCoordinates = convertCoordinates(playerTileMap.get(player).getCoordinates());
     double[] newPaneCoordinates = convertCoordinates(newTile.getCoordinates());
 
-    double currentXPos = originPos + currentPaneCoordinates[0];
-    double currentYPos = currentPaneCoordinates[1] - originPos;
-    double newXPos = originPos + newPaneCoordinates[0];
-    double newYPos = newPaneCoordinates[1] - originPos;
+    double currentXPos = posX + currentPaneCoordinates[0];
+    double currentYPos = currentPaneCoordinates[1] - posY;
+    double newXPos = posX + newPaneCoordinates[0];
+    double newYPos = newPaneCoordinates[1] - posY;
 
     /* Using a sequential transition with a pause transition (if straightLine is true) to delay the
        transition to allow normal player movement to finish before a tile action movement begins. */
@@ -147,7 +163,7 @@ public class GameBoardStackPane extends StackPane {
       getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
           double[] tilePaneCoordinates = convertCoordinates(tile.getCoordinates());
           path.getElements().add(
-              new LineTo(originPos + tilePaneCoordinates[0], tilePaneCoordinates[1] - originPos));
+              new LineTo(posX + tilePaneCoordinates[0], tilePaneCoordinates[1] - posY));
       });
     }
     Shape playerToken = playerTokenMap.get(player);

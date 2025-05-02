@@ -36,7 +36,7 @@ public class MainMenuPlayerRow extends HBox {
   }
 
   private void initialize(String defaultName, PlayerTokenType playerTokenType) {
-    playerToken = PlayerTokenFactory.create(10, color, playerTokenType);
+    playerToken = PlayerTokenFactory.create(7, color, playerTokenType);
 
     playerButton = new Button();
     playerButton.setGraphic(playerToken);
@@ -96,7 +96,7 @@ public class MainMenuPlayerRow extends HBox {
   }
 
   private void updatePlayerToken() {
-    playerToken = PlayerTokenFactory.create(10, color, tokenType);
+    playerToken = PlayerTokenFactory.create(7, color, tokenType);
     playerButton.setGraphic(playerToken);
 
     if (onUpdate != null) {
