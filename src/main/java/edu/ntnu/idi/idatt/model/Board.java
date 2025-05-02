@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.model.tile.Tile;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetDescriptionValidator;

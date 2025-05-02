@@ -1,6 +1,7 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;

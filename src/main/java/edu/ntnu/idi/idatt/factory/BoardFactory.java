@@ -1,14 +1,12 @@
 package edu.ntnu.idi.idatt.factory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Tile;
 
 /**
  * <h3>Factory class for creating Board objects.</h3>

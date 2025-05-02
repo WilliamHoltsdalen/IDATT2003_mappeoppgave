@@ -1,30 +1,29 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.Player;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetIdentifierValidator;
-
 /**
- * <h3>WormholeAction class</h3>
+ * <h3>SlideAction class</h3>
  *
- * <p>This class represents a Wormhole action, which is a tile action that moves the player to a
- * random  wormhole tile. It contains a destination tile ID and a description.
+ * <p>This class represents a slide action, which is a tile action that moves the player to a
+ * different tile. It contains a destination tile ID and a description.
  */
-public class WormholeAction implements TileAction {
+public class SlideAction implements TileAction {
   private String identifier;
   private int destinationTileId;
   private String description;
-
   /**
-   * Constructor for WormholeAction class.
+   * Constructor for SlideAction class.
    *
    * @param identifier The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
    * @param description The description of the action.
    */
-  public WormholeAction(String identifier, int destinationTileId, String description) {
+  public SlideAction(String identifier, int destinationTileId, String description) {
     setIdentifier(identifier);
     setDestinationTileId(destinationTileId);
     setDescription(description);
@@ -92,7 +91,7 @@ public class WormholeAction implements TileAction {
   @Override
   public void setDescription(String description) {
     tileActionSetDescriptionValidator(description);
-
+    
     this.description = description;
   }
 
@@ -104,8 +103,8 @@ public class WormholeAction implements TileAction {
    */
   @Override
   public void perform(Player player, Board board) {
-    tileActionPerformValidator(player, board);
+      tileActionPerformValidator(player, board);
 
-    player.placeOnTile(board.getTile(this.destinationTileId));
+      player.placeOnTile(board.getTile(this.destinationTileId));
   }
 }

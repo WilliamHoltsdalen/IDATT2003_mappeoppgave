@@ -1,6 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.tile.LadderAction;
+import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.observer;
 
 import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 
 /**
  * <h3>BoardGameSubject interface</h3>

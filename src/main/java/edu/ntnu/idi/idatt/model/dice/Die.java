@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.dice;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.dieSetValueValidator;
 

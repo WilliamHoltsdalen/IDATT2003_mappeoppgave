@@ -1,11 +1,9 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetCoordinatesValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetLandActionValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetNextTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileSetTileIdValidator;
-
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
 
 /**
  * <h3>Tile class</h3>
