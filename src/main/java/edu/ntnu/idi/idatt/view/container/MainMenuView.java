@@ -90,7 +90,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
 
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
-    logger.debug("Notifying observers of button click with params: {}", buttonId, params);
+    logger.debug("Notifying observers of button click with params: {} {}", buttonId, params);
     observers.forEach(observer ->
         observer.onButtonClickedWithParams(buttonId, params));
   }
