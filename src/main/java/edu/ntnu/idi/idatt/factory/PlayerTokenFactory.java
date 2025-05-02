@@ -65,15 +65,28 @@ public class PlayerTokenFactory {
     return new Circle(radius);
   }
 
+  /**
+   * Creates a square token using a Polygon instead of a Rectangle.
+   * This approach allows for more consistent rendering and styling
+   * in JavaFX, especially when applying transformations or effects.
+   *
+   * @param radius the half-length of the square's side
+   * @return a Shape representing the square token
+   */
   private static Shape createSquare(double radius) {
-    return new Rectangle(radius*1.5, radius*1.5);
+    return new Polygon(
+        -radius, -radius,
+        radius, -radius,
+        radius, radius,
+        -radius, radius
+    );
   }
 
   private static Shape createTriangle(double radius) {
     return new Polygon(
-        0, -radius*0.8,
-        radius*0.8, radius*0.8,
-        -radius*0.8, radius*0.8
+        0, -radius,
+        radius, radius,
+        -radius, radius
     );
   }
 

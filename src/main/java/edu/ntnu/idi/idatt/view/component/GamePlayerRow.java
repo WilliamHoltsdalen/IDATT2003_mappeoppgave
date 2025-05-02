@@ -20,7 +20,7 @@ public class GamePlayerRow extends HBox {
   }
 
   private void initialize(Player player) {
-    Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
+    Shape playerToken = PlayerTokenFactory.create(7, Color.web(player.getColorHex()),
         player.getPlayerTokenType());
     playerToken.getStyleClass().add("game-players-box-player-token");
 
