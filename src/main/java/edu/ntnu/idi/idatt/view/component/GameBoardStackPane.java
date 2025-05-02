@@ -35,7 +35,6 @@ public class GameBoardStackPane extends StackPane {
   private final Map<Player, Tile> playerTileMap;
   private final Map<Player, Shape> playerTokenMap;
   private double[] boardDimensions;
-  private double originPos;
   private final List<Player> players;
   private final Pane playersPane;
 
@@ -54,7 +53,6 @@ public class GameBoardStackPane extends StackPane {
     this.playerTileMap = new HashMap<>();
     this.playerTokenMap = new HashMap<>();
     this.boardDimensions = new double[2];
-    this.originPos = 0;
     this.players = players;
 
     this.playersPane = new Pane();
@@ -84,13 +82,13 @@ public class GameBoardStackPane extends StackPane {
     playersPane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
         boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
-        originPos = boardDimensions[0] / board.getRowsAndColumns()[1] / 2;
         this.tileSizeX = boardDimensions[0] / board.getRowsAndColumns()[1];
         this.tileSizeY = boardDimensions[1] / board.getRowsAndColumns()[0];
         this.tilePositionX = new double[]{(tileSizeX / 4) , (tileSizeX / 2), (tileSizeX / 4) * 3, (tileSizeX / 4), (tileSizeX / 4) * 3};
         this.tilePositionY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4), (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
-        addGamePieces(players);
-
+        if (playersPane.getChildren().isEmpty()) {
+          addGamePieces(players);
+        }
       }
     });
   }
