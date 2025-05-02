@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
@@ -18,6 +23,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
@@ -39,6 +46,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
+  private static final Logger logger = LoggerFactory.getLogger(BoardCreatorView.class);
   private final List<ButtonClickObserver> observers;
   
   private final VBox componentListContent;
@@ -46,11 +54,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final ComboBox<String> patternComboBox;
   private final Spinner<Integer> rowsSpinner;
   private final Spinner<Integer> columnsSpinner;
+  private ChangeListener<Integer> rowsListener;
+  private ChangeListener<Integer> columnsListener;
   private final TextField nameField;
   private final TextField descriptionField;
   private final BoardStackPane boardStackPane;
 
   public BoardCreatorView() {
+    logger.debug("Constructing BoardCreatorView");
     this.observers = new ArrayList<>();
 
     this.componentListContent = new VBox(10);
@@ -61,6 +72,10 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.nameField = new TextField();
     this.descriptionField = new TextField();
     this.boardStackPane = createBoardStackPane();
+  }
+
+  public List<ButtonClickObserver> getObservers() {
+    return observers;
   }
 
   public VBox getComponentListContent() {
@@ -95,12 +110,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return boardStackPane;
   }
 
-  public void initializeView(Map<String, String[]> components, Board board, String backgroundImagePath) {
+  public void initializeView(Map<String, String[]> components, Board board) {
+    logger.debug("Initializing BoardCreatorView");
     VBox leftPanel = createComponentSelectionPanel(components);
     
-    boardStackPane.initialize(board, backgroundImagePath);
+    boardStackPane.initialize(board, board.getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(500);
-    VBox centerPanel = new VBox(createBoardConfigurationPanel(), boardStackPane);
+    VBox centerPanel = new VBox(createBoardConfigurationPanel(board), boardStackPane);
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
     
@@ -110,6 +126,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
     this.getStyleClass().add("board-creator-view");
+    logger.debug("Board creator view initialized successfully");
   }
 
   private VBox createComponentSelectionPanel(Map<String, String[]> components) {
@@ -174,7 +191,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     });
   }
 
-  private VBox createBoardConfigurationPanel() {
+  private VBox createBoardConfigurationPanel(Board board) {
     VBox panel = new VBox(15);
     panel.getStyleClass().add("board-config-section");
     panel.setAlignment(Pos.CENTER_LEFT);
@@ -193,7 +210,10 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     descriptionField.setPromptText("Description");
     descriptionBox.getChildren().addAll(descriptionLabel, descriptionField);
 
-    nameAndDescriptionBox.getChildren().setAll(nameBox, descriptionBox);
+    Button importBoardButton = new Button("Import board");
+    importBoardButton.getStyleClass().add("import-board-button");
+    importBoardButton.setOnAction(e -> handleImportBoard());
+    nameAndDescriptionBox.getChildren().setAll(nameBox, descriptionBox, importBoardButton);
 
     HBox boardOptionsBox = new HBox(20);
 
@@ -215,14 +235,16 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     rowsBox.getStyleClass().add("board-config-spinner");
     Label rowsLabel = new Label("Rows");
     rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 9));
-    rowsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> notifyObservers("update_grid"));
+    rowsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
+    rowsSpinner.valueProperty().addListener(rowsListener);
     rowsBox.getChildren().addAll(rowsLabel, rowsSpinner);
 
     VBox colsBox = new VBox(5);
     colsBox.getStyleClass().add("board-config-spinner");
     Label colsLabel = new Label("Columns");
     columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 10));
-    columnsSpinner.valueProperty().addListener((obs, oldVal, newVal) -> notifyObservers("update_grid"));
+    columnsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
+    columnsSpinner.valueProperty().addListener(columnsListener);
     colsBox.getChildren().addAll(colsLabel, columnsSpinner);
 
     boardOptionsBox.getChildren()
@@ -239,7 +261,6 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     VBox panel = new VBox(10);
     panel.setPadding(new Insets(20));
 
-    // Header with save button and menu
     HBox header = new HBox();
     header.setAlignment(Pos.CENTER_RIGHT);
 
@@ -247,9 +268,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     saveButton.getStyleClass().add("save-button");
     saveButton.setOnAction(e -> handleSaveBoardClicked());
 
-    Button menuButton = new Button("≡");
-    menuButton.setOnAction(e -> notifyObservers("back_to_menu"));
+    MenuButton menuButton = new MenuButton();
+    menuButton.setGraphic(new FontIcon("fas-ellipsis-v"));
     menuButton.getStyleClass().add("header-menu-button");
+
+    MenuItem backToMenuMenuItem = new MenuItem("Back to menu");
+    backToMenuMenuItem.setGraphic(new FontIcon("fas-home"));
+    backToMenuMenuItem.setOnAction(e -> notifyObservers("back_to_menu"));
+    menuButton.getItems().add(backToMenuMenuItem);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -320,11 +346,32 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     componentListContent.getChildren().add(componentBox);
   }
 
-
   private BoardStackPane createBoardStackPane() {
     BoardStackPane boardContainer = new BoardStackPane();
     boardContainer.getStyleClass().add("board-creator-board-container");
     return boardContainer;
+  }
+
+  public void setRowSpinner(int rows) {
+    rowsSpinner.valueProperty().removeListener(rowsListener);
+    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 15, rows));
+    rowsSpinner.valueProperty().addListener(rowsListener);
+  }
+
+  public void setColumnSpinner(int columns) {
+    columnsSpinner.valueProperty().removeListener(columnsListener);
+    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 15, columns));
+    columnsSpinner.valueProperty().addListener(columnsListener);
+  }
+
+  private void handleImportBoard() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Import Board");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files", "*.json"));
+    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+    if (file != null) {
+      notifyObserversWithParams("import_board", Map.of("path", file.getAbsolutePath()));
+    }
   }
 
   private void handleSaveBoardClicked() {
@@ -334,7 +381,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     File file = fileChooser.showSaveDialog(this.getScene().getWindow());
     if (file == null) {
-      showErrorAlert("Save Board", "Invalid file path");
+      showErrorAlert("Could not save Board", "Invalid file path");
       return;
     }
     Map<String, Object> params = new HashMap<>();
@@ -360,21 +407,25 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
   @Override
   public void addObserver(ButtonClickObserver observer) {
+    logger.debug("Observer added to board creator view");
     observers.add(observer);
   }
 
   @Override
   public void removeObserver(ButtonClickObserver observer) {
+    logger.debug("Observer removed from board creator view");
     observers.remove(observer);
   }
 
   @Override
   public void notifyObservers(String buttonId) {
+    logger.debug("Notifying observers of button click: {}", buttonId);
     observers.forEach(observer -> observer.onButtonClicked(buttonId));
   }
 
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
+    logger.debug("Notifying observers of button click with params: {}", buttonId, params);
     observers.forEach(observer -> observer.onButtonClickedWithParams(buttonId, params));
   }
 } 

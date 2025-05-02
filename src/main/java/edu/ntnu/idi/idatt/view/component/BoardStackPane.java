@@ -1,10 +1,14 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
@@ -25,19 +29,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 public class BoardStackPane extends StackPane {
+  private static final Logger logger = LoggerFactory.getLogger(BoardStackPane.class);
+
   private final Map<Rectangle, TileCoordinates> cellToCoordinatesMap;
   private final Map<TileCoordinates, TileActionComponent> components;
   private double[] boardDimensions;
   private Consumer<ComponentDropEventData> onComponentDropped;
   private Runnable onRemoveComponentsOutsideGrid;
   private Board board;
-  
+
   private final ImageView backgroundImageView;
   private final VBox gridContainer;
   private final Pane componentsPane;
-  private String pattern;
 
   public BoardStackPane() {
+    logger.debug("Constructing BoardStackPane");
     this.cellToCoordinatesMap = new HashMap<>();
     this.components = new HashMap<>();
     this.boardDimensions = new double[2];
@@ -48,24 +54,33 @@ public class BoardStackPane extends StackPane {
     this.backgroundImageView = new ImageView();
     this.componentsPane = new Pane();
     this.gridContainer = new VBox();
-    this.pattern = "None";
 
     this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid beneath the pane
     this.componentsPane.setMouseTransparent(false);
-    
+
     setNodeListeners();
     this.getChildren().addAll(backgroundImageView, gridContainer, componentsPane);
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
   }
 
   public void initialize(Board board, String backgroundImagePath) {
-    this.board = board;
+    logger.debug("Initializing BoardStackPane");
+    reset();
+    setBoard(board);
     setBackground(backgroundImagePath);
     Platform.runLater(() -> {
       setPattern(board.getPattern());
-      loadComponents();
       updateGrid();
+      loadComponents();
     });
+  }
+
+  private void reset() {
+    logger.debug("Resetting BoardStackPane");
+    cellToCoordinatesMap.clear();
+    components.clear();
+    gridContainer.getChildren().clear();
+    componentsPane.getChildren().clear();
   }
 
   public Map<Rectangle, TileCoordinates> getCellToCoordinatesMap() {
@@ -86,32 +101,35 @@ public class BoardStackPane extends StackPane {
 
   public ImageView getBackgroundImageView() {
     return backgroundImageView;
-  } 
+  }
 
   public Pane getComponentsPane() {
     return componentsPane;
-  } 
+  }
 
   public VBox getGridContainer() {
     return gridContainer;
   }
 
   public String getPattern() {
-    return pattern;
+    return board.getPattern();
   }
 
   public void setBackground(String backgroundImagePath) {
+    logger.debug("Setting background to: {}", backgroundImagePath);
     this.board.setBackground(backgroundImagePath);
     backgroundImageView.setImage(new Image(backgroundImagePath));
     backgroundImageView.setPreserveRatio(true);
   }
 
   public void setPattern(String pattern) {
-    this.pattern = pattern;
+    logger.debug("Setting pattern to: {}", pattern);
     this.board.setPattern(pattern);
+    applyPattern();
   }
 
   public void setBoardDimensions(double[] boardDimensions) {
+    logger.debug("Setting board dimensions to: {}", Arrays.toString(boardDimensions));
     this.boardDimensions = boardDimensions;
   }
 
@@ -124,14 +142,17 @@ public class BoardStackPane extends StackPane {
   }
 
   public void setBoard(Board board) {
+    logger.debug("Setting board to: {}", board.getName());
     this.board = board;
   }
 
   private void setNodeListeners() {
+    logger.debug("Setting node listeners");
     // Bind boardDimensions to the gridContainer's layoutBounds
     // boardDimensions is used to calculate the positions of the tiles in the grid
     backgroundImageView.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
+        logger.debug("Board dimensions updated to: {}x{}", newVal.getWidth(), newVal.getHeight());
         boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
         updateBoardVisuals();
       }
@@ -145,7 +166,7 @@ public class BoardStackPane extends StackPane {
         String imagePath = getImagePath(identifier);
         ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
         TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), tile.getLandAction().getDestinationTileId());
-        
+
         // Set portal color number if it's a portal
         if (spec.type() == ComponentSpec.ComponentType.PORTAL) {
           String[] parts = identifier.split("_");
@@ -159,10 +180,10 @@ public class BoardStackPane extends StackPane {
             }
           }
         }
-        
         components.put(new TileCoordinates(tile.getCoordinates()[0], tile.getCoordinates()[1]), component);
       }
     });
+    logger.debug("Loaded {} components", components.size());
     updateBoardVisuals();
   }
 
@@ -172,11 +193,12 @@ public class BoardStackPane extends StackPane {
   }
 
   public void addComponent(String componentIdentifier, TileCoordinates coordinates) {
+    logger.debug("Adding component: {}", componentIdentifier);
     String imagePath = getImagePath(componentIdentifier);
     ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
     int[] destinationCoords;
     int destinationTileId = -1;
-    
+
     List<TileCoordinates> occupiedTiles = Stream.concat(
         components.keySet().stream(),
         components.values().stream()
@@ -185,9 +207,9 @@ public class BoardStackPane extends StackPane {
               return new TileCoordinates(coords[0], coords[1]);
             })
     ).toList();
-    
+
     int tileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
-    
+
     // Calculate destination based on component specification
     switch (spec.type()) {
       case LADDER -> {
@@ -219,12 +241,13 @@ public class BoardStackPane extends StackPane {
     if (occupiedTiles.contains(coordinates) || (destinationTileId != -1 && occupiedTiles.contains(new TileCoordinates(
         board.getTile(destinationTileId).getCoordinates()[0],
         board.getTile(destinationTileId).getCoordinates()[1])))) {
+      logger.warn("Tile is already occupied: {}", coordinates);
       throw new IllegalArgumentException("Tile is already occupied"); // TODO: Replace with a more specific exception
     }
 
     if (destinationTileId != -1 && destinationTileId <= board.getTiles().size()) {
       TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tileId), destinationTileId);
-      
+
       // Set portal color number if it's a portal
       if (spec.type() == ComponentSpec.ComponentType.PORTAL) {
         String[] parts = componentIdentifier.split("_");
@@ -239,15 +262,18 @@ public class BoardStackPane extends StackPane {
       }
       components.put(coordinates, component);
     }
+    logger.debug("Added {} components", components.size());
     updateBoardVisuals();
   }
 
   public void removeComponent(TileCoordinates coordinates) {
+    logger.debug("Removing component from: {}", coordinates);
     components.remove(coordinates);
     updateBoardVisuals();
   }
 
   public void updateGrid() {
+    logger.debug("Updating grid");
     gridContainer.getChildren().clear();
     cellToCoordinatesMap.clear();
 
@@ -270,6 +296,7 @@ public class BoardStackPane extends StackPane {
       }
       gridContainer.getChildren().add(row); // Adding row to grid container
     }
+
     applyPattern();
     updateBoardVisuals();
   }
@@ -327,7 +354,7 @@ public class BoardStackPane extends StackPane {
   }
 
   public void applyPattern() {
-    board.setPattern(pattern);
+    logger.debug("Applying pattern: {}", board.getPattern());
     gridContainer.getChildren().forEach(row ->
         ((HBox) row).getChildren().forEach(cellPane ->
             ((StackPane) cellPane).getChildren().forEach(node -> {
@@ -342,12 +369,12 @@ public class BoardStackPane extends StackPane {
                         return new TileCoordinates(coords[0], coords[1]);
                       })
               ).toList();
-              
+
               if (node instanceof Rectangle rect) {
                 TileCoordinates coords = cellToCoordinatesMap.get(rect);
                 int tileId = ViewUtils.calculateTileId(coords.row(), coords.col(), board.getRowsAndColumns()[1]);
                 if (tileId % 2 == 0 && !occupiedTiles.contains(coords)) {
-                  switch (pattern) {
+                  switch (board.getPattern()) {
                     case "Blue checker" -> rect.getStyleClass().add("blue-checker");
                     case "Yellow checker" -> rect.getStyleClass().add("yellow-checker");
                     case "Purple checker" -> rect.getStyleClass().add("purple-checker");
@@ -369,16 +396,19 @@ public class BoardStackPane extends StackPane {
   }
 
   public void updateBoardVisuals() {
+    logger.debug("Updating board visuals");
     // Clear all existing visual components
     componentsPane.getChildren().clear();
+
+    applyPattern();
 
     // Reset all cell action colors
     gridContainer.getChildren().forEach(row ->
         ((HBox) row).getChildren().forEach(cellPane ->
             ((StackPane) cellPane).getChildren().forEach(rect -> {
               if (rect instanceof Rectangle) {
-                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-slide", 
-                "grid-cell-ladder-destination", "grid-cell-slide-destination");
+                rect.getStyleClass().removeAll("grid-cell-has-ladder", "grid-cell-has-slide",
+                    "grid-cell-ladder-destination", "grid-cell-slide-destination");
               }
             })
         )
@@ -397,9 +427,9 @@ public class BoardStackPane extends StackPane {
 
       // Get the base position for this tile
       double[] screenCoords = ViewUtils.boardToScreenCoordinates(
-          new int[]{coordinates.row(), coordinates.col()}, 
-          board, 
-          boardDimensions[0], 
+          new int[]{coordinates.row(), coordinates.col()},
+          board,
+          boardDimensions[0],
           boardDimensions[1]
       );
 
@@ -422,6 +452,6 @@ public class BoardStackPane extends StackPane {
 
       componentsPane.getChildren().add(component);
     });
+    logger.debug("Updated board visuals for {} components", components.size());
   }
-
 }

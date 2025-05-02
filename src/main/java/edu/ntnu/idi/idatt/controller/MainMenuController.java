@@ -67,8 +67,6 @@ public class MainMenuController implements ButtonClickObserver {
   private void initializeMainMenuView() {
     loadBoardsFromFactory();
     mainMenuView.initialize();
-
-    showBoardVariant(currentBoardIndex);
   }
 
   /**

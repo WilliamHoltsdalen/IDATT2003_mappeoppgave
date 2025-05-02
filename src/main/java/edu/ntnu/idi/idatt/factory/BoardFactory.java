@@ -59,10 +59,8 @@ public class BoardFactory {
   }
 
   public static Board createBlankBoard(int rows, int columns) {
-    Board board = new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
+    return new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
         new int[]{rows, columns}, "media/boards/whiteBoard.png", "None");
-    createTiles(rows, columns).forEach(board::addTile);
-    return board;
   }
 
   /**
@@ -91,35 +89,5 @@ public class BoardFactory {
       e.printStackTrace(); // TODO: Handle exception
     }
     return null;
-  }
-
-  /**
-   * Creates a list of Tile objects that are arranged in a grid pattern with alternating directions
-   * in each row. The first tile is in the lower left corner of the grid, and the direction of the
-   * first row is left to right.
-   *
-   * @param rows The number of rows in the grid.
-   * @param columns The number of columns in the grid.
-   * @return The list of Tile objects.
-   */
-  private static List<Tile> createTiles(int rows, int columns) {
-    List<Tile> tiles = new ArrayList<>();
-    tiles.add(new Tile(0, new int[]{0, -2}, 1)); // Add 0th tile outside of board
-
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        int baseId = i * columns;
-        int tileId;
-        int[] coordinates = new int[]{i, j};
-        // Even numbered rows (left to right)
-        if (i % 2 == 0) {
-          tileId = baseId + j + 1;
-        } else { // Odd numbered rows (right to left)
-          tileId = baseId + (columns - j);
-        }
-        tiles.add(new Tile(tileId, coordinates, tileId + 1));
-      }
-    }
-    return tiles;
   }
 }

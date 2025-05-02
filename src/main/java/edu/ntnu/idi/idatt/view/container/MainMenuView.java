@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.factory.BoardFactory;
 import edu.ntnu.idi.idatt.model.Board;
@@ -30,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class MainMenuView extends VBox implements ButtonClickSubject {
+  private static final Logger logger = LoggerFactory.getLogger(MainMenuView.class);
   private final List<ButtonClickObserver> observers;
 
   private VBox playerSelectionBox;
@@ -50,39 +53,44 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
    * Constructor for MainMenuView class.
    */
   public MainMenuView() {
+    logger.debug("Constructing MainMenuView");
     this.observers = new ArrayList<>();
     this.mainMenuPlayerRows = new ArrayList<>();
     this.playerSelectionTitle = new Text();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
-    this.boardStackpane = new BoardStackPane();
     this.boardTitle = new Label();
     this.boardDescription = new Label();
     this.startGameButton = createStartGameButton();
     this.playerSelectionBox = new VBox();
     this.boardSelectionBox = new VBox();
+    this.boardStackpane = new BoardStackPane();
 
     this.getStyleClass().add("main-menu-view");
   }
 
   @Override
   public void addObserver(ButtonClickObserver observer) {
+    logger.debug("Adding observer to MainMenuView");
     observers.add(observer);
   }
 
   @Override
   public void removeObserver(ButtonClickObserver observer) {
+    logger.debug("Removing observer from MainMenuView");
     observers.remove(observer);
   }
 
   @Override
   public void notifyObservers(String buttonId) {
+    logger.debug("Notifying observers of button click: {}", buttonId);
     observers.forEach(observer ->
         observer.onButtonClicked(buttonId));
   }
 
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
+    logger.debug("Notifying observers of button click with params: {}", buttonId, params);
     observers.forEach(observer ->
         observer.onButtonClickedWithParams(buttonId, params));
   }
@@ -92,6 +100,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
   }
 
   public void initialize() {
+    logger.debug("Initializing MainMenuView");
     setSelectedBoard(BoardFactory.createBoard("Classic"));
 
     Region menuSpacer = new Region();
@@ -103,6 +112,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
     hBox.getStyleClass().add("main-menu-h-box");
     this.getChildren().setAll(createHeaderBox(), hBox, startGameButton);
+    logger.debug("MainMenuView initialized successfully");
   }
 
   private HBox createHeaderBox() {
@@ -163,10 +173,6 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     Text title = new Text("Select a board");
     title.getStyleClass().add("main-menu-selection-box-title");
 
-    boardStackpane.initialize(selectedBoard, selectedBoard.getBackground());
-    boardStackpane.getBackgroundImageView().setFitWidth(250);
-    boardStackpane.getStyleClass().add("main-menu-board-selection-board-view");
-
     Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
     previousButton.getStyleClass().add("icon-only-button");
     previousButton.setOnAction(event -> notifyObservers("previous_board"));
@@ -190,6 +196,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     carousel.getStyleClass().add("main-menu-board-selection-carousel");
 
     VBox vBox = new VBox(title, carousel);
+    vBox.getStyleClass().add("main-menu-board-selection-v-box");
     vBox.getStyleClass().add("main-menu-board-selection");
     return vBox;
   }
@@ -213,6 +220,8 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
     mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
+    
+    logger.debug("Added player row: {}", mainMenuPlayerRow);
 
     updateControls();
   }
@@ -225,6 +234,8 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
   private void removePlayerRow(MainMenuPlayerRow mainMenuPlayerRow) {
     mainMenuPlayerRows.remove(mainMenuPlayerRow);
     playerListBox.getChildren().remove(mainMenuPlayerRow);
+
+    logger.debug("Removed player row: {}", mainMenuPlayerRow);
 
     updateControls();
   }
@@ -290,6 +301,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
    * @param players The list of players to import.
    */
   public void setPlayers(List<Player> players) {
+    logger.debug("Setting players: {}", players);
     mainMenuPlayerRows.clear();
     playerListBox.getChildren().clear();
     players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()),
@@ -302,8 +314,8 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
    * @param board The board object to set.
    */
   public void setSelectedBoard(Board board) {
+    logger.debug("Setting selected board: {}", board.getName());
     selectedBoard = board;
-    boardStackpane = new BoardStackPane();
     boardStackpane.initialize(selectedBoard, selectedBoard.getBackground());
     boardStackpane.getBackgroundImageView().setFitWidth(250);
     boardStackpane.getStyleClass().add("main-menu-board-selection-board-view");
@@ -313,6 +325,7 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
       // Update the board in the carousel
       VBox carousel = (VBox) boardSelectionBox.getChildren().get(1);
       carousel.getChildren().set(0, boardStackpane);
+      logger.debug("Board stack pane in carousel updated successfully");
     });
   }
 }

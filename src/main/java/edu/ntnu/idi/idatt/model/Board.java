@@ -23,7 +23,7 @@ public class Board {
   private String name;
   private String description;
   private int[] rowsAndColumns;
-  private final Map<Integer, Tile> tiles;
+  private Map<Integer, Tile> tiles;
   private String background;
   private String pattern;
 
@@ -37,13 +37,13 @@ public class Board {
    * @param pattern The pattern of the board.
    */
   public Board(String name, String description, int[] rowsAndColumns, String background, String pattern) {
+    this.tiles = new HashMap<>();
+
     setName(name);
     setDescription(description);
     setRowsAndColumns(rowsAndColumns);
     setBackground(background);
     setPattern(pattern);
-
-    this.tiles = new HashMap<>();
   }
 
   /**
@@ -139,6 +139,7 @@ public class Board {
   public void setRowsAndColumns(int[] rowsAndColumns) {
     boardSetRowsAndColumnsValidator(rowsAndColumns);
     this.rowsAndColumns = rowsAndColumns;
+    this.tiles = createTiles(tiles, rowsAndColumns[0], rowsAndColumns[1]);
   }
 
   /**
@@ -170,5 +171,40 @@ public class Board {
     boardAddTileValidator(tile);
 
     this.tiles.put(tile.getTileId(), tile);
+  }
+
+  /**
+   * Creates a list of Tile objects that are arranged in a grid pattern with alternating directions
+   * in each row. The first tile is in the lower left corner of the grid, and the direction of the
+   * first row is left to right.
+   *
+   * @param rows The number of rows in the grid.
+   * @param columns The number of columns in the grid.
+   * @return The list of Tile objects.
+   */
+  private Map<Integer, Tile> createTiles(Map<Integer, Tile> oldTiles, int rows, int columns) {
+    Map<Integer, Tile> newTiles = new HashMap<>();
+    newTiles.put(0, new Tile(0, new int[]{0, -2}, 1)); // Add 0th tile outside of board
+
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        int baseId = i * columns;
+        int tileId;
+        int[] coordinates = new int[]{i, j};
+
+        if (i % 2 == 0) { // Even numbered rows (left to right)
+          tileId = baseId + j + 1;
+        } else { // Odd numbered rows (right to left)
+          tileId = baseId + (columns - j);
+        }
+        newTiles.put(tileId, new Tile(tileId, coordinates, tileId + 1));
+        try {
+          newTiles.get(tileId).setLandAction(oldTiles.get(tileId).getLandAction());
+        } catch (NullPointerException | IllegalArgumentException e) {
+          // Do nothing if the tile doesn't have an action
+        }
+      }
+    }
+    return newTiles;
   }
 }
