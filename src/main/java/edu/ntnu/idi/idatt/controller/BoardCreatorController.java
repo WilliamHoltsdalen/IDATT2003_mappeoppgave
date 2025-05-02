@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
@@ -23,24 +26,31 @@ public class BoardCreatorController implements ButtonClickObserver {
   private static final String SLIDES_PATH_PREFIX = "media/assets/slide/";
   private static final String PORTALS_PATH_PREFIX = "media/assets/portal/";
 
+  private static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
+  
   private final BoardCreatorView view;
   private final BoardStackPane boardPane;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
+  private final Map<String, String> availableBackgrounds;
   private Board board;
 
   public BoardCreatorController(BoardCreatorView view) {
+    logger.debug("Constructing BoardCreatorController");
     this.view = view;
     this.availableComponents = new HashMap<>();
+    this.availableBackgrounds = new HashMap<>();
     this.board = BoardFactory.createBlankBoard(9, 10);
 
     setAvailableComponents();
+    setAvailableBackgrounds();
     initializeBoardCreatorView();
 
     this.boardPane = view.getBoardStackPane();
   }
 
   private void setAvailableComponents() {
+    logger.debug("Setting available components");
     availableComponents.put("Ladder", new String[]{
       LADDERS_PATH_PREFIX + "1R_1U_ladder.png",
       LADDERS_PATH_PREFIX + "1L_1U_ladder.png",
@@ -63,41 +73,51 @@ public class BoardCreatorController implements ButtonClickObserver {
     availableComponents.put("Other", new String[]{});
   }
 
+  private void setAvailableBackgrounds() {
+    logger.debug("Setting available backgrounds");
+    availableBackgrounds.put("White", "media/boards/whiteBoard.png");
+    availableBackgrounds.put("Gray", "media/boards/grayBoard.png");
+    availableBackgrounds.put("Dark blue", "media/boards/darkBlueBoard.png");
+    availableBackgrounds.put("Green", "media/boards/greenBoard.png");
+    availableBackgrounds.put("Red", "media/boards/redBoard.png");
+    availableBackgrounds.put("Yellow", "media/boards/yellowBoard.png");
+    availableBackgrounds.put("Pink", "media/boards/pinkBoard.png");
+    availableBackgrounds.put("Space", "media/boards/spaceBoard.png");
+  }
+
   private void initializeBoardCreatorView() {
-    view.addObserver(this);
-    
-    view.initializeView(availableComponents, board, "media/boards/whiteBoard.png");
+    logger.debug("Initializing board creator view");
+    if (!view.getObservers().contains(this)) {
+      view.addObserver(this);
+    }
+
+    view.initializeView(availableComponents, board);
     Platform.runLater(() -> {
       boardPane.setOnComponentDropped(this::handleComponentDropped);
       boardPane.setOnRemoveComponentsOutsideGrid(this::removeComponentsOutsideGrid);
+      updateViewComponentList();
     });
+    logger.debug("Board creator view initialized successfully");
   }
 
   private void handleComponentDropped(ComponentDropEventData data) {
+    logger.debug("Handling component dropped event");
     TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap().get(data.cell());
     placeComponent(data.componentIdentifier(), coordinates);
     boardPane.updateBoardVisuals();
-    boardPane.applyPattern();
   }
 
   private void updateBackground() {
     boardPane.setBackground(getBackgroundImagePath());
+    logger.debug("Updated background");
   }
 
   private String getBackgroundImagePath() {
-    return switch (view.getBackgroundComboBox().getValue()) {
-      case "Gray" -> "media/boards/grayBoard.png";
-      case "Dark blue" -> "media/boards/darkBlueBoard.png";
-      case "Green" -> "media/boards/greenBoard.png";
-      case "Red" -> "media/boards/redBoard.png";
-      case "Yellow" -> "media/boards/yellowBoard.png";
-      case "Pink" -> "media/boards/pinkBoard.png";
-      case "Space" -> "media/boards/spaceBoard.png";
-      default -> "media/boards/whiteBoard.png"; // for white and default
-    };
+    return availableBackgrounds.get(view.getBackgroundComboBox().getValue());
   }
 
   public void removeComponentsOutsideGrid() {
+    logger.debug("Removing components outside grid");
     // Recalculate destination tiles for all placed components and remove those that have origin or
     // destination outside the new grid bounds.
     Map<TileCoordinates, TileActionComponent> newPlacedComponents = new HashMap<>();
@@ -146,20 +166,24 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private void placeComponent(String componentIdentifier, TileCoordinates coordinates) {
+    logger.debug("Placing component: {}", componentIdentifier);
     try {
       boardPane.addComponent(componentIdentifier, coordinates);
       updateViewComponentList();
     } catch (IllegalArgumentException e) {
       Platform.runLater(() -> view.showErrorAlert("Could not place component", e.getMessage()));
+      logger.warn("Could not place component: {}", componentIdentifier);
     }
   }
 
   private void removeComponent(TileCoordinates coordinates) {
+    logger.debug("Removing component: {}", coordinates);
     boardPane.removeComponent(coordinates);
     updateViewComponentList();
   }
 
   private void updateViewComponentList() {
+    logger.debug("Updating view component list");
     view.getComponentListContent().getChildren().clear();
     boardPane.getComponents().forEach((coordinates, component) -> {
       String displayName = component.getType().substring(0, 1).toUpperCase() + component.getType().substring(1);
@@ -167,46 +191,89 @@ public class BoardCreatorController implements ButtonClickObserver {
       int destinationTileId = component.getDestinationTileId();
       view.addToComponentList(displayName, component.getImage(), () -> removeComponent(coordinates), originTileId, destinationTileId);
     });
+    logger.debug("Added {} components to view component list", view.getComponentListContent().getChildren().size());
   }
 
   @Override
   public void onButtonClicked(String buttonId) {
+    logger.debug("Button clicked: {}", buttonId);
     switch (buttonId) {
       case "back_to_menu" -> handleBackToMenu();
       case "update_grid" -> handleUpdateGrid();
       case "update_background" -> updateBackground();
       case "update_pattern" -> handleUpdatePattern();
-      default -> {
-        break;
-      }
+      default -> logger.warn("Unknown button clicked: {}", buttonId);
     }
   }
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    if (buttonId.equals("save_board")) {
-      handleSaveBoard(params);
+    logger.debug("Button clicked with params: {}, {}", buttonId, params);
+    switch (buttonId) {
+      case "import_board" -> handleImportBoard(params);
+      case "save_board" -> handleSaveBoard(params);
+      default -> logger.warn("Unknown button clicked: {}", buttonId);
     }
   }
 
   private void handleBackToMenu() {
+    logger.debug("Handling back to menu");
     if (onBackToMenu != null) {
       onBackToMenu.run();
     }
   }
 
   private void handleUpdateGrid() {
-    board = BoardFactory.createBlankBoard(view.getRowsSpinner().getValue(), view.getColumnsSpinner().getValue());
+    logger.debug("Handling update grid");
+    board.setRowsAndColumns(new int[]{view.getRowsSpinner().getValue(), view.getColumnsSpinner().getValue()});
     boardPane.setBoard(board);
     boardPane.updateGrid();
+    updateViewComponentList();
   }
 
   private void handleUpdatePattern() {
+    logger.debug("Handling update pattern");
     boardPane.setPattern(view.getPatternComboBox().getValue());
     boardPane.applyPattern();
   }
 
+  private void handleImportBoard(Map<String, Object> params) {
+    logger.debug("Handling import board");
+    String path = (String) params.get("path");
+    BoardFileHandlerGson fileHandler = new BoardFileHandlerGson();
+    List<Board> boards = fileHandler.readFile(path);
+    if (boards.isEmpty()) {
+      Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
+      return;
+    }
+    board = boards.getFirst();
+
+    String backgroundName = availableBackgrounds.entrySet().stream()
+        .filter(entry -> entry.getValue().equals(board.getBackground()))
+        .map(Map.Entry::getKey)
+        .findFirst()
+        .orElse("White");
+    String pattern = board.getPattern();
+    int rows = board.getRowsAndColumns()[0];
+    int columns = board.getRowsAndColumns()[1];
+
+
+    view.setRowSpinner(rows);
+    view.setColumnSpinner(columns);
+    view.getNameField().setText(board.getName());
+    view.getDescriptionField().setText(board.getDescription());
+    view.getBackgroundComboBox().setValue(backgroundName);
+    view.getPatternComboBox().setValue(pattern);
+
+    boardPane.initialize(board, board.getBackground());
+    Platform.runLater(() -> {
+      updateViewComponentList();
+      logger.info("Board imported successfully");
+    });
+  }
+
   private void handleSaveBoard(Map<String, Object> params) {
+    logger.debug("Handling save board");
     try {
       board = boardPane.getBoard();
       board.setName(view.getNameField().getText());
@@ -218,8 +285,10 @@ public class BoardCreatorController implements ButtonClickObserver {
 
       Platform.runLater(() -> view.showInfoAlert("Board saved successfully!",
           "You can now load the board from the main menu, and start playing!"));
+      logger.info("Board saved successfully!");
     } catch (IOException | IllegalArgumentException e) {
       Platform.runLater(() -> view.showErrorAlert("Failed to save board", e.getMessage()));
+      logger.warn("Failed to save board: {}", e.getMessage());
     }
   }
 
