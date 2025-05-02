@@ -208,7 +208,7 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    logger.debug("Button clicked with params: {}", buttonId, params);
+    logger.debug("Button clicked with params: {}, {}", buttonId, params);
     switch (buttonId) {
       case "import_board" -> handleImportBoard(params);
       case "save_board" -> handleSaveBoard(params);
