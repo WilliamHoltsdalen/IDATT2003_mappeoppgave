@@ -1,25 +1,15 @@
 package edu.ntnu.idi.idatt.view.container;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
-import edu.ntnu.idi.idatt.view.component.BoardStackPane;
+import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -36,19 +26,24 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 
-public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
-  private static final Logger logger = LoggerFactory.getLogger(BoardCreatorView.class);
-  private final List<ButtonClickObserver> observers;
-  
+/**
+ * <h3>LadderGameBoardCreatorView</h3>
+ * 
+ * <p>This class extends BoardCreatorView and is used to create a ladder game board creator view. It adds a component list panel, 
+ * as well as background and pattern selection ComboBoxes, and rows and columns spinners.
+ * 
+ * @see BoardCreatorView
+ * @see ComboBox
+ * @see Spinner
+ */
+public class LadderGameBoardCreatorView extends BoardCreatorView {
   private final VBox componentListContent;
   private final ComboBox<String> backgroundComboBox;
   private final ComboBox<String> patternComboBox;
@@ -56,67 +51,78 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   private final Spinner<Integer> columnsSpinner;
   private ChangeListener<Integer> rowsListener;
   private ChangeListener<Integer> columnsListener;
-  private final TextField nameField;
-  private final TextField descriptionField;
-  private final BoardStackPane boardStackPane;
 
-  public BoardCreatorView() {
-    logger.debug("Constructing BoardCreatorView");
-    this.observers = new ArrayList<>();
+  /**
+   * Constructor for LadderGameBoardCreatorView.
+   */
+  public LadderGameBoardCreatorView() {
+    super();
 
     this.componentListContent = new VBox(10);
     this.backgroundComboBox = new ComboBox<>();
     this.patternComboBox = new ComboBox<>();
     this.rowsSpinner = new Spinner<>();
     this.columnsSpinner = new Spinner<>();
-    this.nameField = new TextField();
-    this.descriptionField = new TextField();
-    this.boardStackPane = createBoardStackPane();
   }
 
-  public List<ButtonClickObserver> getObservers() {
-    return observers;
-  }
-
+  /**
+   * Getter for the component list content.
+   * 
+   * @return The component list content.
+   */
   public VBox getComponentListContent() {
     return componentListContent;
   }
 
-  public TextField getNameField() {
-    return nameField;
-  }
-
-  public TextField getDescriptionField() {
-    return descriptionField;
-  }
-
+  /**
+   * Getter for the background ComboBox.
+   * 
+   * @return The background ComboBox.
+   */
   public ComboBox<String> getBackgroundComboBox() {
     return backgroundComboBox;
   }
 
+  /**
+   * Getter for the pattern ComboBox.
+   * 
+   * @return The pattern ComboBox.
+   */
   public ComboBox<String> getPatternComboBox() {
     return patternComboBox;
   }
 
+  /**
+   * Getter for the rows Spinner.
+   * 
+   * @return The rows Spinner.
+   */
   public Spinner<Integer> getRowsSpinner() {
     return rowsSpinner;
   }
 
+  /**
+   * Getter for the columns Spinner.
+   * 
+   * @return The columns Spinner.
+   */
   public Spinner<Integer> getColumnsSpinner() {
     return columnsSpinner;
   }
 
-  public BoardStackPane getBoardStackPane() {
-    return boardStackPane;
-  }
-
+  /**
+   * Initializes the view with the given available components and board.
+   * 
+   * @param components The components to display.
+   * @param board The board to display.
+   */
   public void initializeView(Map<String, String[]> components, Board board) {
-    logger.debug("Initializing BoardCreatorView");
+    logger.debug("Initializing LadderGameBoardCreatorView");
     VBox leftPanel = createComponentSelectionPanel(components);
-    
-    boardStackPane.initialize(board, board.getBackground());
-    boardStackPane.getBackgroundImageView().setFitWidth(500);
-    VBox centerPanel = new VBox(createBoardConfigurationPanel(board), boardStackPane);
+
+    super.getBoardStackPane().initialize(board, board.getBackground());
+    super.getBoardStackPane().getBackgroundImageView().setFitWidth(500);
+    VBox centerPanel = new VBox(createBoardConfigurationPanel(), super.getBoardStackPane());
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
     
@@ -129,6 +135,12 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     logger.debug("Board creator view initialized successfully");
   }
 
+  /**
+   * Creates the component selection panel.
+   * 
+   * @param components The components to display.
+   * @return The component selection panel.
+   */
   private VBox createComponentSelectionPanel(Map<String, String[]> components) {
     VBox panel = new VBox(15);
     panel.setPadding(new Insets(20));
@@ -146,6 +158,14 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return panel;
   }
 
+  /**
+   * Creates a component section. This is a section of the component selection panel, 
+   * which contains a title and a list of component images.
+   * 
+   * @param title The title of the section.
+   * @param imagePaths The image paths of the components in the section.
+   * @return The component section.
+   */
   private VBox createComponentSection(String title, String[] imagePaths) {
     VBox section = new VBox(10);
     section.getStyleClass().add("component-section");
@@ -171,6 +191,12 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return section;
   }
 
+  /**
+   * Sets up the drag and drop functionality for a component image.
+   * 
+   * @param source The component image to set up.
+   * @param imagePath The image path of the component.
+   */
   private void setupDragAndDrop(ImageView source, String imagePath) {
     source.setOnDragDetected(event -> {
       Dragboard db = source.startDragAndDrop(TransferMode.COPY);
@@ -191,7 +217,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     });
   }
 
-  private VBox createBoardConfigurationPanel(Board board) {
+  /**
+   * Creates the board configuration panel. This is a panel that contains the board name and description, 
+   * as well as the background and pattern selection ComboBoxes, and rows and columns spinners.
+   * 
+   * @return The board configuration panel.
+   */
+  private VBox createBoardConfigurationPanel() {
     VBox panel = new VBox(15);
     panel.getStyleClass().add("board-config-section");
     panel.setAlignment(Pos.CENTER_LEFT);
@@ -202,13 +234,13 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
 
     VBox nameBox = new VBox(5);
     Label nameLabel = new Label("Board Name");
-    nameField.setPromptText("Board Name");
-    nameBox.getChildren().addAll(nameLabel, nameField);
+    super.getNameField().setPromptText("Board Name");
+    nameBox.getChildren().addAll(nameLabel, super.getNameField());
 
     VBox descriptionBox = new VBox(5);
     Label descriptionLabel = new Label("Description");
-    descriptionField.setPromptText("Description");
-    descriptionBox.getChildren().addAll(descriptionLabel, descriptionField);
+    super.getDescriptionField().setPromptText("Description");
+    descriptionBox.getChildren().addAll(descriptionLabel, super.getDescriptionField());
 
     Button importBoardButton = new Button("Import board");
     importBoardButton.getStyleClass().add("import-board-button");
@@ -234,7 +266,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     VBox rowsBox = new VBox(5);
     rowsBox.getStyleClass().add("board-config-spinner");
     Label rowsLabel = new Label("Rows");
-    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 9));
+    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, 9));
     rowsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
     rowsSpinner.valueProperty().addListener(rowsListener);
     rowsBox.getChildren().addAll(rowsLabel, rowsSpinner);
@@ -242,7 +274,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     VBox colsBox = new VBox(5);
     colsBox.getStyleClass().add("board-config-spinner");
     Label colsLabel = new Label("Columns");
-    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 20, 10));
+    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, 10));
     columnsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
     columnsSpinner.valueProperty().addListener(columnsListener);
     colsBox.getChildren().addAll(colsLabel, columnsSpinner);
@@ -253,10 +285,16 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     panel.getChildren().setAll(nameAndDescriptionBox, boardOptionsBox);
     panel.getStyleClass().add("board-creator-panel");
 
-    panel.setMaxWidth(boardStackPane.getBackgroundImageView().getFitWidth() + 40); // 40px for padding
+    panel.setMaxWidth(super.getBoardStackPane().getBackgroundImageView().getFitWidth() + 40); // 40px for padding
     return panel;
   }
 
+  /**
+   * Creates the component list panel. This is a panel that contains the component list, 
+   * as well as a save button and a menu button.
+   * 
+   * @return The component list panel.
+   */
   private VBox createComponentListPanel() {
     VBox panel = new VBox(10);
     panel.setPadding(new Insets(20));
@@ -297,6 +335,15 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     return panel;
   }
 
+  /**
+   * Adds a component to the component list.
+   * 
+   * @param displayName The display name of the component.
+   * @param componentImage The image of the component.
+   * @param onDelete The action to perform when the component is deleted.
+   * @param originTileId The origin tile id of the component.
+   * @param destinationTileId The destination tile id of the component.
+   */
   public void addToComponentList(String displayName, Image componentImage, Runnable onDelete, int originTileId, int destinationTileId) {
     VBox componentBox = new VBox(5);
     componentBox.getStyleClass().add("component-item");
@@ -346,86 +393,15 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
     componentListContent.getChildren().add(componentBox);
   }
 
-  private BoardStackPane createBoardStackPane() {
-    BoardStackPane boardContainer = new BoardStackPane();
-    boardContainer.getStyleClass().add("board-creator-board-container");
-    return boardContainer;
-  }
-
   public void setRowSpinner(int rows) {
     rowsSpinner.valueProperty().removeListener(rowsListener);
-    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 15, rows));
+    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, rows));
     rowsSpinner.valueProperty().addListener(rowsListener);
   }
 
   public void setColumnSpinner(int columns) {
     columnsSpinner.valueProperty().removeListener(columnsListener);
-    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 15, columns));
+    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, columns));
     columnsSpinner.valueProperty().addListener(columnsListener);
-  }
-
-  private void handleImportBoard() {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Import Board");
-    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files", "*.json"));
-    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
-    if (file != null) {
-      notifyObserversWithParams("import_board", Map.of("path", file.getAbsolutePath()));
-    }
-  }
-
-  private void handleSaveBoardClicked() {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save Board");
-    fileChooser.setInitialFileName(nameField.getText() + ".json");
-
-    File file = fileChooser.showSaveDialog(this.getScene().getWindow());
-    if (file == null) {
-      showErrorAlert("Could not save Board", "Invalid file path");
-      return;
-    }
-    Map<String, Object> params = new HashMap<>();
-    params.put("path", file.getAbsolutePath());
-    notifyObserversWithParams("save_board", params);
-  }
-
-  public void showInfoAlert(String headerText, String message) {
-    Alert alert = new Alert(AlertType.INFORMATION);
-    alert.setTitle("Info");
-    alert.setHeaderText(headerText);
-    alert.setContentText(message);
-    alert.showAndWait();
-  }
-
-  public void showErrorAlert(String headerText, String message) {
-    Alert alert = new Alert(AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setHeaderText(headerText);
-    alert.setContentText(message); 
-    alert.showAndWait();
-  }
-
-  @Override
-  public void addObserver(ButtonClickObserver observer) {
-    logger.debug("Observer added to board creator view");
-    observers.add(observer);
-  }
-
-  @Override
-  public void removeObserver(ButtonClickObserver observer) {
-    logger.debug("Observer removed from board creator view");
-    observers.remove(observer);
-  }
-
-  @Override
-  public void notifyObservers(String buttonId) {
-    logger.debug("Notifying observers of button click: {}", buttonId);
-    observers.forEach(observer -> observer.onButtonClicked(buttonId));
-  }
-
-  @Override
-  public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
-    logger.debug("Notifying observers of button click with params: {}", buttonId, params);
-    observers.forEach(observer -> observer.onButtonClickedWithParams(buttonId, params));
   }
 } 

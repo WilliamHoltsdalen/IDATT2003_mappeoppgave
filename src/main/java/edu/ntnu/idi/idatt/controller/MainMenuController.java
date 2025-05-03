@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.controller;
 
 import edu.ntnu.idi.idatt.factory.board.BoardFactory;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.container.MainMenuView;
 import javafx.stage.FileChooser;
 
 public class MainMenuController implements ButtonClickObserver {
@@ -26,16 +26,16 @@ public class MainMenuController implements ButtonClickObserver {
   BiConsumer<Board, List<Player>> onStartGame;
   Runnable onCreateBoard;
 
-  private final MainMenuView mainMenuView;
+  private final LadderGameMenuView ladderGameMenuView;
 
   /**
    * Constructor for MenuController class.
    */
-  public MainMenuController(MainMenuView mainMenuView) {
+  public MainMenuController(LadderGameMenuView ladderGameMenuView) {
     this.boardFactory = new LadderBoardFactory();
     this.boardVariants = new HashMap<>();
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
-    this.mainMenuView = mainMenuView;
+    this.ladderGameMenuView = ladderGameMenuView;
 
     initializeMainMenuView();
   }
@@ -69,8 +69,8 @@ public class MainMenuController implements ButtonClickObserver {
    */
   private void initializeMainMenuView() {
     loadBoardsFromFactory();
-    mainMenuView.setSelectedBoard(boardFactory.createBoard("Classic"));
-    mainMenuView.initialize();
+    ladderGameMenuView.setSelectedBoard(boardFactory.createBoard("Classic"));
+    ladderGameMenuView.initialize();
   }
 
   /**
@@ -79,7 +79,7 @@ public class MainMenuController implements ButtonClickObserver {
   private void handleStartGame() {
     Board board = boardVariants.get(currentBoardIndex);
     List<Player> players = new ArrayList<>();
-    mainMenuView.getPlayerRows().forEach(playerRow ->
+    ladderGameMenuView.getPlayerRows().forEach(playerRow ->
         players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
             playerRow.getPlayerTokenType())));
 
@@ -110,12 +110,12 @@ public class MainMenuController implements ButtonClickObserver {
       return;
     }
     loadBoardFromFile(file.getAbsolutePath());
-    mainMenuView.setSelectedBoard(boardVariants.get(boardVariants.size()));
+    ladderGameMenuView.setSelectedBoard(boardVariants.get(boardVariants.size()));
   }
 
   private void showBoardVariant(int boardIndex) {
     Board board = boardVariants.get(boardIndex);
-    mainMenuView.setSelectedBoard(board);
+    ladderGameMenuView.setSelectedBoard(board);
   }
 
   /**
@@ -126,7 +126,7 @@ public class MainMenuController implements ButtonClickObserver {
    */
   public void loadPlayersFromFile(String filePath) {
     try {
-      mainMenuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
+      ladderGameMenuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
     } catch (IOException e) {
       e.printStackTrace();
     }

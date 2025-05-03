@@ -1,6 +1,6 @@
 package edu.ntnu.idi.idatt.filehandler;
 
-import edu.ntnu.idi.idatt.model.board.LadderBoard;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -159,7 +159,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     rowsAndColumns[1] = jsonObject.get(COLUMNS_PROPERTY).getAsInt();
     String boardBackground = jsonObject.get(BACKGROUND_PROPERTY).getAsString();
     String boardPattern = jsonObject.get(PATTERN_PROPERTY).getAsString();
-    Board board = new LadderBoard(boardName, boardDescription, rowsAndColumns, boardBackground, boardPattern);
+    Board board = new LadderGameBoard(boardName, boardDescription, rowsAndColumns, boardBackground, boardPattern);
 
     JsonArray tilesJsonArray = jsonObject.getAsJsonArray(TILES_PROPERTY);
     tilesJsonArray.forEach(tileJson -> {

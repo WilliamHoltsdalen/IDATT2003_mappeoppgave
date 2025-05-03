@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.controller;
 
 import edu.ntnu.idi.idatt.factory.board.BoardFactory;
+import edu.ntnu.idi.idatt.view.container.LadderGameBoardCreatorView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
-import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
 
@@ -29,7 +29,7 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
   
-  private final BoardCreatorView view;
+  private final LadderGameBoardCreatorView view;
   private final BoardStackPane boardPane;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
@@ -37,7 +37,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private final BoardFactory boardFactory;
   private Board board;
 
-  public BoardCreatorController(BoardCreatorView view) {
+  public BoardCreatorController(LadderGameBoardCreatorView view) {
     logger.debug("Constructing BoardCreatorController");
     this.view = view;
     this.availableComponents = new HashMap<>();

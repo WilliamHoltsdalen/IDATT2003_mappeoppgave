@@ -11,7 +11,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.container.LadderGameView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 
 public class LadderGameController implements ButtonClickObserver, BoardGameObserver {
   private final LadderGameView ladderGameView;

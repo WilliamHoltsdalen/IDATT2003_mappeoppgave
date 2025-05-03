@@ -5,22 +5,22 @@ import java.io.IOException;
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.board.LadderBoard;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 
 /**
- * <h3>Factory class for creating LadderBoard objects.</h3>
+ * <h3>Factory class for creating LadderGameBoard objects.</h3>
  *
- * <p>This class provides methods for creating LadderBoard objects based on predefined variants.
- * LadderBoard objects can also be created from an external file. 
+ * <p>This class provides methods for creating LadderGameBoard objects based on predefined variants.
+ * LadderGameBoard objects can also be created from an external file.
  */
 public class LadderBoardFactory implements BoardFactory {
 
   /**
-   * Creates a LadderBoard object based on predefined variants stored as json files in the
+   * Creates a LadderGameBoard object based on predefined variants stored as json files in the
    * "resources/boards" directory.
    *
    * @param variant A string specifying which board variant to create.
-   * @return A configured LadderBoard object.
+   * @return A configured LadderGameBoard object.
    * @throws IllegalArgumentException if the variant is not recognized.
    */
   @Override
@@ -51,15 +51,15 @@ public class LadderBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a blank LadderBoard object with the given number of rows and columns.
+   * Creates a blank LadderGameBoard object with the given number of rows and columns.
    *
    * @param rows The number of rows in the board.
    * @param columns The number of columns in the board.
-   * @return A LadderBoard object with the given number of rows and columns, that has no tile actions.
+   * @return A LadderGameBoard object with the given number of rows and columns, that has no tile actions.
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
-    return new LadderBoard("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
+    return new LadderGameBoard("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
         new int[]{rows, columns}, "media/boards/whiteBoard.png", "None");
   }
 

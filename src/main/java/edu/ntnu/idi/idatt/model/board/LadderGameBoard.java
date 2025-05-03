@@ -6,7 +6,7 @@ import java.util.Map;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 
 /**
- * <h3>LadderBoard class</h3>
+ * <h3>LadderGameBoard class</h3>
  *
  * <p>Concrete implementation of the Board interface for the Chutes and Ladders game.
  * This class extends AbstractBoard and implements game-specific board functionality.
@@ -15,10 +15,10 @@ import edu.ntnu.idi.idatt.model.tile.Tile;
  * @see Board
  * @see Tile
  */
-public class LadderBoard extends AbstractBoard {
+public class LadderGameBoard extends AbstractBoard {
 
     /**
-     * Constructor for LadderBoard.
+     * Constructor for LadderGameBoard.
      *
      * @param name The name of the board
      * @param description The description of the board
@@ -26,7 +26,7 @@ public class LadderBoard extends AbstractBoard {
      * @param background The background of the board
      * @param pattern The pattern of the board
      */
-    public LadderBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
+    public LadderGameBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
         super(name, description, rowsAndColumns, background, pattern);
     }
 

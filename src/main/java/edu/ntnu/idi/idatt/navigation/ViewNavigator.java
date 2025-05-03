@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.navigation;
 
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +12,9 @@ import edu.ntnu.idi.idatt.controller.MainMenuController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.container.AppView;
-import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
-import edu.ntnu.idi.idatt.view.container.LadderGameView;
-import edu.ntnu.idi.idatt.view.container.MainMenuView;
+import edu.ntnu.idi.idatt.view.app.AppView;
+import edu.ntnu.idi.idatt.view.container.LadderGameBoardCreatorView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {
@@ -56,7 +56,7 @@ public class ViewNavigator implements ButtonClickObserver {
   }
 
   private Node createMainMenuView() {
-    MainMenuView view = new MainMenuView();
+    LadderGameMenuView view = new LadderGameMenuView();
     MainMenuController controller = new MainMenuController(view);
     controller.setOnStartGame((board, players) -> {
       Map<String, Object> params = new HashMap<>();
@@ -81,7 +81,7 @@ public class ViewNavigator implements ButtonClickObserver {
   }
 
   private Node createBoardCreatorView() {
-    BoardCreatorView view = new BoardCreatorView();
+    LadderGameBoardCreatorView view = new LadderGameBoardCreatorView();
     BoardCreatorController controller = new BoardCreatorController(view);
     controller.setOnBackToMenu(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
     return view;

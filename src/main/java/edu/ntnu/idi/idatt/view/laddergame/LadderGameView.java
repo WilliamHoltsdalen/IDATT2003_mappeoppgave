@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.container;
+package edu.ntnu.idi.idatt.view.laddergame;
 
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
