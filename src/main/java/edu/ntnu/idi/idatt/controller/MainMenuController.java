@@ -147,7 +147,7 @@ public class MainMenuController implements ButtonClickObserver {
     try {
       Board board = BoardFactory.createBoardFromFile(filePath);
       boardVariants.put(boardVariants.size() + 1, board);
-    } catch (IOException | IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       e.printStackTrace();
     }
   }

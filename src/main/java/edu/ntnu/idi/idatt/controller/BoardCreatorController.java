@@ -240,13 +240,13 @@ public class BoardCreatorController implements ButtonClickObserver {
   private void handleImportBoard(Map<String, Object> params) {
     logger.debug("Handling import board");
     String path = (String) params.get("path");
-    BoardFileHandlerGson fileHandler = new BoardFileHandlerGson();
-    List<Board> boards = fileHandler.readFile(path);
-    if (boards.isEmpty()) {
+
+    Board importedBoard = BoardFactory.createBoardFromFile(path);
+    if (importedBoard == null) {
       Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
       return;
     }
-    board = boards.getFirst();
+    board = importedBoard;
 
     String backgroundName = availableBackgrounds.entrySet().stream()
         .filter(entry -> entry.getValue().equals(board.getBackground()))

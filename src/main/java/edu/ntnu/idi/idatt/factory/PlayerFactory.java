@@ -33,9 +33,8 @@ public class PlayerFactory {
     if (filePath == null || filePath.isEmpty()) {
       return List.of();
     }
-
     final FileHandler<Player> playerFileHandler = new PlayerFileHandlerCsv();
-    return playerFileHandler.readFile(filePath);
+    return (List<Player>) playerFileHandler.readFile(filePath);
   }
 
   /**

@@ -1,22 +1,25 @@
 package edu.ntnu.idi.idatt.filehandler;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+
 import edu.ntnu.idi.idatt.model.Board;
 import edu.ntnu.idi.idatt.model.tile.LadderAction;
 import edu.ntnu.idi.idatt.model.tile.PortalAction;
 import edu.ntnu.idi.idatt.model.tile.SlideAction;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import org.apache.commons.io.FileUtils;
 
 /**
  * <h3>FileHandler implementation for Board objects.</h3>
@@ -47,15 +50,15 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
    *
    * @param path The path to the file.
    * @return A list of Board objects or null if the file does not exist or cannot be read.
+   * @throws IOException if an error occurs while reading the file.
    */
   @Override
-  public List<Board> readFile(String path) {
+  public Board readFile(String path) throws IOException {
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-      Board board = deserializeBoard(jsonString); // Todo: Support multiple boards
-      return List.of(board);
+      return deserializeBoard(jsonString);
     } catch (IOException e) {
-      return List.of();
+      throw new IOException("Could not read board from file: " + path);
     }
   }
 
@@ -71,7 +74,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     if (boards == null || boards.isEmpty()) {
       throw new IllegalArgumentException("Board list is null or empty.");
     }
-    JsonObject boardJson = serializeBoard(boards.getFirst()); // Todo: Support multiple boards
+    JsonObject boardJson = serializeBoard(boards.getFirst());
     if (boardJson == null) {
       // Todo: Handle null boardJson, perhaps by throwing a ( custom ? ) exception
       return;
