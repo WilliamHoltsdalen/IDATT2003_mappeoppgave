@@ -1,6 +1,6 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.player.Player;
 import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;

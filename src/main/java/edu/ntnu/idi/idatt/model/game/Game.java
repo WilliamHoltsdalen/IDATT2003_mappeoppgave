@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
  * <h3>Game interface</h3>

@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.view.component;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;

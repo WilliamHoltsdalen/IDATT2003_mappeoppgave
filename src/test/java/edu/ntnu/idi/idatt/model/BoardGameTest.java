@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.model;
 
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;

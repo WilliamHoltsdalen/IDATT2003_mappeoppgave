@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
 import javafx.stage.FileChooser;

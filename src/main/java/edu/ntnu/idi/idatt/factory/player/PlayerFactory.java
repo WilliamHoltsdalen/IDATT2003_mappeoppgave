@@ -5,8 +5,8 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>Factory class for creating Player objects.</h3>

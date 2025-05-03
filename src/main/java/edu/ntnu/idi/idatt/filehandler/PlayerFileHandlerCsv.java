@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>FileHandler implementation for Player objects.</h3>

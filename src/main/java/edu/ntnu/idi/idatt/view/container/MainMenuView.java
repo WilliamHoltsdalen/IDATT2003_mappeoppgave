@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;

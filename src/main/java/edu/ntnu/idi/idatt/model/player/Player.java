@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.player;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerPlaceOnTileValidator;

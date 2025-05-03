@@ -3,8 +3,8 @@ package edu.ntnu.idi.idatt.model.validators;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 
