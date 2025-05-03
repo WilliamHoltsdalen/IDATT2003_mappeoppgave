@@ -1,7 +1,9 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -14,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MainMenuPlayerRow extends HBox {
   TextField nameTextField;

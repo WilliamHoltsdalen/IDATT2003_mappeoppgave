@@ -1,30 +1,30 @@
-package edu.ntnu.idi.idatt.factory;
+package edu.ntnu.idi.idatt.factory.board;
 
 import java.io.IOException;
 
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderBoard;
 
 /**
- * <h3>Factory class for creating Board objects.</h3>
+ * <h3>Factory class for creating LadderBoard objects.</h3>
  *
- * <p>This class provides methods for creating Board objects based on predefined variants.
- * Board objects can be created from an external file, or from scratch.
+ * <p>This class provides methods for creating LadderBoard objects based on predefined variants.
+ * LadderBoard objects can also be created from an external file. 
  */
-public class BoardFactory {
-
-  /** Private constructor to prevent instantiation. */
-  private BoardFactory() {}
+public class LadderBoardFactory implements BoardFactory {
 
   /**
-   * Creates a Board object based on a predefined variant (hardcoded).
+   * Creates a LadderBoard object based on predefined variants stored as json files in the
+   * "resources/boards" directory.
    *
    * @param variant A string specifying which board variant to create.
-   * @return A configured Board object.
+   * @return A configured LadderBoard object.
    * @throws IllegalArgumentException if the variant is not recognized.
    */
-  public static Board createBoard(String variant) {
+  @Override
+  public Board createBoard(String variant) {
     return switch (variant.toLowerCase()) {
       case "classic" -> createClassicBoard();
       case "teleporting" -> createPortalBoard();
@@ -36,10 +36,12 @@ public class BoardFactory {
    * Creates a Board object by reading from an external file.
    * File handling is delegated to the {@link BoardFileHandlerGson} class.
    *
+   * @see BoardFileHandlerGson
    * @param filePath The path to the JSON file containing board data.
    * @return A Board object constructed from the file data.
    */
-  public static Board createBoardFromFile(String filePath){
+  @Override
+  public Board createBoardFromFile(String filePath){
     FileHandler<Board> boardFileHandler = new BoardFileHandlerGson();
     try {
       return (Board) boardFileHandler.readFile(filePath);
@@ -48,8 +50,16 @@ public class BoardFactory {
     }
   }
 
-  public static Board createBlankBoard(int rows, int columns) {
-    return new Board("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
+  /**
+   * Creates a blank LadderBoard object with the given number of rows and columns.
+   *
+   * @param rows The number of rows in the board.
+   * @param columns The number of columns in the board.
+   * @return A LadderBoard object with the given number of rows and columns, that has no tile actions.
+   */
+  @Override
+  public Board createBlankBoard(int rows, int columns) {
+    return new LadderBoard("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
         new int[]{rows, columns}, "media/boards/whiteBoard.png", "None");
   }
 
@@ -58,7 +68,7 @@ public class BoardFactory {
    *
    * @return A classic Board object.
    */
-  private static Board createClassicBoard() {
+  private Board createClassicBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/ClassicBoard.json");
     if (board == null) {
       // TODO: Do something in case of null board, even if its just logging.
@@ -71,7 +81,7 @@ public class BoardFactory {
    *
    * @return A Board object with portals.
    */
-  private static Board createPortalBoard()  {
+  private Board createPortalBoard()  {
     Board board = createBoardFromFile("src/main/resources/boards/PortalBoard.json");
     if (board == null) {
       // TODO: Do something in case of null board, even if its just logging.

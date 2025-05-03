@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.controller;
 
+import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
-import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
@@ -33,6 +34,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;
+  private final BoardFactory boardFactory;
   private Board board;
 
   public BoardCreatorController(BoardCreatorView view) {
@@ -40,7 +42,8 @@ public class BoardCreatorController implements ButtonClickObserver {
     this.view = view;
     this.availableComponents = new HashMap<>();
     this.availableBackgrounds = new HashMap<>();
-    this.board = BoardFactory.createBlankBoard(9, 10);
+    this.boardFactory = new LadderBoardFactory();
+    this.board = boardFactory.createBlankBoard(9, 10);
 
     setAvailableComponents();
     setAvailableBackgrounds();
@@ -240,8 +243,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private void handleImportBoard(Map<String, Object> params) {
     logger.debug("Handling import board");
     String path = (String) params.get("path");
-
-    Board importedBoard = BoardFactory.createBoardFromFile(path);
+    Board importedBoard = boardFactory.createBoardFromFile(path);
     if (importedBoard == null) {
       Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
       return;

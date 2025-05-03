@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.controller;
 
+import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.factory.PlayerFactory;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
@@ -18,6 +19,7 @@ import javafx.stage.FileChooser;
 
 public class MainMenuController implements ButtonClickObserver {
   private static final int DEFAULT_BOARD_INDEX = 1;
+  private final BoardFactory boardFactory;
   private final Map<Integer, Board> boardVariants;
   private int currentBoardIndex;
 
@@ -30,6 +32,7 @@ public class MainMenuController implements ButtonClickObserver {
    * Constructor for MenuController class.
    */
   public MainMenuController(MainMenuView mainMenuView) {
+    this.boardFactory = new LadderBoardFactory();
     this.boardVariants = new HashMap<>();
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
     this.mainMenuView = mainMenuView;
@@ -66,6 +69,7 @@ public class MainMenuController implements ButtonClickObserver {
    */
   private void initializeMainMenuView() {
     loadBoardsFromFactory();
+    mainMenuView.setSelectedBoard(boardFactory.createBoard("Classic"));
     mainMenuView.initialize();
   }
 
@@ -106,6 +110,7 @@ public class MainMenuController implements ButtonClickObserver {
       return;
     }
     loadBoardFromFile(file.getAbsolutePath());
+    mainMenuView.setSelectedBoard(boardVariants.get(boardVariants.size()));
   }
 
   private void showBoardVariant(int boardIndex) {
@@ -130,22 +135,22 @@ public class MainMenuController implements ButtonClickObserver {
   /**
    * Loads the hardcoded boards from the factory, and adds them to the {@link #boardVariants} map.
    *
-   * @see BoardFactory#createBoard(String)
+   * @see LadderBoardFactory#createBoard(String)
    */
   private void loadBoardsFromFactory() {
-    this.boardVariants.put(1, BoardFactory.createBoard("Classic"));
-    this.boardVariants.put(2, BoardFactory.createBoard("Teleporting"));
+    this.boardVariants.put(1, boardFactory.createBoard("Classic"));
+    this.boardVariants.put(2, boardFactory.createBoard("Teleporting"));
   }
 
   /**
    * Loads the board from the given file path, and adds it to the {@link #boardVariants} map.
    *
-   * @see BoardFactory#createBoardFromFile(String)
+   * @see LadderBoardFactory#createBoardFromFile(String)
    * @param filePath The path to the file containing the board.
    */
   private void loadBoardFromFile(String filePath) {
     try {
-      Board board = BoardFactory.createBoardFromFile(filePath);
+      Board board = boardFactory.createBoardFromFile(filePath);
       boardVariants.put(boardVariants.size() + 1, board);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();

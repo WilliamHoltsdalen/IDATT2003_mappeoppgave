@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
 import javafx.geometry.Pos;

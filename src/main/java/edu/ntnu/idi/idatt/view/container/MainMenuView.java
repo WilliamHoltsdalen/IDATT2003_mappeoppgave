@@ -10,8 +10,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
@@ -101,7 +100,6 @@ public class MainMenuView extends VBox implements ButtonClickSubject {
 
   public void initialize() {
     logger.debug("Initializing MainMenuView");
-    setSelectedBoard(BoardFactory.createBoard("Classic"));
 
     Region menuSpacer = new Region();
     menuSpacer.getStyleClass().add("main-menu-spacer");

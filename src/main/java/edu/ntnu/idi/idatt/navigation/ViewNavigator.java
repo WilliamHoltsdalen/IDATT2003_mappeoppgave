@@ -8,14 +8,13 @@ import java.util.Map;
 import edu.ntnu.idi.idatt.controller.BoardCreatorController;
 import edu.ntnu.idi.idatt.controller.LadderGameController;
 import edu.ntnu.idi.idatt.controller.MainMenuController;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.container.AppView;
 import edu.ntnu.idi.idatt.view.container.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.container.LadderGameView;
 import edu.ntnu.idi.idatt.view.container.MainMenuView;
-import javafx.application.Platform;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {

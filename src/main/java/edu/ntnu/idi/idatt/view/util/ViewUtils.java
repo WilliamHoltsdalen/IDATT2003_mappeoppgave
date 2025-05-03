@@ -2,7 +2,7 @@ package edu.ntnu.idi.idatt.view.util;
 import java.util.List;
 import java.util.Random;
 
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.model.board.Board;
 
 /**
  * Utility class containing helper methods for view-related operations. This

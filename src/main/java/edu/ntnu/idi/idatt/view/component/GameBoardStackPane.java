@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.factory.PlayerTokenFactory;
-import edu.ntnu.idi.idatt.model.Board;
+import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
