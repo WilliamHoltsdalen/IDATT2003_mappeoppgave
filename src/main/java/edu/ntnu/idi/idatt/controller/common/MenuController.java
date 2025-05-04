@@ -38,21 +38,42 @@ public abstract class MenuController implements ButtonClickObserver {
 
     protected abstract void loadBoardsFromFactory();
 
+    /**
+    * Initializes the main menu view.
+    */
+    protected abstract void initializeMenuView();
+
+    /**
+     * Sets the board factory.
+     * @param boardFactory the board factory to set
+     */
     protected void setBoardFactory(BoardFactory boardFactory) {
         this.boardFactory = boardFactory;
     }
-  
+
+    /**
+     * Sets the action to be performed when the start game button is clicked.
+     * @param onStartGame the action to be performed when the start game button is clicked
+     */
     public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
         this.onStartGame = onStartGame;
-      }
-    
-      public void setOnBackToGameSelection(Runnable onBackToGameSelection) {
+    }
+
+    /**
+     * Sets the action to be performed when the back to game selection button is clicked.
+     * @param onBackToGameSelection the action to be performed when the back to game selection button is clicked
+     */
+    public void setOnBackToGameSelection(Runnable onBackToGameSelection) {
         this.onBackToGameSelection = onBackToGameSelection;
-      }
-    
-      public void setOnCreateBoard(Runnable onCreateBoard) {
+    }
+
+    /**
+     * Sets the action to be performed when the create board button is clicked.
+     * @param onCreateBoard the action to be performed when the create board button is clicked
+     */
+    public void setOnCreateBoard(Runnable onCreateBoard) {
         this.onCreateBoard = onCreateBoard;
-      }
+    }
 
     @Override
     public void onButtonClicked(String buttonId) {
@@ -86,15 +107,6 @@ public abstract class MenuController implements ButtonClickObserver {
         players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
             playerRow.getPlayerTokenType())));
     return players;
-  }
-
-  /**
-   * Initializes the main menu view.
-   */
-  protected void initializeMenuView() {
-    loadBoardsFromFactory();
-    menuView.setSelectedBoard(boardFactory.createBoard("Classic"));
-    menuView.initialize();
   }
 
   /**

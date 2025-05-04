@@ -1,10 +1,17 @@
-package edu.ntnu.idi.idatt.controller;
+package edu.ntnu.idi.idatt.controller.laddergame;
+
+import java.util.List;
 
 import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 
 public class LadderGameMenuController extends MenuController {
+  private static final int MIN_PLAYERS = 2;
+  private static final int MAX_PLAYERS = 5;
+  private static final List<PlayerTokenType> ALLOWED_PLAYER_TOKEN_TYPES = List.of(PlayerTokenType.values());
+  private static final List<String> ALLOWED_PLAYER_COLORS = List.of();
 
   /**
    * Constructor for LadderGameMenuController class.
@@ -13,7 +20,16 @@ public class LadderGameMenuController extends MenuController {
     super(menuView);
 
     super.setBoardFactory(new LadderBoardFactory());
-    super.initializeMenuView();
+    initializeMenuView();
+  }
+
+
+  /**{@inheritDoc} */
+  @Override
+  protected void initializeMenuView() {
+    loadBoardsFromFactory();
+    menuView.setSelectedBoard(boardFactory.createBoard("Classic"));
+    menuView.initialize("Ladder Game Menu", ALLOWED_PLAYER_TOKEN_TYPES, ALLOWED_PLAYER_COLORS, MIN_PLAYERS, MAX_PLAYERS);
   }
 
   /**
