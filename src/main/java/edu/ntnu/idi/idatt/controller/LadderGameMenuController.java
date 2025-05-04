@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.board.BoardFactory;
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
+import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import javafx.stage.FileChooser;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 
 public class MainMenuController implements ButtonClickObserver {
   private static final int DEFAULT_BOARD_INDEX = 1;
@@ -25,7 +25,7 @@ public class MainMenuController implements ButtonClickObserver {
 
   BiConsumer<Board, List<Player>> onStartGame;
   Runnable onCreateBoard;
-
+  Runnable onBackToGameSelection;
   private final LadderGameMenuView ladderGameMenuView;
 
   /**
@@ -43,12 +43,11 @@ public class MainMenuController implements ButtonClickObserver {
   @Override
   public void onButtonClicked(String buttonId) {
     switch (buttonId) {
-      case "import_players" -> handleImportPlayersButtonAction();
-      case "import_board" -> handleImportBoardButtonAction();
       case "next_board" -> handleNextBoard();
       case "previous_board" -> handlePreviousBoard();
       case "start_game" -> handleStartGame();
       case "create_board" -> handleCreateBoard();
+      case "back_to_game_selection" -> handleBackToGameSelection();
       default -> {
         break;
       }
@@ -57,11 +56,25 @@ public class MainMenuController implements ButtonClickObserver {
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    // Not needed
+    switch (buttonId) {
+      case "import_players" -> handleImportPlayers(params);
+      case "save_players" -> handleSavePlayers(params);
+      case "import_board" -> handleImportBoard(params);
+      default -> {
+        break;
+      }
+    }
   }
-
   public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
     this.onStartGame = onStartGame;
+  }
+
+  public void setOnBackToGameSelection(Runnable onBackToGameSelection) {
+    this.onBackToGameSelection = onBackToGameSelection;
+  }
+
+  public void setOnCreateBoard(Runnable onCreateBoard) {
+    this.onCreateBoard = onCreateBoard;
   }
 
   /**
@@ -73,15 +86,20 @@ public class MainMenuController implements ButtonClickObserver {
     ladderGameMenuView.initialize();
   }
 
+  private List<Player> getPlayers() {
+    List<Player> players = new ArrayList<>();
+    ladderGameMenuView.getPlayerRows().forEach(playerRow ->
+        players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
+            playerRow.getPlayerTokenType())));
+    return players;
+  }
+
   /**
    * Handles the action of the 'start game' button in the main menu.
    */
   private void handleStartGame() {
     Board board = boardVariants.get(currentBoardIndex);
-    List<Player> players = new ArrayList<>();
-    ladderGameMenuView.getPlayerRows().forEach(playerRow ->
-        players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
-            playerRow.getPlayerTokenType())));
+    List<Player> players = getPlayers();
 
     onStartGame.accept(board, players);
   }
@@ -96,40 +114,44 @@ public class MainMenuController implements ButtonClickObserver {
     showBoardVariant(currentBoardIndex);
   }
 
-  private void handleImportPlayersButtonAction() {
-    File file = new FileChooser().showOpenDialog(null);
-    if (file == null) {
-      return;
-    }
-    loadPlayersFromFile(file.getAbsolutePath());
+  private void handleCreateBoard() {
+    onCreateBoard.run();
   }
 
-  private void handleImportBoardButtonAction() {
-    File file = new FileChooser().showOpenDialog(null);
-    if (file == null) {
-      return;
+  private void handleBackToGameSelection() {
+    onBackToGameSelection.run();
+  }
+
+  private void handleImportPlayers(Map<String, Object> params) {
+    File file = (File) params.get("file");
+    try {
+      loadPlayersFromFile(file.getAbsolutePath());
+    } catch (NullPointerException e) {
+      ladderGameMenuView.showErrorAlert("Failed to import players", "Invalid file path");
     }
-    loadBoardFromFile(file.getAbsolutePath());
-    ladderGameMenuView.setSelectedBoard(boardVariants.get(boardVariants.size()));
+  }
+
+  private void handleSavePlayers(Map<String, Object> params) {
+    File file = (File) params.get("file");
+    try {
+      savePlayersToFile(file.getAbsolutePath());
+    } catch (NullPointerException e) {
+      ladderGameMenuView.showErrorAlert("Error", "Could not save players");
+    }
+  }
+
+  private void handleImportBoard(Map<String, Object> params) {
+    File file = (File) params.get("file");
+    try {
+      loadBoardFromFile(file.getAbsolutePath());
+    } catch (NullPointerException e) {
+      ladderGameMenuView.showErrorAlert("Failed to import board", "Invalid file path");
+    }
   }
 
   private void showBoardVariant(int boardIndex) {
     Board board = boardVariants.get(boardIndex);
     ladderGameMenuView.setSelectedBoard(board);
-  }
-
-  /**
-   * Loads the players from the file at the given path and adds them to the main menu.
-   *
-   * @see PlayerFactory#createPlayersFromFile(String)
-   * @param filePath The path to the file containing the players.
-   */
-  public void loadPlayersFromFile(String filePath) {
-    try {
-      ladderGameMenuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   /**
@@ -143,6 +165,31 @@ public class MainMenuController implements ButtonClickObserver {
   }
 
   /**
+   * Loads the players from the file at the given path and adds them to the main menu.
+   *
+   * @see PlayerFactory#createPlayersFromFile(String)
+   * @param filePath The path to the file containing the players.
+   */
+  public void loadPlayersFromFile(String filePath) {
+    try {
+      ladderGameMenuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
+      ladderGameMenuView.showInfoAlert("Success", "Players loaded successfully");
+    } catch (IOException e) {
+      ladderGameMenuView.showErrorAlert("Error", "Could not load players");
+    }
+  }
+
+  public void savePlayersToFile(String filePath) {
+    try {
+      PlayerFileHandlerCsv fileHandler = new PlayerFileHandlerCsv();
+      fileHandler.writeFile(filePath, getPlayers());
+      ladderGameMenuView.showInfoAlert("Success", "Players saved successfully");
+    } catch (IOException e) {
+      ladderGameMenuView.showErrorAlert("Error", "Could not save players");
+    }
+  }
+
+  /**
    * Loads the board from the given file path, and adds it to the {@link #boardVariants} map.
    *
    * @see LadderBoardFactory#createBoardFromFile(String)
@@ -151,17 +198,16 @@ public class MainMenuController implements ButtonClickObserver {
   private void loadBoardFromFile(String filePath) {
     try {
       Board board = boardFactory.createBoardFromFile(filePath);
+      if (boardVariants.values().stream().anyMatch(b -> b.getName().equals(board.getName()))) {
+        ladderGameMenuView.showErrorAlert("An error occured", "Board with name " + board.getName() + " already exists");
+        return;
+      }
       boardVariants.put(boardVariants.size() + 1, board);
+      currentBoardIndex = boardVariants.size();
+      showBoardVariant(currentBoardIndex);
+      ladderGameMenuView.showInfoAlert("Success", "Board imported successfully");
     } catch (IllegalArgumentException e) {
-      e.printStackTrace();
+      ladderGameMenuView.showErrorAlert("An error occured", "Could not load board");
     }
-  }
-
-  private void handleCreateBoard() {
-    onCreateBoard.run();
-  }
-
-  public void setOnCreateBoard(Runnable onCreateBoard) {
-    this.onCreateBoard = onCreateBoard;
   }
 }

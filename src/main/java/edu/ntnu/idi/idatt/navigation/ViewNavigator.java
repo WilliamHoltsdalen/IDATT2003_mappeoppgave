@@ -1,19 +1,21 @@
 package edu.ntnu.idi.idatt.navigation;
 
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.controller.BoardCreatorController;
+import edu.ntnu.idi.idatt.controller.common.GameSelectionController;
 import edu.ntnu.idi.idatt.controller.LadderGameController;
-import edu.ntnu.idi.idatt.controller.MainMenuController;
+import edu.ntnu.idi.idatt.controller.LadderGameMenuController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.app.AppView;
+import edu.ntnu.idi.idatt.view.common.GameSelectionView;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 import javafx.scene.Node;
 
@@ -44,9 +46,10 @@ public class ViewNavigator implements ButtonClickObserver {
 
   public void navigateTo(ViewType viewType, Map<String, Object> params) {
     switch (viewType) {
-      case MAIN_MENU -> appView.showView(createMainMenuView());
+      case GAME_SELECTION -> appView.showView(createGameSelectionView());
+      case LADDER_GAME_MENU -> appView.showView(createLadderGameMenuView());
       case LADDER_GAME -> appView.showView(createLadderGameView(params));
-      case BOARD_CREATOR -> appView.showView(createBoardCreatorView());
+      case LADDER_GAME_BOARD_CREATOR -> appView.showView(createLadderGameBoardCreatorView());
       default -> throw new IllegalArgumentException("Unknown view type: " + viewType);
     }
   }
@@ -55,16 +58,26 @@ public class ViewNavigator implements ButtonClickObserver {
     navigateTo(viewType, Collections.emptyMap());
   }
 
-  private Node createMainMenuView() {
+  private Node createGameSelectionView() {
+    GameSelectionView view = new GameSelectionView();
+    GameSelectionController controller = new GameSelectionController(view);
+    controller.setOnLadderGame(() -> navigateTo(ViewType.LADDER_GAME_MENU));
+    controller.setOnLudoGame(null);
+    view.addObserver(controller);
+    return view;
+  }
+
+  private Node createLadderGameMenuView() {
     LadderGameMenuView view = new LadderGameMenuView();
-    MainMenuController controller = new MainMenuController(view);
+    LadderGameMenuController controller = new LadderGameMenuController(view);
     controller.setOnStartGame((board, players) -> {
       Map<String, Object> params = new HashMap<>();
       params.put("board", board);
       params.put("players", players);
       navigateTo(ViewType.LADDER_GAME, params);
     });
-    controller.setOnCreateBoard(() -> navigateTo(ViewType.BOARD_CREATOR));
+    controller.setOnCreateBoard(() -> navigateTo(ViewType.LADDER_GAME_BOARD_CREATOR));
+    controller.setOnBackToGameSelection(() -> navigateTo(ViewType.GAME_SELECTION));
     view.addObserver(controller);
     return view;
   }
@@ -75,15 +88,15 @@ public class ViewNavigator implements ButtonClickObserver {
     LadderGameView view = new LadderGameView();
     LadderGameController controller = new LadderGameController(
         view, board, players);
-    controller.setOnQuitGame(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
+    controller.setOnQuitGame(() -> navigateTo(ViewType.LADDER_GAME_MENU, Collections.emptyMap()));
     view.addObserver(controller);
     return view;
   }
 
-  private Node createBoardCreatorView() {
+  private Node createLadderGameBoardCreatorView() {
     LadderGameBoardCreatorView view = new LadderGameBoardCreatorView();
     BoardCreatorController controller = new BoardCreatorController(view);
-    controller.setOnBackToMenu(() -> navigateTo(ViewType.MAIN_MENU, Collections.emptyMap()));
+    controller.setOnBackToMenu(() -> navigateTo(ViewType.LADDER_GAME_MENU, Collections.emptyMap()));
     return view;
   }
 }

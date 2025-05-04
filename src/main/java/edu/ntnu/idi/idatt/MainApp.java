@@ -39,7 +39,7 @@ public class MainApp extends Application {
     viewNavigator = new ViewNavigator(appView);
     root = new BorderPane();
 
-    showMainMenu();
+    showGameSelection();
 
     Scene scene = new Scene(root, 1280, 720);
     scene.getStylesheets().add("stylesheets/styles.css");
@@ -50,9 +50,9 @@ public class MainApp extends Application {
     logger.info("{} started successfully", APP_NAME);
   }
 
-  public void showMainMenu() {
-    logger.debug("Showing main menu");
+  public void showGameSelection() {
+    logger.debug("Showing game selection");
     root.setCenter(appView);
-    viewNavigator.navigateTo(ViewType.MAIN_MENU);
+    viewNavigator.navigateTo(ViewType.GAME_SELECTION);
   }
 }

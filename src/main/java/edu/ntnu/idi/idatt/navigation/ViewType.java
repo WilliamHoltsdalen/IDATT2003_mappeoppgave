@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.navigation;
 
 public enum ViewType {
-  MAIN_MENU,
+  GAME_SELECTION,
+  LADDER_GAME_MENU,
   LADDER_GAME,
   GAME_OVER,
-  BOARD_CREATOR
+  LADDER_GAME_BOARD_CREATOR
 }
