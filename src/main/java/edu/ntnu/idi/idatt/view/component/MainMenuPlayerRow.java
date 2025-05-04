@@ -56,6 +56,7 @@ public class MainMenuPlayerRow extends HBox {
   private void showPlayerColorPickerPopup(double xPos, double yPos) {
     Popup popup = new Popup();
     popup.setHideOnEscape(true);
+    popup.setAutoHide(true);
     popup.setAutoFix(true);
 
     Text popupPickColorText = new Text("Pick a color for " + getName());

@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.common;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,20 +10,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 /**
@@ -40,15 +45,15 @@ import javafx.util.Duration;
 public abstract class MenuView extends VBox implements ButtonClickSubject {
   protected static final Logger logger = LoggerFactory.getLogger(MenuView.class);
   private final List<ButtonClickObserver> observers;
-  private Runnable onUpdateControls;
 
   protected VBox playerSelectionBox;
-  protected final Text playerSelectionTitle;
+  protected HBox playerSelectionHeader;
   protected final List<MainMenuPlayerRow> mainMenuPlayerRows;
   protected final HBox addPlayerButtonsBox;
   protected final VBox playerListBox;
 
   protected VBox boardSelectionBox;
+  protected HBox boardSelectionHeader;
   protected final BoardStackPane boardStackPane;
   protected final Label boardTitle;
   protected final Label boardDescription;
@@ -59,16 +64,30 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   protected MenuView() {
     this.observers = new ArrayList<>();
     this.mainMenuPlayerRows = new ArrayList<>();
-    this.playerSelectionTitle = new Text();
+    this.playerSelectionHeader = new HBox();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
     this.boardTitle = new Label();
     this.boardDescription = new Label();
     this.startGameButton = createStartGameButton();
     this.playerSelectionBox = new VBox();
+    this.boardSelectionHeader = new HBox();
     this.boardSelectionBox = new VBox();
     this.boardStackPane = new BoardStackPane();
   }
+
+  public abstract void initialize();
+
+  protected abstract void updateControls();
+
+  public abstract void setPlayers(List<Player> players);
+
+  public abstract void setSelectedBoard(Board board);
+
+  protected abstract VBox createPlayerSelectionBox();
+
+  protected abstract VBox createBoardSelectionBox();
+
   /**
    * Returns the list of player rows in the main menu.
    *
@@ -76,15 +95,6 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    */
   public List<MainMenuPlayerRow> getPlayerRows() {
     return mainMenuPlayerRows;
-  }
-
-  /**
-   * Sets the callback for the 'update controls' event.
-   *
-   * @param onUpdateControls The callback to set.
-   */
-  protected void setOnUpdateControls(Runnable onUpdateControls) {
-    this.onUpdateControls = onUpdateControls;
   }
 
   /**
@@ -103,28 +113,20 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    *
    * @return The header HBox. 
    */
-  protected HBox createHeaderBox() {
-    Text title = new Text("Main Menu");
-    title.getStyleClass().add("main-menu-title");
+  protected HBox createHeaderBox(String title) {
+    Button backButton = new Button("Game selection");
+    backButton.setGraphic(new FontIcon("fas-chevron-left"));
+    backButton.getStyleClass().add("main-menu-back-button");
+    backButton.setOnAction(event -> notifyObservers("back_to_game_selection"));
 
-    MenuButton moreOptionsMenu = new MenuButton("Import");
-    moreOptionsMenu.getStyleClass().add("main-menu-more-options-menu");
+    Text headerTitle = new Text(title);
+    headerTitle.getStyleClass().add("main-menu-title");
 
-    MenuItem importPlayersMenuItem = new MenuItem("Import players");
-    importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
-    moreOptionsMenu.getItems().addAll(importPlayersMenuItem);
-    importPlayersMenuItem.setOnAction(event -> notifyObservers("import_players"));
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+    Platform.runLater(() -> spacer.setMaxWidth(backButton.getWidth()));
 
-    MenuItem importBoardMenuItem = new MenuItem("Import board");
-    importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
-    moreOptionsMenu.getItems().addAll(importBoardMenuItem);
-    importBoardMenuItem.setOnAction(event -> notifyObservers("import_board"));
-
-    Button createBoardButton = new Button("Create Board");
-    createBoardButton.getStyleClass().add("main-menu-create-board-button");
-    createBoardButton.setOnAction(event -> notifyObservers("create_board"));
-
-    HBox headerBox = new HBox(title, moreOptionsMenu, createBoardButton);
+    HBox headerBox = new HBox(backButton, headerTitle, spacer);
     headerBox.getStyleClass().add("main-menu-header-box");
 
     return headerBox;
@@ -140,13 +142,13 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   protected void addPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType, boolean removable) {
     MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, playerTokenType, removable);
     mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
-    mainMenuPlayerRow.setOnUpdate(onUpdateControls);
+    mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
 
     logger.debug("Added player row: {}", mainMenuPlayerRow);
-
-    onUpdateControls.run();
+  
+    updateControls();
   }
 
   /**
@@ -159,7 +161,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     playerListBox.getChildren().remove(mainMenuPlayerRow);
 
     logger.debug("Removed player row: {}", mainMenuPlayerRow);
-    onUpdateControls.run();
+    updateControls();
   }
 
   /**
@@ -181,6 +183,63 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     startGameButton.setOnAction(event -> notifyObservers("start_game"));
     startGameButton.getStyleClass().remove("button-disabled");
     Tooltip.uninstall(startGameButton, startGameButton.getTooltip());
+  }
+
+  protected void handleSavePlayers() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save players");
+    fileChooser.setInitialFileName("players.csv");
+
+    File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not save players", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("save_players", Map.of("file", file));
+  }
+
+  protected void handleImportPlayers() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Import players");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files", "*.csv"));
+    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not import players", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("import_players", Map.of("file", file));
+  }
+
+  protected void handleImportBoard() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Import board");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files", "*.json"));
+    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not import board", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("import_board", Map.of("file", file));
+  } 
+
+  protected void handleCreateBoard() {
+    notifyObservers("create_board");
+  }
+
+  public void showInfoAlert(String headerText, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Info");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  public void showErrorAlert(String headerText, String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 
   /**

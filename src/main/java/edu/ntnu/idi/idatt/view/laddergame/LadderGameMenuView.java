@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
-import edu.ntnu.idi.idatt.view.common.MenuView;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,9 +9,13 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
+import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -22,16 +25,16 @@ import javafx.scene.text.Text;
 public class LadderGameMenuView extends MenuView {
 
   /**
-   * Constructor for MainMenuView class.
+   * Constructor for LadderGameMenuView class.
    */
   public LadderGameMenuView() {
     super();
-    super.setOnUpdateControls(this::updateControls);
     this.getStyleClass().add("main-menu-view");
   }
 
+  @Override
   public void initialize() {
-    logger.debug("Initializing MainMenuView");
+    logger.debug("Initializing LadderGameMenuView");
 
     Region menuSpacer = new Region();
     menuSpacer.getStyleClass().add("main-menu-spacer");
@@ -41,13 +44,31 @@ public class LadderGameMenuView extends MenuView {
 
     HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
     hBox.getStyleClass().add("main-menu-h-box");
-    this.getChildren().setAll(createHeaderBox(), hBox, startGameButton);
-    logger.debug("MainMenuView initialized successfully");
+    this.getChildren().setAll(createHeaderBox("Ladder Game Menu"), hBox, startGameButton);
+    logger.debug("LadderGameMenuView initialized successfully");
   }
 
-  private VBox createPlayerSelectionBox() {
-    playerSelectionTitle.setText("Select players");
+  @Override
+  protected VBox createPlayerSelectionBox() {
+    Text playerSelectionTitle = new Text("Select players");
     playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
+
+    MenuButton playerOptionsMenu = new MenuButton("Options");
+    playerOptionsMenu.getStyleClass().add("main-menu-options-menu");
+
+    MenuItem importPlayersMenuItem = new MenuItem("Import players");
+    importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
+    importPlayersMenuItem.setOnAction(event -> handleImportPlayers());
+
+    MenuItem savePlayersMenuItem = new MenuItem("Save players");
+    savePlayersMenuItem.setGraphic(new FontIcon("fas-file-export"));
+    savePlayersMenuItem.setOnAction(event -> handleSavePlayers());
+
+    playerOptionsMenu.getItems().addAll(importPlayersMenuItem, savePlayersMenuItem);
+
+    playerSelectionHeader.getChildren().addAll(playerSelectionTitle, playerOptionsMenu);
+    playerSelectionHeader.setSpacing(10);
+    playerSelectionHeader.setAlignment(Pos.CENTER);
 
     playerListBox.getStyleClass().add("main-menu-player-list-box");
     addPlayerRow("Player 1", Color.RED, PlayerTokenType.CIRCLE,false);
@@ -66,15 +87,33 @@ public class LadderGameMenuView extends MenuView {
         .add("main-menu-add-player-button"));
     addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
 
-    VBox vBox = new VBox(playerSelectionTitle, playerListBox, addPlayerButtonsBox, startGameButton);
+    VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox, startGameButton);
     vBox.getStyleClass().add("main-menu-player-selection");
 
     return vBox;
   }
 
-  private VBox createBoardSelectionBox() {
-    Text title = new Text("Select a board");
-    title.getStyleClass().add("main-menu-selection-box-title");
+  @Override
+  protected VBox createBoardSelectionBox() {
+    Text boardSelectionTitle = new Text("Select a board");
+    boardSelectionTitle.getStyleClass().add("main-menu-selection-box-title"); 
+    
+    MenuButton boardOptionsMenu = new MenuButton("Options");
+    boardOptionsMenu.getStyleClass().add("main-menu-options-menu");
+
+    MenuItem importBoardMenuItem = new MenuItem("Import board");
+    importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
+    importBoardMenuItem.setOnAction(event -> handleImportBoard());
+
+    MenuItem createBoardMenuItem = new MenuItem("Create board");
+    createBoardMenuItem.setGraphic(new FontIcon("fas-plus"));
+    createBoardMenuItem.setOnAction(event -> handleCreateBoard());
+
+    boardOptionsMenu.getItems().addAll(importBoardMenuItem, createBoardMenuItem);
+
+    boardSelectionHeader.getChildren().addAll(boardSelectionTitle, boardOptionsMenu);
+    boardSelectionHeader.setSpacing(10);
+    boardSelectionHeader.setAlignment(Pos.CENTER);
 
     Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
     previousButton.getStyleClass().add("icon-only-button");
@@ -98,7 +137,7 @@ public class LadderGameMenuView extends MenuView {
     VBox carousel = new VBox(boardStackPane, carouselControls, boardDescription);
     carousel.getStyleClass().add("main-menu-board-selection-carousel");
 
-    VBox vBox = new VBox(title, carousel);
+    VBox vBox = new VBox(boardSelectionHeader, carousel);
     vBox.getStyleClass().add("main-menu-board-selection-v-box");
     vBox.getStyleClass().add("main-menu-board-selection");
     return vBox;
@@ -109,12 +148,13 @@ public class LadderGameMenuView extends MenuView {
    * and disables the start game button if there are not enough players. The button is also disabled
    * if there are any players with the same color and token type.
    */
-  public void updateControls() {
+  @Override
+  protected void updateControls() {
     // Hide / show the add player buttons box based on the number of players in the main menu.
     if (mainMenuPlayerRows.size() == 5) {
       playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
     } else if (mainMenuPlayerRows.size() < 5) {
-      playerSelectionBox.getChildren().setAll(playerSelectionTitle, playerListBox, addPlayerButtonsBox);
+      playerSelectionBox.getChildren().setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
     }
 
     // Disable the start game button if there are not enough players.
@@ -142,6 +182,7 @@ public class LadderGameMenuView extends MenuView {
    *
    * @param players The list of players to import.
    */
+  @Override
   public void setPlayers(List<Player> players) {
     logger.debug("Setting players: {}", players);
     mainMenuPlayerRows.clear();
@@ -155,6 +196,7 @@ public class LadderGameMenuView extends MenuView {
    *
    * @param board The board object to set.
    */
+  @Override
   public void setSelectedBoard(Board board) {
     logger.debug("Setting selected board: {}", board.getName());
     selectedBoard = board;

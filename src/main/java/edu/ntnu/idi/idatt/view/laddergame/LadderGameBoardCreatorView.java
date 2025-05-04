@@ -178,6 +178,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
     for (String imagePath : imagePaths) {
       ImageView componentImage = new ImageView(new Image(imagePath));
+      componentImage.getStyleClass().add("component-section-image");
       String imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
       int widthTiles = Integer.parseInt(imageName.substring(0, 1));
       componentImage.setFitWidth(25.0 * widthTiles);
