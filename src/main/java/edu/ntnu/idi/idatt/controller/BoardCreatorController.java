@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.controller;
 
 import edu.ntnu.idi.idatt.factory.board.BoardFactory;
-import edu.ntnu.idi.idatt.view.container.LadderGameBoardCreatorView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

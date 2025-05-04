@@ -10,9 +10,9 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetCurrentPlayerValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGameSetPlayersValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.BoardGameSubject;
 

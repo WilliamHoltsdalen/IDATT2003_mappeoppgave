@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.model.player;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerPlaceOnTileValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetColorHexValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetNameValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.playerSetPlayerTokenTypeValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerPlaceOnTileValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetColorHexValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetNameValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetPlayerTokenTypeValidator;
 
 /**
  * <h3>Player class</h3>

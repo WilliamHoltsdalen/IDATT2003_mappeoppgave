@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.model.validators;
+package edu.ntnu.idi.idatt.model.validator;
 
 import java.util.List;
 

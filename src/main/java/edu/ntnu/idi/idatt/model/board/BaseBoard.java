@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardAddTileValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardGetTileValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetBackgroundValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetDescriptionValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetPatternValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetRowsAndColumnsValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.boardSetnameValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardAddTileValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGetTileValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetBackgroundValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetDescriptionValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetPatternValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetRowsAndColumnsValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetnameValidator;
 
 /**
- * <h3>AbstractBoard class</h3>
+ * <h3>BaseBoard class</h3>
  *
  * <p>Abstract class implementing common functionality for board game boards.
  * This class provides the base implementation for both Chutes and Ladders and Ludo boards.
  */
-public abstract class AbstractBoard implements Board {
+public abstract class BaseBoard implements Board {
     protected String name;
     protected String description;
     protected int[] rowsAndColumns;
@@ -29,7 +29,7 @@ public abstract class AbstractBoard implements Board {
     protected String pattern;
 
     /**
-     * Constructor for AbstractBoard.
+     * Constructor for BaseBoard.
      *
      * @param name The name of the board
      * @param description The description of the board
@@ -37,7 +37,7 @@ public abstract class AbstractBoard implements Board {
      * @param background The background of the board
      * @param pattern The pattern of the board
      */
-    protected AbstractBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
+    protected BaseBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
         this.tiles = new HashMap<>();
         setName(name);
         setDescription(description);

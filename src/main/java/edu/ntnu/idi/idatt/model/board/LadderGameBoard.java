@@ -9,13 +9,13 @@ import edu.ntnu.idi.idatt.model.tile.Tile;
  * <h3>LadderGameBoard class</h3>
  *
  * <p>Concrete implementation of the Board interface for the Chutes and Ladders game.
- * This class extends AbstractBoard and implements game-specific board functionality.
+ * This class extends BaseBoard and implements game-specific board functionality.
  * 
- * @see AbstractBoard
+ * @see BaseBoard
  * @see Board
  * @see Tile
  */
-public class LadderGameBoard extends AbstractBoard {
+public class LadderGameBoard extends BaseBoard {
 
     /**
      * Constructor for LadderGameBoard.
