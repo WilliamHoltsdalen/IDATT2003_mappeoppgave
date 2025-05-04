@@ -1,4 +1,4 @@
-package edu.ntnu.idi.idatt.view.container;
+package edu.ntnu.idi.idatt.view.app;
 
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;

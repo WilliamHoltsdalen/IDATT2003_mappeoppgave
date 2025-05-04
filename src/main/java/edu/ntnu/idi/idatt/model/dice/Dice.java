@@ -1,8 +1,8 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.dice;
 
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceAddDiceValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceGetDieValueValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.diceRollSingleDieValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.diceAddDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.diceGetDieValueValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.diceRollSingleDieValidator;
 import static java.util.List.copyOf;
 
 import java.util.ArrayList;

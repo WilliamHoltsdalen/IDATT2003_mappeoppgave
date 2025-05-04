@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
-import edu.ntnu.idi.idatt.model.LadderAction;
-import edu.ntnu.idi.idatt.model.PortalAction;
-import edu.ntnu.idi.idatt.model.SlideAction;
-import edu.ntnu.idi.idatt.model.Tile;
+import edu.ntnu.idi.idatt.model.tile.LadderAction;
+import edu.ntnu.idi.idatt.model.tile.PortalAction;
+import edu.ntnu.idi.idatt.model.tile.SlideAction;
+import edu.ntnu.idi.idatt.model.tile.Tile;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

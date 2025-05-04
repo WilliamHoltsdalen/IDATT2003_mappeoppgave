@@ -1,10 +1,11 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetIdentifierValidator;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
 /**
  * <h3>SlideAction class</h3>
  *

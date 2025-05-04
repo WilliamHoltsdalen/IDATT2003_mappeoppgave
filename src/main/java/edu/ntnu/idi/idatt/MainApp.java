@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.navigation.ViewNavigator;
 import edu.ntnu.idi.idatt.navigation.ViewType;
-import edu.ntnu.idi.idatt.view.container.AppView;
+import edu.ntnu.idi.idatt.view.app.AppView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

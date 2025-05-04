@@ -1,16 +1,17 @@
 package edu.ntnu.idi.idatt.controller;
 
+import edu.ntnu.idi.idatt.model.game.BoardGame;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.BoardGame;
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.container.LadderGameView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 
 public class LadderGameController implements ButtonClickObserver, BoardGameObserver {
   private final LadderGameView ladderGameView;
@@ -35,7 +36,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   public void initializeBoardGame(Board board, List<Player> players) {
     try {
-      boardGame = new BoardGame(board, players, 2);
+      boardGame = new LadderBoardGame(board, players, 2);
       boardGame.addObserver(this);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();

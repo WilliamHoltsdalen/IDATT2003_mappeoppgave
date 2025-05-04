@@ -1,11 +1,12 @@
-package edu.ntnu.idi.idatt.factory;
+package edu.ntnu.idi.idatt.factory.player;
 
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
-import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import java.io.IOException;
 import java.util.List;
+
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
+import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>Factory class for creating Player objects.</h3>
@@ -33,9 +34,8 @@ public class PlayerFactory {
     if (filePath == null || filePath.isEmpty()) {
       return List.of();
     }
-
     final FileHandler<Player> playerFileHandler = new PlayerFileHandlerCsv();
-    return playerFileHandler.readFile(filePath);
+    return (List<Player>) playerFileHandler.readFile(filePath);
   }
 
   /**

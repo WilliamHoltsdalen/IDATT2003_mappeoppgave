@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.filehandler;
 
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -10,6 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>FileHandler implementation for Player objects.</h3>
@@ -37,7 +38,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         players.add(player);
       }
     } catch (IOException e) {
-      throw new IOException("Could not read file: " + path);
+      throw new IOException("Could not read players from file: " + path);
     }
     return players;
   }

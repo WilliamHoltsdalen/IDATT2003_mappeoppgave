@@ -1,30 +1,31 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetIdentifierValidator;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
 
 /**
- * <h3>LadderAction class</h3>
+ * <h3>PortalAction class</h3>
  *
- * <p>This class represents a ladder action, which is a tile action that moves the player to a
- * different tile. It contains a destination tile ID and a description.
+ * <p>This class represents a Portal action, which is a tile action that moves the player to a
+ * random tile. It contains a destination tile ID and a description.
  */
-public class LadderAction implements TileAction {
+public class PortalAction implements TileAction {
   private String identifier;
   private int destinationTileId;
   private String description;
 
   /**
-   * Constructor for LadderAction class.
+   * Constructor for PortalAction class.
    *
    * @param identifier The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
    * @param description The description of the action.
    */
-  public LadderAction(String identifier, int destinationTileId, String description) {
+  public PortalAction(String identifier, int destinationTileId, String description) {
     setIdentifier(identifier);
     setDestinationTileId(destinationTileId);
     setDescription(description);

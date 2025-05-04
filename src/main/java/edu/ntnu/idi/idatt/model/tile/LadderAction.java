@@ -1,30 +1,31 @@
-package edu.ntnu.idi.idatt.model;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionPerformValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDescriptionValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetDestinationTileIdValidator;
-import static edu.ntnu.idi.idatt.model.validators.ArgumentValidator.tileActionSetIdentifierValidator;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
 
 /**
- * <h3>WormholeAction class</h3>
+ * <h3>LadderAction class</h3>
  *
- * <p>This class represents a Wormhole action, which is a tile action that moves the player to a
- * random  wormhole tile. It contains a destination tile ID and a description.
+ * <p>This class represents a ladder action, which is a tile action that moves the player to a
+ * different tile. It contains a destination tile ID and a description.
  */
-public class WormholeAction implements TileAction {
+public class LadderAction implements TileAction {
   private String identifier;
   private int destinationTileId;
   private String description;
 
   /**
-   * Constructor for WormholeAction class.
+   * Constructor for LadderAction class.
    *
    * @param identifier The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
    * @param description The description of the action.
    */
-  public WormholeAction(String identifier, int destinationTileId, String description) {
+  public LadderAction(String identifier, int destinationTileId, String description) {
     setIdentifier(identifier);
     setDestinationTileId(destinationTileId);
     setDescription(description);

@@ -1,6 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.factory.BoardFactory;
+import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.tile.Tile;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,7 +33,7 @@ class BoardGameTest {
     void setUp() {
         player1 = new Player("Player 1","#00FF00");
         player2 = new Player("Player 2","#00FF00");
-        Board board = BoardFactory.createBoard("classic");
+        Board board = LadderBoardFactory.createLadderBoard("classic");
         for (int i = 0; i <= 100; i++) {
             board.addTile(new Tile(i, i + 1));
         }
@@ -98,7 +101,7 @@ class BoardGameTest {
         @Test
         void testCreateBoardGameWithInvalidBoard() {
             assertThrows(IllegalArgumentException.class, () -> new BoardGame(null, List.of(player1), 1));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("doesNotExist"), Arrays.asList(player1), 1));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(LadderBoardFactory.createLadderBoard("doesNotExist"), Arrays.asList(player1), 1));
         }
 
         /**
@@ -107,7 +110,7 @@ class BoardGameTest {
         @DisplayName("Test creating a BoardGame with player list set to null should throw an exception.")
         @Test
         void testCreateBoardGameWithNullPlayerList() {
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), null, 1));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(LadderBoardFactory.createLadderBoard("classic"), null, 1));
         }
 
         /**
@@ -116,8 +119,8 @@ class BoardGameTest {
         @DisplayName("Test creating a BoardGame with invalid dice count should throw an exception.")
         @Test
         void testCreateBoardGameWithInvalidDiceCount() {
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), Arrays.asList(player1), 0));
-            assertThrows(IllegalArgumentException.class, () -> new BoardGame(BoardFactory.createBoard("classic"), Arrays.asList(player1), -1));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(LadderBoardFactory.createLadderBoard("classic"), Arrays.asList(player1), 0));
+            assertThrows(IllegalArgumentException.class, () -> new BoardGame(LadderBoardFactory.createLadderBoard("classic"), Arrays.asList(player1), -1));
         }
     }
 }

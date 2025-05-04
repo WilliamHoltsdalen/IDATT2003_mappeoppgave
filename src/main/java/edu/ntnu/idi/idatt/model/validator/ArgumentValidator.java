@@ -1,12 +1,12 @@
-package edu.ntnu.idi.idatt.model.validators;
+package edu.ntnu.idi.idatt.model.validator;
 
 import java.util.List;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
-import edu.ntnu.idi.idatt.model.Tile;
-import edu.ntnu.idi.idatt.model.interfaces.TileAction;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 
 /**
  * <h3> Validator class for arguments passed to model constructors and methods.</h3>

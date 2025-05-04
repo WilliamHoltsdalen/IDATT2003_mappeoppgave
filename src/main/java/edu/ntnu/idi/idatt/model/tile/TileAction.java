@@ -1,7 +1,7 @@
-package edu.ntnu.idi.idatt.model.interfaces;
+package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.Board;
-import edu.ntnu.idi.idatt.model.Player;
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
  * <h3>TileAction interface</h3>
