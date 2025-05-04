@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.navigation;
 
-import edu.ntnu.idi.idatt.view.common.MenuView;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +16,12 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.app.AppView;
 import edu.ntnu.idi.idatt.view.common.GameSelectionView;
+import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameMenuView;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameMenuView;
+import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {
@@ -55,6 +56,7 @@ public class ViewNavigator implements ButtonClickObserver {
       case LADDER_GAME -> appView.showView(createLadderGameView(params));
       case LADDER_GAME_BOARD_CREATOR -> appView.showView(createLadderGameBoardCreatorView());
       case LUDO_GAME_MENU -> appView.showView(createLudoGameMenuView());
+      case LUDO_GAME -> appView.showView(createLudoGameView());
       default -> throw new IllegalArgumentException("Unknown view type: " + viewType);
     }
   }
@@ -109,14 +111,16 @@ public class ViewNavigator implements ButtonClickObserver {
     LudoGameMenuView view = new LudoGameMenuView();
     MenuController controller = new LudoMenuController(view);
     controller.setOnStartGame((board, players) -> {
-      Map<String, Object> params = new HashMap<>();
-      params.put("board", board);
-      params.put("players", players);
-      navigateTo(ViewType.LUDO_GAME, params);
+      navigateTo(ViewType.LUDO_GAME);
     });
     controller.setOnCreateBoard(() -> navigateTo(ViewType.LUDO_GAME_BOARD_CREATOR));
     controller.setOnBackToGameSelection(() -> navigateTo(ViewType.GAME_SELECTION));
     view.addObserver(controller);
+    return view;
+  }
+
+  private Node createLudoGameView() {
+    LudoGameView view = new LudoGameView();
     return view;
   }
 }

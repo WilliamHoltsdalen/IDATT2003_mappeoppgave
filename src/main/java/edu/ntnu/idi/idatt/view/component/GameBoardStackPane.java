@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ import javafx.util.Duration;
  */
 public class GameBoardStackPane extends StackPane {
   private static final Duration TRANSITION_DURATION = Duration.seconds(1);
-  private final Board board;
+  private final LadderGameBoard board;
   private final Map<Player, Tile> playerTileMap;
   private final Map<Player, Shape> playerTokenMap;
   private double[] boardDimensions;
@@ -47,7 +48,7 @@ public class GameBoardStackPane extends StackPane {
    * @param board the board to display
    * @param players the list of players to display
    */
-  public GameBoardStackPane(Board board, List<Player> players) {
+  public GameBoardStackPane(LadderGameBoard board, List<Player> players) {
     this.board = board;
     this.playerTileMap = new HashMap<>();
     this.playerTokenMap = new HashMap<>();

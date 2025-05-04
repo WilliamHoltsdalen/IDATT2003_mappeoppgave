@@ -2,10 +2,8 @@ package edu.ntnu.idi.idatt.view.common;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -96,6 +94,13 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    * Validates the players in the menu view and disables the start game button if necessary.
    */
   protected abstract void validatePlayers();
+
+  /**
+   * Sets the selected board in the main menu to the given board object.
+   *
+   * @param board The board object to set.
+   */
+  public abstract void setSelectedBoard(Board board);
 
   /**
    * Initializes the menu view.
@@ -335,27 +340,6 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     }
 
     validatePlayers();
-  }
-
-  /**
-   * Sets the selected board in the main menu to the given board object.
-   *
-   * @param board The board object to set.
-   */
-  public void setSelectedBoard(Board board) {
-    logger.debug("Setting selected board: {}", board.getName());
-    selectedBoard = board;
-    boardStackPane.initialize(selectedBoard, selectedBoard.getBackground());
-    boardStackPane.getBackgroundImageView().setFitWidth(250);
-    boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
-    boardTitle.setText(board.getName());
-    boardDescription.setText(board.getDescription());
-    Platform.runLater(() -> {
-      // Update the board in the carousel
-      VBox carousel = (VBox) boardSelectionBox.getChildren().get(1);
-      carousel.getChildren().set(0, boardStackPane);
-      logger.debug("Board stack pane in carousel updated successfully");
-    });
   }
 
   /**

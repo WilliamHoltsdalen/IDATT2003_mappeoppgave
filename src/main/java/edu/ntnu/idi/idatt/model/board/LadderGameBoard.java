@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
-
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetBackgroundValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetPatternValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetRowsAndColumnsValidator;
 /**
  * <h3>LadderGameBoard class</h3>
  *
@@ -16,6 +18,9 @@ import edu.ntnu.idi.idatt.model.tile.Tile;
  * @see Tile
  */
 public class LadderGameBoard extends BaseBoard {
+    protected int[] rowsAndColumns;
+    protected String background;
+    protected String pattern;
 
     /**
      * Constructor for LadderGameBoard.
@@ -27,7 +32,71 @@ public class LadderGameBoard extends BaseBoard {
      * @param pattern The pattern of the board
      */
     public LadderGameBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
-        super(name, description, rowsAndColumns, background, pattern);
+        super(name, description);
+
+        setRowsAndColumns(rowsAndColumns);
+        setBackground(background);
+        setPattern(pattern);
+    }
+
+    /**
+     * Gets the number of rows and columns in the board.
+     *
+     * @return an array containing [rows, columns]
+     */
+    public int[] getRowsAndColumns() {
+        return rowsAndColumns;
+    }
+
+    /**
+     * Gets the background of the board.
+     *
+     * @return the background of the board
+     */
+    public String getBackground() {
+        return background;
+    }
+
+    /**
+     * Gets the pattern of the board.
+     *
+     * @return the pattern of the board
+     */
+    public String getPattern() {
+        return pattern;
+    }
+
+    /**
+     * Sets the number of rows and columns in the board. Also creates the tiles for the board 
+     * based on the rows and columns by calling the appropriate method.
+     * 
+     * @see #createTiles(int, int)
+     * @param rowsAndColumns an array containing [rows, columns]
+     */
+    public void setRowsAndColumns(int[] rowsAndColumns) {
+        ladderGameBoardSetRowsAndColumnsValidator(rowsAndColumns);
+        this.rowsAndColumns = rowsAndColumns;
+        createTiles(rowsAndColumns[0], rowsAndColumns[1]);
+    }
+
+    /**
+     * Sets the background of the board.
+     *
+     * @param background the background to set
+     */
+    public void setBackground(String background) {
+        ladderGameBoardSetBackgroundValidator(background);
+        this.background = background;
+    }
+
+    /**
+     * Sets the pattern of the board.
+     *
+     * @param pattern the pattern to set
+     */
+    public void setPattern(String pattern) {
+        ladderGameBoardSetPatternValidator(pattern);
+        this.pattern = pattern;
     }
 
     /**

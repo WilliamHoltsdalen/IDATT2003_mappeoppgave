@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ public class BoardStackPane extends StackPane {
   private double[] boardDimensions;
   private Consumer<ComponentDropEventData> onComponentDropped;
   private Runnable onRemoveComponentsOutsideGrid;
-  private Board board;
+  private LadderGameBoard board;
 
   private final ImageView backgroundImageView;
   private final VBox gridContainer;
@@ -63,7 +64,7 @@ public class BoardStackPane extends StackPane {
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
   }
 
-  public void initialize(Board board, String backgroundImagePath) {
+  public void initialize(LadderGameBoard board, String backgroundImagePath) {
     logger.debug("Initializing BoardStackPane");
     reset();
     setBoard(board);
@@ -141,7 +142,7 @@ public class BoardStackPane extends StackPane {
     this.onRemoveComponentsOutsideGrid = onRemoveComponentsOutsideGrid;
   }
 
-  public void setBoard(Board board) {
+  public void setBoard(LadderGameBoard board) {
     logger.debug("Setting board to: {}", board.getName());
     this.board = board;
   }

@@ -7,6 +7,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
+import javafx.scene.paint.Color;
 
 /**
  * <h3> Validator class for arguments passed to model constructors and methods.</h3>
@@ -109,42 +110,6 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates the arguments for the setBackground method in Board class.
-   *
-   * @param background the background to set
-   * @throws IllegalArgumentException if background is null or blank
-   */
-  public static void boardSetBackgroundValidator(String background) {
-    if (background == null || background.isBlank()) {
-      throw new IllegalArgumentException("Background cannot be null or blank");
-    }
-  }
-
-  /** 
-   * Validates the arguments for the setPattern method in Board class.
-   *
-   * @param pattern the pattern to set
-   * @throws IllegalArgumentException if pattern is null or blank
-   */
-  public static void boardSetPatternValidator(String pattern) {
-    if (pattern == null || pattern.isBlank()) {
-      throw new IllegalArgumentException("Pattern cannot be null or blank");
-    }
-  }
-
-  /**
-   * Validates the arguments for the setRowsAndColumns method in Board class.
-   *
-   * @param rowsAndColumns the rows and columns to set
-   * @throws IllegalArgumentException if rowsAndColumns is null
-   */
-  public static void boardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
-    if (rowsAndColumns == null) {
-      throw new IllegalArgumentException("Rows and columns cannot be null");
-    }
-  }
-
-  /**
    * Validates the arguments for the populateTiles method in Board class.
    *
    * @param rows    the number of rows
@@ -169,6 +134,97 @@ public class ArgumentValidator {
     }
     if (tile.getTileId() < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setRowsAndColumns method in LadderGameBoard class.
+   *
+   * @param rowsAndColumns the rows and columns to set
+   * @throws IllegalArgumentException if rowsAndColumns is null
+   */
+  public static void ladderGameBoardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
+    if (rowsAndColumns == null) {
+      throw new IllegalArgumentException("Rows and columns cannot be null");
+    }
+  }
+  
+  /**
+   * Validates the arguments for the setBackground method in LadderGameBoard class.
+   *
+   * @param background the background to set
+   * @throws IllegalArgumentException if background is null or blank
+   */
+  public static void ladderGameBoardSetBackgroundValidator(String background) {
+    if (background == null || background.isBlank()) {
+      throw new IllegalArgumentException("Background cannot be null or blank");
+    }
+  }
+
+  /** 
+   * Validates the arguments for the setPattern method in LadderGameBoard class.
+   *
+   * @param pattern the pattern to set
+   * @throws IllegalArgumentException if pattern is null or blank
+   */
+  public static void ladderGameBoardSetPatternValidator(String pattern) {
+    if (pattern == null || pattern.isBlank()) {
+      throw new IllegalArgumentException("Pattern cannot be null or blank");
+    }
+  }
+
+  /**
+   * Validates the arguments for the setRowsAndColumns method in LudoGameBoard class.
+   *
+   * @param rowsAndColumns the rows and columns to set
+   * @throws IllegalArgumentException if rowsAndColumns is null or the rows and columns are not equal
+   */
+  public static void ludoGameBoardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
+    if (rowsAndColumns == null) {
+      throw new IllegalArgumentException("Rows and columns cannot be null");
+    }
+    if (rowsAndColumns[0] != rowsAndColumns[1]) {
+      throw new IllegalArgumentException("Rows and columns must be equal");
+    }
+  }
+
+
+  /**
+   * Validates the arguments for the setColors method in LudoGameBoard class.
+   *
+   * @param colors the colors to set
+   * @throws IllegalArgumentException if colors is null
+   */
+  public static void ludoGameBoardSetColorsValidator(Color[] colors) {
+    if (colors == null) {
+      throw new IllegalArgumentException("Colors cannot be null");
+    }
+    if (colors.length != 4) {
+      throw new IllegalArgumentException("Colors must contain 4 colors");
+    }
+    for (Color color : colors) {
+      if (color == null) {
+        throw new IllegalArgumentException("Color cannot be null");
+      }
+    }
+  }
+
+  /**
+   * Validates the arguments for the setBoardSize method in LudoGameBoard class.
+   *
+   * @param boardSize the board size to set
+   * @throws IllegalArgumentException if boardSize is less than 1
+   */
+  public static void ludoGameBoardSetBoardSizeValidator(int boardSize) {
+    if (boardSize < 1) {
+      throw new IllegalArgumentException("Board size must be greater than 0");
+    }
+    if (boardSize % 2 == 0) {
+      throw new IllegalArgumentException("Board size must be an odd number");
+    }
+
+    if (boardSize < 9) {
+      throw new IllegalArgumentException("Board size must be at least 9");
     }
   }
 

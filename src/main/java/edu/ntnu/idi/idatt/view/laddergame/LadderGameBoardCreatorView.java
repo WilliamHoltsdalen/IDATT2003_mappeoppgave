@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.Map;
 
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -116,7 +117,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
    * @param components The components to display.
    * @param board The board to display.
    */
-  public void initializeView(Map<String, String[]> components, Board board) {
+  public void initializeView(Map<String, String[]> components, LadderGameBoard board) {
     logger.debug("Initializing LadderGameBoardCreatorView");
     VBox leftPanel = createComponentSelectionPanel(components);
 
