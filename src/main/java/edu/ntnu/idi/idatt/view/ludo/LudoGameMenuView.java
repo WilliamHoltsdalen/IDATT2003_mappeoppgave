@@ -12,20 +12,12 @@ public class LudoGameMenuView extends MenuView {
         super();
     }
 
-    /**
-   * Updates the controls of the main menu view based on the number of players in the main menu,
-   * and disables the start game button if there are not enough players. The button is also disabled
-   * if there are any players with the same color and token type.
+  /**
+   * Validates the players in the main menu. Disables the start game button if there are not enough players,
+   * or if there are any duplicate colors or token types.
    */
   @Override
-  protected void updateControls() {
-    // Hide / show the add player buttons box based on the number of players in the main menu.
-    if (mainMenuPlayerRows.size() == maximumPlayers) {
-      playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
-    } else if (mainMenuPlayerRows.size() < maximumPlayers) {
-      playerSelectionBox.getChildren().setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
-    }
-
+  protected void validatePlayers() {
     // Disable the start game button if there are not enough players.
     if (mainMenuPlayerRows.size() < minimumPlayers) {
       disableStartGameButton("You need at least " + minimumPlayers + " players.");
@@ -33,8 +25,7 @@ public class LudoGameMenuView extends MenuView {
       enableStartGameButton();
     }
 
-    /* Find all the unique colors and token types in the main menu, and disable the start game button
-     * if there are any duplicates.*/
+    // Find all the unique colors in the main menu, and disable the start game button if there are any duplicates.
     Set<Color> uniqueColors = new HashSet<>(
         mainMenuPlayerRows.stream().map(MenuPlayerRow::getColor).toList());
     if (uniqueColors.size() != mainMenuPlayerRows.size()) {

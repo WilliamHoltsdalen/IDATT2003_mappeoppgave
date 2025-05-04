@@ -93,6 +93,11 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   }
 
   /**
+   * Validates the players in the menu view and disables the start game button if necessary.
+   */
+  protected abstract void validatePlayers();
+
+  /**
    * Initializes the menu view.
    * 
    * @param title The title of the menu view.
@@ -329,26 +334,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
       playerSelectionBox.getChildren().setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
     }
 
-    // Disable the start game button if there are not enough players.
-    if (mainMenuPlayerRows.size() < minimumPlayers) {
-      disableStartGameButton("You need at least " + minimumPlayers + " players.");
-    } else {
-      enableStartGameButton();
-    }
-
-    /* Find all the unique colors and token types in the main menu, and disable the start game button
-     * if there are any duplicates.*/
-    Set<Color> uniqueColors = new HashSet<>(
-        mainMenuPlayerRows.stream().map(MenuPlayerRow::getColor).toList());
-    if (uniqueColors.size() != mainMenuPlayerRows.size()) {
-      disableStartGameButton("You can't have two players with the same color.");
-    }
-    
-    Set<PlayerTokenType> uniqueTokenTypes = new HashSet<>(
-        mainMenuPlayerRows.stream().map(MenuPlayerRow::getPlayerTokenType).toList());
-     if (uniqueTokenTypes.size() != mainMenuPlayerRows.size()) {
-      disableStartGameButton("You can't have two players with the same token type.");
-    }
+    validatePlayers();
   }
 
   /**

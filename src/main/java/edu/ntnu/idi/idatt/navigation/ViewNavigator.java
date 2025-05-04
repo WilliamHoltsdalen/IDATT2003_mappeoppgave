@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.navigation;
 
+import edu.ntnu.idi.idatt.view.common.MenuView;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ViewNavigator implements ButtonClickObserver {
   }
 
   private Node createLadderGameMenuView() {
-    LadderGameMenuView view = new LadderGameMenuView();
+    MenuView view = new LadderGameMenuView();
     MenuController controller = new LadderGameMenuController(view);
     controller.setOnStartGame((board, players) -> {
       Map<String, Object> params = new HashMap<>();
