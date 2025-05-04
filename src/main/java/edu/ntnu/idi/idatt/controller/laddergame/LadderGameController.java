@@ -1,15 +1,15 @@
-package edu.ntnu.idi.idatt.controller;
+package edu.ntnu.idi.idatt.controller.laddergame;
 
-import edu.ntnu.idi.idatt.model.game.BoardGame;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.game.BoardGame;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
 import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
+import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 

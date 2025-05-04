@@ -44,14 +44,14 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   @Override
-  public void writeFile(String path, List<Player> players) {
+  public void writeFile(String path, List<Player> players) throws IOException {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
       for (Player player : players) {
         writer.write(toCsvLine(player));
         writer.newLine();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new IOException("Could not write players to file: " + path);
     }
   }
 

@@ -18,6 +18,44 @@
   -fx-max-width: infinity;
 }
 
+.game-selection-box {
+  -fx-background-color: -gray-background;
+  -fx-padding: 20;
+  -fx-spacing: 30;
+  -fx-alignment: center;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
+  -fx-background-radius: 18;
+}
+
+.game-selection-title {
+  -fx-font-size: 36px;
+  -fx-font-weight: bold;
+}
+
+.game-selection-game-name {
+  -fx-font-size: 20px;
+}
+
+.game-selection-game-box {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+  -fx-effect: dropshadow(three-pass-box, black, 6, 0, 0, 0);
+  -fx-cursor: hand;
+}
+
+.game-selection-game-box:hover {
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-effect: dropshadow(three-pass-box, #007AFF, 10, 0, 0, 0);
+}
+
 .main-menu-view {
   -fx-background-color: -gray-background;
   -fx-padding: 20;
@@ -31,6 +69,7 @@
 .main-menu-h-box {
   -fx-alignment: center;
   -fx-spacing: 35;
+  -fx-padding: 20, 0, 0, 0;
 }
 
 .main-menu-header-box {
@@ -42,6 +81,15 @@
   -fx-pref-width: 3px;
   -fx-background-color: -gray-border;
   -fx-min-height: 370px;
+}
+
+.main-menu-back-button {
+  -fx-background-color: transparent;
+  -fx-border-color: black;
+  -fx-border-radius: 5;
+  -fx-text-fill: black;
+  -fx-font-size: 20px;
+  -fx-padding: 5;
 }
 
 .main-menu-more-options-menu {
@@ -61,6 +109,15 @@
 .main-menu-player-selection {
   -fx-alignment: top-center;
   -fx-spacing: 20;
+}
+
+.main-menu-import-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: black;
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 5;
+  -fx-padding: 3;
 }
 
 .main-menu-player-list-box {
@@ -94,6 +151,16 @@
   -fx-spacing: 10;
   -fx-font-size: 18px;
   -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+}
+
+/* To hide the hyperlink and separator in the color palette */
+.color-palette .hyperlink, .color-palette .separator {
+  visibility: hidden;
+}
+
+/* To hide the empty space after removing the hyperlink and separator in the color palette */
+.color-palette {
+  -fx-padding: 15 15 -30 15;
 }
 
 .main-menu-add-player-button:hover {
@@ -312,6 +379,7 @@ Button {
   -fx-font-weight: bold;
   -fx-background-radius: 7;
   -fx-padding: 7 10;
+  -fx-cursor: hand;
 }
 
 Button:hover {
@@ -370,6 +438,10 @@ Button:pressed {
   -fx-margin: 10 0;
 }
 
+.component-section-image {
+  -fx-cursor: hand;
+}
+
 .board-config-section {
   -fx-spacing: 15;
   -fx-padding: 15;
@@ -411,7 +483,6 @@ Button:pressed {
 }
 
 .grid-cell {
-  -fx-cursor: hand;
   -fx-fill: transparent;
   -fx-stroke: black;
   -fx-stroke-width: 1.5;
@@ -552,7 +623,6 @@ Button:pressed {
   -fx-text-fill: #FF3B30;
   -fx-font-size: 18px;
   -fx-padding: 0;
-  -fx-cursor: hand;
 }
 
 .delete-button:hover {

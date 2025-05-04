@@ -1,28 +1,39 @@
 package edu.ntnu.idi.idatt.view.common;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.BoardStackPane;
-import edu.ntnu.idi.idatt.view.component.MainMenuPlayerRow;
+import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 /**
@@ -39,52 +50,85 @@ import javafx.util.Duration;
  */
 public abstract class MenuView extends VBox implements ButtonClickSubject {
   protected static final Logger logger = LoggerFactory.getLogger(MenuView.class);
-  private final List<ButtonClickObserver> observers;
-  private Runnable onUpdateControls;
+  protected final List<ButtonClickObserver> observers;
+  protected final List<PlayerTokenType> allowedPlayerTokenTypes;
+  protected final List<String> allowedPlayerColors;
+  protected int minimumPlayers;
+  protected int maximumPlayers;
 
   protected VBox playerSelectionBox;
-  protected final Text playerSelectionTitle;
-  protected final List<MainMenuPlayerRow> mainMenuPlayerRows;
+  protected HBox playerSelectionHeader;
+  protected final List<MenuPlayerRow> mainMenuPlayerRows;
   protected final HBox addPlayerButtonsBox;
   protected final VBox playerListBox;
 
   protected VBox boardSelectionBox;
+  protected HBox boardSelectionHeader;
   protected final BoardStackPane boardStackPane;
   protected final Label boardTitle;
   protected final Label boardDescription;
   protected final Button startGameButton;
   protected Board selectedBoard;
 
-  
+  /**
+   * Constructor for MenuView class.
+   */
   protected MenuView() {
     this.observers = new ArrayList<>();
+    this.allowedPlayerTokenTypes = new ArrayList<>();
+    this.allowedPlayerColors = new ArrayList<>();
     this.mainMenuPlayerRows = new ArrayList<>();
-    this.playerSelectionTitle = new Text();
+    this.playerSelectionHeader = new HBox();
     this.playerListBox = new VBox();
     this.addPlayerButtonsBox = new HBox();
     this.boardTitle = new Label();
     this.boardDescription = new Label();
     this.startGameButton = createStartGameButton();
     this.playerSelectionBox = new VBox();
+    this.boardSelectionHeader = new HBox();
     this.boardSelectionBox = new VBox();
     this.boardStackPane = new BoardStackPane();
+
+    this.getStyleClass().add("main-menu-view");
   }
+
+  /**
+   * Validates the players in the menu view and disables the start game button if necessary.
+   */
+  protected abstract void validatePlayers();
+
+  /**
+   * Initializes the menu view.
+   * 
+   * @param title The title of the menu view.
+   * @param allowedPlayerTokenTypes The allowed player token types.
+   */
+  public void initialize(String title, List<PlayerTokenType> allowedPlayerTokenTypes,
+      List<String> allowedPlayerColors, int minimumPlayers, int maximumPlayers) {
+    this.allowedPlayerTokenTypes.addAll(allowedPlayerTokenTypes);
+    this.allowedPlayerColors.addAll(allowedPlayerColors);
+    this.minimumPlayers = minimumPlayers;
+    this.maximumPlayers = maximumPlayers;
+
+    Region menuSpacer = new Region();
+    menuSpacer.getStyleClass().add("main-menu-spacer");
+
+    this.playerSelectionBox = createPlayerSelectionBox();
+    this.boardSelectionBox = createBoardSelectionBox();
+
+    HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
+    hBox.getStyleClass().add("main-menu-h-box");
+    this.getChildren().setAll(createHeaderBox(title), hBox, startGameButton);
+    logger.debug("MenuView initialized successfully");
+  }
+
   /**
    * Returns the list of player rows in the main menu.
    *
    * @return The list of player rows in the main menu.
    */
-  public List<MainMenuPlayerRow> getPlayerRows() {
+  public List<MenuPlayerRow> getPlayerRows() {
     return mainMenuPlayerRows;
-  }
-
-  /**
-   * Sets the callback for the 'update controls' event.
-   *
-   * @param onUpdateControls The callback to set.
-   */
-  protected void setOnUpdateControls(Runnable onUpdateControls) {
-    this.onUpdateControls = onUpdateControls;
   }
 
   /**
@@ -103,50 +147,165 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    *
    * @return The header HBox. 
    */
-  protected HBox createHeaderBox() {
-    Text title = new Text("Main Menu");
-    title.getStyleClass().add("main-menu-title");
+  protected HBox createHeaderBox(String title) {
+    Button backButton = new Button("Game selection");
+    backButton.setGraphic(new FontIcon("fas-chevron-left"));
+    backButton.getStyleClass().add("main-menu-back-button");
+    backButton.setOnAction(event -> notifyObservers("back_to_game_selection"));
 
-    MenuButton moreOptionsMenu = new MenuButton("Import");
-    moreOptionsMenu.getStyleClass().add("main-menu-more-options-menu");
+    Text headerTitle = new Text(title);
+    headerTitle.getStyleClass().add("main-menu-title");
 
-    MenuItem importPlayersMenuItem = new MenuItem("Import players");
-    importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
-    moreOptionsMenu.getItems().addAll(importPlayersMenuItem);
-    importPlayersMenuItem.setOnAction(event -> notifyObservers("import_players"));
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+    Platform.runLater(() -> spacer.setMaxWidth(backButton.getWidth()));
 
-    MenuItem importBoardMenuItem = new MenuItem("Import board");
-    importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
-    moreOptionsMenu.getItems().addAll(importBoardMenuItem);
-    importBoardMenuItem.setOnAction(event -> notifyObservers("import_board"));
-
-    Button createBoardButton = new Button("Create Board");
-    createBoardButton.getStyleClass().add("main-menu-create-board-button");
-    createBoardButton.setOnAction(event -> notifyObservers("create_board"));
-
-    HBox headerBox = new HBox(title, moreOptionsMenu, createBoardButton);
+    HBox headerBox = new HBox(backButton, headerTitle, spacer);
     headerBox.getStyleClass().add("main-menu-header-box");
 
     return headerBox;
   }
+  
+  /**
+   * Creates a player selection box with a title, options, and player list.
+   *
+   * @return The player selection VBox.
+   */
+  protected VBox createPlayerSelectionBox() {
+    Text playerSelectionTitle = new Text("Select players");
+    playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
+
+    MenuButton playerOptionsMenu = new MenuButton("Options");
+    playerOptionsMenu.getStyleClass().add("main-menu-options-menu");
+
+    MenuItem importPlayersMenuItem = new MenuItem("Import players");
+    importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
+    importPlayersMenuItem.setOnAction(event -> handleImportPlayers());
+
+    MenuItem savePlayersMenuItem = new MenuItem("Save players");
+    savePlayersMenuItem.setGraphic(new FontIcon("fas-file-export"));
+    savePlayersMenuItem.setOnAction(event -> handleSavePlayers());
+
+    playerOptionsMenu.getItems().addAll(importPlayersMenuItem, savePlayersMenuItem);
+
+    playerSelectionHeader.getChildren().addAll(playerSelectionTitle, playerOptionsMenu);
+    playerSelectionHeader.setSpacing(10);
+    playerSelectionHeader.setAlignment(Pos.CENTER);
+
+    playerListBox.getStyleClass().add("main-menu-player-list-box");
+    if (!allowedPlayerColors.isEmpty() && allowedPlayerColors.size() <= maximumPlayers) {
+      addPlayerRow("Player 1", Color.web(allowedPlayerColors.get(0)), false);
+      addPlayerRow("Player 2", Color.web(allowedPlayerColors.get(1)), true);
+    } else if (allowedPlayerColors.isEmpty()) {
+      addPlayerRow("Player 1", Color.RED, false);
+      addPlayerRow("Player 2", Color.GREEN, true);
+    }
+
+    Supplier<Color> getPlayerRowDefaultColor = () -> allowedPlayerColors.isEmpty() ? Color.BLUE : Color.web(allowedPlayerColors.get(mainMenuPlayerRows.size()));
+
+    Button addPlayerButton = new Button("Add Player");
+    addPlayerButton.setOnAction(event -> addPlayerRow(
+        "Player " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true));
+
+    Button addBotButton = new Button("Add Bot");
+    addBotButton.setOnAction(event -> addPlayerRow(
+        "Bot " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true));
+
+    addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
+    addPlayerButtonsBox.getChildren().forEach(button -> button.getStyleClass()
+        .add("main-menu-add-player-button"));
+    addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
+
+    VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox, startGameButton);
+    vBox.getStyleClass().add("main-menu-player-selection");
+
+    return vBox;
+  }
 
   /**
-   * Adds a new player row to the main menu with the given name, color, and removable status.
+   * Creates a board selection box with a title, options, and board carousel.
+   *
+   * @return The board selection VBox.
+   */
+  protected VBox createBoardSelectionBox() {
+    Text boardSelectionTitle = new Text("Select a board");
+    boardSelectionTitle.getStyleClass().add("main-menu-selection-box-title"); 
+    
+    MenuButton boardOptionsMenu = new MenuButton("Options");
+    boardOptionsMenu.getStyleClass().add("main-menu-options-menu");
+
+    MenuItem importBoardMenuItem = new MenuItem("Import board");
+    importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
+    importBoardMenuItem.setOnAction(event -> handleImportBoard());
+
+    MenuItem createBoardMenuItem = new MenuItem("Create board");
+    createBoardMenuItem.setGraphic(new FontIcon("fas-plus"));
+    createBoardMenuItem.setOnAction(event -> handleCreateBoard());
+
+    boardOptionsMenu.getItems().addAll(importBoardMenuItem, createBoardMenuItem);
+
+    boardSelectionHeader.getChildren().addAll(boardSelectionTitle, boardOptionsMenu);
+    boardSelectionHeader.setSpacing(10);
+    boardSelectionHeader.setAlignment(Pos.CENTER);
+
+    Button previousButton = new Button("", new FontIcon("fas-chevron-left"));
+    previousButton.getStyleClass().add("icon-only-button");
+    previousButton.setOnAction(event -> notifyObservers("previous_board"));
+
+    boardTitle.setText(selectedBoard.getName());
+
+    Button nextButton = new Button("", new FontIcon("fas-chevron-right"));
+    nextButton.getStyleClass().add("icon-only-button");
+    nextButton.setOnAction(event -> notifyObservers("next_board"));
+
+    HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
+    carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
+
+    boardDescription.setText(selectedBoard.getDescription());
+    boardDescription.getStyleClass().add("main-menu-board-selection-description");
+    boardDescription.prefWidthProperty().bind(carouselControls.widthProperty().multiply(0.8));
+    boardDescription.setMinHeight(Region.USE_PREF_SIZE);
+    boardDescription.setWrapText(true);
+
+    VBox carousel = new VBox(boardStackPane, carouselControls, boardDescription);
+    carousel.getStyleClass().add("main-menu-board-selection-carousel");
+
+    VBox vBox = new VBox(boardSelectionHeader, carousel);
+    vBox.getStyleClass().add("main-menu-board-selection-v-box");
+    vBox.getStyleClass().add("main-menu-board-selection");
+    return vBox;
+  }
+  
+  /**
+   * Sets the players in the menu to the given list of players.
+   *
+   * @param players The list of players to import.
+   */
+  public void setPlayers(List<Player> players) {
+    logger.debug("Setting players: {}", players);
+    mainMenuPlayerRows.clear();
+    playerListBox.getChildren().clear();
+    players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()), !mainMenuPlayerRows.isEmpty()));
+  }
+
+  /**
+   * Adds a new player row to the main menu with the given name, color, and removable status. 
    *
    * @param defaultName The default name of the player.
    * @param color The color of the player.
    * @param removable The removable status of the player.
    */
-  protected void addPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType, boolean removable) {
-    MainMenuPlayerRow mainMenuPlayerRow = new MainMenuPlayerRow(defaultName, color, playerTokenType, removable);
+  protected void addPlayerRow(String defaultName, Color color, boolean removable) {
+    PlayerTokenType playerToken = allowedPlayerTokenTypes.size() >= minimumPlayers ? allowedPlayerTokenTypes.get(playerListBox.getChildren().size()) : allowedPlayerTokenTypes.get(0);
+    MenuPlayerRow mainMenuPlayerRow = new MenuPlayerRow(defaultName, color, playerToken, allowedPlayerTokenTypes, allowedPlayerColors, removable);
     mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
-    mainMenuPlayerRow.setOnUpdate(onUpdateControls);
+    mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
 
     logger.debug("Added player row: {}", mainMenuPlayerRow);
-
-    onUpdateControls.run();
+  
+    updateControls();
   }
 
   /**
@@ -154,12 +313,49 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    *
    * @param mainMenuPlayerRow The player row to remove.
    */
-  protected void removePlayerRow(MainMenuPlayerRow mainMenuPlayerRow) {
+  protected void removePlayerRow(MenuPlayerRow mainMenuPlayerRow) {
     mainMenuPlayerRows.remove(mainMenuPlayerRow);
     playerListBox.getChildren().remove(mainMenuPlayerRow);
 
     logger.debug("Removed player row: {}", mainMenuPlayerRow);
-    onUpdateControls.run();
+    updateControls();
+  }
+
+  /**
+   * Updates the controls of the main menu view based on the number of players in the main menu,
+   * and disables the start game button if there are not enough players. The button is also disabled
+   * if there are any players with the same color and token type.
+   */
+  protected void updateControls() {
+    // Hide / show the add player buttons box based on the number of players in the main menu.
+    if (mainMenuPlayerRows.size() == maximumPlayers) {
+      playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
+    } else if (mainMenuPlayerRows.size() < maximumPlayers) {
+      playerSelectionBox.getChildren().setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
+    }
+
+    validatePlayers();
+  }
+
+  /**
+   * Sets the selected board in the main menu to the given board object.
+   *
+   * @param board The board object to set.
+   */
+  public void setSelectedBoard(Board board) {
+    logger.debug("Setting selected board: {}", board.getName());
+    selectedBoard = board;
+    boardStackPane.initialize(selectedBoard, selectedBoard.getBackground());
+    boardStackPane.getBackgroundImageView().setFitWidth(250);
+    boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
+    boardTitle.setText(board.getName());
+    boardDescription.setText(board.getDescription());
+    Platform.runLater(() -> {
+      // Update the board in the carousel
+      VBox carousel = (VBox) boardSelectionBox.getChildren().get(1);
+      carousel.getChildren().set(0, boardStackPane);
+      logger.debug("Board stack pane in carousel updated successfully");
+    });
   }
 
   /**
@@ -181,6 +377,63 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     startGameButton.setOnAction(event -> notifyObservers("start_game"));
     startGameButton.getStyleClass().remove("button-disabled");
     Tooltip.uninstall(startGameButton, startGameButton.getTooltip());
+  }
+
+  protected void handleSavePlayers() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save players");
+    fileChooser.setInitialFileName("players.csv");
+
+    File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not save players", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("save_players", Map.of("file", file));
+  }
+
+  protected void handleImportPlayers() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Import players");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files", "*.csv"));
+    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not import players", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("import_players", Map.of("file", file));
+  }
+
+  protected void handleImportBoard() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Import board");
+    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files", "*.json"));
+    File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+    if (file == null) {
+      showErrorAlert("Could not import board", "Invalid file path");
+      return;
+    }
+    notifyObserversWithParams("import_board", Map.of("file", file));
+  } 
+
+  protected void handleCreateBoard() {
+    notifyObservers("create_board");
+  }
+
+  public void showInfoAlert(String headerText, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Info");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  public void showErrorAlert(String headerText, String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText(headerText);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 
   /**

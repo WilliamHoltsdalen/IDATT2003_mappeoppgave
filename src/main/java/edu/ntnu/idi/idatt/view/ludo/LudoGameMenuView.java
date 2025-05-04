@@ -1,20 +1,16 @@
-package edu.ntnu.idi.idatt.view.laddergame;
+package edu.ntnu.idi.idatt.view.ludo;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
 import javafx.scene.paint.Color;
 
-public class LadderGameMenuView extends MenuView {
-  /**
-   * Constructor for LadderGameMenuView class.
-   */
-  public LadderGameMenuView() {
-    super();
-  }
+public class LudoGameMenuView extends MenuView {
+    public LudoGameMenuView() {
+        super();
+    }
 
   /**
    * Validates the players in the main menu. Disables the start game button if there are not enough players,
@@ -34,13 +30,6 @@ public class LadderGameMenuView extends MenuView {
         mainMenuPlayerRows.stream().map(MenuPlayerRow::getColor).toList());
     if (uniqueColors.size() != mainMenuPlayerRows.size()) {
       disableStartGameButton("You can't have two players with the same color.");
-    }
-
-    // Find all the unique token types in the main menu, and disable the start game button if there are any duplicates.
-    Set<PlayerTokenType> uniqueTokenTypes = new HashSet<>(
-        mainMenuPlayerRows.stream().map(MenuPlayerRow::getPlayerTokenType).toList());
-    if (uniqueTokenTypes.size() != mainMenuPlayerRows.size()) {
-      disableStartGameButton("You can't have two players with the same token type.");
     }
   }
 }
