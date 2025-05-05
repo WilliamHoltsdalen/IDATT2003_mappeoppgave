@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
@@ -28,7 +29,7 @@ public class LadderGameView extends HBox implements ButtonClickSubject {
     this.getStyleClass().add("game-view");
   }
 
-  public void initialize(List<Player> players, int roundNumber, Board board) {
+  public void initialize(List<Player> players, int roundNumber, LadderGameBoard board) {
     this.playersBox = createPlayersBox(players, roundNumber);
     this.boardStackPane = createBoardStackPane(board, players);
     this.gameMenuBox = createGameMenuBox();
@@ -60,7 +61,7 @@ public class LadderGameView extends HBox implements ButtonClickSubject {
     return spacer;
   }
 
-  public GameBoardStackPane createBoardStackPane(Board board, List<Player> players) {
+  public GameBoardStackPane createBoardStackPane(LadderGameBoard board, List<Player> players) {
     return new GameBoardStackPane(board, players);
   }
 

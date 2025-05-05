@@ -10,8 +10,6 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardAddTileV
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGetTileValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetBackgroundValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetDescriptionValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetPatternValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetRowsAndColumnsValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardSetnameValidator;
 
 /**
@@ -26,24 +24,20 @@ public abstract class BaseBoard implements Board {
     protected int[] rowsAndColumns;
     protected Map<Integer, Tile> tiles;
     protected String background;
-    protected String pattern;
-
+    
     /**
      * Constructor for BaseBoard.
      *
      * @param name The name of the board
      * @param description The description of the board
-     * @param rowsAndColumns The number of rows and columns in the board
      * @param background The background of the board
      * @param pattern The pattern of the board
      */
-    protected BaseBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
+    protected BaseBoard(String name, String description, String background) {
         this.tiles = new HashMap<>();
         setName(name);
         setDescription(description);
-        setRowsAndColumns(rowsAndColumns);
         setBackground(background);
-        setPattern(pattern);
     }
 
     /**
@@ -67,13 +61,13 @@ public abstract class BaseBoard implements Board {
     }
 
     /**
-     * Gets the number of rows and columns in the board.
+     * Gets the background of the board.
      *
-     * @return an array containing [rows, columns]
+     * @return the background of the board
      */
     @Override
-    public int[] getRowsAndColumns() {
-        return rowsAndColumns;
+    public String getBackground() {
+        return background;
     }
 
     /**
@@ -110,26 +104,6 @@ public abstract class BaseBoard implements Board {
     }
 
     /**
-     * Gets the background of the board.
-     *
-     * @return the background of the board
-     */
-    @Override
-    public String getBackground() {
-        return background;
-    }
-
-    /**
-     * Gets the pattern of the board.
-     *
-     * @return the pattern of the board
-     */
-    @Override
-    public String getPattern() {
-        return pattern;
-    }
-
-    /**
      * Sets the name of the board.
      *
      * @param name the name to set
@@ -152,20 +126,6 @@ public abstract class BaseBoard implements Board {
     }
 
     /**
-     * Sets the number of rows and columns in the board. Also creates the tiles for the board 
-     * based on the rows and columns by calling the appropriate method.
-     * 
-     * @see #createTiles(int, int)
-     * @param rowsAndColumns an array containing [rows, columns]
-     */
-    @Override
-    public void setRowsAndColumns(int[] rowsAndColumns) {
-        boardSetRowsAndColumnsValidator(rowsAndColumns);
-        this.rowsAndColumns = rowsAndColumns;
-        createTiles(rowsAndColumns[0], rowsAndColumns[1]);
-    }
-
-    /**
      * Sets the background of the board.
      *
      * @param background the background to set
@@ -174,17 +134,6 @@ public abstract class BaseBoard implements Board {
     public void setBackground(String background) {
         boardSetBackgroundValidator(background);
         this.background = background;
-    }
-
-    /**
-     * Sets the pattern of the board.
-     *
-     * @param pattern the pattern to set
-     */
-    @Override
-    public void setPattern(String pattern) {
-        boardSetPatternValidator(pattern);
-        this.pattern = pattern;
     }
 
     /**

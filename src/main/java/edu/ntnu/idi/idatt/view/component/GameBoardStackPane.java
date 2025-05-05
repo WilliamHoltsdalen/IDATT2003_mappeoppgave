@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
-import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
@@ -30,7 +31,7 @@ import javafx.util.Duration;
  */
 public class GameBoardStackPane extends StackPane {
   private static final Duration TRANSITION_DURATION = Duration.seconds(1);
-  private final Board board;
+  private final LadderGameBoard board;
   private final Map<Player, Tile> playerTileMap;
   private final Map<Player, Shape> playerTokenMap;
   private double[] boardDimensions;
@@ -47,7 +48,7 @@ public class GameBoardStackPane extends StackPane {
    * @param board the board to display
    * @param players the list of players to display
    */
-  public GameBoardStackPane(Board board, List<Player> players) {
+  public GameBoardStackPane(LadderGameBoard board, List<Player> players) {
     this.board = board;
     this.playerTileMap = new HashMap<>();
     this.playerTokenMap = new HashMap<>();
@@ -67,7 +68,7 @@ public class GameBoardStackPane extends StackPane {
    * @param players the list of players to display
    */
   private void initialize(List<Player> players) {
-    BoardStackPane boardStackPane = new BoardStackPane();
+    LadderGameBoardStackPane boardStackPane = new LadderGameBoardStackPane();
     boardStackPane.initialize(board, board.getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(500);
     boardStackPane.getStyleClass().add("game-board-image-view");

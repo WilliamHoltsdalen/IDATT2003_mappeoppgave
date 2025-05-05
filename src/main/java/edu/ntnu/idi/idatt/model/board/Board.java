@@ -25,11 +25,11 @@ public interface Board {
     String getDescription();
 
     /**
-     * Gets the number of rows and columns in the board.
+     * Gets the background of the board.
      *
-     * @return an array containing [rows, columns]
+     * @return the background of the board
      */
-    int[] getRowsAndColumns();
+    String getBackground();
 
     /**
      * Gets a tile by its ID.
@@ -54,20 +54,6 @@ public interface Board {
     int getTileCount();
 
     /**
-     * Gets the background image path of the board.
-     *
-     * @return the background image path
-     */
-    String getBackground();
-
-    /**
-     * Gets the pattern of the board.
-     *
-     * @return the pattern of the board
-     */
-    String getPattern();
-
-    /**
      * Sets the name of the board.
      *
      * @param name the name to set
@@ -82,25 +68,11 @@ public interface Board {
     void setDescription(String description);
 
     /**
-     * Sets the number of rows and columns in the board.
+     * Sets the background of the board.
      *
-     * @param rowsAndColumns an array containing [rows, columns]
-     */
-    void setRowsAndColumns(int[] rowsAndColumns);
-
-    /**
-     * Sets the background image path of the board.
-     *
-     * @param background the background image path to set
+     * @param background the background to set
      */
     void setBackground(String background);
-
-    /**
-     * Sets the pattern of the board.
-     *
-     * @param pattern the pattern to set
-     */
-    void setPattern(String pattern);
 
     /**
      * Adds a tile to the board.

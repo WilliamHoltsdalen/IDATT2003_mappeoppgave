@@ -3,8 +3,12 @@ package edu.ntnu.idi.idatt.view.ludo;
 import java.util.HashSet;
 import java.util.Set;
 
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import javafx.application.Platform;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class LudoGameMenuView extends MenuView {
@@ -31,5 +35,27 @@ public class LudoGameMenuView extends MenuView {
     if (uniqueColors.size() != mainMenuPlayerRows.size()) {
       disableStartGameButton("You can't have two players with the same color.");
     }
+  }
+
+  /**
+   * Sets the selected board in the main menu to the given board object.
+   *
+   * @param board The board object to set.
+   */
+  @Override
+  public void setSelectedBoard(Board board) {
+    logger.debug("Setting selected board: {}", board.getName());
+    selectedBoard = board;
+    boardStackPane.initialize((LadderGameBoard) selectedBoard, ((LadderGameBoard) selectedBoard).getBackground());
+    boardStackPane.getBackgroundImageView().setFitWidth(250);
+    boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
+    boardTitle.setText(board.getName());
+    boardDescription.setText(board.getDescription());
+    Platform.runLater(() -> {
+      // Update the board in the carousel
+      VBox carousel = (VBox) boardSelectionBox.getChildren().get(1);
+      carousel.getChildren().set(0, boardStackPane);
+      logger.debug("Board stack pane in carousel updated successfully");
+    });
   }
 }

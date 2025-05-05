@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
-import edu.ntnu.idi.idatt.view.component.BoardStackPane;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
@@ -29,13 +29,13 @@ import javafx.stage.FileChooser;
  * @see BorderPane
  * @see ButtonClickSubject
  */
-public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
+public abstract class BoardCreatorView extends BorderPane implements ButtonClickSubject {
   protected static final Logger logger = LoggerFactory.getLogger(BoardCreatorView.class);
   protected final List<ButtonClickObserver> observers;
 
   private final TextField nameField;
   private final TextField descriptionField;
-  private final BoardStackPane boardStackPane;
+  private final LadderGameBoardStackPane boardStackPane;
 
   /**
    * Constructor for BoardCreatorView.
@@ -80,7 +80,7 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
    * 
    * @return The board stack pane.
    */
-  public BoardStackPane getBoardStackPane() {
+  public LadderGameBoardStackPane getBoardStackPane() {
     return boardStackPane;
   }
 
@@ -117,8 +117,8 @@ public class BoardCreatorView extends BorderPane implements ButtonClickSubject {
    * 
    * @return The board stack pane.
    */
-  protected BoardStackPane createBoardStackPane() {
-    BoardStackPane boardContainer = new BoardStackPane();
+  protected LadderGameBoardStackPane createBoardStackPane() {
+    LadderGameBoardStackPane boardContainer = new LadderGameBoardStackPane();
     boardContainer.getStyleClass().add("board-creator-board-container");
     return boardContainer;
   }
