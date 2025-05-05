@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.game.BoardGame;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
 import edu.ntnu.idi.idatt.model.player.Player;
@@ -47,7 +48,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    * Initializes the ladder game view. 
    */
   private void initializeLadderGameView() {
-    ladderGameView.initialize(getPlayers(), getRoundNumber(), getBoard());
+    ladderGameView.initialize(getPlayers(), getRoundNumber(), (LadderGameBoard) getBoard());
   }
 
   /**

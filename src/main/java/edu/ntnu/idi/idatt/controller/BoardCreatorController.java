@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.board.BoardFactory;
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +11,15 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
+import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
 
@@ -30,12 +31,12 @@ public class BoardCreatorController implements ButtonClickObserver {
   private static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
   
   private final LadderGameBoardCreatorView view;
-  private final BoardStackPane boardPane;
+  private final LadderGameBoardStackPane boardPane;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;
   private final BoardFactory boardFactory;
-  private Board board;
+  private LadderGameBoard board;
 
   public BoardCreatorController(LadderGameBoardCreatorView view) {
     logger.debug("Constructing BoardCreatorController");
@@ -43,7 +44,7 @@ public class BoardCreatorController implements ButtonClickObserver {
     this.availableComponents = new HashMap<>();
     this.availableBackgrounds = new HashMap<>();
     this.boardFactory = new LadderBoardFactory();
-    this.board = boardFactory.createBlankBoard(9, 10);
+    this.board = (LadderGameBoard) boardFactory.createBlankBoard(9, 10);
 
     setAvailableComponents();
     setAvailableBackgrounds();
@@ -248,7 +249,7 @@ public class BoardCreatorController implements ButtonClickObserver {
       Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
       return;
     }
-    board = importedBoard;
+    board = (LadderGameBoard) importedBoard;
 
     String backgroundName = availableBackgrounds.entrySet().stream()
         .filter(entry -> entry.getValue().equals(board.getBackground()))
@@ -258,7 +259,6 @@ public class BoardCreatorController implements ButtonClickObserver {
     String pattern = board.getPattern();
     int rows = board.getRowsAndColumns()[0];
     int columns = board.getRowsAndColumns()[1];
-
 
     view.setRowSpinner(rows);
     view.setColumnSpinner(columns);
@@ -277,7 +277,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private void handleSaveBoard(Map<String, Object> params) {
     logger.debug("Handling save board");
     try {
-      board = boardPane.getBoard();
+      board = (LadderGameBoard) boardPane.getBoard();
       board.setName(view.getNameField().getText());
       board.setDescription(view.getDescriptionField().getText());
 

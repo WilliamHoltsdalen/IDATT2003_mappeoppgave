@@ -75,7 +75,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     if (boards == null || boards.isEmpty()) {
       throw new IllegalArgumentException("Board list is null or empty.");
     }
-    JsonObject boardJson = serializeBoard(boards.getFirst());
+    JsonObject boardJson = serializeBoard((LadderGameBoard) boards.getFirst());
     if (boardJson == null) {
       // Todo: Handle null boardJson, perhaps by throwing a ( custom ? ) exception
       return;
@@ -99,7 +99,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
    * @return A JSON string representation of the Board object or null if the given Board object is
    *         null.
    */
-  private JsonObject serializeBoard(Board board) {
+  private JsonObject serializeBoard(LadderGameBoard board) {
     if (board == null) {
       return null;
     }
