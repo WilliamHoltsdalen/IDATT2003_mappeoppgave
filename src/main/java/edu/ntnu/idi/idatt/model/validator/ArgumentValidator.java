@@ -110,15 +110,30 @@ public class ArgumentValidator {
   }
 
   /**
+   * Validates the arguments for the setBackground method in LadderGameBoard class.
+   *
+   * @param background the background to set
+   * @throws IllegalArgumentException if background is null or blank
+   */
+  public static void boardSetBackgroundValidator(String background) {
+    if (background == null || background.isBlank()) {
+      throw new IllegalArgumentException("Background cannot be null or blank");
+    }
+  }
+
+  /**
    * Validates the arguments for the populateTiles method in Board class.
    *
    * @param rows    the number of rows
    * @param columns the number of columns
    * @throws IllegalArgumentException if rows or columns is less than 1
    */
-  public static void boardPopulateTilesValidator(int rows, int columns) {
+  public static void ludoGameBoardCreateTilesValidator(int rows, int columns) {
     if (rows < 1 || columns < 1) {
       throw new IllegalArgumentException("Board must have at least 1 row and 1 column");
+    }
+    if (rows != columns) {
+      throw new IllegalArgumentException("Board must be a square");
     }
   }
 
@@ -146,18 +161,6 @@ public class ArgumentValidator {
   public static void ladderGameBoardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
     if (rowsAndColumns == null) {
       throw new IllegalArgumentException("Rows and columns cannot be null");
-    }
-  }
-  
-  /**
-   * Validates the arguments for the setBackground method in LadderGameBoard class.
-   *
-   * @param background the background to set
-   * @throws IllegalArgumentException if background is null or blank
-   */
-  public static void ladderGameBoardSetBackgroundValidator(String background) {
-    if (background == null || background.isBlank()) {
-      throw new IllegalArgumentException("Background cannot be null or blank");
     }
   }
 

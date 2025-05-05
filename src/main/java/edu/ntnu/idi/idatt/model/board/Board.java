@@ -25,6 +25,13 @@ public interface Board {
     String getDescription();
 
     /**
+     * Gets the background of the board.
+     *
+     * @return the background of the board
+     */
+    String getBackground();
+
+    /**
      * Gets a tile by its ID.
      *
      * @param tileId the ID of the tile to get
@@ -59,6 +66,13 @@ public interface Board {
      * @param description the description to set
      */
     void setDescription(String description);
+
+    /**
+     * Sets the background of the board.
+     *
+     * @param background the background to set
+     */
+    void setBackground(String background);
 
     /**
      * Adds a tile to the board.

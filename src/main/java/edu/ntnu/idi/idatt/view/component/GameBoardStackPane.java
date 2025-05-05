@@ -1,15 +1,15 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
-import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
@@ -68,7 +68,7 @@ public class GameBoardStackPane extends StackPane {
    * @param players the list of players to display
    */
   private void initialize(List<Player> players) {
-    BoardStackPane boardStackPane = new BoardStackPane();
+    LadderGameBoardStackPane boardStackPane = new LadderGameBoardStackPane();
     boardStackPane.initialize(board, board.getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(500);
     boardStackPane.getStyleClass().add("game-board-image-view");

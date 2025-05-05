@@ -15,8 +15,8 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
-import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -62,7 +62,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
   protected VBox boardSelectionBox;
   protected HBox boardSelectionHeader;
-  protected final BoardStackPane boardStackPane;
+  protected final LadderGameBoardStackPane boardStackPane;
   protected final Label boardTitle;
   protected final Label boardDescription;
   protected final Button startGameButton;
@@ -85,7 +85,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     this.playerSelectionBox = new VBox();
     this.boardSelectionHeader = new HBox();
     this.boardSelectionBox = new VBox();
-    this.boardStackPane = new BoardStackPane();
+    this.boardStackPane = new LadderGameBoardStackPane();
 
     this.getStyleClass().add("main-menu-view");
   }

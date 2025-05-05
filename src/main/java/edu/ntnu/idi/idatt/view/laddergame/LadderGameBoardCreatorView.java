@@ -1,11 +1,10 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.Map;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;

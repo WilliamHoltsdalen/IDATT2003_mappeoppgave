@@ -1,8 +1,5 @@
 package edu.ntnu.idi.idatt.controller;
 
-import edu.ntnu.idi.idatt.factory.board.BoardFactory;
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +11,15 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
+import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.view.component.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
 
@@ -31,7 +31,7 @@ public class BoardCreatorController implements ButtonClickObserver {
   private static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
   
   private final LadderGameBoardCreatorView view;
-  private final BoardStackPane boardPane;
+  private final LadderGameBoardStackPane boardPane;
   private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;

@@ -20,7 +20,7 @@ public class LudoGameView extends BorderPane {
     }
 
     public void initialize() {
-        this.board = new LudoGameBoard("Classic ludo", "Classic 9x9 ludo board", 15, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+        this.board = new LudoGameBoard("Classic ludo", "Classic 9x9 ludo board", "media/boards/whiteBoard.png", 15, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
     
         this.setCenter(createTestBoardPane());
     }
@@ -49,9 +49,9 @@ public class LudoGameView extends BorderPane {
                 if (tile == null) {
                     tileRect.setFill(Color.WHITE);
                 } else if (tile.getType().contains("1")) {
-                    tileRect.setFill(Color.RED);
+                    tileRect.setFill(board.getColors()[0]);
                 } else if (tile.getType().contains("2")) {
-                    tileRect.setFill(Color.BLUE);
+                    tileRect.setFill(board.getColors()[1]);
                 } else if (tile.getType().contains("3")) {
                     tileRect.setFill(Color.GREEN);
                 } else if (tile.getType().contains("4")) {

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetBackgroundValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetPatternValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetRowsAndColumnsValidator;
 /**
@@ -32,10 +31,9 @@ public class LadderGameBoard extends BaseBoard {
      * @param pattern The pattern of the board
      */
     public LadderGameBoard(String name, String description, int[] rowsAndColumns, String background, String pattern) {
-        super(name, description);
+        super(name, description, background);
 
         setRowsAndColumns(rowsAndColumns);
-        setBackground(background);
         setPattern(pattern);
     }
 
@@ -46,15 +44,6 @@ public class LadderGameBoard extends BaseBoard {
      */
     public int[] getRowsAndColumns() {
         return rowsAndColumns;
-    }
-
-    /**
-     * Gets the background of the board.
-     *
-     * @return the background of the board
-     */
-    public String getBackground() {
-        return background;
     }
 
     /**
@@ -77,16 +66,6 @@ public class LadderGameBoard extends BaseBoard {
         ladderGameBoardSetRowsAndColumnsValidator(rowsAndColumns);
         this.rowsAndColumns = rowsAndColumns;
         createTiles(rowsAndColumns[0], rowsAndColumns[1]);
-    }
-
-    /**
-     * Sets the background of the board.
-     *
-     * @param background the background to set
-     */
-    public void setBackground(String background) {
-        ladderGameBoardSetBackgroundValidator(background);
-        this.background = background;
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.ntnu.idi.idatt.model.tile.LudoTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoGameBoardCreateTilesValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoGameBoardSetBoardSizeValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoGameBoardSetColorsValidator;
 import javafx.scene.paint.Color;
@@ -16,8 +17,8 @@ public class LudoGameBoard extends BaseBoard {
   protected int boardSize;
   private Color[] colors;
 
-  public LudoGameBoard(String name, String description, int boardSize, Color[] colors) {
-    super(name, description);
+  public LudoGameBoard(String name, String description, String background, int boardSize, Color[] colors) {
+    super(name, description, background);
 
     setBoardSize(boardSize);
     setColors(colors);
@@ -45,6 +46,8 @@ public class LudoGameBoard extends BaseBoard {
 
   @Override
   public void createTiles(int rows, int columns) {
+    ludoGameBoardCreateTilesValidator(rows, columns);
+    
     Map<Integer, Tile> newTiles = new HashMap<>();
 
     final int totalTileCount = rows * columns;
