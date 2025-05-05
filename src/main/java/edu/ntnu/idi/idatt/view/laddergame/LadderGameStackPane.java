@@ -1,27 +1,22 @@
-package edu.ntnu.idi.idatt.view.component;
+package edu.ntnu.idi.idatt.view.laddergame;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
+import edu.ntnu.idi.idatt.view.common.GameStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javafx.util.Duration;
 
 /**
  * <h3>GameBoardStackPane class</h3>
@@ -29,66 +24,33 @@ import javafx.util.Duration;
  * <p>This class extends the StackPane class. It is used to display the game board in the game view.
  * It contains a board image, a players pane, and methods for moving players.
  */
-public class GameBoardStackPane extends StackPane {
-  private static final Duration TRANSITION_DURATION = Duration.seconds(1);
-  private final LadderGameBoard board;
-  private final Map<Player, Tile> playerTileMap;
-  private final Map<Player, Shape> playerTokenMap;
-  private double[] boardDimensions;
-  private final List<Player> players;
-  private final Pane playersPane;
+public class LadderGameStackPane extends GameStackPane {
 
-  double tileSizeX;
-  double tileSizeY;
-  double[] tilePositionX;
-  double[] tilePositionY;
   /**
    * Constructor for GameBoardStackPane class.
    *
    * @param board the board to display
    * @param players the list of players to display
    */
-  public GameBoardStackPane(LadderGameBoard board, List<Player> players) {
-    this.board = board;
-    this.playerTileMap = new HashMap<>();
-    this.playerTokenMap = new HashMap<>();
-    this.boardDimensions = new double[2];
-    this.players = players;
-
-    this.playersPane = new Pane();
-
-    this.getStyleClass().add("game-board");
-    initialize(players);
+  public LadderGameStackPane(LadderGameBoard board, List<Player> players) {
+    super(board, players);
+    initialize(players, new LadderGameBoardStackPane());
   }
 
-  /**
-   * Initializes the board stack pane by creating all the components and adding them to the stack
-   * pane. Also initializes the board dimensions and origin position for the players.
-   *
-   * @param players the list of players to display
-   */
-  private void initialize(List<Player> players) {
-    LadderGameBoardStackPane boardStackPane = new LadderGameBoardStackPane();
-    boardStackPane.initialize(board, board.getBackground());
-    boardStackPane.getBackgroundImageView().setFitWidth(500);
-    boardStackPane.getStyleClass().add("game-board-image-view");
-
-    StackPane stackPane = new StackPane();
-    stackPane.getChildren().setAll(boardStackPane, playersPane);
-    stackPane.getStyleClass().add("game-board-stack-pane");
-    stackPane.maxHeightProperty().bind(stackPane.heightProperty());
-    this.getChildren().add(stackPane);
-
+  @Override
+  protected void initializePlayersPane() {
     playersPane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
-        boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
-        this.tileSizeX = boardDimensions[0] / board.getRowsAndColumns()[1];
-        this.tileSizeY = boardDimensions[1] / board.getRowsAndColumns()[0];
-        this.tilePositionX = new double[]{(tileSizeX / 4) , (tileSizeX / 2), (tileSizeX / 4) * 3, (tileSizeX / 4), (tileSizeX / 4) * 3};
-        this.tilePositionY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4), (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
-        if (playersPane.getChildren().isEmpty()) {
-          addGamePieces(players);
-        }
+          boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
+          this.tileSizeX = boardDimensions[0] / ((LadderGameBoard) board).getRowsAndColumns()[1];
+          this.tileSizeY = boardDimensions[1] / ((LadderGameBoard) board).getRowsAndColumns()[0];
+
+          this.tilePositionX = new double[]{(tileSizeX / 4) , (tileSizeX / 2), (tileSizeX / 4) * 3, (tileSizeX / 4), (tileSizeX / 4) * 3};
+          this.tilePositionY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4), (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
+          
+          if (playersPane.getChildren().isEmpty()) {
+              addGamePieces(players);
+          }
       }
     });
   }
@@ -99,6 +61,7 @@ public class GameBoardStackPane extends StackPane {
    *
    * @param players the list of players to add game pieces for
    */
+  @Override
   public void addGamePieces(List<Player> players) {
     players.forEach(player -> {
 
@@ -129,6 +92,7 @@ public class GameBoardStackPane extends StackPane {
    * @param newTile the new tile to move the player to
    * @param straightLine whether to use a straight line animation or not
    */
+  @Override
   public void movePlayer(Player player, Tile newTile, boolean straightLine) {
     /* Prevents the player from moving to the same tile, which would cause a null pointer exception
        when setting the moveTo coordinates in the path. */
@@ -184,8 +148,9 @@ public class GameBoardStackPane extends StackPane {
    * @return the array of coordinates in the pane's coordinate system (x, y) with origin at the
    *         top left corner.
    */
-  private double[] convertCoordinates(int[] rc) {
-    return ViewUtils.boardToScreenCoordinates(rc, board, boardDimensions[0], boardDimensions[1]);
+  @Override
+  protected double[] convertCoordinates(int[] rc) {
+    return ViewUtils.ladderBoardToScreenCoordinates(rc, (LadderGameBoard) board, boardDimensions[0], boardDimensions[1]);
   }
 
   /**
@@ -195,7 +160,8 @@ public class GameBoardStackPane extends StackPane {
    * @param endTile the end tile for the path
    * @return the list of tiles between the start and end tiles
    */
-  private List<Tile> getPathTiles(Tile startTile, Tile endTile) {
+  @Override
+  protected List<Tile> getPathTiles(Tile startTile, Tile endTile) {
     int fromId = startTile.getTileId();
     int toId = endTile.getTileId();
 

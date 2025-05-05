@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
+import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
 import javafx.application.Platform;
@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public class LudoGameMenuView extends MenuView {
     public LudoGameMenuView() {
-        super();
+        super(new LudoGameBoardStackPane());
     }
 
   /**
@@ -46,7 +46,7 @@ public class LudoGameMenuView extends MenuView {
   public void setSelectedBoard(Board board) {
     logger.debug("Setting selected board: {}", board.getName());
     selectedBoard = board;
-    boardStackPane.initialize((LadderGameBoard) selectedBoard, ((LadderGameBoard) selectedBoard).getBackground());
+    boardStackPane.initialize((LudoGameBoard) selectedBoard, ((LudoGameBoard) selectedBoard).getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(250);
     boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
     boardTitle.setText(board.getName());

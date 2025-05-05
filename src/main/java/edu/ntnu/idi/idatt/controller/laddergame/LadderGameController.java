@@ -1,30 +1,19 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
-import edu.ntnu.idi.idatt.model.game.BoardGame;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
-import edu.ntnu.idi.idatt.observer.BoardGameObserver;
-import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 
-public class LadderGameController implements ButtonClickObserver, BoardGameObserver {
-  private final LadderGameView ladderGameView;
-
-  private BoardGame boardGame;
-  private Runnable onQuitGame;
-
+public class LadderGameController extends GameController {
+  
   public LadderGameController(LadderGameView ladderGameView, Board board, List<Player> players) {
-    this.ladderGameView = ladderGameView;
-
-    initializeBoardGame(board, players);
-    initializeLadderGameView();
+    super(ladderGameView, board, players);
   }
 
   /**
@@ -35,6 +24,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    * @param board the board to use in the game
    * @param players the list of players to use in the game
    */
+  @Override
   public void initializeBoardGame(Board board, List<Player> players) {
     try {
       boardGame = new LadderBoardGame(board, players, 2);
@@ -44,42 +34,9 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
     }
   }
   
-  /**
-   * Initializes the ladder game view. 
-   */
-  private void initializeLadderGameView() {
-    ladderGameView.initialize(getPlayers(), getRoundNumber(), (LadderGameBoard) getBoard());
-  }
-
-  /**
-   * Returns the round number of the game.
-   *
-   * @return The round number of the game.
-   */
-  private int getRoundNumber() {
-    return boardGame.getRoundNumber();
-  }
-
-  /**
-   * Returns the players of the game.
-   *
-   * @return The players of the game.
-   */
-  private List<Player> getPlayers() {
-    return boardGame.getPlayers();
-  }
-
-  /**
-   * Returns the board object of the game.
-   *
-   * @return The board of the game.
-   */
-  private Board getBoard() {
-    return boardGame.getBoard();
-  }
-
-  private void handleRollDiceButtonAction() {
-    if (ladderGameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+  @Override
+  protected void handleRollDiceButtonAction() {
+    if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
       performPlayerTurnForAllPlayers();
       return;
     }
@@ -89,7 +46,8 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
   /**
    * Performs a player move by calling the player turn method in the board game.
    */
-  private void performPlayerTurn() {
+  @Override
+  protected void performPlayerTurn() {
     boardGame.performPlayerTurn();
   }
 
@@ -103,35 +61,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
     } while (!boardGame.getCurrentPlayer().equals(boardGame.getPlayers().getFirst()));
   }
 
-  /**
-   * Restarts the game by initializing a new BoardGame instance with the same board and players.
-   */
-  public void restartGame() {
-    List<Player> players = new ArrayList<>();
-    boardGame.getPlayers().forEach(player -> players.add(new Player(player.getName(),
-        player.getColorHex(), player.getPlayerTokenType())));
-
-    initializeBoardGame(boardGame.getBoard(), players);
-    initializeLadderGameView();
-  }
-
-  /**
-   * Quits the game by running the on quit game event.
-   */
-  private void quitGame() {
-    if (onQuitGame != null) {
-      onQuitGame.run();
-    }
-  }
-
-  /**
-   * Sets the on quit game event.
-   *
-   * @param onQuitGame the on quit game event
-   */
-  public void setOnQuitGame(Runnable onQuitGame) {
-    this.onQuitGame = onQuitGame;
-  }
+  
 
   /**
    * Sets the tile number of the player in the players box.
@@ -140,7 +70,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    * @param newTileId the new tile id
    */
   private void setPlayerTileNumber(Player player, int newTileId) {
-    ladderGameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
+    gameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
   }
 
@@ -153,11 +83,11 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   @Override
   public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
-    ladderGameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
+    gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
 
     setPlayerTileNumber(player, newTileId);
 
-    ladderGameView.getBoardStackPane().movePlayer(player, getBoard().getTile(newTileId), false);
+    gameView.getGameStackPane().movePlayer(player, getBoard().getTile(newTileId), false);
   }
 
   /**
@@ -167,9 +97,9 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   @Override
   public void onRoundNumberIncremented(int roundNumber) {
-    ladderGameView.getPlayersBox().setRoundNumber(roundNumber);
+    gameView.getPlayersBox().setRoundNumber(roundNumber);
 
-    ladderGameView.getGameMenuBox().addGameLogRoundBox(roundNumber);
+    gameView.getGameMenuBox().addGameLogRoundBox(roundNumber);
   }
 
   /**
@@ -179,11 +109,11 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   @Override
   public void onCurrentPlayerChanged(Player player) {
-    if (!ladderGameView.getGameMenuBox().getRollForAllPlayersSelected()) {
-      ladderGameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
+    if (!gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+      gameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
       return;
     }
-    ladderGameView.getPlayersBox().removeFocusedPlayer();
+    gameView.getPlayersBox().removeFocusedPlayer();
 
   }
 
@@ -195,10 +125,10 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   @Override
   public void onTileActionPerformed(Player player, TileAction tileAction) {
-    ladderGameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
+    gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
 
-    ladderGameView.getBoardStackPane().movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
+    gameView.getGameStackPane().movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
   }
 
   /**
@@ -208,7 +138,7 @@ public class LadderGameController implements ButtonClickObserver, BoardGameObser
    */
   @Override
   public void onGameFinished(Player winner) {
-    ladderGameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
+    gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
   }
 
   /**

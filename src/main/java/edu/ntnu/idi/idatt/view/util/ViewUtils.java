@@ -1,9 +1,9 @@
 package edu.ntnu.idi.idatt.view.util;
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.util.List;
 import java.util.Random;
 
-import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
+import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 
 /**
  * Utility class containing helper methods for view-related operations. This
@@ -19,8 +19,8 @@ public class ViewUtils {
   }
 
   /**
-   * Converts board coordinates (row, column) to screen coordinates (x, y).
-   * The board uses a coordinate system with origin at the bottom left, while
+   * Converts ladder board coordinates (row, column) to screen coordinates (x, y).
+   * The ladder board uses a coordinate system with origin at the bottom left, while
    * the screen uses a coordinate system with origin at the top left.
    *
    * @param coordinates the array of coordinates (in the board's coordinate
@@ -30,7 +30,7 @@ public class ViewUtils {
    * @param boardHeight the visual height of the board on screen
    * @return the array of coordinates in the screen's coordinate system (x, y)
    */
-  public static double[] boardToScreenCoordinates(int[] coordinates, LadderGameBoard board,
+  public static double[] ladderBoardToScreenCoordinates(int[] coordinates, LadderGameBoard board,
       double boardWidth, double boardHeight) {
     int row = coordinates[0];
     int col = coordinates[1];
@@ -40,6 +40,27 @@ public class ViewUtils {
 
     double x = (boardWidth / maxCols) * col;
     double y = boardHeight - ((boardHeight / maxRows) * row);
+
+    return new double[]{x, y};
+  }
+
+  /**
+   * Converts ludo board coordinates (row, column) to screen coordinates (x, y).
+   *
+   * @param coordinates the array of coordinates (in the board's coordinate
+   * system (row, column))
+   * @param board the game board containing dimension information
+   * @param boardWidth the visual width of the board on screen
+   * @param boardHeight the visual height of the board on screen
+   * @return the array of coordinates in the screen's coordinate system (x, y)
+   */
+  public static double[] ludoBoardToScreenCoordinates(int[] coordinates, LudoGameBoard board,
+      double boardWidth, double boardHeight) {
+    int row = coordinates[0];
+    int col = coordinates[1];
+
+    double x = (boardWidth / board.getBoardSize()) * col;
+    double y = (boardHeight / board.getBoardSize() * row);
 
     return new double[]{x, y};
   }

@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.model.game;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
@@ -52,7 +54,11 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   @Override
   public void initializeGame() {
     logger.info("Game started!");
-    players.forEach(player -> player.placeOnTile(board.getTile(0)));
+
+    List<Tile> tiles = board.getTiles();
+    tiles.sort(Comparator.comparingInt(Tile::getTileId));
+    players.forEach(player -> player.placeOnTile(tiles.getFirst()));
+    
     setCurrentPlayer(players.getFirst());
   }
 

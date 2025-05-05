@@ -31,7 +31,6 @@ public abstract class MenuController implements ButtonClickObserver {
     
     protected MenuController(MenuView menuView) {
         this.menuView = menuView;
-        this.boardFactory = new LadderBoardFactory();
         this.boardVariants = new HashMap<>();
         this.currentBoardIndex = DEFAULT_BOARD_INDEX;
     }

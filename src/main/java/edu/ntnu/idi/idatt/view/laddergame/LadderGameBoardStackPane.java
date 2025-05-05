@@ -361,7 +361,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
       Rectangle destinationCell = findCellByCoordinates(new TileCoordinates(destCoords[0], destCoords[1]));
 
       // Get the base position for this tile
-      double[] screenCoords = ViewUtils.boardToScreenCoordinates(
+      double[] screenCoords = ViewUtils.ladderBoardToScreenCoordinates(
           new int[]{coordinates.row(), coordinates.col()},
           ((LadderGameBoard) board),
           boardDimensions[0],

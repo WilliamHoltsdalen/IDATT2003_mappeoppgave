@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.controller.ludo;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.controller.common.MenuController;
-import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 
@@ -16,7 +16,7 @@ public class LudoMenuController extends MenuController {
   public LudoMenuController(MenuView view) {
     super(view);
 
-    super.setBoardFactory(new LadderBoardFactory());
+    super.setBoardFactory(new LudoBoardFactory());
     initializeMenuView();
   }
 
@@ -30,5 +30,7 @@ public class LudoMenuController extends MenuController {
   @Override
   protected void loadBoardsFromFactory() {
     super.boardVariants.put(1, super.boardFactory.createBoard("Classic"));
+    super.boardVariants.put(2, super.boardFactory.createBoard("Small"));
+    super.boardVariants.put(3, super.boardFactory.createBoard("Large"));
   }
 }
