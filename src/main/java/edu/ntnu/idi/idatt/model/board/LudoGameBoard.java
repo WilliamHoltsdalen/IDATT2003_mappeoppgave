@@ -57,6 +57,7 @@ public class LudoGameBoard extends BaseBoard {
     final int totalTrackTileCount = trackTileCount * 4; // The track areas are 3 tiles wide with the same length as the start areas
     final int middleTileCount = 3 * 3; // The middle area is 3x3, with 4 finish tiles and 5 "spacing" tiles
     final int middleTilesStartIndex = startTilesStartIndex - middleTileCount;
+
     final int finishTrackStartIndex = middleTilesStartIndex - (finishTrackSize * 4);
     final int[] finishTrackStartIndexes = {finishTrackStartIndex, finishTrackStartIndex + finishTrackSize, finishTrackStartIndex + (finishTrackSize * 2), finishTrackStartIndex + (finishTrackSize * 3)};
 
@@ -95,7 +96,7 @@ public class LudoGameBoard extends BaseBoard {
     // For each row between upper and lower start areas
     for (int row = startAreaSize; row < boardSize - startAreaSize; row++) {
       final int rowZeroIndex = row - startAreaSize;
-      // For each column in the left track area (between start areas 1 and 3)
+      // For each column in the left track area (between start areas 1 and 4)
       for (int column = 0; column < startAreaSize; column++) {
         final int columnZeroIndex = column;
         Tile tile = trackSection1.stream()
@@ -114,7 +115,7 @@ public class LudoGameBoard extends BaseBoard {
         newTiles.put(tile.getTileId(), new LudoTile(tile.getTileId(), new int[] {row, column}, tile.getNextTileId(), ((LudoTile)tile).getType()));
       }
     
-      // For each column in the right track area (between start areas 2 and 4)
+      // For each column in the right track area (between start areas 2 and 3)
       for (int column = boardSize - startAreaSize; column < boardSize; column++) { 
         final int columnZeroIndex = column - boardSize + startAreaSize;
         Tile tile = trackSection3.stream()
@@ -127,11 +128,11 @@ public class LudoGameBoard extends BaseBoard {
 
     // For each row in lower start areas
     for (int row = boardSize - startAreaSize; row < boardSize; row++) {
-      // For each column in start area 3 (lower left)
+      // For each column in start area 4 (lower left)
       int rowZeroIndex = row - boardSize + startAreaSize;
       for (int column = 0; column < startAreaSize; column++) { 
-        int tileId = startTilesStartIndexes[2] + (startAreaSize * rowZeroIndex) + column;
-        Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-3");
+        int tileId = startTilesStartIndexes[3] + (startAreaSize * rowZeroIndex) + column;
+        Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-4");
         newTiles.put(tileId, tile);
       }
 
@@ -145,11 +146,11 @@ public class LudoGameBoard extends BaseBoard {
         newTiles.put(tile.getTileId(), new LudoTile(tile.getTileId(), new int[] {row, column}, tile.getNextTileId(), ((LudoTile)tile).getType()));
       }
 
-      // For each column in start area 4 (lower right)
+      // For each column in start area 3 (lower right)
       for (int column = boardSize - startAreaSize; column < boardSize; column++) { 
         int colZeroIndex = column - boardSize + startAreaSize;
-        int tileId = startTilesStartIndexes[3] + (startAreaSize * rowZeroIndex) + colZeroIndex;
-        Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-4");
+        int tileId = startTilesStartIndexes[2] + (startAreaSize * rowZeroIndex) + colZeroIndex;
+        Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-3");
         newTiles.put(tileId, tile);
       }
     }
