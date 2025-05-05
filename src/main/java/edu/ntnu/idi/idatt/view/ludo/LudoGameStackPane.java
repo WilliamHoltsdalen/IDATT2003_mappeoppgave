@@ -30,7 +30,7 @@ public class LudoGameStackPane extends GameStackPane {
     protected void initializePlayersPane() {
       playersPane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
         if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
-          boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
+          boardDimensions = new double[]{newVal.getWidth(), newVal.getWidth()};
           this.tileSizeX = boardDimensions[0] / ((LudoGameBoard) board).getBoardSize();
           this.tileSizeY = boardDimensions[1] / ((LudoGameBoard) board).getBoardSize();
 
