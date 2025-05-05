@@ -3,8 +3,10 @@ package edu.ntnu.idi.idatt.model.game;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 
 /**
  * <h3>LadderBoardGame class</h3>
@@ -25,6 +27,14 @@ public class LadderBoardGame extends BoardGame {
     super(board, players, diceCount);
   }
 
+  @Override
+  public void initializeGame() {
+    logger.info("Game started!");
+
+    players.forEach(player -> ((LadderGamePlayer) player).placeOnTile(board.getTile(0)));
+    setCurrentPlayer(players.getFirst());
+  }
+
   /**
    * Gets the winner of the game.
    * @return The winning player, or null if there is no winner
@@ -32,7 +42,7 @@ public class LadderBoardGame extends BoardGame {
   @Override
   public Player getWinner() {
     for (Player player : players) {
-      if (player.getCurrentTile().getTileId() == board.getTileCount()) {
+      if (((LadderGamePlayer) player).getCurrentTile().getTileId() == board.getTileCount()) {
         return player;
       }
     }
@@ -46,6 +56,20 @@ public class LadderBoardGame extends BoardGame {
     checkWinCondition();
     updateCurrentPlayer();
     handleRoundNumber();
+  }
+
+  /**
+   * Handles tile actions for the current player.
+   */
+  @Override
+  protected void handleTileAction() {
+    TileAction landAction = ((LadderGamePlayer) currentPlayer).getCurrentTile().getLandAction();
+    if (landAction == null) {
+      return;
+    }
+    landAction.perform(currentPlayer, board);
+    notifyTileActionPerformed(currentPlayer, landAction);
+    logger.info("Performed tile action: {}", landAction.getDescription());
   }
 
   /**
@@ -68,7 +92,7 @@ public class LadderBoardGame extends BoardGame {
    * @return The next tile for the player, meaning the tile the specified player will move to.
    */
   private Tile findNextTile(Player player, int diceRoll) {
-    int currentTileId = player.getCurrentTile().getTileId();
+    int currentTileId = ((LadderGamePlayer) player).getCurrentTile().getTileId();
     int nextTileId = currentTileId + diceRoll;
     int tileCount = board.getTileCount();
 
@@ -85,7 +109,7 @@ public class LadderBoardGame extends BoardGame {
   public void rollDiceAndMovePlayer() {
     dice.rollDice();
     Tile nextTile = findNextTile(currentPlayer, dice.getTotalValue());
-    currentPlayer.placeOnTile(nextTile);
+    ((LadderGamePlayer) currentPlayer).placeOnTile(nextTile);
     notifyPlayerMoved(currentPlayer, dice.getTotalValue(), nextTile.getTileId());
   }
 } 

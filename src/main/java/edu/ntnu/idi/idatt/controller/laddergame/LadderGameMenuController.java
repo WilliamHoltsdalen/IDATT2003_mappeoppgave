@@ -1,9 +1,12 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 
@@ -23,6 +26,19 @@ public class LadderGameMenuController extends MenuController {
     initializeMenuView();
   }
 
+  /**
+   * Returns the players of the game.
+   *
+   * @return The players of the game.
+   */
+  @Override
+  protected List<Player> getPlayers() {
+    List<Player> players = new ArrayList<>();
+    menuView.getPlayerRows().forEach(playerRow ->
+        players.add(new LadderGamePlayer(playerRow.getName(), playerRow.getColor().toString(),
+            playerRow.getPlayerTokenType())));
+    return players;
+  }
 
   /**{@inheritDoc} */
   @Override

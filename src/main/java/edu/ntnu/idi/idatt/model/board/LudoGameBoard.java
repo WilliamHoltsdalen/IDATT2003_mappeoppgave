@@ -16,10 +16,20 @@ import javafx.scene.paint.Color;
 public class LudoGameBoard extends BaseBoard {
   protected int boardSize;
   private Color[] colors;
+  private int[] playerStartIndexes;
+  private int[] playerTrackStartIndexes;
+  private int[] playerFinishStartIndexes;
+  private int[] playerFinishIndexes;
+  private int startAreaSize;
 
   public LudoGameBoard(String name, String description, String background, int boardSize, Color[] colors) {
     super(name, description, background);
 
+    playerStartIndexes = new int[4];
+    playerTrackStartIndexes = new int[4];
+    playerFinishStartIndexes = new int[4];
+    playerFinishIndexes = new int[4];
+    
     setBoardSize(boardSize);
     setColors(colors);
   }
@@ -32,11 +42,24 @@ public class LudoGameBoard extends BaseBoard {
     return boardSize;
   }
 
-  public void setBoardSize(int boardSize) {
-    ludoGameBoardSetBoardSizeValidator(boardSize);
-    this.boardSize = boardSize;
-    createTiles(boardSize, boardSize);
+  public int[] getPlayerStartIndexes() {
+    return playerStartIndexes;
+  }
 
+  public int[] getPlayerTrackStartIndexes() {
+    return playerTrackStartIndexes;
+  }
+
+  public int[] getPlayerFinishStartIndexes() {
+    return playerFinishStartIndexes;
+  }
+
+  public int[] getPlayerFinishIndexes() {
+    return playerFinishIndexes;
+  }
+
+  public int getStartAreaSize() {
+    return startAreaSize;
   }
 
   public void setColors(Color[] colors) {
@@ -44,38 +67,63 @@ public class LudoGameBoard extends BaseBoard {
     this.colors = colors;
   }
 
+  public void setBoardSize(int boardSize) {
+    ludoGameBoardSetBoardSizeValidator(boardSize);
+    this.boardSize = boardSize;
+    createTiles(boardSize, boardSize);
+  }
+
+  public void setPlayerStartIndexes(int[] playerStartIndexes) {
+    this.playerStartIndexes = playerStartIndexes;
+  }
+
+  public void setPlayerTrackStartIndexes(int[] playerTrackStartIndexes) {
+    this.playerTrackStartIndexes = playerTrackStartIndexes;
+  }
+
+  public void setPlayerFinishStartIndexes(int[] playerFinishStartIndexes) {
+    this.playerFinishStartIndexes = playerFinishStartIndexes;
+  }
+
+  public void setPlayerFinishIndexes(int[] playerFinishIndexes) {
+    this.playerFinishIndexes = playerFinishIndexes;
+  }
+
+  public void setStartAreaSize(int startAreaSize) {
+    this.startAreaSize = startAreaSize;
+  }
+
   @Override
   public void createTiles(int rows, int columns) {
     ludoGameBoardCreateTilesValidator(rows, columns);
-    
     Map<Integer, Tile> newTiles = new HashMap<>();
 
-    final int totalTileCount = rows * columns;
-    final int startAreaSize = (boardSize - 3) / 2;
+    this.startAreaSize = (boardSize - 3) / 2;
+    
     final int tilesPerStartArea = startAreaSize * startAreaSize;
+    final int startTilesStartIndex = (rows * columns) - (tilesPerStartArea * 4) + 1;
+    this.playerStartIndexes = new int[] {startTilesStartIndex, startTilesStartIndex + tilesPerStartArea, startTilesStartIndex + (tilesPerStartArea * 2), startTilesStartIndex + (tilesPerStartArea * 3)};
+    
     final int finishTrackSize = startAreaSize - 1;
-    final int startTilesStartIndex = totalTileCount - (tilesPerStartArea * 4) + 1;
-    final int[] startTilesStartIndexes = {startTilesStartIndex, startTilesStartIndex + tilesPerStartArea, startTilesStartIndex + (tilesPerStartArea * 2), startTilesStartIndex + (tilesPerStartArea * 3)};
     final int trackTileCount = 3 + (finishTrackSize * 2);
-    final int totalTrackTileCount = trackTileCount * 4; // The track areas are 3 tiles wide with the same length as the start areas
-    final int middleTileCount = 3 * 3; // The middle area is 3x3, with 4 finish tiles and 5 "spacing" tiles
-    final int middleTilesStartIndex = startTilesStartIndex - middleTileCount;
-
+    final int totalTrackTileCount = trackTileCount * 4;
+    final int middleTilesStartIndex = startTilesStartIndex - (3 * 3); // (The middle area is always 3x3)
     final int finishTrackStartIndex = middleTilesStartIndex - (finishTrackSize * 4);
-    final int[] finishTrackStartIndexes = {finishTrackStartIndex, finishTrackStartIndex + finishTrackSize, finishTrackStartIndex + (finishTrackSize * 2), finishTrackStartIndex + (finishTrackSize * 3)};
+    this.playerFinishStartIndexes = new int[] {finishTrackStartIndex, finishTrackStartIndex + finishTrackSize, finishTrackStartIndex + (finishTrackSize * 2), finishTrackStartIndex + (finishTrackSize * 3)};
+    this.playerTrackStartIndexes = new int[]{1, 1 + (trackTileCount * 1), 1 + (trackTileCount * 2), 1 + (trackTileCount * 3)}; 
 
-    List<Tile> trackSection1 = createTrackSection(1, totalTrackTileCount, finishTrackStartIndexes, startAreaSize, 1);
-    List<Tile> trackSection2 = createTrackSection(1 + (trackTileCount * 1), (trackTileCount * 1), finishTrackStartIndexes, startAreaSize, 2);
-    List<Tile> trackSection3 = createTrackSection(1 + (trackTileCount * 2), (trackTileCount * 2), finishTrackStartIndexes, startAreaSize, 3);
-    List<Tile> trackSection4 = createTrackSection(1 + (trackTileCount * 3), (trackTileCount * 3), finishTrackStartIndexes, startAreaSize, 4);
-    List<Tile> finishSection = createFinishSection(middleTilesStartIndex);
+    final List<Tile> finishSection = createFinishSection(middleTilesStartIndex);
+    final List<Tile> trackSection1 = createTrackSection(playerTrackStartIndexes[0], totalTrackTileCount, playerFinishStartIndexes, startAreaSize, 1);
+    final List<Tile> trackSection2 = createTrackSection(playerTrackStartIndexes[1], (trackTileCount * 1), playerFinishStartIndexes, startAreaSize, 2);
+    final List<Tile> trackSection3 = createTrackSection(playerTrackStartIndexes[2], (trackTileCount * 2), playerFinishStartIndexes, startAreaSize, 3);
+    final List<Tile> trackSection4 = createTrackSection(playerTrackStartIndexes[3], (trackTileCount * 3), playerFinishStartIndexes, startAreaSize, 4);
 
     // For each row in upper start areas
     for (int row = 0; row < startAreaSize; row++) {
       final int rowZeroIndex = row;
       // For each column in start area 1 (upper left)
       for (int column = 0; column < startAreaSize; column++) { 
-        int tileId = startTilesStartIndexes[0] + (startAreaSize * row) + column;
+        int tileId = playerStartIndexes[0] + (startAreaSize * row) + column;
         Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-1");
         newTiles.put(tileId, tile);
       }
@@ -90,7 +138,7 @@ public class LudoGameBoard extends BaseBoard {
       // For each column in start area 2 (upper right)
       for (int column = boardSize - startAreaSize; column < boardSize; column++) { 
         final int columnZeroIndex = column - boardSize + startAreaSize;
-        int tileId = startTilesStartIndexes[1] + (startAreaSize * row) + columnZeroIndex;
+        int tileId = playerStartIndexes[1] + (startAreaSize * row) + columnZeroIndex;
         Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-2");
         newTiles.put(tileId, tile);
       }
@@ -134,7 +182,7 @@ public class LudoGameBoard extends BaseBoard {
       // For each column in start area 4 (lower left)
       int rowZeroIndex = row - boardSize + startAreaSize;
       for (int column = 0; column < startAreaSize; column++) { 
-        int tileId = startTilesStartIndexes[3] + (startAreaSize * rowZeroIndex) + column;
+        int tileId = playerStartIndexes[3] + (startAreaSize * rowZeroIndex) + column;
         Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-4");
         newTiles.put(tileId, tile);
       }
@@ -152,7 +200,7 @@ public class LudoGameBoard extends BaseBoard {
       // For each column in start area 3 (lower right)
       for (int column = boardSize - startAreaSize; column < boardSize; column++) { 
         int colZeroIndex = column - boardSize + startAreaSize;
-        int tileId = startTilesStartIndexes[2] + (startAreaSize * rowZeroIndex) + colZeroIndex;
+        int tileId = playerStartIndexes[2] + (startAreaSize * rowZeroIndex) + colZeroIndex;
         Tile tile = new LudoTile(tileId, new int[] {row, column}, tileId + 1, "start-3");
         newTiles.put(tileId, tile);
       }
@@ -164,12 +212,14 @@ public class LudoGameBoard extends BaseBoard {
   private List<Tile> createTrackSection(int startId, int endId, int[] finishTrackStartIndexes, int startAreaSize, int startAreaIndex) {
     List<Tile> tmpTiles = new ArrayList<>();
     for (int row = 0; row < 3; row++) {
-      for (int column = 0; column < startAreaSize; column++) {
+      for (int column = 0; column < startAreaSize; column++) { 
         int tileId;
+        int nextTileId = 0;
         String type;
         if (row == 0 && column == 0 ) { // The upper left tile
             tileId = endId;
             type = "track";
+            nextTileId = startId;
         } else if (row == 1 && column == 0) { // The middle left tile
             tileId = endId - 1;
             type = "track";
@@ -179,7 +229,8 @@ public class LudoGameBoard extends BaseBoard {
         } else if (row == 1) { // The finish-track path
             tileId = finishTrackStartIndexes[startAreaIndex - 1] + column - 1;
             type = "finish-" + startAreaIndex;
-        } else if (row == 2) { // The lower path 
+            nextTileId = column == startAreaSize - 1 ? playerFinishIndexes[startAreaIndex - 1] : 0;
+          } else if (row == 2) { // The lower path 
             tileId = endId - 2 - column;
             type = "track";
         } else if (row == 0 && column == 1) { // The player-start tile for the section
@@ -190,7 +241,8 @@ public class LudoGameBoard extends BaseBoard {
             type = "track";
         }
         int[] coordinates = new int[] {row, column};
-        Tile tile = new LudoTile(tileId, coordinates, tileId + 1, type);
+        nextTileId = nextTileId == 0 ? tileId + 1 : nextTileId;
+        Tile tile = new LudoTile(tileId, coordinates, nextTileId, type);
         tmpTiles.add(tile);
       }
     }
@@ -239,19 +291,23 @@ public class LudoGameBoard extends BaseBoard {
         if (Arrays.asList(blankTiles).contains(tileId)) {
           type = "finish-blank";
         } else if (tileId - startId == 1) {
+          playerFinishIndexes[1] = tileId;
           type = "finish-2";
           nextTileId = 0;
         } else if (tileId - startId == 3) {
+          playerFinishIndexes[0] = tileId;
           type = "finish-1";
           nextTileId = 0;
         } else if (tileId - startId == 5) {
+          playerFinishIndexes[2] = tileId;
           type = "finish-3";
           nextTileId = 0;
         } else if (tileId - startId == 7) {
+          playerFinishIndexes[3] = tileId;
           type = "finish-4";
           nextTileId = 0;
         } else {
-          type = "finish";
+          type = "error";
         }
         int[] coordinates = new int[] {row, column};
         Tile tile = new LudoTile(tileId, coordinates, nextTileId, type);

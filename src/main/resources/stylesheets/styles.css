@@ -629,3 +629,10 @@ Button:pressed {
   -fx-scale-x: 1.2;
   -fx-scale-y: 1.2;
 }
+
+.ludo-board-cell {
+  -fx-stroke: black;
+  -fx-stroke-width: 1;
+  -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 3, 0, 0, 0);
+}

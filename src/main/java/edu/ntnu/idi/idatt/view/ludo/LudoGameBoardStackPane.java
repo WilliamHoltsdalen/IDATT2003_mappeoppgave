@@ -71,7 +71,7 @@ public class LudoGameBoardStackPane extends BoardStackPane {
 
     String type = tile.getType();
     Color[] colors = ((LudoGameBoard)board).getColors();
-    
+
     if (type.contains("1")) {
       cellRect.setFill(colors[0]);
     } else if (type.contains("2")) {
@@ -86,8 +86,7 @@ public class LudoGameBoardStackPane extends BoardStackPane {
       cellRect.setFill(Color.GRAY);
     }
 
-    cellRect.setStroke(Color.BLACK);
-    cellRect.setStrokeWidth(1);
+    cellRect.getStyleClass().add("ludo-board-cell");
     cellPane.getChildren().add(cellRect);
     return cellPane;
   }

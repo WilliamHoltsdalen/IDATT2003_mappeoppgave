@@ -5,9 +5,9 @@ import java.util.List;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.view.common.GamePlayersBox;
 import edu.ntnu.idi.idatt.view.common.GameStackPane;
 import edu.ntnu.idi.idatt.view.common.GameView;
-import edu.ntnu.idi.idatt.view.component.GamePlayersBox;
 
 public class LadderGameView extends GameView {
 
@@ -17,7 +17,7 @@ public class LadderGameView extends GameView {
 
   @Override
   public GamePlayersBox createPlayersBox(List<Player> players, int roundNumber) {
-    return new GamePlayersBox(players, roundNumber);
+    return new LadderGamePlayersBox(players, roundNumber);
   }
 
   @Override

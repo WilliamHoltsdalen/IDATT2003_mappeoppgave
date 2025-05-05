@@ -25,7 +25,7 @@ import edu.ntnu.idi.idatt.observer.BoardGameSubject;
  * This class provides the base implementation for both Chutes and Ladders and Ludo games.
  */
 public abstract class BoardGame implements Game, BoardGameSubject {
-  private static final Logger logger = LoggerFactory.getLogger(BoardGame.class);
+  protected static final Logger logger = LoggerFactory.getLogger(BoardGame.class);
   protected final List<BoardGameObserver> observers;
   protected Board board;
   protected List<Player> players;
@@ -51,16 +51,13 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     initializeGame();
   }
 
-  @Override
-  public void initializeGame() {
-    logger.info("Game started!");
+  /**
+   * Initializes the game by setting the initial state of the game.
+   * This method is implemented by the subclasses.
+   */
+  public abstract void initializeGame();
 
-    List<Tile> tiles = board.getTiles();
-    tiles.sort(Comparator.comparingInt(Tile::getTileId));
-    players.forEach(player -> player.placeOnTile(tiles.getFirst()));
-    
-    setCurrentPlayer(players.getFirst());
-  }
+  protected abstract void handleTileAction();
 
   @Override
   public Board getBoard() {
@@ -109,7 +106,7 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     boardGameSetCurrentPlayerValidator(player);
 
     this.currentPlayer = player;
-    logger.info("Set current player to: {}", currentPlayer.getName());
+    logger.debug("Set current player to: {}", currentPlayer.getName());
   }
 
   @Override
@@ -150,19 +147,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     boardGameCreateDiceValidator(diceCount);
 
     this.dice = new Dice(diceCount);
-  }
-
-  /**
-   * Handles tile actions for the current player.
-   */
-  protected void handleTileAction() {
-    TileAction landAction = currentPlayer.getCurrentTile().getLandAction();
-    if (landAction == null) {
-      return;
-    }
-    landAction.perform(currentPlayer, board);
-    notifyTileActionPerformed(currentPlayer, landAction);
-    logger.info("Performed tile action: {}", landAction.getDescription());
   }
 
   /**

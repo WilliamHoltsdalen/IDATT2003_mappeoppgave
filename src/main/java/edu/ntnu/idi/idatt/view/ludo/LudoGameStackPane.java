@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.view.common.GameStackPane;
@@ -33,7 +34,7 @@ public class LudoGameStackPane extends GameStackPane {
           this.tileSizeX = boardDimensions[0] / ((LudoGameBoard) board).getBoardSize();
           this.tileSizeY = boardDimensions[1] / ((LudoGameBoard) board).getBoardSize();
 
-          this.tilePositionX = new double[]{(tileSizeX / 2) , (tileSizeX / 2), (tileSizeX / 2), (tileSizeX / 2)};
+          this.tilePositionX = new double[]{(tileSizeX / 2), (tileSizeX / 2), (tileSizeX / 2), (tileSizeX / 2)};
           this.tilePositionY = new double[]{(tileSizeY / 2), (tileSizeY / 2), (tileSizeY / 2), (tileSizeY / 2)};
 
           if (playersPane.getChildren().isEmpty()) {
@@ -45,22 +46,33 @@ public class LudoGameStackPane extends GameStackPane {
 
     @Override
     public void addGamePieces(List<Player> players) {
+      double[] startAreaDimensions = convertCoordinates(new int[]{((LudoGameBoard) board).getStartAreaSize(), ((LudoGameBoard) board).getStartAreaSize()});
+      double[][] playerStartPositions = new double[][]{
+        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 1},
+        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 1},
+        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 2},
+        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 2}
+      };
       players.forEach(player -> {
-        Tile playerTile = player.getCurrentTile();
+        Tile firstStartAreaTile = ((LudoGameBoard) board).getTile(((LudoGameBoard) board).getPlayerStartIndexes()[players.indexOf(player)]);
+        double[] startAreaFirstTilePos = convertCoordinates(firstStartAreaTile.getCoordinates());
+        
+        ((LudoPlayer) player).getTokens().forEach(token -> {
+          Tile playerTile = token.getCurrentTile();
+          
+          double startAreaPosX = playerStartPositions[token.getTokenId() - 1][0];
+          double startAreaPosY = playerStartPositions[token.getTokenId() - 1][1];
 
-        double posX = tilePositionX[players.indexOf(player)];
-        double posY = tilePositionY[players.indexOf(player)];
+          Shape playerToken = PlayerTokenFactory.create(8, Color.web(player.getColorHex()),
+              player.getPlayerTokenType());
+          playerToken.getStyleClass().add("game-board-player-token");
+          playerToken.setTranslateX(startAreaFirstTilePos[0] + startAreaPosX);
+          playerToken.setTranslateY(startAreaFirstTilePos[1] + startAreaPosY);
+          playersPane.getChildren().add(playerToken);
 
-        Shape playerToken = PlayerTokenFactory.create(8, Color.web(player.getColorHex()),
-            player.getPlayerTokenType());
-        playerToken.getStyleClass().add("game-board-player-token");
-        // TODO: Make this work for ludo, placing the player tokens in the player's starting area
-        playerToken.setTranslateX(posX + playerTile.getCoordinates()[0]);
-        playerToken.setTranslateY(playerTile.getCoordinates()[1] - posY);
-        playersPane.getChildren().add(playerToken);
-
-        playerTokenMap.put(player, playerToken);
-        playerTileMap.put(player, playerTile);
+          playerTokenMap.put(player, playerToken);
+          playerTileMap.put(player, playerTile);
+        });
       });
     }
 

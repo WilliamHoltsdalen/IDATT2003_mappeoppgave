@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.view.common.GameStackPane;
@@ -65,7 +66,7 @@ public class LadderGameStackPane extends GameStackPane {
   public void addGamePieces(List<Player> players) {
     players.forEach(player -> {
 
-      Tile playerTile = player.getCurrentTile();
+      Tile playerTile = ((LadderGamePlayer) player).getCurrentTile();
 
       double posX = tilePositionX[players.indexOf(player)];
       double posY = tilePositionY[players.indexOf(player)];

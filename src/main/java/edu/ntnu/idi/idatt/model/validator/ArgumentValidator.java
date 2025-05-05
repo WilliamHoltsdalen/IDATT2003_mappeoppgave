@@ -7,6 +7,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
+import edu.ntnu.idi.idatt.model.token.LudoToken.TokenStatus;
 import javafx.scene.paint.Color;
 
 /**
@@ -361,9 +362,21 @@ public class ArgumentValidator {
    * @param tile the tile to place the player on
    * @throws IllegalArgumentException if tile is null
    */
-  public static void playerPlaceOnTileValidator(Tile tile) {
+  public static void ladderGamePlayerPlaceOnTileValidator(Tile tile) {
     if (tile == null) {
       throw new IllegalArgumentException("Tile cannot be null");
+    }
+  }
+
+  public static void ludoPlayerMoveTokenValidator(int pieceId, Tile tile, TokenStatus status) {
+    if (pieceId < 1 || pieceId > 4) {
+      throw new IllegalArgumentException("Piece id must be between 1 and 4");
+    }
+    if (tile == null) {
+      throw new IllegalArgumentException("Tile cannot be null");
+    }
+    if (status == null) {
+      throw new IllegalArgumentException("Status cannot be null");
     }
   }
 
@@ -378,6 +391,8 @@ public class ArgumentValidator {
       throw new IllegalArgumentException("Player token type cannot be null");
     }
   }
+
+
 
   /**
    * Validates the arguments for the setCoordinates method in Tile class.
@@ -413,9 +428,6 @@ public class ArgumentValidator {
   public static void tileSetNextTileIdValidator(int currentTileId, int nextTileId) {
     if (nextTileId < 0) {
       throw new IllegalArgumentException("Next tile id must be equal to or greater than 0");
-    }
-    if (nextTileId > 0 && nextTileId <= currentTileId) {
-      throw new IllegalArgumentException("Next tile id must be 0 or greater than current tile id");
     }
   }
 

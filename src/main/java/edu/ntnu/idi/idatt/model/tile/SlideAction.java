@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.model.tile;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
@@ -105,6 +106,6 @@ public class SlideAction implements TileAction {
   public void perform(Player player, Board board) {
       tileActionPerformValidator(player, board);
 
-      player.placeOnTile(board.getTile(this.destinationTileId));
+      ((LadderGamePlayer) player).placeOnTile(board.getTile(this.destinationTileId));
   }
 }

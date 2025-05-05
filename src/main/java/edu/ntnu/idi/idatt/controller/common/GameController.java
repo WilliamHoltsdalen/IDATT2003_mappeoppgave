@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.controller.common;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +29,12 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
     protected abstract void handleRollDiceButtonAction();
 
     protected abstract void performPlayerTurn();
+
+    protected abstract void restartGame();
     
     public void initializeGameView() {
         gameView.initialize(getPlayers(), getRoundNumber(), (Board) getBoard());
     }
-    
     
     /**
     * Returns the round number of the game.
@@ -70,18 +70,6 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
     */
     public void setOnQuitGame(Runnable onQuitGame) {
         this.onQuitGame = onQuitGame;
-    }
-    
-    /**
-    * Restarts the game by initializing a new BoardGame instance with the same board and players.
-    */
-    protected void restartGame() {
-        List<Player> players = new ArrayList<>();
-        boardGame.getPlayers().forEach(player -> players.add(new Player(player.getName(),
-        player.getColorHex(), player.getPlayerTokenType())));
-        
-        initializeBoardGame(boardGame.getBoard(), players);
-        initializeGameView();
     }
     
     /**

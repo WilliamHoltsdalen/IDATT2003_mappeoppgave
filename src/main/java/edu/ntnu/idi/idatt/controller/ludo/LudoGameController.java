@@ -1,11 +1,13 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LudoBoardGame;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
@@ -19,7 +21,7 @@ public class LudoGameController extends GameController {
     @Override
     public void initializeBoardGame(Board board, List<Player> players) {
         try {
-            boardGame = new LudoBoardGame(board, players, 2);
+            boardGame = new LudoBoardGame(board, players, 1);
             boardGame.addObserver(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -45,6 +47,31 @@ public class LudoGameController extends GameController {
     private void setPlayerTileNumber(Player player, int newTileId) {
         gameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
+    }
+
+    /**
+     * Handles the player released event.
+     *
+     * @param player the player
+     * @param tileId the tile id
+     */
+    public void onPlayerReleased(Player player, int tileId) {
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " released from tile " + tileId);
+        setPlayerTileNumber(player, tileId);
+        gameView.getGameStackPane().movePlayer(player, getBoard().getTile(tileId), true);
+    }
+
+    /**
+    * Restarts the game by initializing a new BoardGame instance with the same board and players.
+    */
+    @Override
+    protected void restartGame() {
+        List<Player> players = new ArrayList<>();
+        boardGame.getPlayers().forEach(player -> players.add(new LudoPlayer(player.getName(),
+        player.getColorHex(), player.getPlayerTokenType())));
+        
+        initializeBoardGame(boardGame.getBoard(), players);
+        initializeGameView();
     }
     
     @Override
