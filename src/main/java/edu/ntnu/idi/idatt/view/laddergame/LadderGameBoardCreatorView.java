@@ -6,6 +6,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
+import edu.ntnu.idi.idatt.view.common.BoardStackPane;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,8 +14,6 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
@@ -110,6 +109,18 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     return columnsSpinner;
   }
 
+  public void setRowSpinner(int rows) {
+    rowsSpinner.valueProperty().removeListener(rowsListener);
+    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, rows));
+    rowsSpinner.valueProperty().addListener(rowsListener);
+  }
+
+  public void setColumnSpinner(int columns) {
+    columnsSpinner.valueProperty().removeListener(columnsListener);
+    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, columns));
+    columnsSpinner.valueProperty().addListener(columnsListener);
+  }
+
   /**
    * Initializes the view with the given available components and board.
    * 
@@ -133,6 +144,13 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     this.setRight(rightPanel);
     this.getStyleClass().add("board-creator-view");
     logger.debug("Board creator view initialized successfully");
+  }
+
+  @Override
+  protected BoardStackPane createBoardStackPane() {
+    LadderGameBoardStackPane boardContainer = new LadderGameBoardStackPane();
+    boardContainer.getStyleClass().add("board-creator-board-container");
+    return boardContainer;
   }
 
   /**
@@ -300,26 +318,18 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     VBox panel = new VBox(10);
     panel.setPadding(new Insets(20));
 
-    HBox header = new HBox();
-    header.setAlignment(Pos.CENTER_RIGHT);
+    HBox buttonBox = new HBox(10);
+    buttonBox.setAlignment(Pos.CENTER);
 
-    Button saveButton = new Button("Save board");
+    Button saveButton = new Button("Save board", new FontIcon("fas-save"));
     saveButton.getStyleClass().add("save-button");
     saveButton.setOnAction(e -> handleSaveBoardClicked());
 
-    MenuButton menuButton = new MenuButton();
-    menuButton.setGraphic(new FontIcon("fas-ellipsis-v"));
-    menuButton.getStyleClass().add("header-menu-button");
+    Button backButton = new Button("Back to menu", new FontIcon("fas-home"));
+    backButton.getStyleClass().add("back-button");
+    backButton.setOnAction(e -> notifyObservers("back_to_menu"));
 
-    MenuItem backToMenuMenuItem = new MenuItem("Back to menu");
-    backToMenuMenuItem.setGraphic(new FontIcon("fas-home"));
-    backToMenuMenuItem.setOnAction(e -> notifyObservers("back_to_menu"));
-    menuButton.getItems().add(backToMenuMenuItem);
-
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-    header.getChildren().addAll(saveButton, spacer, menuButton);
+    buttonBox.getChildren().addAll(saveButton, backButton);
 
     Text title = new Text("Components");
     title.getStyleClass().add("panel-title");
@@ -331,7 +341,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     componentList.getStyleClass().add("component-list-scroll-pane");
     componentListContent.getStyleClass().add("component-list-content");
 
-    panel.getChildren().addAll(header, title, componentList);
+    panel.getChildren().addAll(buttonBox, title, componentList);
     panel.getStyleClass().add("board-creator-panel");
     return panel;
   }
@@ -392,17 +402,5 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
     componentBox.getChildren().addAll(header, contentBox);
     componentListContent.getChildren().add(componentBox);
-  }
-
-  public void setRowSpinner(int rows) {
-    rowsSpinner.valueProperty().removeListener(rowsListener);
-    rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, rows));
-    rowsSpinner.valueProperty().addListener(rowsListener);
-  }
-
-  public void setColumnSpinner(int columns) {
-    columnsSpinner.valueProperty().removeListener(columnsListener);
-    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, columns));
-    columnsSpinner.valueProperty().addListener(columnsListener);
   }
 } 
