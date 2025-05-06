@@ -74,7 +74,7 @@ public class LudoGameController extends GameController {
     * @param tileId the tile id
     */
     public void onTokenReleased(Player player, int tileId, int tokenId) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + "rolled 6 and released token " + (tokenId + 1));
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled 6 and released token " + (tokenId + 1));
         ((LudoGameStackPane) gameView.getGameStackPane()).releaseToken(((LudoPlayer) player), tokenId);
         setPlayerTileNumber(player);
     }
