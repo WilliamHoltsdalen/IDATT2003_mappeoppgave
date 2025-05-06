@@ -2,7 +2,7 @@ package edu.ntnu.idi.idatt.factory.board;
 
 import java.io.IOException;
 
-import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.filehandler.LadderGameBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
@@ -34,15 +34,15 @@ public class LadderBoardFactory implements BoardFactory {
 
   /**
    * Creates a Board object by reading from an external file.
-   * File handling is delegated to the {@link BoardFileHandlerGson} class.
+   * File handling is delegated to the {@link LadderGameBoardFileHandlerGson} class.
    *
-   * @see BoardFileHandlerGson
+   * @see LadderGameBoardFileHandlerGson
    * @param filePath The path to the JSON file containing board data.
    * @return A Board object constructed from the file data.
    */
   @Override
   public Board createBoardFromFile(String filePath){
-    FileHandler<Board> boardFileHandler = new BoardFileHandlerGson();
+    FileHandler<Board> boardFileHandler = new LadderGameBoardFileHandlerGson();
     try {
       return (Board) boardFileHandler.readFile(filePath);
     } catch (IOException e) {

@@ -28,7 +28,7 @@ import edu.ntnu.idi.idatt.model.tile.TileAction;
  * <p>This class provides methods for reading and writing Board objects to and from JSON files.
  * It uses the Gson library for serialization and deserialization.
  */
-public class BoardFileHandlerGson implements FileHandler<Board> {
+public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
   private static final String ROWS_PROPERTY = "rows";

@@ -10,7 +10,7 @@ import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
-import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.filehandler.LadderGameBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
@@ -253,7 +253,7 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
       board.setDescription(view.getDescriptionField().getText());
 
       String path = (String) params.get("path");
-      BoardFileHandlerGson fileHandler = new BoardFileHandlerGson();
+      LadderGameBoardFileHandlerGson fileHandler = new LadderGameBoardFileHandlerGson();
       fileHandler.writeFile(path, List.of(board));
 
       Platform.runLater(() -> view.showInfoAlert("Board saved successfully!",
