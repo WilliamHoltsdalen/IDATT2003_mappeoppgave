@@ -50,7 +50,33 @@ public class LudoBoardCreatorController extends BoardCreatorController {
 
   @Override
   protected void handleImportBoard(Map<String, Object> params) {
-    // TODO: Implement
+    logger.debug("Handling import board");
+    String path = (String) params.get("path");
+    try {
+      Board importedBoard = boardFactory.createBoardFromFile(path);
+      if (importedBoard == null) {
+        Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
+        return;
+      } 
+      board = (LudoGameBoard) importedBoard;
+    } catch (Exception e) {
+      Platform.runLater(() -> view.showErrorAlert("Failed to import board", 
+      "The file does not contain a valid Ludo board."));
+      logger.warn("Failed to import board. Check if the file contains a valid Ludo board");
+      return;
+    }
+    
+    int boardSize = ((LudoGameBoard) board).getBoardSize();
+    ((LudoBoardCreatorView) view).setBoardSizeSpinner(boardSize);
+    view.getNameField().setText(board.getName());
+    view.getDescriptionField().setText(board.getDescription());
+    
+    boardPane.initialize(board, board.getBackground());
+    Platform.runLater(() -> {
+      view.showInfoAlert("Success!",
+        "The board has been imported successfully!");
+      logger.info("Board imported successfully");
+    });
   }
 
   @Override

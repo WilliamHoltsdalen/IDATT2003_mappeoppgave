@@ -67,7 +67,10 @@ public class LudoBoardFactory implements BoardFactory {
    * @return A configured LudoGameBoard object.
    */
   private Board createClassicBoard() {
-    Board board = new LudoGameBoard("Classic ludo", "Classic 15x15 ludo board", "media/boards/whiteBoard.png", 15, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+    Board board = createBoardFromFile("src/main/resources/boards/ClassicLudoBoard.json");
+    if (board == null) {
+      // TODO: Do something in case of null board, even if its just logging.
+    }
     return board;
   }
 
@@ -77,7 +80,10 @@ public class LudoBoardFactory implements BoardFactory {
    * @return A configured LudoGameBoard object.
    */
   private Board createSmallBoard() {
-    Board board = new LudoGameBoard("Small ludo", "Small 9x9 ludo board", "media/boards/whiteBoard.png", 9, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+    Board board = createBoardFromFile("src/main/resources/boards/SmallLudoBoard.json");
+    if (board == null) {
+      // TODO: Do something in case of null board, even if its just logging.
+    }
     return board;
   }
 
@@ -87,7 +93,10 @@ public class LudoBoardFactory implements BoardFactory {
    * @return A configured LudoGameBoard object.
    */
   private Board createLargeBoard() {
-    Board board = new LudoGameBoard("Large ludo", "Large 21x21 ludo board", "media/boards/whiteBoard.png", 21, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+    Board board = createBoardFromFile("src/main/resources/boards/XlLudoBoard.json");
+    if (board == null) {
+      // TODO: Do something in case of null board, even if its just logging.
+    }
     return board;
   }
 }

@@ -69,7 +69,7 @@ public class LadderBoardFactory implements BoardFactory {
    * @return A classic Board object.
    */
   private Board createClassicBoard() {
-    Board board = createBoardFromFile("src/main/resources/boards/ClassicBoard.json");
+    Board board = createBoardFromFile("src/main/resources/boards/ClassicLadderGameBoard.json");
     if (board == null) {
       // TODO: Do something in case of null board, even if its just logging.
     }
@@ -82,7 +82,7 @@ public class LadderBoardFactory implements BoardFactory {
    * @return A Board object with portals.
    */
   private Board createPortalBoard()  {
-    Board board = createBoardFromFile("src/main/resources/boards/PortalBoard.json");
+    Board board = createBoardFromFile("src/main/resources/boards/PortalLadderGameBoard.json");
     if (board == null) {
       // TODO: Do something in case of null board, even if its just logging.
     }
