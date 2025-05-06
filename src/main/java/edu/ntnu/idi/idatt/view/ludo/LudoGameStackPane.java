@@ -49,31 +49,25 @@ public class LudoGameStackPane extends GameStackPane {
 
     @Override
     public void addGamePieces(List<Player> players) {
-      double[] startAreaDimensions = convertCoordinates(new int[]{((LudoGameBoard) board).getStartAreaSize(), ((LudoGameBoard) board).getStartAreaSize()});
-      double[][] playerStartPositions = new double[][]{
-        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 1},
-        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 1},
-        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 2},
-        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 2}
-      };
-      players.forEach(player -> {
-        Tile firstStartAreaTile = ((LudoGameBoard) board).getTile(((LudoGameBoard) board).getPlayerStartIndexes()[players.indexOf(player)]);
-        double[] startAreaFirstTilePos = convertCoordinates(firstStartAreaTile.getCoordinates());
-        
+      players.forEach(player -> {    
         ((LudoPlayer) player).getTokens().forEach(token -> {
-          double startAreaPosX = playerStartPositions[token.getTokenId() - 1][0];
-          double startAreaPosY = playerStartPositions[token.getTokenId() - 1][1];
-
           Shape playerToken = PlayerTokenFactory.create(8, Color.web(player.getColorHex()),
-              player.getPlayerTokenType());
+            player.getPlayerTokenType());
           playerToken.getStyleClass().add("game-board-player-token");
-          playerToken.setTranslateX(startAreaFirstTilePos[0] + startAreaPosX);
-          playerToken.setTranslateY(startAreaFirstTilePos[1] + startAreaPosY);
-          playersPane.getChildren().add(playerToken);
-
           tokenShapeMap.put(token, playerToken);
+          
+          placeTokenInStartArea(player, token);
+          playersPane.getChildren().add(playerToken);
         });
       });
+    }
+
+    private void placeTokenInStartArea(Player player, LudoToken token) {
+      double[] startAreaPos = getTokenStartPosition(player, token);
+
+      Shape playerToken = tokenShapeMap.get(token);
+      playerToken.setTranslateX(startAreaPos[0]);
+      playerToken.setTranslateY(startAreaPos[1]);
     }
 
     public void releaseToken(LudoPlayer player, int tokenId) {
@@ -92,6 +86,24 @@ public class LudoGameStackPane extends GameStackPane {
       PathTransition pathTransition = new PathTransition();
       pathTransition.setDuration(TRANSITION_DURATION);
       pathTransition.setNode(tokenShapeMap.get(token));
+      pathTransition.setPath(path);
+      pathTransition.play();
+    }
+
+    public void moveTokenToStartArea(Player player, LudoToken token) {
+      double[] startAreaPos = getTokenStartPosition(player, token);
+      Shape playerToken = tokenShapeMap.get(token);
+
+      double[] currentTokenPos = new double[]{playerToken.getTranslateX(), playerToken.getTranslateY()};
+
+      Path path = new Path();
+      path.getElements().add(new MoveTo(currentTokenPos[0], currentTokenPos[1]));
+      path.getElements().add(new LineTo(startAreaPos[0], startAreaPos[1]));
+
+      PathTransition pathTransition = new PathTransition();
+      pathTransition.setDelay(TRANSITION_DURATION); // Allow the token to be visually captured before being moved.
+      pathTransition.setDuration(TRANSITION_DURATION);
+      pathTransition.setNode(playerToken);
       pathTransition.setPath(path);
       pathTransition.play();
     }
@@ -133,6 +145,24 @@ public class LudoGameStackPane extends GameStackPane {
     @Override
     protected double[] convertCoordinates(int[] rc) {
       return ViewUtils.ludoBoardToScreenCoordinates(rc, (LudoGameBoard) board, boardDimensions[0], boardDimensions[1]);
+    }
+
+
+    private double[] getTokenStartPosition(Player player, LudoToken token) {
+      double[] startAreaDimensions = convertCoordinates(new int[]{((LudoGameBoard) board).getStartAreaSize(), ((LudoGameBoard) board).getStartAreaSize()});
+      double[][] playerStartPositions = new double[][]{
+        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 1},
+        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 1},
+        {startAreaDimensions[0] / 3 * 1, startAreaDimensions[1] / 3 * 2},
+        {startAreaDimensions[0] / 3 * 2, startAreaDimensions[1] / 3 * 2}
+      };
+        Tile firstStartAreaTile = ((LudoGameBoard) board).getTile(((LudoGameBoard) board).getPlayerStartIndexes()[players.indexOf(player)]);
+        double[] startAreaFirstTilePos = convertCoordinates(firstStartAreaTile.getCoordinates());
+        
+        double startAreaPosX = playerStartPositions[token.getTokenId() - 1][0];
+        double startAreaPosY = playerStartPositions[token.getTokenId() - 1][1];
+
+      return new double[]{startAreaFirstTilePos[0] + startAreaPosX, startAreaFirstTilePos[1] + startAreaPosY};
     }
 
     protected List<Tile> getPathTiles(int playerIndex, Tile startTile, Tile endTile) {

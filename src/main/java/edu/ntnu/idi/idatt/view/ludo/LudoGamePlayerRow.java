@@ -47,4 +47,10 @@ public class LudoGamePlayerRow extends GamePlayerRow {
     
         this.getChildren().addAll(playerToken, playerName, spacer, playerTile);
       }
+
+      @Override
+      public void setTileNumber(Player player, String text) {
+        playerTile.setText(text + "/4");
+        playerTile.setTooltip(new Tooltip(player.getName() + " has " + text + " finished tokens"));
+      }
 }

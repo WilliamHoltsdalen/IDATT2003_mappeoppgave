@@ -74,7 +74,7 @@ public class LadderGameController extends GameController {
    */
   private void setPlayerTileNumber(Player player, int newTileId) {
     gameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
-        .setTileNumber(player, newTileId);
+        .setTileNumber(player, String.valueOf(newTileId));
   }
 
   /**

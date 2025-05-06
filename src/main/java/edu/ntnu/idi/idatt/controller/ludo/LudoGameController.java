@@ -45,9 +45,12 @@ public class LudoGameController extends GameController {
     * @param player the player
     * @param newTileId the new tile id
     */
-    private void setPlayerTileNumber(Player player, int newTileId) {
+    private void setPlayerTileNumber(Player player) {
+        int finishedTokens = (int) ((LudoPlayer) player).getTokens().stream()
+        .filter(t -> t.getStatus() == LudoToken.TokenStatus.FINISHED)
+        .count();
         gameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
-        .setTileNumber(player, newTileId);
+        .setTileNumber(player, String.valueOf(finishedTokens));
     }
     
     /**
@@ -58,8 +61,8 @@ public class LudoGameController extends GameController {
     */
     public void onTokenReleased(Player player, int tileId, int tokenId) {
         gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " released token " + (tokenId + 1));
-        setPlayerTileNumber(player, tileId);
         ((LudoGameStackPane) gameView.getGameStackPane()).releaseToken(((LudoPlayer) player), tokenId);
+        setPlayerTileNumber(player);
     }
     
     /**
@@ -76,11 +79,10 @@ public class LudoGameController extends GameController {
     }
     
     public void onTokenMoved(Player player, LudoToken token, int diceRoll, int oldTileId, int newTileId) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
-        
-        setPlayerTileNumber(player, newTileId);
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved token " + (token.getTokenId() + 1) + " to tile " + newTileId);
         
         ((LudoGameStackPane) gameView.getGameStackPane()).moveToken(token, getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false);
+        setPlayerTileNumber(player);
     }
     
     @Override
@@ -99,6 +101,22 @@ public class LudoGameController extends GameController {
     @Override
     public void onGameFinished(Player winner) {
         gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
+    }
+    
+    public void onTokenCaptured(Player player, LudoToken token, int oldTileId) {
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + "'s token " + token.getTokenId() + " was captured and sent back to start!");
+
+        ((LudoGameStackPane) gameView.getGameStackPane()).moveTokenToStartArea(player, token);
+        setPlayerTileNumber(player);
+    }
+
+    public void onTokenFinished(Player player, LudoToken token) {
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + "'s token " + token.getTokenId() + " finished!");
+        setPlayerTileNumber(player);
+    }
+
+    public void onTurnSkipped(Player player, int diceRoll) {
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " but has no tokens to move. Turn skipped!");
     }
     
     @Override
