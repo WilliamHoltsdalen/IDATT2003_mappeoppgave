@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -111,46 +112,49 @@ public class GameMenuBox extends VBox {
         onRollDice.run();
       }
     });
+    // Options section at the bottom of the menu
+    GridPane optionsGrid = new GridPane();
+    optionsGrid.getStyleClass().add("game-menu-options-box");
+    optionsGrid.setHgap(12);
+    optionsGrid.setVgap(8);
 
-    // Options section
     Label optionsLabel = new Label("Options");
     optionsLabel.getStyleClass().add("game-menu-options-label");
+    optionsGrid.add(optionsLabel, 0, 0, 2, 1);
 
     Text rollForAllPlayersText = new Text("Roll for all players");
     rollForAllPlayersText.getStyleClass().add("game-menu-roll-for-all-players-text");
-    rollForAllPlayersCheckBox.getStyleClass().add("game-menu-roll-for-all-players-check-box");
-    HBox rollForAllPlayersHBox = new HBox(rollForAllPlayersText, rollForAllPlayersCheckBox);
-    rollForAllPlayersHBox.getStyleClass().add("game-menu-roll-for-all-players-box");
+    optionsGrid.add(rollForAllPlayersText, 0, 1);
+    optionsGrid.add(rollForAllPlayersCheckBox, 1, 1);
 
     Text animatedDiceText = new Text("Animated dice");
     animatedDiceText.getStyleClass().add("game-menu-roll-for-all-players-text");
-    animatedDiceCheckBox.getStyleClass().add("game-menu-roll-for-all-players-check-box");
-    HBox animatedDiceHBox = new HBox(animatedDiceText, animatedDiceCheckBox);
-    animatedDiceHBox.getStyleClass().add("game-menu-roll-for-all-players-box");
+    optionsGrid.add(animatedDiceText, 0, 2);
+    optionsGrid.add(animatedDiceCheckBox, 1, 2);
 
-    VBox optionsBox = new VBox(6, optionsLabel, rollForAllPlayersHBox, animatedDiceHBox);
-    optionsBox.getStyleClass().add("game-menu-options-box");
-    optionsBox.setFillWidth(true);
-
-    VBox menuBottomBox = new VBox(horizontalDividerBottom, diceContainer, rollDiceButton, optionsBox);
+    VBox menuBottomBox = new VBox(horizontalDividerBottom, diceContainer, rollDiceButton, optionsGrid);
     menuBottomBox.getStyleClass().add("game-menu-bottom-box");
 
     this.getChildren().setAll(menuTopBox, gameLogScrollPane, menuBottomBox);
 
-    // Hide dice and animation option when 'Roll for all players' is checked 
+    // Hide dice and animation option when 'Roll for all players' is checked
     rollForAllPlayersCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
       diceContainer.setVisible(!isSelected);
       diceContainer.setManaged(!isSelected);
-      animatedDiceHBox.setVisible(!isSelected);
-      animatedDiceHBox.setManaged(!isSelected);
+      animatedDiceCheckBox.setVisible(!isSelected);
+      animatedDiceCheckBox.setManaged(!isSelected);
       animatedDiceCheckBox.setSelected(!isSelected);
+      animatedDiceText.setVisible(!isSelected);
+      animatedDiceText.setManaged(!isSelected);
     });
-    // Set initial state
+    // Set initial state for the options
     boolean isSelected = rollForAllPlayersCheckBox.isSelected();
     diceContainer.setVisible(!isSelected);
     diceContainer.setManaged(!isSelected);
-    animatedDiceHBox.setVisible(!isSelected);
-    animatedDiceHBox.setManaged(!isSelected);
+    animatedDiceCheckBox.setVisible(!isSelected);
+    animatedDiceCheckBox.setManaged(!isSelected);
+    animatedDiceText.setVisible(!isSelected);
+    animatedDiceText.setManaged(!isSelected);
   }
 
   /**
