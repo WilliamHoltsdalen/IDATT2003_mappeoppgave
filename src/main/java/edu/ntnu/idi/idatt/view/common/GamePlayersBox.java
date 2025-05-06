@@ -1,7 +1,8 @@
-package edu.ntnu.idi.idatt.view.component;
+package edu.ntnu.idi.idatt.view.common;
+
+import java.util.List;
 
 import edu.ntnu.idi.idatt.model.player.Player;
-import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -14,11 +15,11 @@ import javafx.scene.text.Text;
  * <p>This class extends the VBox class. It is used to display the players in the game view.
  * It contains a list of player rows, as well as a round number text.
  */
-public class GamePlayersBox extends VBox {
-  private static final String ROUND_NUMBER_TEXT = "Round ";
+public abstract class GamePlayersBox extends VBox {
+  protected static final String ROUND_NUMBER_TEXT = "Round ";
 
-  private final List<GamePlayerRow> playersBoxRows;
-  private final Text roundNumberText;
+  protected final List<GamePlayerRow> playersBoxRows;
+  protected final Text roundNumberText;
 
   /**
    * Constructor for GamePlayersBox class.
@@ -37,34 +38,7 @@ public class GamePlayersBox extends VBox {
     setRoundNumber(initialRoundNumber);
   }
 
-  /**
-   * Initializes the players box by creating all the components and adding the players to the box.
-   *
-   * @param players the list of players to add to the box
-   */
-  private void initialize(List<Player> players) {
-    roundNumberText.getStyleClass().add("game-players-box-round-number");
-
-    HorizontalDivider horizontalDivider = new HorizontalDivider();
-
-    VBox playersBoxVbox = new VBox(roundNumberText, horizontalDivider);
-    playersBoxVbox.getStyleClass().add("game-players-box");
-    playersBoxVbox.maxHeightProperty().bind(playersBoxVbox.heightProperty());
-
-    players.forEach(player -> {
-      GamePlayerRow playerRow = new GamePlayerRow(player);
-      HBox.setHgrow(playerRow, Priority.ALWAYS);
-      playersBoxRows.add(playerRow);
-      playersBoxVbox.getChildren().add(playerRow);
-    });
-
-    VBox vBox = new VBox(playersBoxVbox);
-    VBox.setVgrow(playersBoxVbox, Priority.ALWAYS);
-    HBox.setHgrow(vBox, Priority.NEVER);
-    vBox.setAlignment(Pos.TOP_LEFT);
-
-    this.getChildren().add(vBox);
-  }
+  protected abstract void initialize(List<Player> players);
 
   /**
    * Sets the round number.

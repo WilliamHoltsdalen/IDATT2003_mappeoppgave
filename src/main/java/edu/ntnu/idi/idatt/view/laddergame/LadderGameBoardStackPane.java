@@ -8,6 +8,7 @@ import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
+import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
@@ -34,7 +35,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
    */
   @Override
   public void initialize(Board board, String backgroundImagePath) {
-    super.initialize((LadderGameBoard) board, backgroundImagePath);
+    super.initialize(board, backgroundImagePath);
 
     Platform.runLater(() -> {
       setPattern(((LadderGameBoard) board).getPattern());
@@ -69,11 +70,12 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   @Override
   protected void loadComponents() {
     board.getTiles().forEach(tile -> {
-      if (tile.getLandAction() != null) {
-        String identifier = tile.getLandAction().getIdentifier();
+      LadderGameTile ladderGameTile = (LadderGameTile) tile;
+      if (ladderGameTile.getLandAction() != null) {
+        String identifier = ladderGameTile.getLandAction().getIdentifier();
         String imagePath = getImagePath(identifier);
         ComponentSpec spec = ComponentSpec.fromFilename(imagePath.substring(imagePath.lastIndexOf("/") + 1));
-        TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), tile.getLandAction().getDestinationTileId());
+        TileActionComponent component = new TileActionComponent(spec.type().toString(), imagePath, board.getTile(tile.getTileId()), ladderGameTile.getLandAction().getDestinationTileId());
 
         // Set portal color number if it's a portal
         if (spec.type() == ComponentSpec.ComponentType.PORTAL) {
@@ -125,7 +127,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
         components.keySet().stream(),
         components.values().stream()
             .map(component -> {
-              int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
+              int[] coords = board.getTile(((LadderGameTile) component.getTile()).getLandAction().getDestinationTileId()).getCoordinates();
               return new TileCoordinates(coords[0], coords[1]);
             })
     ).toList();
@@ -304,7 +306,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
                   components.values().stream()
                       .filter(component -> !component.getType().equals("PORTAL"))
                       .map(component -> {
-                        int[] coords = board.getTile(component.getTile().getLandAction().getDestinationTileId()).getCoordinates();
+                        int[] coords = board.getTile(((LadderGameTile) component.getTile()).getLandAction().getDestinationTileId()).getCoordinates();
                         return new TileCoordinates(coords[0], coords[1]);
                       })
               ).toList();
@@ -356,12 +358,12 @@ public class LadderGameBoardStackPane extends BoardStackPane {
         return;
       }
 
-      int destinationTileId = component.getTile().getLandAction().getDestinationTileId();
+      int destinationTileId = ((LadderGameTile) component.getTile()).getLandAction().getDestinationTileId();
       int[] destCoords = board.getTile(destinationTileId).getCoordinates();
       Rectangle destinationCell = findCellByCoordinates(new TileCoordinates(destCoords[0], destCoords[1]));
 
       // Get the base position for this tile
-      double[] screenCoords = ViewUtils.boardToScreenCoordinates(
+      double[] screenCoords = ViewUtils.ladderBoardToScreenCoordinates(
           new int[]{coordinates.row(), coordinates.col()},
           ((LadderGameBoard) board),
           boardDimensions[0],

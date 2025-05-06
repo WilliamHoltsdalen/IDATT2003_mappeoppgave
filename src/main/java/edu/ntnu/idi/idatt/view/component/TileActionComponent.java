@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.view.component;
 
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.model.tile.LadderAction;
+import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.PortalAction;
 import edu.ntnu.idi.idatt.model.tile.SlideAction;
 import edu.ntnu.idi.idatt.model.tile.Tile;
@@ -87,9 +88,9 @@ public class TileActionComponent extends ImageView {
     String description = typeName + " from " + tile.getTileId() + " to " + destinationTileId;
     
     switch (type) {
-        case "LADDER" -> tile.setLandAction(new LadderAction(identifier.toString(), destinationTileId, description));
-        case "SLIDE" -> tile.setLandAction(new SlideAction(identifier.toString(), destinationTileId, description));
-        case "PORTAL" -> tile.setLandAction(new PortalAction(identifier.toString(), destinationTileId, description));
+        case "LADDER" -> ((LadderGameTile) tile).setLandAction(new LadderAction(identifier.toString(), destinationTileId, description));
+        case "SLIDE" -> ((LadderGameTile) tile).setLandAction(new SlideAction(identifier.toString(), destinationTileId, description));
+        case "PORTAL" -> ((LadderGameTile) tile).setLandAction(new PortalAction(identifier.toString(), destinationTileId, description));
         default -> throw new IllegalArgumentException("Unknown tile action type: " + type);
     }
   }

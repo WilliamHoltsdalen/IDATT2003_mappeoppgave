@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.controller.common;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ public abstract class MenuController implements ButtonClickObserver {
     
     protected MenuController(MenuView menuView) {
         this.menuView = menuView;
-        this.boardFactory = new LadderBoardFactory();
         this.boardVariants = new HashMap<>();
         this.currentBoardIndex = DEFAULT_BOARD_INDEX;
     }
@@ -42,6 +40,9 @@ public abstract class MenuController implements ButtonClickObserver {
     * Initializes the main menu view.
     */
     protected abstract void initializeMenuView();
+
+
+  protected abstract List<Player> getPlayers();
 
     /**
      * Sets the board factory.
@@ -100,14 +101,6 @@ public abstract class MenuController implements ButtonClickObserver {
         }
       }
     }
-
-  private List<Player> getPlayers() {
-    List<Player> players = new ArrayList<>();
-    menuView.getPlayerRows().forEach(playerRow ->
-        players.add(new Player(playerRow.getName(), playerRow.getColor().toString(),
-            playerRow.getPlayerTokenType())));
-    return players;
-  }
 
   /**
    * Handles the action of the 'start game' button in the main menu.

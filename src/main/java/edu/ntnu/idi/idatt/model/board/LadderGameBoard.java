@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.model.board;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetPatternValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetRowsAndColumnsValidator;
@@ -92,7 +93,7 @@ public class LadderGameBoard extends BaseBoard {
     @Override
     public void createTiles(int rows, int columns) {
         Map<Integer, Tile> newTiles = new HashMap<>();
-        newTiles.put(0, new Tile(0, new int[]{0, -2}, 1)); // Add 0th tile outside of board
+        newTiles.put(0, new LadderGameTile(0, new int[]{0, -2}, 1)); // Add 0th tile outside of board
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -105,9 +106,9 @@ public class LadderGameBoard extends BaseBoard {
                 } else { // Odd numbered rows (right to left)
                     tileId = baseId + (columns - j);
                 }
-                newTiles.put(tileId, new Tile(tileId, coordinates, tileId + 1));
+                newTiles.put(tileId, new LadderGameTile(tileId, coordinates, tileId + 1));
                 try {
-                    newTiles.get(tileId).setLandAction(tiles.get(tileId).getLandAction());
+                    ((LadderGameTile) newTiles.get(tileId)).setLandAction(((LadderGameTile) tiles.get(tileId)).getLandAction());
                 } catch (NullPointerException | IllegalArgumentException e) {
                     // Do nothing if the tile doesn't have an action
                 }

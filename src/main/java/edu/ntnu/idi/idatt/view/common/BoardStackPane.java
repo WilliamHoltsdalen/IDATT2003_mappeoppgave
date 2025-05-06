@@ -55,7 +55,9 @@ public abstract class BoardStackPane extends StackPane {
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
   }
 
-  /** Loads the components for the board. */
+  /**
+   * Loads the components for the board.
+   */
   protected abstract void loadComponents();
 
   /**

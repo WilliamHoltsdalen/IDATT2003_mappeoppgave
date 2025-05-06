@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.filehandler;
 
-import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -16,10 +15,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.tile.LadderAction;
+import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.PortalAction;
 import edu.ntnu.idi.idatt.model.tile.SlideAction;
-import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 
 /**
@@ -107,6 +107,7 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
     JsonArray tilesJsonArray = new JsonArray();
 
     board.getTiles().forEach(tile -> {
+      LadderGameTile ladderGameTile = (LadderGameTile) tile;
       JsonObject tileJson = new JsonObject();
       JsonObject actionJson = new JsonObject();
 
@@ -117,12 +118,12 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       tileJson.add(TILE_COORDINATES_PROPERTY, coordinatesArray);
       tileJson.addProperty(TILE_NEXT_TILE_ID_PROPERTY, tile.getNextTileId());
 
-      if (tile.getLandAction() != null) {
-        actionJson.addProperty(TILE_ACTION_IDENTIFIER_PROPERTY, tile.getLandAction()
+      if (ladderGameTile.getLandAction() != null) {
+        actionJson.addProperty(TILE_ACTION_IDENTIFIER_PROPERTY, ladderGameTile.getLandAction()
             .getIdentifier());
-        actionJson.addProperty(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY, tile.getLandAction()
+        actionJson.addProperty(TILE_ACTION_DESTINATION_TILE_ID_PROPERTY, ladderGameTile.getLandAction()
             .getDestinationTileId());
-        actionJson.addProperty(TILE_ACTION_DESCRIPTION_PROPERTY, tile.getLandAction()
+        actionJson.addProperty(TILE_ACTION_DESCRIPTION_PROPERTY, ladderGameTile.getLandAction()
             .getDescription());
         tileJson.add(TILE_ACTION_PROPERTY, actionJson);
       }
@@ -192,10 +193,10 @@ public class BoardFileHandlerGson implements FileHandler<Board> {
       }
 
       if (tileAction != null) {
-        board.addTile(new Tile(tileId, coordinates, nextTileId, tileAction));
+        board.addTile(new LadderGameTile(tileId, coordinates, nextTileId, tileAction));
         return;
       }
-      board.addTile(new Tile(tileId, coordinates, nextTileId));
+      board.addTile(new LadderGameTile(tileId, coordinates, nextTileId));
     });
 
     return board;

@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.model.player;
 
-import edu.ntnu.idi.idatt.model.tile.Tile;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerPlaceOnTileValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetColorHexValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetNameValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetPlayerTokenTypeValidator;
@@ -12,11 +10,10 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetPlay
  * <p>This class represents a player in the game. It contains a name, a color, a player token type,
  * and the current tile of the player.
  */
-public class Player {
+public abstract class Player {
   private String name;
   private String colorHex;
   private PlayerTokenType playerTokenType;
-  private Tile currentTile;
 
   /**
    * Constructor for Player class.
@@ -58,15 +55,6 @@ public class Player {
   }
 
   /**
-   * Returns the current tile of the player.
-   *
-   * @return The current tile of the player.
-   */
-  public Tile getCurrentTile() {
-    return currentTile;
-  }
-
-  /**
    * Sets the name of the player.
    *
    * @param name The name to set.
@@ -97,16 +85,5 @@ public class Player {
     playerSetPlayerTokenTypeValidator(playerTokenType);
 
     this.playerTokenType = playerTokenType;
-  }
-
-  /**
-   * Places the player on the given tile.
-   *
-   * @param tile The tile to place the player on.
-   */
-  public void placeOnTile(Tile tile) {
-    playerPlaceOnTileValidator(tile);
-
-    this.currentTile = tile;
   }
 }

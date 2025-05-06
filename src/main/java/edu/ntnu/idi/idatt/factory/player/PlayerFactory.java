@@ -5,6 +5,8 @@ import java.util.List;
 
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
@@ -16,9 +18,6 @@ import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
  * factory class.
  */
 public class PlayerFactory {
-  private static final String DEFAULT_BOT_NAME_PREFIX = "Bot_";
-  private static final String DEFAULT_BOT_COLOR = "#FF0000";
-  private static final PlayerTokenType DEFAULT_BOT_TOKEN_TYPE = PlayerTokenType.SQUARE;
 
   /** Private constructor to prevent instantiation. */
   private PlayerFactory() {}
@@ -39,37 +38,36 @@ public class PlayerFactory {
   }
 
   /**
-   * Creates a single Player with the given name and colorHex.
+   * Creates a single LadderGame player with the given name and colorHex.
    *
    * @param name      The player's name.
    * @param colorHex  The player's color in hex (e.g. "#FF0000").
-   * @return A new Player instance with the given attributes.
+   * @return A new LadderGamePlayer instance with the given attributes.
    */
-  public static Player createPlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
-    if (name == null || name.isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty.");
-    }
-    if (colorHex == null || colorHex.isEmpty()) {
-      throw new IllegalArgumentException("Color hex cannot be null or empty.");
-    }
-    if (playerTokenType == null) {
-      throw new IllegalArgumentException("Player token type cannot be null.");
+  public static Player createLadderGamePlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
+    if (!validatePlayer(name, colorHex, playerTokenType)) {
+      throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new Player(name, colorHex, playerTokenType);
+    return new LadderGamePlayer(name, colorHex, playerTokenType);
   }
 
   /**
-   * Creates a player representing a bot, with the given name prefixed with "Bot_".
+   * Creates a single Ludo player with the given name and colorHex.
    *
-   * @param name The name of the bot.
-   * @return A new Player instance representing the bot.
+   * @param name      The player's name.
+   * @param colorHex  The player's color in hex (e.g. "#FF0000").
+   * @return A new LudoPlayer instance with the given attributes.
    */
-  public static Player createBot(String name) {
-    if (name == null || name.isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty.");
+  public static Player createLudoPlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
+    if (!validatePlayer(name, colorHex, playerTokenType)) {
+      throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new Player(DEFAULT_BOT_NAME_PREFIX + name, DEFAULT_BOT_COLOR, DEFAULT_BOT_TOKEN_TYPE);
+    return new LudoPlayer(name, colorHex, playerTokenType);
+  }
+
+  private static boolean validatePlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
+    return name != null && !name.isEmpty() && colorHex != null && !colorHex.isEmpty() && playerTokenType != null;
   }
 }

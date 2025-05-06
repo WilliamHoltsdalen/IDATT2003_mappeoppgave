@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
@@ -27,11 +29,23 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
       String line;
       while ((line = reader.readLine()) != null) {
+        String playerType = "";
         if (line.equals("name, colorHex, playerTokenType")) {
+          playerType = "ladderGamePlayer";
+          continue;
+        } else if (line.equals("name, colorHex")) {
+          playerType = "ludoPlayer";
           continue;
         }
 
-        Player player = fromCsvLine(line);
+        
+        Player player = null;
+        if (playerType.equals("ladderGamePlayer")) {
+          player = LadderGamePlayerfromCsvLine(line);
+        } else if (playerType.equals("ludoPlayer")) {
+          player = LudoPlayerfromCsvLine(line);
+        }
+
         if (player == null) {
           return Collections.emptyList();
         }
@@ -55,7 +69,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     }
   }
 
-  private Player fromCsvLine(String line) {
+  private Player LadderGamePlayerfromCsvLine(String line) {
     String[] segments = line.split(",");
     if (segments.length != 3) {
       return null;
@@ -64,7 +78,22 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
       String playerName = segments[0].trim();
       String playerColorHex = segments[1].trim();
       String playerTokenType = segments[2].trim();
-      return new Player(playerName, playerColorHex, PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
+      return new LadderGamePlayer(playerName, playerColorHex, PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private Player LudoPlayerfromCsvLine(String line) {
+    String[] segments = line.split(",");
+    if (segments.length != 2) {
+      return null;
+    }
+    try {
+      String playerName = segments[0].trim();
+      String playerColorHex = segments[1].trim();
+      return new LudoPlayer(playerName, playerColorHex, PlayerTokenType.CIRCLE);
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }

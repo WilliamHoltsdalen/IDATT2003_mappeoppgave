@@ -17,7 +17,7 @@ public class LadderGameMenuView extends MenuView {
    * Constructor for LadderGameMenuView class.
    */
   public LadderGameMenuView() {
-    super();
+    super(new LadderGameBoardStackPane());
   }
 
   /**

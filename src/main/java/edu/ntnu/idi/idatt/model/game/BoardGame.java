@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.model.game;
 
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +13,6 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.tile.TileAction;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.BoardGameSubject;
 
@@ -23,7 +23,7 @@ import edu.ntnu.idi.idatt.observer.BoardGameSubject;
  * This class provides the base implementation for both Chutes and Ladders and Ludo games.
  */
 public abstract class BoardGame implements Game, BoardGameSubject {
-  private static final Logger logger = LoggerFactory.getLogger(BoardGame.class);
+  protected static final Logger logger = LoggerFactory.getLogger(BoardGame.class);
   protected final List<BoardGameObserver> observers;
   protected Board board;
   protected List<Player> players;
@@ -49,12 +49,11 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     initializeGame();
   }
 
-  @Override
-  public void initializeGame() {
-    logger.info("Game started!");
-    players.forEach(player -> player.placeOnTile(board.getTile(0)));
-    setCurrentPlayer(players.getFirst());
-  }
+  /**
+   * Initializes the game by setting the initial state of the game.
+   * This method is implemented by the subclasses.
+   */
+  public abstract void initializeGame();
 
   @Override
   public Board getBoard() {
@@ -103,7 +102,7 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     boardGameSetCurrentPlayerValidator(player);
 
     this.currentPlayer = player;
-    logger.info("Set current player to: {}", currentPlayer.getName());
+    logger.debug("Set current player to: {}", currentPlayer.getName());
   }
 
   @Override
@@ -147,19 +146,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   /**
-   * Handles tile actions for the current player.
-   */
-  protected void handleTileAction() {
-    TileAction landAction = currentPlayer.getCurrentTile().getLandAction();
-    if (landAction == null) {
-      return;
-    }
-    landAction.perform(currentPlayer, board);
-    notifyTileActionPerformed(currentPlayer, landAction);
-    logger.info("Performed tile action: {}", landAction.getDescription());
-  }
-
-  /**
    * Updates the current player to the next player in the list.
    */
   protected void updateCurrentPlayer() {
@@ -167,7 +153,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     int nextIndex = (currentIndex + 1) % players.size();
     setCurrentPlayer(players.get(nextIndex));
   }
-
 
   /**
    * Checks if the game has a winner and notifies observers if it does.
@@ -181,11 +166,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   @Override
-  public void notifyPlayerMoved(Player player, int diceRoll, int newTileId) {
-    observers.forEach(observer -> observer.onPlayerMoved(player, diceRoll, newTileId));
-  }
-
-  @Override
   public void notifyRoundNumberIncremented(int roundNumber) {
     observers.forEach(observer -> observer.onRoundNumberIncremented(roundNumber));
   }
@@ -193,11 +173,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   @Override
   public void notifyCurrentPlayerChanged(Player player) {
     observers.forEach(observer -> observer.onCurrentPlayerChanged(player));
-  }
-
-  @Override
-  public void notifyTileActionPerformed(Player player, TileAction tileAction) {
-    observers.forEach(observer -> observer.onTileActionPerformed(player, tileAction));
   }
 
   @Override

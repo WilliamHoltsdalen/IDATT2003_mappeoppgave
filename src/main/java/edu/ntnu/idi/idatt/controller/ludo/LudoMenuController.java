@@ -1,9 +1,12 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.ntnu.idi.idatt.controller.common.MenuController;
-import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
+import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;  
+import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 
@@ -16,8 +19,22 @@ public class LudoMenuController extends MenuController {
   public LudoMenuController(MenuView view) {
     super(view);
 
-    super.setBoardFactory(new LadderBoardFactory());
+    super.setBoardFactory(new LudoBoardFactory());
     initializeMenuView();
+  }
+
+  /**
+   * Returns the players of the game.
+   *
+   * @return The players of the game.
+   */
+  @Override
+  protected List<Player> getPlayers() {
+    List<Player> players = new ArrayList<>();
+    menuView.getPlayerRows().forEach(playerRow ->
+        players.add(new LudoPlayer(playerRow.getName(), playerRow.getColor().toString(),
+            playerRow.getPlayerTokenType())));
+    return players;
   }
 
   @Override
@@ -30,5 +47,7 @@ public class LudoMenuController extends MenuController {
   @Override
   protected void loadBoardsFromFactory() {
     super.boardVariants.put(1, super.boardFactory.createBoard("Classic"));
+    super.boardVariants.put(2, super.boardFactory.createBoard("Small"));
+    super.boardVariants.put(3, super.boardFactory.createBoard("Large"));
   }
 }
