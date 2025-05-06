@@ -60,7 +60,7 @@ public abstract class GameView extends HBox implements ButtonClickSubject {
   }
 
   public GameMenuBox createGameMenuBox() {
-    GameMenuBox box = new GameMenuBox();
+    GameMenuBox box = new GameMenuBox(1);
     box.setOnRestartGame(() -> notifyObservers("restart_game"));
     box.setOnQuitGame(() -> notifyObservers("quit_game"));
     box.setOnRollDice(() -> notifyObservers("roll_dice"));

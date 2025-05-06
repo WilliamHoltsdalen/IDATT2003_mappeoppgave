@@ -112,11 +112,13 @@ public class LudoGameStackPane extends GameStackPane {
       if (oldTile.getTileId() == newTile.getTileId()) {
         return;
       }
+      Shape playerToken = tokenShapeMap.get(token);
+      playerToken.setCache(true);
 
       double[] newPaneCoordinates = convertCoordinates(newTile.getCoordinates());
 
-      double currentXPos = tokenShapeMap.get(token).getTranslateX();
-      double currentYPos = tokenShapeMap.get(token).getTranslateY();
+      double currentXPos = playerToken.getTranslateX();
+      double currentYPos = playerToken.getTranslateY();
       double newXPos = tileOffset + newPaneCoordinates[0];
       double newYPos = tileOffset + newPaneCoordinates[1];
 
@@ -134,7 +136,6 @@ public class LudoGameStackPane extends GameStackPane {
           path.getElements().add(new LineTo(tilePaneCoordinates[0] + tileOffset, tilePaneCoordinates[1] + tileOffset));
         });
       }
-      Shape playerToken = tokenShapeMap.get(token);
       PathTransition pathTransition = new PathTransition();
       pathTransition.setDuration(TRANSITION_DURATION);
       pathTransition.setNode(playerToken);

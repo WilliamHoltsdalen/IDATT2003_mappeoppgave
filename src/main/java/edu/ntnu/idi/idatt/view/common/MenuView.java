@@ -220,7 +220,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
         .add("main-menu-add-player-button"));
     addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
 
-    VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox, startGameButton);
+    VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
     vBox.getStyleClass().add("main-menu-player-selection");
 
     return vBox;

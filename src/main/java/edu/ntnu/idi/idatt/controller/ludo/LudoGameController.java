@@ -31,12 +31,26 @@ public class LudoGameController extends GameController {
     
     @Override
     protected void handleRollDiceButtonAction() {
+        if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+            performPlayerTurnForAllPlayers();
+            return;
+        }
         performPlayerTurn();
     }
     
     @Override
+    protected void performPlayerTurnForAllPlayers() {
+        do {
+            performPlayerTurn();
+        } while (!boardGame.getCurrentPlayer().equals(boardGame.getPlayers().getFirst()));
+    }
+    
+    @Override
     protected void performPlayerTurn() {
-        boardGame.performPlayerTurn();
+        int diceRoll = ((LudoBoardGame) boardGame).rollDice();
+        gameView.getGameMenuBox().animateDiceRoll(new int[]{diceRoll}, () -> {
+            ((LudoBoardGame) boardGame).performPlayerTurn(diceRoll);
+        });
     }
     
     /**
@@ -60,7 +74,7 @@ public class LudoGameController extends GameController {
     * @param tileId the tile id
     */
     public void onTokenReleased(Player player, int tileId, int tokenId) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " released token " + (tokenId + 1));
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + "rolled 6 and released token " + (tokenId + 1));
         ((LudoGameStackPane) gameView.getGameStackPane()).releaseToken(((LudoPlayer) player), tokenId);
         setPlayerTileNumber(player);
     }
@@ -79,7 +93,7 @@ public class LudoGameController extends GameController {
     }
     
     public void onTokenMoved(Player player, LudoToken token, int diceRoll, int oldTileId, int newTileId) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved token " + (token.getTokenId() + 1) + " to tile " + newTileId);
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved token " + (token.getTokenId()));
         
         ((LudoGameStackPane) gameView.getGameStackPane()).moveToken(token, getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false);
         setPlayerTileNumber(player);

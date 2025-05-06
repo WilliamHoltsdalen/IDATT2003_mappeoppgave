@@ -66,9 +66,7 @@ public class LudoBoardGame extends BoardGame {
         return dice.getTotalValue();
     }
     
-    @Override
-    public void performPlayerTurn() {
-        int diceRoll = rollDice();
+    public void performPlayerTurn(int diceRoll) {
         if (checkCurrentPlayerCanMove()) {
             moveToken(diceRoll);
             checkTokenFinished();

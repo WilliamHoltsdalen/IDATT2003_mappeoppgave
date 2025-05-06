@@ -108,6 +108,10 @@ public class LadderGameStackPane extends GameStackPane {
     if (playerTileMap.get(player).getTileId() == newTile.getTileId()) {
       return;
     }
+
+    Shape playerToken = playerTokenMap.get(player);
+    playerToken.setCache(true);
+
     double posX = tilePositionX[players.indexOf(player)];
     double posY = tilePositionY[players.indexOf(player)];
 
@@ -136,8 +140,6 @@ public class LadderGameStackPane extends GameStackPane {
               new LineTo(posX + tilePaneCoordinates[0], tilePaneCoordinates[1] - posY));
       });
     }
-    Shape playerToken = playerTokenMap.get(player);
-    playerToken.setCache(true);
     pathTransition.setDuration(TRANSITION_DURATION);
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);

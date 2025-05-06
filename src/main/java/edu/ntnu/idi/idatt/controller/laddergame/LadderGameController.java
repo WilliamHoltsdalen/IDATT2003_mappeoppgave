@@ -51,20 +51,25 @@ public class LadderGameController extends GameController {
    */
   @Override
   protected void performPlayerTurn() {
-    boardGame.performPlayerTurn();
+    int diceRoll = ((LadderBoardGame) boardGame).rollDice();
+    int[] diceValues = ((LadderBoardGame) boardGame).getDice().getDiceList().stream()
+        .mapToInt(die -> die.getValue())
+        .toArray();
+    gameView.getGameMenuBox().animateDiceRoll(diceValues, () -> {
+      ((LadderBoardGame) boardGame).performPlayerTurn(diceRoll);
+    });
   }
 
   /**
    * Performs a player move for all players by calling the player turn method in the board game for
    * all players.
    */
-  private void performPlayerTurnForAllPlayers() {
+  @Override
+  protected void performPlayerTurnForAllPlayers() {
     do {
-      boardGame.performPlayerTurn();
+      performPlayerTurn();
     } while (!boardGame.getCurrentPlayer().equals(boardGame.getPlayers().getFirst()));
-  }
-
-  
+  }  
 
   /**
    * Sets the tile number of the player in the players box.
