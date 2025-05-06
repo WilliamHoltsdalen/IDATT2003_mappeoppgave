@@ -28,8 +28,11 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
     try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
       String line;
+      String playerType = "";
       while ((line = reader.readLine()) != null) {
-        String playerType = "";
+        if (playerType.equals("ludoPlayer") && players.size() == 4) {
+          break;
+        }
         if (line.equals("name, colorHex, playerTokenType")) {
           playerType = "ladderGamePlayer";
           continue;
@@ -38,7 +41,6 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
           continue;
         }
 
-        
         Player player = null;
         if (playerType.equals("ladderGamePlayer")) {
           player = LadderGamePlayerfromCsvLine(line);

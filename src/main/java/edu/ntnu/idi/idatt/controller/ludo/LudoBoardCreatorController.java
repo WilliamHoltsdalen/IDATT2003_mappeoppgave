@@ -6,7 +6,9 @@ import java.util.Map;
 
 import edu.ntnu.idi.idatt.controller.common.BoardCreatorController;
 import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
-import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
+import edu.ntnu.idi.idatt.filehandler.FileHandler;
+import edu.ntnu.idi.idatt.filehandler.LudoBoardFileHandlerGson;
+import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.ludo.LudoBoardCreatorView;
@@ -60,7 +62,7 @@ public class LudoBoardCreatorController extends BoardCreatorController {
       board.setDescription(view.getDescriptionField().getText());
       
       String path = (String) params.get("path");
-      BoardFileHandlerGson fileHandler = new BoardFileHandlerGson();
+      FileHandler<Board> fileHandler = new LudoBoardFileHandlerGson();
       fileHandler.writeFile(path, List.of(board));
 
       Platform.runLater(() -> view.showInfoAlert("Board saved successfully!",
