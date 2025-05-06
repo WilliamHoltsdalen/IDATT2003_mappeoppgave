@@ -1,7 +1,10 @@
 package edu.ntnu.idi.idatt.model.game;
 
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,11 +13,6 @@ import org.slf4j.LoggerFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.tile.Tile;
-import edu.ntnu.idi.idatt.model.tile.TileAction;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.BoardGameSubject;
 
@@ -56,8 +54,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
    * This method is implemented by the subclasses.
    */
   public abstract void initializeGame();
-
-  protected abstract void handleTileAction();
 
   @Override
   public Board getBoard() {
@@ -158,7 +154,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     setCurrentPlayer(players.get(nextIndex));
   }
 
-
   /**
    * Checks if the game has a winner and notifies observers if it does.
    */
@@ -171,11 +166,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   @Override
-  public void notifyPlayerMoved(Player player, int diceRoll, int newTileId) {
-    observers.forEach(observer -> observer.onPlayerMoved(player, diceRoll, newTileId));
-  }
-
-  @Override
   public void notifyRoundNumberIncremented(int roundNumber) {
     observers.forEach(observer -> observer.onRoundNumberIncremented(roundNumber));
   }
@@ -183,11 +173,6 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   @Override
   public void notifyCurrentPlayerChanged(Player player) {
     observers.forEach(observer -> observer.onCurrentPlayerChanged(player));
-  }
-
-  @Override
-  public void notifyTileActionPerformed(Player player, TileAction tileAction) {
-    observers.forEach(observer -> observer.onTileActionPerformed(player, tileAction));
   }
 
   @Override

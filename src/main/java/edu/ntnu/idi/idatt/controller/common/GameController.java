@@ -6,7 +6,6 @@ import java.util.Map;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.BoardGame;
 import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
@@ -89,16 +88,10 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
     public abstract void onButtonClickedWithParams(String buttonId, Map<String, Object> params);
     
     @Override
-    public abstract void onPlayerMoved(Player player, int diceRoll, int newTileId);
-    
-    @Override
     public abstract void onRoundNumberIncremented(int roundNumber);
     
     @Override
     public abstract void onCurrentPlayerChanged(Player player);
-    
-    @Override
-    public abstract void onTileActionPerformed(Player player, TileAction tileAction);
     
     @Override
     public abstract void onGameFinished(Player winner);

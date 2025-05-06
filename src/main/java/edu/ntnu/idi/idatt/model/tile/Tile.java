@@ -1,7 +1,6 @@
 package edu.ntnu.idi.idatt.model.tile;
 
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetCoordinatesValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetLandActionValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetNextTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetTileIdValidator;
 
@@ -13,11 +12,10 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetTileId
  *
  * @see TileAction
  */
-public class Tile {
+public abstract class Tile {
   private int tileId;
   private int[] coordinates;
   private int nextTileId;
-  private TileAction landAction;
 
   /**
    * Constructor for Tile class.
@@ -42,7 +40,6 @@ public class Tile {
     setTileId(tileId);
     setCoordinates(coordinates);
     setNextTileId(nextTileId);
-    setLandAction(tileAction);
   }
 
   /**
@@ -70,15 +67,6 @@ public class Tile {
    */
   public int getNextTileId() {
     return nextTileId;
-  }
-
-  /**
-   * Returns the tile action.
-   *
-   * @return The tile action.
-   */
-  public TileAction getLandAction() {
-    return landAction;
   }
 
   /**
@@ -112,16 +100,5 @@ public class Tile {
     tileSetNextTileIdValidator(this.tileId, nextTileId);
 
     this.nextTileId = nextTileId;
-  }
-
-  /**
-   * Sets the tile action.
-   *
-   * @param landAction The tile action to set.
-   */
-  public void setLandAction(TileAction landAction) {
-    tileSetLandActionValidator(landAction);
-
-    this.landAction = landAction;
   }
 }

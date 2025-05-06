@@ -21,6 +21,7 @@ public class LudoGameBoard extends BaseBoard {
   private int[] playerFinishStartIndexes;
   private int[] playerFinishIndexes;
   private int startAreaSize;
+  private int totalTrackTileCount;
 
   public LudoGameBoard(String name, String description, String background, int boardSize, Color[] colors) {
     super(name, description, background);
@@ -62,6 +63,10 @@ public class LudoGameBoard extends BaseBoard {
     return startAreaSize;
   }
 
+  public int getTotalTrackTileCount() {
+    return totalTrackTileCount;
+  }
+
   public void setColors(Color[] colors) {
     ludoGameBoardSetColorsValidator(colors);
     this.colors = colors;
@@ -71,26 +76,6 @@ public class LudoGameBoard extends BaseBoard {
     ludoGameBoardSetBoardSizeValidator(boardSize);
     this.boardSize = boardSize;
     createTiles(boardSize, boardSize);
-  }
-
-  public void setPlayerStartIndexes(int[] playerStartIndexes) {
-    this.playerStartIndexes = playerStartIndexes;
-  }
-
-  public void setPlayerTrackStartIndexes(int[] playerTrackStartIndexes) {
-    this.playerTrackStartIndexes = playerTrackStartIndexes;
-  }
-
-  public void setPlayerFinishStartIndexes(int[] playerFinishStartIndexes) {
-    this.playerFinishStartIndexes = playerFinishStartIndexes;
-  }
-
-  public void setPlayerFinishIndexes(int[] playerFinishIndexes) {
-    this.playerFinishIndexes = playerFinishIndexes;
-  }
-
-  public void setStartAreaSize(int startAreaSize) {
-    this.startAreaSize = startAreaSize;
   }
 
   @Override
@@ -106,7 +91,7 @@ public class LudoGameBoard extends BaseBoard {
     
     final int finishTrackSize = startAreaSize - 1;
     final int trackTileCount = 3 + (finishTrackSize * 2);
-    final int totalTrackTileCount = trackTileCount * 4;
+    this.totalTrackTileCount = trackTileCount * 4;
     final int middleTilesStartIndex = startTilesStartIndex - (3 * 3); // (The middle area is always 3x3)
     final int finishTrackStartIndex = middleTilesStartIndex - (finishTrackSize * 4);
     this.playerFinishStartIndexes = new int[] {finishTrackStartIndex, finishTrackStartIndex + finishTrackSize, finishTrackStartIndex + (finishTrackSize * 2), finishTrackStartIndex + (finishTrackSize * 3)};

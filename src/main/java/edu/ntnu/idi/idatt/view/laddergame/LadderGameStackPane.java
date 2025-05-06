@@ -1,7 +1,9 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
@@ -26,6 +28,8 @@ import javafx.scene.shape.Shape;
  * It contains a board image, a players pane, and methods for moving players.
  */
 public class LadderGameStackPane extends GameStackPane {
+  protected final Map<Player, Tile> playerTileMap;
+  protected final Map<Player, Shape> playerTokenMap;
 
   /**
    * Constructor for GameBoardStackPane class.
@@ -35,7 +39,11 @@ public class LadderGameStackPane extends GameStackPane {
    */
   public LadderGameStackPane(LadderGameBoard board, List<Player> players) {
     super(board, players);
-    initialize(players, new LadderGameBoardStackPane());
+
+    this.playerTileMap = new HashMap<>();
+    this.playerTokenMap = new HashMap<>();
+
+    initialize(new LadderGameBoardStackPane());
   }
 
   @Override
@@ -93,7 +101,6 @@ public class LadderGameStackPane extends GameStackPane {
    * @param newTile the new tile to move the player to
    * @param straightLine whether to use a straight line animation or not
    */
-  @Override
   public void movePlayer(Player player, Tile newTile, boolean straightLine) {
     /* Prevents the player from moving to the same tile, which would cause a null pointer exception
        when setting the moveTo coordinates in the path. */
@@ -161,7 +168,6 @@ public class LadderGameStackPane extends GameStackPane {
    * @param endTile the end tile for the path
    * @return the list of tiles between the start and end tiles
    */
-  @Override
   protected List<Tile> getPathTiles(Tile startTile, Tile endTile) {
     int fromId = startTile.getTileId();
     int toId = endTile.getTileId();

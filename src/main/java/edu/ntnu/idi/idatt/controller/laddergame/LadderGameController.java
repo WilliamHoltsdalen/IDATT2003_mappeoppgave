@@ -10,6 +10,7 @@ import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
 import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
+import edu.ntnu.idi.idatt.view.laddergame.LadderGameStackPane;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 
 public class LadderGameController extends GameController {
@@ -96,13 +97,12 @@ public class LadderGameController extends GameController {
    * @param diceRoll the dice roll
    * @param newTileId the new tile id
    */
-  @Override
   public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
     gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
 
     setPlayerTileNumber(player, newTileId);
 
-    gameView.getGameStackPane().movePlayer(player, getBoard().getTile(newTileId), false);
+    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player, getBoard().getTile(newTileId), false);
   }
 
   /**
@@ -138,12 +138,11 @@ public class LadderGameController extends GameController {
    * @param player the player
    * @param tileAction the tile action
    */
-  @Override
   public void onTileActionPerformed(Player player, TileAction tileAction) {
     gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
 
-    gameView.getGameStackPane().movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
+    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
   }
 
   /**

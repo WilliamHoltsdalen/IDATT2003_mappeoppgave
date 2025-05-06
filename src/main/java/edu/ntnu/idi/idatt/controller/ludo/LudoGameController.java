@@ -9,7 +9,8 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LudoBoardGame;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.tile.TileAction;
+import edu.ntnu.idi.idatt.model.token.LudoToken;
+import edu.ntnu.idi.idatt.view.ludo.LudoGameStackPane;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
 
 public class LudoGameController extends GameController {
@@ -48,19 +49,19 @@ public class LudoGameController extends GameController {
         gameView.getPlayersBox().getPlayerRows().get(getPlayers().indexOf(player))
         .setTileNumber(player, newTileId);
     }
-
+    
     /**
-     * Handles the player released event.
-     *
-     * @param player the player
-     * @param tileId the tile id
-     */
-    public void onPlayerReleased(Player player, int tileId) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " released from tile " + tileId);
+    * Handles the player released event.
+    *
+    * @param player the player
+    * @param tileId the tile id
+    */
+    public void onTokenReleased(Player player, int tileId, int tokenId) {
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " released token " + (tokenId + 1));
         setPlayerTileNumber(player, tileId);
-        gameView.getGameStackPane().movePlayer(player, getBoard().getTile(tileId), true);
+        ((LudoGameStackPane) gameView.getGameStackPane()).releaseToken(((LudoPlayer) player), tokenId);
     }
-
+    
     /**
     * Restarts the game by initializing a new BoardGame instance with the same board and players.
     */
@@ -74,13 +75,12 @@ public class LudoGameController extends GameController {
         initializeGameView();
     }
     
-    @Override
-    public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
+    public void onTokenMoved(Player player, LudoToken token, int diceRoll, int oldTileId, int newTileId) {
         gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
         
         setPlayerTileNumber(player, newTileId);
-
-        gameView.getGameStackPane().movePlayer(player, getBoard().getTile(newTileId), false);
+        
+        ((LudoGameStackPane) gameView.getGameStackPane()).moveToken(token, getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false);
     }
     
     @Override
@@ -93,21 +93,14 @@ public class LudoGameController extends GameController {
     @Override
     public void onCurrentPlayerChanged(Player player) {
         gameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
+        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " is now the current player");
     }
-
-    @Override
-    public void onTileActionPerformed(Player player, TileAction tileAction) {
-        gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
-        setPlayerTileNumber(player, tileAction.getDestinationTileId());
-
-        gameView.getGameStackPane().movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
-    }
-
+    
     @Override
     public void onGameFinished(Player winner) {
         gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
     }
-
+    
     @Override
     public void onButtonClicked(String buttonId) {
         switch (buttonId) {
@@ -119,7 +112,7 @@ public class LudoGameController extends GameController {
             }
         }
     }
-
+    
     @Override
     public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
         // Not needed

@@ -1,18 +1,19 @@
 package edu.ntnu.idi.idatt.view.ludo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.Tile;
+import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.view.common.GameStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -20,10 +21,13 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 
 public class LudoGameStackPane extends GameStackPane {
+  protected final Map<LudoToken, Shape> tokenShapeMap;
+  protected double tileOffset;
 
     public LudoGameStackPane(LudoGameBoard board, List<Player> players) {
         super(board, players);
-        initialize(players, new LudoGameBoardStackPane());
+        this.tokenShapeMap = new HashMap<>();
+        initialize(new LudoGameBoardStackPane());
     }
 
     @Override
@@ -34,8 +38,7 @@ public class LudoGameStackPane extends GameStackPane {
           this.tileSizeX = boardDimensions[0] / ((LudoGameBoard) board).getBoardSize();
           this.tileSizeY = boardDimensions[1] / ((LudoGameBoard) board).getBoardSize();
 
-          this.tilePositionX = new double[]{(tileSizeX / 2), (tileSizeX / 2), (tileSizeX / 2), (tileSizeX / 2)};
-          this.tilePositionY = new double[]{(tileSizeY / 2), (tileSizeY / 2), (tileSizeY / 2), (tileSizeY / 2)};
+          this.tileOffset = (tileSizeX / 2);
 
           if (playersPane.getChildren().isEmpty()) {
             addGamePieces(players);
@@ -58,8 +61,6 @@ public class LudoGameStackPane extends GameStackPane {
         double[] startAreaFirstTilePos = convertCoordinates(firstStartAreaTile.getCoordinates());
         
         ((LudoPlayer) player).getTokens().forEach(token -> {
-          Tile playerTile = token.getCurrentTile();
-          
           double startAreaPosX = playerStartPositions[token.getTokenId() - 1][0];
           double startAreaPosY = playerStartPositions[token.getTokenId() - 1][1];
 
@@ -70,53 +71,63 @@ public class LudoGameStackPane extends GameStackPane {
           playerToken.setTranslateY(startAreaFirstTilePos[1] + startAreaPosY);
           playersPane.getChildren().add(playerToken);
 
-          playerTokenMap.put(player, playerToken);
-          playerTileMap.put(player, playerTile);
+          tokenShapeMap.put(token, playerToken);
         });
       });
     }
 
-    @Override
-    public void movePlayer(Player player, Tile newTile, boolean straightLine) {
-      if (playerTileMap.get(player).getTileId() == newTile.getTileId()) {
+    public void releaseToken(LudoPlayer player, int tokenId) {
+      LudoToken token = player.getTokens().get(tokenId);
+
+      Tile startTile = token.getCurrentTile();
+
+      double[] startTilePos = convertCoordinates(startTile.getCoordinates());
+      double[] currentTokenPos = new double[]{tokenShapeMap.get(token).getTranslateX(), tokenShapeMap.get(token).getTranslateY()};
+      double[] newTokenPos = new double[]{startTilePos[0] + tileOffset, startTilePos[1] + tileOffset};
+
+      Path path = new Path();
+      path.getElements().add(new MoveTo(currentTokenPos[0], currentTokenPos[1]));
+      path.getElements().add(new LineTo(newTokenPos[0], newTokenPos[1]));
+
+      PathTransition pathTransition = new PathTransition();
+      pathTransition.setDuration(TRANSITION_DURATION);
+      pathTransition.setNode(tokenShapeMap.get(token));
+      pathTransition.setPath(path);
+      pathTransition.play();
+    }
+
+    public void moveToken(LudoToken token, Tile oldTile, Tile newTile, boolean straightLine) {
+      if (oldTile.getTileId() == newTile.getTileId()) {
         return;
       }
-      double posX = tilePositionX[players.indexOf(player)];
-      double posY = tilePositionY[players.indexOf(player)];
 
-      double[] currentPaneCoordinates = convertCoordinates(playerTileMap.get(player).getCoordinates());
       double[] newPaneCoordinates = convertCoordinates(newTile.getCoordinates());
 
-      double currentXPos = posX + currentPaneCoordinates[0];
-      double currentYPos = currentPaneCoordinates[1] + posY;
-      double newXPos = posX + newPaneCoordinates[0];
-      double newYPos = newPaneCoordinates[1] + posY;
-
-      SequentialTransition transition = new SequentialTransition();
+      double currentXPos = tokenShapeMap.get(token).getTranslateX();
+      double currentYPos = tokenShapeMap.get(token).getTranslateY();
+      double newXPos = tileOffset + newPaneCoordinates[0];
+      double newYPos = tileOffset + newPaneCoordinates[1];
 
       Path path = new Path();
       path.getElements().add(new MoveTo(currentXPos, currentYPos));
 
+      Player player = players.stream().filter(p -> ((LudoPlayer) p).getTokens().contains(token)).findFirst().orElse(null);
+      int playerIndex = players.indexOf(player);
+
       if (straightLine) {
         path.getElements().add(new LineTo(newXPos, newYPos));
-        PauseTransition pauseTransition = new PauseTransition(TRANSITION_DURATION);
-        transition.getChildren().add(pauseTransition);
       } else {
-        getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
+        getPathTiles(playerIndex, oldTile, newTile).forEach(tile -> {
           double[] tilePaneCoordinates = convertCoordinates(tile.getCoordinates());
-          path.getElements().add(new LineTo(posX + tilePaneCoordinates[0], tilePaneCoordinates[1] + posY));
+          path.getElements().add(new LineTo(tilePaneCoordinates[0] + tileOffset, tilePaneCoordinates[1] + tileOffset));
         });
       }
-      Shape playerToken = playerTokenMap.get(player);
+      Shape playerToken = tokenShapeMap.get(token);
       PathTransition pathTransition = new PathTransition();
       pathTransition.setDuration(TRANSITION_DURATION);
       pathTransition.setNode(playerToken);
       pathTransition.setPath(path);
-
-      transition.getChildren().add(pathTransition);
-      transition.play();
-      // Update the player tile map to reflect the new tile.
-      playerTileMap.put(player, newTile);
+      pathTransition.play();
     }
 
     @Override
@@ -124,24 +135,43 @@ public class LudoGameStackPane extends GameStackPane {
       return ViewUtils.ludoBoardToScreenCoordinates(rc, (LudoGameBoard) board, boardDimensions[0], boardDimensions[1]);
     }
 
-    @Override
-    protected List<Tile> getPathTiles(Tile startTile, Tile endTile) {
+    protected List<Tile> getPathTiles(int playerIndex, Tile startTile, Tile endTile) {
+      List<Tile> pathTiles = new ArrayList<>();
+
       int fromId = startTile.getTileId();
       int toId = endTile.getTileId();
 
-      List<Tile> pathTiles = new ArrayList<>();
+      int totalTrackTileCount = ((LudoGameBoard) board).getTotalTrackTileCount();
+      int firstTrackTileId = ((LudoGameBoard) board).getPlayerTrackStartIndexes()[0];
+
       if (fromId < toId) {
-        for (int id = fromId + 1; id <= toId; id++) {
+        for (int id = fromId + 1; id <= toId; id++) { // For players to move smoothly onto the finish track. 
+          if (id == ((LudoGameBoard) board).getPlayerTrackStartIndexes()[playerIndex]) {
+            id = ((LudoGameBoard) board).getPlayerFinishStartIndexes()[playerIndex];
+          }
+          if (id == ((LudoGameBoard) board).getPlayerTrackStartIndexes()[playerIndex] - 1) {
+            continue;
+          }
+          if (playerIndex == 0 && id == totalTrackTileCount) { // For the first player to go onto the finish track smoothly.
+            continue;
+          }
+          if (id > ((LudoGameBoard) board).getPlayerFinishStartIndexes()[playerIndex] + ((LudoGameBoard) board).getStartAreaSize() - 2) {
+            id = toId;
+          }
           pathTiles.add(board.getTile(id));
         }
       } else {
-        for (int id = fromId - 1; id >= toId; id--) {
-          pathTiles.add(board.getTile(id));
+        if (fromId <= totalTrackTileCount && toId >= firstTrackTileId) { // For everyone but the first player to pass the last track tile / first track tile gap smoothly. 
+          for (int id = fromId; id <= totalTrackTileCount; id++) {
+            pathTiles.add(board.getTile(id));
+          }
+          for (int id = firstTrackTileId; id <= toId; id++) {
+            pathTiles.add(board.getTile(id));
+          }
+        } else {
+          pathTiles.add(board.getTile(toId));
         }
       }
       return pathTiles;
     }
-    
-    
-    
 }

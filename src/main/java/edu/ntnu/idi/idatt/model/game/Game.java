@@ -74,7 +74,6 @@ public interface Game {
    */
   void setCurrentPlayer(Player player);
 
-
   /**
    * Checks if the game has a winner.
    *
@@ -87,5 +86,8 @@ public interface Game {
    */
   void performPlayerTurn();
 
+  /**
+   * Handles the round number.
+   */
   void handleRoundNumber();
 }

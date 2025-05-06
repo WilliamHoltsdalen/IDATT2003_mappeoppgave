@@ -1,10 +1,11 @@
 package edu.ntnu.idi.idatt.model.player;
 
+import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGamePlayerPlaceOnTileValidator;
 
 public class LadderGamePlayer extends Player {
-  private Tile currentTile;
+  private LadderGameTile currentTile;
   
   public LadderGamePlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
     super(name, colorHex, playerTokenType);
@@ -28,7 +29,7 @@ public class LadderGamePlayer extends Player {
   public void placeOnTile(Tile tile) {
     ladderGamePlayerPlaceOnTileValidator(tile);
     
-    this.currentTile = tile;
+    this.currentTile = (LadderGameTile) tile;
   }
   
   
