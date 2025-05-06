@@ -27,6 +27,8 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
 
     protected abstract void handleRollDiceButtonAction();
 
+    protected abstract void performPlayerTurnForAllPlayers();
+
     protected abstract void performPlayerTurn();
 
     protected abstract void restartGame();

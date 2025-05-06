@@ -8,6 +8,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.view.common.GamePlayersBox;
 import edu.ntnu.idi.idatt.view.common.GameStackPane;
 import edu.ntnu.idi.idatt.view.common.GameView;
+import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 
 public class LadderGameView extends GameView {
 
@@ -23,5 +24,14 @@ public class LadderGameView extends GameView {
   @Override
   public GameStackPane createGameStackPane(Board board, List<Player> players) {
     return new LadderGameStackPane((LadderGameBoard) board, players);
+  }
+
+  @Override
+  public GameMenuBox createGameMenuBox() {
+    GameMenuBox box = new GameMenuBox(2); // Use 2 dice for Ladder game
+    box.setOnRestartGame(() -> notifyObservers("restart_game"));
+    box.setOnQuitGame(() -> notifyObservers("quit_game"));
+    box.setOnRollDice(() -> notifyObservers("roll_dice"));
+    return box;
   }
 }

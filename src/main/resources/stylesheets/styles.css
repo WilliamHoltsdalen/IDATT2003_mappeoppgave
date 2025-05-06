@@ -371,6 +371,31 @@
 .game-menu-roll-for-all-players-check-box {
 }
 
+.game-menu-dice-container {
+  -fx-padding: 20;
+  -fx-min-height: 100;
+  -fx-alignment: center;
+}
+
+.game-menu-options-box {
+  -fx-background-color: #f3f3f3;
+  -fx-border-color: #d0d0d0;
+  -fx-border-radius: 7;
+  -fx-background-radius: 7;
+  -fx-padding: 10 10 10 10;
+  -fx-spacing: 6;
+  -fx-alignment: center_left;
+  -fx-max-width: 220px;
+  -fx-min-width: 180px;
+  -fx-translate-y: 8;
+}
+
+.game-menu-options-label {
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #444;
+  -fx-padding: 0 0 4 0;
+}
 
 Button {
   -fx-background-color: -button-blue;

@@ -51,9 +51,13 @@ public class LadderBoardGame extends BoardGame {
     return null;
   }
 
-  @Override
-  public void performPlayerTurn() {
-    rollDiceAndMovePlayer();
+  public int rollDice() {
+    dice.rollDice();
+    return dice.getTotalValue();
+  }
+
+  public void performPlayerTurn(int diceRoll) {
+    movePlayer(diceRoll);
     handleTileAction();
     checkWinCondition();
     updateCurrentPlayer();
@@ -107,11 +111,10 @@ public class LadderBoardGame extends BoardGame {
   /**
    * Rolls the dice for the current player and moves them to the new tile.
    */
-  public void rollDiceAndMovePlayer() {
-    dice.rollDice();
-    Tile nextTile = findNextTile(currentPlayer, dice.getTotalValue());
+  public void movePlayer(int diceRoll) {
+    Tile nextTile = findNextTile(currentPlayer, diceRoll);
     ((LadderGamePlayer) currentPlayer).placeOnTile(nextTile);
-    notifyPlayerMoved(currentPlayer, dice.getTotalValue(), nextTile.getTileId());
+    notifyPlayerMoved(currentPlayer, diceRoll, nextTile.getTileId());
   }
 
   /**

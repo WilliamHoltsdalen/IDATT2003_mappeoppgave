@@ -15,6 +15,7 @@ import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.CacheHint;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -107,6 +108,10 @@ public class LadderGameStackPane extends GameStackPane {
     if (playerTileMap.get(player).getTileId() == newTile.getTileId()) {
       return;
     }
+
+    Shape playerToken = playerTokenMap.get(player);
+    playerToken.setCache(true);
+
     double posX = tilePositionX[players.indexOf(player)];
     double posY = tilePositionY[players.indexOf(player)];
 
@@ -120,15 +125,14 @@ public class LadderGameStackPane extends GameStackPane {
 
     /* Using a sequential transition with a pause transition (if straightLine is true) to delay the
        transition to allow normal player movement to finish before a tile action movement begins. */
-    SequentialTransition transition = new SequentialTransition();
 
+    PathTransition pathTransition = new PathTransition();
     Path path = new Path();
     path.getElements().add(new MoveTo(currentXPos, currentYPos));
 
     if (straightLine) {
       path.getElements().add(new LineTo(newXPos, newYPos));
-      PauseTransition pauseTransition = new PauseTransition(TRANSITION_DURATION);
-      transition.getChildren().add(pauseTransition);
+      pathTransition.setDelay(TRANSITION_DURATION);
     } else {
       getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
           double[] tilePaneCoordinates = convertCoordinates(tile.getCoordinates());
@@ -136,14 +140,11 @@ public class LadderGameStackPane extends GameStackPane {
               new LineTo(posX + tilePaneCoordinates[0], tilePaneCoordinates[1] - posY));
       });
     }
-    Shape playerToken = playerTokenMap.get(player);
-    PathTransition pathTransition = new PathTransition();
     pathTransition.setDuration(TRANSITION_DURATION);
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
+    pathTransition.play();
 
-    transition.getChildren().add(pathTransition);
-    transition.play();
     // Update the player tile map to reflect the new tile.
     playerTileMap.put(player, newTile);
   }

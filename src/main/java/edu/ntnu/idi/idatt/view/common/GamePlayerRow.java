@@ -15,8 +15,8 @@ public abstract class GamePlayerRow extends HBox {
 
   protected abstract void initialize(Player player);
 
-  public void setTileNumber(Player player, int tileNumber) {
-    playerTile.setText(String.valueOf(tileNumber));
-    playerTile.setTooltip(new Tooltip(player.getName() + " is on tile: " + tileNumber));
+  public void setTileNumber(Player player, String text) {
+    playerTile.setText(text);
+    playerTile.setTooltip(new Tooltip(player.getName() + " is on tile: " + text));
   }
 }

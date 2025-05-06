@@ -82,11 +82,6 @@ public interface Game {
   Player getWinner();
 
   /**
-   * Performs a turn for the current player.
-   */
-  void performPlayerTurn();
-
-  /**
    * Handles the round number.
    */
   void handleRoundNumber();

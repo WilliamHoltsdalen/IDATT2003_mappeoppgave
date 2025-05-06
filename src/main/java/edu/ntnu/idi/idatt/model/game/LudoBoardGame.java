@@ -52,9 +52,10 @@ public class LudoBoardGame extends BoardGame {
     }
 
     private void checkTokenFinished() {
-        ((LudoPlayer) currentPlayer).getTokens().stream().forEach(token -> {
+        ((LudoPlayer) currentPlayer).getTokens().stream().filter(token -> token.getStatus() == LudoToken.TokenStatus.RELEASED).forEach(token -> {
             if (token.getCurrentTile().getTileId() == ((LudoGameBoard) board).getPlayerFinishIndexes()[players.indexOf(currentPlayer)]) {
                 token.setStatus(LudoToken.TokenStatus.FINISHED);
+                notifyTokenFinished(currentPlayer, token);
             }
         });
     }
@@ -65,14 +66,14 @@ public class LudoBoardGame extends BoardGame {
         return dice.getTotalValue();
     }
     
-    @Override
-    public void performPlayerTurn() {
-        int diceRoll = rollDice();
+    public void performPlayerTurn(int diceRoll) {
         if (checkCurrentPlayerCanMove()) {
             moveToken(diceRoll);
             checkTokenFinished();
         } else if (diceRoll == 6) {
             releaseToken();
+        } else {
+            notifyTurnSkipped(currentPlayer, diceRoll);
         }
         checkWinCondition();
         updateCurrentPlayer();
@@ -102,6 +103,8 @@ public class LudoBoardGame extends BoardGame {
         token.setCurrentTile(board.getTile(tileId));
         token.setStatus(LudoToken.TokenStatus.RELEASED);
         notifyTokenReleased(currentPlayer, tileId, ((LudoPlayer) currentPlayer).getTokens().indexOf(token));
+        // Check for and handle token captures
+        handleTokenCapture(board.getTile(tileId));
     }
     
     public void moveToken(int diceRoll) {
@@ -113,6 +116,27 @@ public class LudoBoardGame extends BoardGame {
         Tile nextTile = findNextTile(token, diceRoll);
         token.setCurrentTile(nextTile);
         notifyTokenMoved(currentPlayer, token, diceRoll, oldTileId, nextTile.getTileId());
+
+        // Check for and handle token captures
+        handleTokenCapture(nextTile);
+    }
+    
+    private void handleTokenCapture(Tile destinationTile) {
+        // Check all players except current player for tokens on the destination tile
+        for (Player player : players) {
+            if (player == currentPlayer) continue; // Skip current player's tokens
+            
+            ((LudoPlayer) player).getTokens().stream()
+                .filter(token -> token.getCurrentTile().getTileId() == destinationTile.getTileId())
+                .forEach(token -> {
+                    // Send token back to its starting position
+                    int startIndex = ((LudoGameBoard) board).getPlayerStartIndexes()[players.indexOf(player)];
+                    int oldTileId = token.getCurrentTile().getTileId();
+                    token.setCurrentTile(board.getTile(startIndex));
+                    token.setStatus(LudoToken.TokenStatus.NOT_RELEASED);
+                    notifyTokenCaptured(player, token, oldTileId);
+                });
+        }
     }
     
     private void notifyTokenReleased(Player player, int tileId, int tokenId) {
@@ -121,5 +145,17 @@ public class LudoBoardGame extends BoardGame {
 
     private void notifyTokenMoved(Player player, LudoToken token, int diceRoll, int oldTileId, int newTileId) {
         observers.forEach(observer -> ((LudoGameController) observer).onTokenMoved(player, token, diceRoll, oldTileId, newTileId));
+    }
+
+    private void notifyTokenCaptured(Player player, LudoToken token, int oldTileId) {
+        observers.forEach(observer -> ((LudoGameController) observer).onTokenCaptured(player, token, oldTileId));
+    }
+
+    private void notifyTokenFinished(Player player, LudoToken token) {
+        observers.forEach(observer -> ((LudoGameController) observer).onTokenFinished(player, token));
+    }
+
+    private void notifyTurnSkipped(Player player, int diceRoll) {
+        observers.forEach(observer -> ((LudoGameController) observer).onTurnSkipped(player, diceRoll));
     }
 }
