@@ -1,58 +1,51 @@
-package edu.ntnu.idi.idatt.controller;
+package edu.ntnu.idi.idatt.controller.laddergame;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import edu.ntnu.idi.idatt.controller.common.BoardCreatorController;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
-import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.filehandler.BoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
-import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
-import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardStackPane;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
 import javafx.application.Platform;
 
-public class BoardCreatorController implements ButtonClickObserver {
+public class LadderGameBoardCreatorController extends BoardCreatorController {
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
   private static final String SLIDES_PATH_PREFIX = "media/assets/slide/";
   private static final String PORTALS_PATH_PREFIX = "media/assets/portal/";
-
-  private static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
   
-  private final LadderGameBoardCreatorView view;
-  private final LadderGameBoardStackPane boardPane;
-  private Runnable onBackToMenu;
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;
-  private final BoardFactory boardFactory;
-  private LadderGameBoard board;
-
-  public BoardCreatorController(LadderGameBoardCreatorView view) {
-    logger.debug("Constructing BoardCreatorController");
-    this.view = view;
+  
+  public LadderGameBoardCreatorController(BoardCreatorView view) {
+    super(view);
+    logger.debug("Constructing LadderGameBoardCreatorController");
+    
     this.availableComponents = new HashMap<>();
     this.availableBackgrounds = new HashMap<>();
-    this.boardFactory = new LadderBoardFactory();
-    this.board = (LadderGameBoard) boardFactory.createBlankBoard(9, 10);
-
+    
     setAvailableComponents();
     setAvailableBackgrounds();
+    
     initializeBoardCreatorView();
-
-    this.boardPane = view.getBoardStackPane();
   }
 
+  @Override
+  protected void initializeBoard() {
+    this.boardFactory = new LadderBoardFactory();
+    this.board = (LadderGameBoard) boardFactory.createBlankBoard(9, 10);
+  }
+  
   private void setAvailableComponents() {
     logger.debug("Setting available components");
     availableComponents.put("Ladder", new String[]{
@@ -76,7 +69,7 @@ public class BoardCreatorController implements ButtonClickObserver {
     });
     availableComponents.put("Other", new String[]{});
   }
-
+  
   private void setAvailableBackgrounds() {
     logger.debug("Setting available backgrounds");
     availableBackgrounds.put("White", "media/boards/whiteBoard.png");
@@ -89,13 +82,15 @@ public class BoardCreatorController implements ButtonClickObserver {
     availableBackgrounds.put("Space", "media/boards/spaceBoard.png");
   }
 
-  private void initializeBoardCreatorView() {
+  @Override
+  protected void initializeBoardCreatorView() {
     logger.debug("Initializing board creator view");
     if (!view.getObservers().contains(this)) {
       view.addObserver(this);
     }
 
-    view.initializeView(availableComponents, board);
+    LadderGameBoardCreatorView ladderGameBoardCreatorView = (LadderGameBoardCreatorView) view;
+    ladderGameBoardCreatorView.initializeView(availableComponents, (LadderGameBoard) board);
     Platform.runLater(() -> {
       boardPane.setOnComponentDropped(this::handleComponentDropped);
       boardPane.setOnRemoveComponentsOutsideGrid(this::removeComponentsOutsideGrid);
@@ -103,7 +98,7 @@ public class BoardCreatorController implements ButtonClickObserver {
     });
     logger.debug("Board creator view initialized successfully");
   }
-
+  
   private void handleComponentDropped(ComponentDropEventData data) {
     logger.debug("Handling component dropped event");
     TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap().get(data.cell());
@@ -117,25 +112,26 @@ public class BoardCreatorController implements ButtonClickObserver {
   }
 
   private String getBackgroundImagePath() {
-    return availableBackgrounds.get(view.getBackgroundComboBox().getValue());
+    return availableBackgrounds.get(((LadderGameBoardCreatorView) view).getBackgroundComboBox().getValue());
   }
 
   public void removeComponentsOutsideGrid() {
     logger.debug("Removing components outside grid");
     // Recalculate destination tiles for all placed components and remove those that have origin or
     // destination outside the new grid bounds.
+    LadderGameBoard gameBoard = (LadderGameBoard) board;
     Map<TileCoordinates, TileActionComponent> newPlacedComponents = new HashMap<>();
     boardPane.getComponents().forEach((coordinates, component) -> {
-      if (coordinates.row() < board.getRowsAndColumns()[0] && coordinates.col() < board.getRowsAndColumns()[1]) {
+      if (coordinates.row() < gameBoard.getRowsAndColumns()[0] && coordinates.col() < gameBoard.getRowsAndColumns()[1]) {
         ComponentSpec spec = ComponentSpec.fromFilename(component.getImagePath().substring(component.getImagePath().lastIndexOf("/") + 1));
         int[] destinationCoords = calculateDestinationCoordinates(coordinates, spec);
 
-        if (destinationCoords[0] >= 0 && destinationCoords[0] < board.getRowsAndColumns()[0] &&
-            destinationCoords[1] >= 0 && destinationCoords[1] < board.getRowsAndColumns()[1]) {
-          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], board.getRowsAndColumns()[1]);
+        if (destinationCoords[0] >= 0 && destinationCoords[0] < gameBoard.getRowsAndColumns()[0] &&
+            destinationCoords[1] >= 0 && destinationCoords[1] < gameBoard.getRowsAndColumns()[1]) {
+          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], gameBoard.getRowsAndColumns()[1]);
           newPlacedComponents.put(coordinates, 
               new TileActionComponent(component.getType(), component.getImagePath(),
-                  board.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1])), 
+                  gameBoard.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), gameBoard.getRowsAndColumns()[1])), 
                   destinationTileId));
         }
       }
@@ -156,8 +152,8 @@ public class BoardCreatorController implements ButtonClickObserver {
       };
       case PORTAL -> {
         // Portals get a new random destination every time.
-        int rows = view.getRowsSpinner().getValue();
-        int columns = view.getColumnsSpinner().getValue();
+        int rows = ((LadderGameBoardCreatorView) view).getRowsSpinner().getValue();
+        int columns = ((LadderGameBoardCreatorView) view).getColumnsSpinner().getValue();
         int originTileId = ViewUtils.calculateTileId(origin.row(), origin.col(), columns);
         List<Integer> occupiedTiles = boardPane.getComponents().values().stream()
             .map(TileActionComponent::getDestinationTileId)
@@ -188,48 +184,21 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void updateViewComponentList() {
     logger.debug("Updating view component list");
-    view.getComponentListContent().getChildren().clear();
+    ((LadderGameBoardCreatorView) view).getComponentListContent().getChildren().clear();
     boardPane.getComponents().forEach((coordinates, component) -> {
       String displayName = component.getType().substring(0, 1).toUpperCase() + component.getType().substring(1);
-      int originTileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), board.getRowsAndColumns()[1]);
+      int originTileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), ((LadderGameBoard) board).getRowsAndColumns()[1]);
       int destinationTileId = component.getDestinationTileId();
-      view.addToComponentList(displayName, component.getImage(), () -> removeComponent(coordinates), originTileId, destinationTileId);
+      ((LadderGameBoardCreatorView) view).addToComponentList(displayName, component.getImage(), () -> removeComponent(coordinates), originTileId, destinationTileId);
     });
-    logger.debug("Added {} components to view component list", view.getComponentListContent().getChildren().size());
+    logger.debug("Added {} components to view component list", ((LadderGameBoardCreatorView) view).getComponentListContent().getChildren().size());
   }
 
+  
   @Override
-  public void onButtonClicked(String buttonId) {
-    logger.debug("Button clicked: {}", buttonId);
-    switch (buttonId) {
-      case "back_to_menu" -> handleBackToMenu();
-      case "update_grid" -> handleUpdateGrid();
-      case "update_background" -> updateBackground();
-      case "update_pattern" -> handleUpdatePattern();
-      default -> logger.warn("Unknown button clicked: {}", buttonId);
-    }
-  }
-
-  @Override
-  public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
-    logger.debug("Button clicked with params: {}, {}", buttonId, params);
-    switch (buttonId) {
-      case "import_board" -> handleImportBoard(params);
-      case "save_board" -> handleSaveBoard(params);
-      default -> logger.warn("Unknown button clicked: {}", buttonId);
-    }
-  }
-
-  private void handleBackToMenu() {
-    logger.debug("Handling back to menu");
-    if (onBackToMenu != null) {
-      onBackToMenu.run();
-    }
-  }
-
-  private void handleUpdateGrid() {
+  protected void handleUpdateGrid() {
     logger.debug("Handling update grid");
-    board.setRowsAndColumns(new int[]{view.getRowsSpinner().getValue(), view.getColumnsSpinner().getValue()});
+    ((LadderGameBoard) board).setRowsAndColumns(new int[]{((LadderGameBoardCreatorView) view).getRowsSpinner().getValue(), ((LadderGameBoardCreatorView) view).getColumnsSpinner().getValue()});
     boardPane.setBoard(board);
     boardPane.updateGrid();
     updateViewComponentList();
@@ -237,11 +206,12 @@ public class BoardCreatorController implements ButtonClickObserver {
 
   private void handleUpdatePattern() {
     logger.debug("Handling update pattern");
-    boardPane.setPattern(view.getPatternComboBox().getValue());
+    ((LadderGameBoard) boardPane.getBoard()).setPattern(((LadderGameBoardCreatorView) view).getPatternComboBox().getValue());
     boardPane.applyPattern();
   }
 
-  private void handleImportBoard(Map<String, Object> params) {
+  @Override
+  protected void handleImportBoard(Map<String, Object> params) {
     logger.debug("Handling import board");
     String path = (String) params.get("path");
     Board importedBoard = boardFactory.createBoardFromFile(path);
@@ -256,16 +226,16 @@ public class BoardCreatorController implements ButtonClickObserver {
         .map(Map.Entry::getKey)
         .findFirst()
         .orElse("White");
-    String pattern = board.getPattern();
-    int rows = board.getRowsAndColumns()[0];
-    int columns = board.getRowsAndColumns()[1];
+    String pattern = ((LadderGameBoard) board).getPattern();
+    int rows = ((LadderGameBoard) board).getRowsAndColumns()[0];
+    int columns = ((LadderGameBoard) board).getRowsAndColumns()[1];
 
-    view.setRowSpinner(rows);
-    view.setColumnSpinner(columns);
+    ((LadderGameBoardCreatorView) view).setRowSpinner(rows);
+    ((LadderGameBoardCreatorView) view).setColumnSpinner(columns);
     view.getNameField().setText(board.getName());
     view.getDescriptionField().setText(board.getDescription());
-    view.getBackgroundComboBox().setValue(backgroundName);
-    view.getPatternComboBox().setValue(pattern);
+    ((LadderGameBoardCreatorView) view).getBackgroundComboBox().setValue(backgroundName);
+    ((LadderGameBoardCreatorView) view).getPatternComboBox().setValue(pattern);
 
     boardPane.initialize(board, board.getBackground());
     Platform.runLater(() -> {
@@ -274,7 +244,8 @@ public class BoardCreatorController implements ButtonClickObserver {
     });
   }
 
-  private void handleSaveBoard(Map<String, Object> params) {
+  @Override
+  protected void handleSaveBoard(Map<String, Object> params) {
     logger.debug("Handling save board");
     try {
       board = (LadderGameBoard) boardPane.getBoard();
@@ -294,7 +265,15 @@ public class BoardCreatorController implements ButtonClickObserver {
     }
   }
 
-  public void setOnBackToMenu(Runnable onBackToMenu) {
-    this.onBackToMenu = onBackToMenu;
+  @Override
+  public void onButtonClicked(String buttonId) {
+    logger.debug("Button clicked: {}", buttonId);
+    switch (buttonId) {
+      case "back_to_menu" -> handleBackToMenu();
+      case "update_grid" -> handleUpdateGrid();
+      case "update_background" -> updateBackground();
+      case "update_pattern" -> handleUpdatePattern();
+      default -> logger.warn("Unknown button clicked: {}", buttonId);
+    }
   }
-} 
+}

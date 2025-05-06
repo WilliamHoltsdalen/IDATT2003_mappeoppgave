@@ -27,7 +27,7 @@ public class LudoBoardFactory implements BoardFactory {
 
   @Override
   public Board createBlankBoard(int rows, int columns) {
-    return new LudoGameBoard("Blank ludo", "Blank ludo board", "media/boards/whiteBoard.png", rows, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+    return new LudoGameBoard("Blank ludo board", "Blank ludo board", "media/boards/whiteBoard.png", rows, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
   }
 
   private Board createClassicBoard() {
