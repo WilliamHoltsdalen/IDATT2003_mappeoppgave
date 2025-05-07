@@ -2,7 +2,9 @@ package edu.ntnu.idi.idatt.view.component;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,8 +20,11 @@ import javafx.scene.text.Text;
  */
 public class GameMenuBox extends VBox {
   private final ScrollPane gameLogScrollPane;
-  private final VBox gameLogRoundBoxesVBox;
+  private final VBox gameLogRoundBoxesVbox;
   private final CheckBox rollForAllPlayersCheckBox;
+  private final CheckBox animatedDiceCheckBox;
+  private final AnimatedDie[] dice;
+  private final HBox diceContainer;
 
   private Runnable onRestartGame = null;
   private Runnable onQuitGame = null;
@@ -30,10 +35,27 @@ public class GameMenuBox extends VBox {
    * all the components and initializing the game menu box by calling the
    * {@link #initialize()} method.
    */
-  public GameMenuBox() {
+  public GameMenuBox(int diceCount) {
     gameLogScrollPane = new ScrollPane();
-    gameLogRoundBoxesVBox = new VBox();
+    gameLogRoundBoxesVbox = new VBox();
     rollForAllPlayersCheckBox = new CheckBox();
+    animatedDiceCheckBox = new CheckBox();
+    animatedDiceCheckBox.setSelected(true); // Default to animated
+    
+    // Create dice array with specified count (max 2)
+    diceCount = Math.min(diceCount, 2);
+    dice = new AnimatedDie[diceCount];
+    for (int i = 0; i < diceCount; i++) {
+      dice[i] = new AnimatedDie(70);
+    }
+    
+    // Create container for dice
+    diceContainer = new HBox(10); // 10 pixels spacing between dice
+    diceContainer.getStyleClass().add("game-menu-dice-container");
+    diceContainer.setAlignment(javafx.geometry.Pos.CENTER);
+    for (AnimatedDie die : dice) {
+      diceContainer.getChildren().add(die);
+    }
 
     this.getStyleClass().add("game-menu-box");
     VBox.setVgrow(gameLogScrollPane, Priority.ALWAYS);
@@ -62,26 +84,23 @@ public class GameMenuBox extends VBox {
       }
     });
 
-    HBox buttonsHBox = new HBox(restartGameButton, quitGameButton);
-    buttonsHBox.getStyleClass().add("game-menu-buttons-h-box");
+    HBox buttonsHbox = new HBox(restartGameButton, quitGameButton);
+    buttonsHbox.getStyleClass().add("game-menu-buttons-h-box");
 
     HorizontalDivider horizontalDividerTop = new HorizontalDivider();
 
-    VBox menuTopBox = new VBox(buttonsHBox, horizontalDividerTop);
+    VBox menuTopBox = new VBox(buttonsHbox, horizontalDividerTop);
     menuTopBox.getStyleClass().add("game-menu-top-box");
 
     // Middle part of the menu, containing the game log
-    gameLogRoundBoxesVBox.getStyleClass().add("game-menu-game-log-round-boxes-vbox");
-    gameLogScrollPane.setContent(gameLogRoundBoxesVBox);
+    gameLogRoundBoxesVbox.getStyleClass().add("game-menu-game-log-round-boxes-vbox");
+    gameLogScrollPane.setContent(gameLogRoundBoxesVbox);
     gameLogScrollPane.getStyleClass().add("game-menu-game-log-scroll-pane");
     gameLogScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     gameLogScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    gameLogRoundBoxesVBox.heightProperty().addListener(observable ->
+    gameLogRoundBoxesVbox.heightProperty().addListener(observable ->
         gameLogScrollPane.setVvalue(1.0));
     addGameLogRoundBox(1);
-
-    // Lower part of the menu, containing the controls for rolling the dice
-    HorizontalDivider horizontalDividerBottom = new HorizontalDivider();
 
     Button rollDiceButton = new Button("Roll dice");
     rollDiceButton.getStyleClass().add("game-menu-roll-dice-button");
@@ -90,19 +109,54 @@ public class GameMenuBox extends VBox {
         onRollDice.run();
       }
     });
+    // Options section at the bottom of the menu
+    GridPane optionsGrid = new GridPane();
+    optionsGrid.getStyleClass().add("game-menu-options-box");
+    optionsGrid.setHgap(12);
+    optionsGrid.setVgap(8);
+
+    Label optionsLabel = new Label("Options");
+    optionsLabel.getStyleClass().add("game-menu-options-label");
+    optionsGrid.add(optionsLabel, 0, 0, 2, 1);
 
     Text rollForAllPlayersText = new Text("Roll for all players");
     rollForAllPlayersText.getStyleClass().add("game-menu-roll-for-all-players-text");
+    optionsGrid.add(rollForAllPlayersText, 0, 1);
+    optionsGrid.add(rollForAllPlayersCheckBox, 1, 1);
 
-    rollForAllPlayersCheckBox.getStyleClass().add("game-menu-roll-for-all-players-check-box");
+    Text animatedDiceText = new Text("Animated dice");
+    animatedDiceText.getStyleClass().add("game-menu-roll-for-all-players-text");
+    optionsGrid.add(animatedDiceText, 0, 2);
+    optionsGrid.add(animatedDiceCheckBox, 1, 2);
 
-    HBox rollForAllPlayersHBox = new HBox(rollForAllPlayersText, rollForAllPlayersCheckBox);
-    rollForAllPlayersHBox.getStyleClass().add("game-menu-roll-for-all-players-box");
+    // Lower part of the menu, containing the controls for rolling the dice
+    HorizontalDivider horizontalDividerBottom = new HorizontalDivider();
 
-    VBox menuBottomBox = new VBox(horizontalDividerBottom, rollDiceButton, rollForAllPlayersHBox);
+    VBox menuBottomBox = new VBox(horizontalDividerBottom, diceContainer, rollDiceButton,
+        optionsGrid);
     menuBottomBox.getStyleClass().add("game-menu-bottom-box");
 
     this.getChildren().setAll(menuTopBox, gameLogScrollPane, menuBottomBox);
+
+    // Hide dice and animation option when 'Roll for all players' is checked
+    rollForAllPlayersCheckBox.selectedProperty().addListener((obs,
+        wasSelected, isSelected) -> {
+      diceContainer.setVisible(!isSelected);
+      diceContainer.setManaged(!isSelected);
+      animatedDiceCheckBox.setVisible(!isSelected);
+      animatedDiceCheckBox.setManaged(!isSelected);
+      animatedDiceCheckBox.setSelected(!isSelected);
+      animatedDiceText.setVisible(!isSelected);
+      animatedDiceText.setManaged(!isSelected);
+    });
+    // Set initial state for the options
+    boolean isSelected = rollForAllPlayersCheckBox.isSelected();
+    diceContainer.setVisible(!isSelected);
+    diceContainer.setManaged(!isSelected);
+    animatedDiceCheckBox.setVisible(!isSelected);
+    animatedDiceCheckBox.setManaged(!isSelected);
+    animatedDiceText.setVisible(!isSelected);
+    animatedDiceText.setManaged(!isSelected);
   }
 
   /**
@@ -118,7 +172,7 @@ public class GameMenuBox extends VBox {
     VBox gameLogRoundBox = new VBox(roundBoxRoundNumberText);
     HBox.setHgrow(gameLogRoundBox, Priority.ALWAYS);
     gameLogRoundBox.getStyleClass().add("game-menu-game-log-round-box");
-    gameLogRoundBoxesVBox.getChildren().add(gameLogRoundBox);
+    gameLogRoundBoxesVbox.getChildren().add(gameLogRoundBox);
   }
 
   /**
@@ -132,7 +186,7 @@ public class GameMenuBox extends VBox {
     entryText.getStyleClass().add("game-menu-game-log-round-box-entry");
     entryText.setWrappingWidth(200);
 
-    VBox roundBox = (VBox) gameLogRoundBoxesVBox.getChildren().getLast();
+    VBox roundBox = (VBox) gameLogRoundBoxesVbox.getChildren().getLast();
     roundBox.getChildren().add(entryText);
   }
 
@@ -170,5 +224,49 @@ public class GameMenuBox extends VBox {
    */
   public boolean getRollForAllPlayersSelected() {
     return rollForAllPlayersCheckBox.isSelected();
+  }
+
+  /**
+   * Returns whether the 'animated dice' checkbox is selected.
+   *
+   * @return Whether the 'animated dice' checkbox is selected.
+   */
+  public boolean isAnimatedDiceEnabled() {
+    return animatedDiceCheckBox.isSelected();
+  }
+
+  /**
+   * Animates the dice roll with the given values.
+   *
+   * @param values The values to show on the dice.
+   */
+  public void animateDiceRoll(int[] values, Runnable onFinished) {
+    if (values.length > dice.length) {
+      throw new IllegalArgumentException("Too many dice values provided");
+    }
+
+    if (!isAnimatedDiceEnabled()) {
+      // If animation is disabled, just show the values immediately
+      for (int i = 0; i < values.length; i++) {
+        dice[i].setValue(values[i]);
+      }
+      onFinished.run();
+      return;
+    }
+
+    // Create a counter to track completed animations
+    final int[] completedAnimations = {0};
+    
+    // Animate each die
+    for (int i = 0; i < values.length; i++) {
+      final int index = i;
+      dice[i].roll(values[i], () -> {
+        completedAnimations[0]++;
+        // When all animations are complete, run the onFinished callback
+        if (completedAnimations[0] == values.length) {
+          onFinished.run();
+        }
+      });
+    }
   }
 }

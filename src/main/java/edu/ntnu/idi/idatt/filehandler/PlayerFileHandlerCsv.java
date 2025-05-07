@@ -1,7 +1,9 @@
 package edu.ntnu.idi.idatt.filehandler;
 
-import edu.ntnu.idi.idatt.model.Player;
-import edu.ntnu.idi.idatt.model.PlayerTokenType;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -25,36 +27,50 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
     try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
       String line;
+      String playerType = "";
       while ((line = reader.readLine()) != null) {
+        if (playerType.equals("ludoPlayer") && players.size() == 4) {
+          break;
+        }
         if (line.equals("name, colorHex, playerTokenType")) {
+          playerType = "ladderGamePlayer";
+          continue;
+        } else if (line.equals("name, colorHex")) {
+          playerType = "ludoPlayer";
           continue;
         }
 
-        Player player = fromCsvLine(line);
+        Player player = null;
+        if (playerType.equals("ladderGamePlayer")) {
+          player = ladderGamePlayerfromCsvLine(line);
+        } else if (playerType.equals("ludoPlayer")) {
+          player = ludoPlayerfromCsvLine(line);
+        }
+
         if (player == null) {
           return Collections.emptyList();
         }
         players.add(player);
       }
     } catch (IOException e) {
-      throw new IOException("Could not read file: " + path);
+      throw new IOException("Could not read players from file: " + path);
     }
     return players;
   }
 
   @Override
-  public void writeFile(String path, List<Player> players) {
+  public void writeFile(String path, List<Player> players) throws IOException {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
       for (Player player : players) {
         writer.write(toCsvLine(player));
         writer.newLine();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new IOException("Could not write players to file: " + path);
     }
   }
 
-  private Player fromCsvLine(String line) {
+  private Player ladderGamePlayerfromCsvLine(String line) {
     String[] segments = line.split(",");
     if (segments.length != 3) {
       return null;
@@ -63,7 +79,23 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
       String playerName = segments[0].trim();
       String playerColorHex = segments[1].trim();
       String playerTokenType = segments[2].trim();
-      return new Player(playerName, playerColorHex, PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
+      return new LadderGamePlayer(playerName, playerColorHex,
+          PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private Player ludoPlayerfromCsvLine(String line) {
+    String[] segments = line.split(",");
+    if (segments.length != 2) {
+      return null;
+    }
+    try {
+      String playerName = segments[0].trim();
+      String playerColorHex = segments[1].trim();
+      return new LudoPlayer(playerName, playerColorHex, PlayerTokenType.CIRCLE);
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
@@ -71,7 +103,8 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   private String toCsvLine(Player player) {
-    return String.format("%s,%s,%s", player.getName(), player.getColorHex(), player.getPlayerTokenType().name());
+    return String.format("%s,%s,%s", player.getName(), player.getColorHex(),
+        player.getPlayerTokenType().name());
   }
 
 }

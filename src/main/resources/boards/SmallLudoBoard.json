@@ -1,0 +1,769 @@
+{
+  "name": "Small Ludo Board",
+  "description": "A tiny ludo board for quick games!",
+  "boardSize": 9,
+  "background": "media/boards/whiteBoard.png",
+  "colors": [
+    "0xff0000ff",
+    "0x0000ffff",
+    "0x008000ff",
+    "0xffff00ff"
+  ],
+  "playerStartIndexes": [
+    46,
+    55,
+    64,
+    73
+  ],
+  "playerTrackStartIndexes": [
+    1,
+    8,
+    15,
+    22
+  ],
+  "playerFinishStartIndexes": [
+    29,
+    31,
+    33,
+    35
+  ],
+  "playerFinishIndexes": [
+    40,
+    38,
+    42,
+    44
+  ],
+  "startAreaSize": 3,
+  "totalTrackTileCount": 28,
+  "tiles": [
+    {
+      "id": 1,
+      "coordinates": [
+        3,
+        1
+      ],
+      "nextTileId": 2,
+      "type": "track-start-1"
+    },
+    {
+      "id": 2,
+      "coordinates": [
+        3,
+        2
+      ],
+      "nextTileId": 3,
+      "type": "track"
+    },
+    {
+      "id": 3,
+      "coordinates": [
+        2,
+        3
+      ],
+      "nextTileId": 4,
+      "type": "track"
+    },
+    {
+      "id": 4,
+      "coordinates": [
+        1,
+        3
+      ],
+      "nextTileId": 5,
+      "type": "track"
+    },
+    {
+      "id": 5,
+      "coordinates": [
+        0,
+        3
+      ],
+      "nextTileId": 6,
+      "type": "track"
+    },
+    {
+      "id": 6,
+      "coordinates": [
+        0,
+        4
+      ],
+      "nextTileId": 7,
+      "type": "track"
+    },
+    {
+      "id": 7,
+      "coordinates": [
+        0,
+        5
+      ],
+      "nextTileId": 8,
+      "type": "track"
+    },
+    {
+      "id": 8,
+      "coordinates": [
+        1,
+        5
+      ],
+      "nextTileId": 9,
+      "type": "track-start-2"
+    },
+    {
+      "id": 9,
+      "coordinates": [
+        2,
+        5
+      ],
+      "nextTileId": 10,
+      "type": "track"
+    },
+    {
+      "id": 10,
+      "coordinates": [
+        3,
+        6
+      ],
+      "nextTileId": 11,
+      "type": "track"
+    },
+    {
+      "id": 11,
+      "coordinates": [
+        3,
+        7
+      ],
+      "nextTileId": 12,
+      "type": "track"
+    },
+    {
+      "id": 12,
+      "coordinates": [
+        3,
+        8
+      ],
+      "nextTileId": 13,
+      "type": "track"
+    },
+    {
+      "id": 13,
+      "coordinates": [
+        4,
+        8
+      ],
+      "nextTileId": 14,
+      "type": "track"
+    },
+    {
+      "id": 14,
+      "coordinates": [
+        5,
+        8
+      ],
+      "nextTileId": 15,
+      "type": "track"
+    },
+    {
+      "id": 15,
+      "coordinates": [
+        5,
+        7
+      ],
+      "nextTileId": 16,
+      "type": "track-start-3"
+    },
+    {
+      "id": 16,
+      "coordinates": [
+        5,
+        6
+      ],
+      "nextTileId": 17,
+      "type": "track"
+    },
+    {
+      "id": 17,
+      "coordinates": [
+        6,
+        5
+      ],
+      "nextTileId": 18,
+      "type": "track"
+    },
+    {
+      "id": 18,
+      "coordinates": [
+        7,
+        5
+      ],
+      "nextTileId": 19,
+      "type": "track"
+    },
+    {
+      "id": 19,
+      "coordinates": [
+        8,
+        5
+      ],
+      "nextTileId": 20,
+      "type": "track"
+    },
+    {
+      "id": 20,
+      "coordinates": [
+        8,
+        4
+      ],
+      "nextTileId": 21,
+      "type": "track"
+    },
+    {
+      "id": 21,
+      "coordinates": [
+        8,
+        3
+      ],
+      "nextTileId": 22,
+      "type": "track"
+    },
+    {
+      "id": 22,
+      "coordinates": [
+        7,
+        3
+      ],
+      "nextTileId": 23,
+      "type": "track-start-4"
+    },
+    {
+      "id": 23,
+      "coordinates": [
+        6,
+        3
+      ],
+      "nextTileId": 24,
+      "type": "track"
+    },
+    {
+      "id": 24,
+      "coordinates": [
+        5,
+        2
+      ],
+      "nextTileId": 25,
+      "type": "track"
+    },
+    {
+      "id": 25,
+      "coordinates": [
+        5,
+        1
+      ],
+      "nextTileId": 26,
+      "type": "track"
+    },
+    {
+      "id": 26,
+      "coordinates": [
+        5,
+        0
+      ],
+      "nextTileId": 27,
+      "type": "track"
+    },
+    {
+      "id": 27,
+      "coordinates": [
+        4,
+        0
+      ],
+      "nextTileId": 28,
+      "type": "track"
+    },
+    {
+      "id": 28,
+      "coordinates": [
+        3,
+        0
+      ],
+      "nextTileId": 1,
+      "type": "track"
+    },
+    {
+      "id": 29,
+      "coordinates": [
+        4,
+        1
+      ],
+      "nextTileId": 30,
+      "type": "finish-1"
+    },
+    {
+      "id": 30,
+      "coordinates": [
+        4,
+        2
+      ],
+      "nextTileId": 40,
+      "type": "finish-1"
+    },
+    {
+      "id": 31,
+      "coordinates": [
+        1,
+        4
+      ],
+      "nextTileId": 32,
+      "type": "finish-2"
+    },
+    {
+      "id": 32,
+      "coordinates": [
+        2,
+        4
+      ],
+      "nextTileId": 38,
+      "type": "finish-2"
+    },
+    {
+      "id": 33,
+      "coordinates": [
+        4,
+        7
+      ],
+      "nextTileId": 34,
+      "type": "finish-3"
+    },
+    {
+      "id": 34,
+      "coordinates": [
+        4,
+        6
+      ],
+      "nextTileId": 42,
+      "type": "finish-3"
+    },
+    {
+      "id": 35,
+      "coordinates": [
+        7,
+        4
+      ],
+      "nextTileId": 36,
+      "type": "finish-4"
+    },
+    {
+      "id": 36,
+      "coordinates": [
+        6,
+        4
+      ],
+      "nextTileId": 44,
+      "type": "finish-4"
+    },
+    {
+      "id": 37,
+      "coordinates": [
+        3,
+        3
+      ],
+      "nextTileId": 38,
+      "type": "error"
+    },
+    {
+      "id": 38,
+      "coordinates": [
+        3,
+        4
+      ],
+      "nextTileId": 0,
+      "type": "finish-2"
+    },
+    {
+      "id": 39,
+      "coordinates": [
+        3,
+        5
+      ],
+      "nextTileId": 40,
+      "type": "error"
+    },
+    {
+      "id": 40,
+      "coordinates": [
+        4,
+        3
+      ],
+      "nextTileId": 0,
+      "type": "finish-1"
+    },
+    {
+      "id": 41,
+      "coordinates": [
+        4,
+        4
+      ],
+      "nextTileId": 42,
+      "type": "error"
+    },
+    {
+      "id": 42,
+      "coordinates": [
+        4,
+        5
+      ],
+      "nextTileId": 0,
+      "type": "finish-3"
+    },
+    {
+      "id": 43,
+      "coordinates": [
+        5,
+        3
+      ],
+      "nextTileId": 44,
+      "type": "error"
+    },
+    {
+      "id": 44,
+      "coordinates": [
+        5,
+        4
+      ],
+      "nextTileId": 0,
+      "type": "finish-4"
+    },
+    {
+      "id": 45,
+      "coordinates": [
+        5,
+        5
+      ],
+      "nextTileId": 46,
+      "type": "error"
+    },
+    {
+      "id": 46,
+      "coordinates": [
+        0,
+        0
+      ],
+      "nextTileId": 47,
+      "type": "start-1"
+    },
+    {
+      "id": 47,
+      "coordinates": [
+        0,
+        1
+      ],
+      "nextTileId": 48,
+      "type": "start-1"
+    },
+    {
+      "id": 48,
+      "coordinates": [
+        0,
+        2
+      ],
+      "nextTileId": 49,
+      "type": "start-1"
+    },
+    {
+      "id": 49,
+      "coordinates": [
+        1,
+        0
+      ],
+      "nextTileId": 50,
+      "type": "start-1"
+    },
+    {
+      "id": 50,
+      "coordinates": [
+        1,
+        1
+      ],
+      "nextTileId": 51,
+      "type": "start-1"
+    },
+    {
+      "id": 51,
+      "coordinates": [
+        1,
+        2
+      ],
+      "nextTileId": 52,
+      "type": "start-1"
+    },
+    {
+      "id": 52,
+      "coordinates": [
+        2,
+        0
+      ],
+      "nextTileId": 53,
+      "type": "start-1"
+    },
+    {
+      "id": 53,
+      "coordinates": [
+        2,
+        1
+      ],
+      "nextTileId": 54,
+      "type": "start-1"
+    },
+    {
+      "id": 54,
+      "coordinates": [
+        2,
+        2
+      ],
+      "nextTileId": 55,
+      "type": "start-1"
+    },
+    {
+      "id": 55,
+      "coordinates": [
+        0,
+        6
+      ],
+      "nextTileId": 56,
+      "type": "start-2"
+    },
+    {
+      "id": 56,
+      "coordinates": [
+        0,
+        7
+      ],
+      "nextTileId": 57,
+      "type": "start-2"
+    },
+    {
+      "id": 57,
+      "coordinates": [
+        0,
+        8
+      ],
+      "nextTileId": 58,
+      "type": "start-2"
+    },
+    {
+      "id": 58,
+      "coordinates": [
+        1,
+        6
+      ],
+      "nextTileId": 59,
+      "type": "start-2"
+    },
+    {
+      "id": 59,
+      "coordinates": [
+        1,
+        7
+      ],
+      "nextTileId": 60,
+      "type": "start-2"
+    },
+    {
+      "id": 60,
+      "coordinates": [
+        1,
+        8
+      ],
+      "nextTileId": 61,
+      "type": "start-2"
+    },
+    {
+      "id": 61,
+      "coordinates": [
+        2,
+        6
+      ],
+      "nextTileId": 62,
+      "type": "start-2"
+    },
+    {
+      "id": 62,
+      "coordinates": [
+        2,
+        7
+      ],
+      "nextTileId": 63,
+      "type": "start-2"
+    },
+    {
+      "id": 63,
+      "coordinates": [
+        2,
+        8
+      ],
+      "nextTileId": 64,
+      "type": "start-2"
+    },
+    {
+      "id": 64,
+      "coordinates": [
+        6,
+        6
+      ],
+      "nextTileId": 65,
+      "type": "start-3"
+    },
+    {
+      "id": 65,
+      "coordinates": [
+        6,
+        7
+      ],
+      "nextTileId": 66,
+      "type": "start-3"
+    },
+    {
+      "id": 66,
+      "coordinates": [
+        6,
+        8
+      ],
+      "nextTileId": 67,
+      "type": "start-3"
+    },
+    {
+      "id": 67,
+      "coordinates": [
+        7,
+        6
+      ],
+      "nextTileId": 68,
+      "type": "start-3"
+    },
+    {
+      "id": 68,
+      "coordinates": [
+        7,
+        7
+      ],
+      "nextTileId": 69,
+      "type": "start-3"
+    },
+    {
+      "id": 69,
+      "coordinates": [
+        7,
+        8
+      ],
+      "nextTileId": 70,
+      "type": "start-3"
+    },
+    {
+      "id": 70,
+      "coordinates": [
+        8,
+        6
+      ],
+      "nextTileId": 71,
+      "type": "start-3"
+    },
+    {
+      "id": 71,
+      "coordinates": [
+        8,
+        7
+      ],
+      "nextTileId": 72,
+      "type": "start-3"
+    },
+    {
+      "id": 72,
+      "coordinates": [
+        8,
+        8
+      ],
+      "nextTileId": 73,
+      "type": "start-3"
+    },
+    {
+      "id": 73,
+      "coordinates": [
+        6,
+        0
+      ],
+      "nextTileId": 74,
+      "type": "start-4"
+    },
+    {
+      "id": 74,
+      "coordinates": [
+        6,
+        1
+      ],
+      "nextTileId": 75,
+      "type": "start-4"
+    },
+    {
+      "id": 75,
+      "coordinates": [
+        6,
+        2
+      ],
+      "nextTileId": 76,
+      "type": "start-4"
+    },
+    {
+      "id": 76,
+      "coordinates": [
+        7,
+        0
+      ],
+      "nextTileId": 77,
+      "type": "start-4"
+    },
+    {
+      "id": 77,
+      "coordinates": [
+        7,
+        1
+      ],
+      "nextTileId": 78,
+      "type": "start-4"
+    },
+    {
+      "id": 78,
+      "coordinates": [
+        7,
+        2
+      ],
+      "nextTileId": 79,
+      "type": "start-4"
+    },
+    {
+      "id": 79,
+      "coordinates": [
+        8,
+        0
+      ],
+      "nextTileId": 80,
+      "type": "start-4"
+    },
+    {
+      "id": 80,
+      "coordinates": [
+        8,
+        1
+      ],
+      "nextTileId": 81,
+      "type": "start-4"
+    },
+    {
+      "id": 81,
+      "coordinates": [
+        8,
+        2
+      ],
+      "nextTileId": 82,
+      "type": "start-4"
+    }
+  ]
+}

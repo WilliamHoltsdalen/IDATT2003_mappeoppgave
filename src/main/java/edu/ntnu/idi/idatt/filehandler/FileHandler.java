@@ -13,12 +13,13 @@ public interface FileHandler<T> {
 
   /**
    * Reads the contents of a file and returns the file contents.
+   * The return type can be anything, as long as it is a valid object.
    *
    * @param filePath the path to the file
-   * @return A list of the file contents
+   * @return The object read from the file
    * @throws IOException if an error occurs while reading the file
    */
-  List<T> readFile(String filePath) throws IOException;
+  Object readFile(String filePath) throws IOException;
 
   /**
    * Writes contents to a file, using the given file path.

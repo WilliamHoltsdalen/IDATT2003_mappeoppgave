@@ -18,6 +18,44 @@
   -fx-max-width: infinity;
 }
 
+.game-selection-box {
+  -fx-background-color: -gray-background;
+  -fx-padding: 20;
+  -fx-spacing: 30;
+  -fx-alignment: center;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
+  -fx-background-radius: 18;
+}
+
+.game-selection-title {
+  -fx-font-size: 36px;
+  -fx-font-weight: bold;
+}
+
+.game-selection-game-name {
+  -fx-font-size: 20px;
+}
+
+.game-selection-game-box {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+  -fx-effect: dropshadow(three-pass-box, black, 6, 0, 0, 0);
+  -fx-cursor: hand;
+}
+
+.game-selection-game-box:hover {
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-effect: dropshadow(three-pass-box, #007AFF, 10, 0, 0, 0);
+}
+
 .main-menu-view {
   -fx-background-color: -gray-background;
   -fx-padding: 20;
@@ -31,6 +69,7 @@
 .main-menu-h-box {
   -fx-alignment: center;
   -fx-spacing: 35;
+  -fx-padding: 20, 0, 0, 0;
 }
 
 .main-menu-header-box {
@@ -42,6 +81,15 @@
   -fx-pref-width: 3px;
   -fx-background-color: -gray-border;
   -fx-min-height: 370px;
+}
+
+.main-menu-back-button {
+  -fx-background-color: transparent;
+  -fx-border-color: black;
+  -fx-border-radius: 5;
+  -fx-text-fill: black;
+  -fx-font-size: 20px;
+  -fx-padding: 5;
 }
 
 .main-menu-more-options-menu {
@@ -61,6 +109,15 @@
 .main-menu-player-selection {
   -fx-alignment: top-center;
   -fx-spacing: 20;
+}
+
+.main-menu-import-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: black;
+  -fx-border-color: black;
+  -fx-border-width: 1;
+  -fx-border-radius: 5;
+  -fx-padding: 3;
 }
 
 .main-menu-player-list-box {
@@ -96,6 +153,16 @@
   -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
 }
 
+/* To hide the hyperlink and separator in the color palette */
+.color-palette .hyperlink, .color-palette .separator {
+  visibility: hidden;
+}
+
+/* To hide the empty space after removing the hyperlink and separator in the color palette */
+.color-palette {
+  -fx-padding: 15 15 -30 15;
+}
+
 .main-menu-add-player-button:hover {
   -fx-background-color: -button-dark-hover;
 }
@@ -117,7 +184,7 @@
   -fx-alignment: center;
 }
 
-.main-menu-board-selection-image-view {
+.main-menu-board-selection-board-view {
   -fx-fit-width: 250px;
   -fx-preserve-ratio: true;
 }
@@ -246,10 +313,10 @@
   -fx-border-radius: 7;
 }
 
-.game-menu-game-log-scroll-pane {
+.scroll-pane {
   -fx-background-color: -gray-background;
   -fx-background-radius: 10;
-  -fx-border-color: black;
+  -fx-border-color: -gray-border;
   -fx-border-radius: 10;
   -fx-border-width: 1;
   -fx-max-height: infinity;
@@ -304,6 +371,31 @@
 .game-menu-roll-for-all-players-check-box {
 }
 
+.game-menu-dice-container {
+  -fx-padding: 20;
+  -fx-min-height: 100;
+  -fx-alignment: center;
+}
+
+.game-menu-options-box {
+  -fx-background-color: #f3f3f3;
+  -fx-border-color: #d0d0d0;
+  -fx-border-radius: 7;
+  -fx-background-radius: 7;
+  -fx-padding: 10 10 10 10;
+  -fx-spacing: 6;
+  -fx-alignment: center_left;
+  -fx-max-width: 220px;
+  -fx-min-width: 180px;
+  -fx-translate-y: 8;
+}
+
+.game-menu-options-label {
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #444;
+  -fx-padding: 0 0 4 0;
+}
 
 Button {
   -fx-background-color: -button-blue;
@@ -312,6 +404,7 @@ Button {
   -fx-font-weight: bold;
   -fx-background-radius: 7;
   -fx-padding: 7 10;
+  -fx-cursor: hand;
 }
 
 Button:hover {
@@ -338,4 +431,237 @@ Button:pressed {
   -fx-background-color: -button-disabled;
   -fx-scale-x: 1;
   -fx-scale-y: 1;
+}
+
+.board-creator-view {
+  -fx-background-color: #6C9CA4;
+  -fx-padding: 20;
+  -fx-spacing: 20;
+}
+
+.board-creator-panel {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 20;
+  -fx-min-width: 300px;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.panel-title {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 0 15 0;
+}
+
+.component-section {
+  -fx-background-color: #F8F8F8;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-margin: 10 0;
+}
+
+.component-section-image {
+  -fx-cursor: hand;
+}
+
+.board-config-section {
+  -fx-spacing: 15;
+  -fx-padding: 15;
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+}
+
+.board-config-section .text-field {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+  -fx-padding: 8;
+  -fx-pref-width: -1;
+  -fx-max-width: infinity;
+  -fx-hgrow: always;
+}
+
+.board-config-section .combo-box {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+}
+
+.board-config-section .spinner {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+}
+
+.board-creator-board-container {
+  -fx-background-color: #8B8780;
+  -fx-background-radius: 10;
+  -fx-padding: 20;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+  -fx-alignment: center;
+}
+
+.grid-cell {
+  -fx-fill: transparent;
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 8, 0, 0, 0);
+}
+
+.grid-cell.blue-checker {
+  -fx-fill: rgba(112, 192, 236, 0.82);
+}
+
+.grid-cell.yellow-checker {
+  -fx-fill: rgba(228, 236, 112, 0.78);
+}
+
+.grid-cell.purple-checker {
+  -fx-fill: rgba(162, 112, 236, 0.85);
+}
+
+.grid-cell-label {
+  -fx-font-size: 8px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 3 1 0;
+  -fx-text-fill: black;
+}
+
+.grid-cell-drag-preview {
+  -fx-fill: #939393;
+  -fx-stroke: blue;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-ladder {
+  -fx-fill: rgb(10, 183, 96);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-portal {
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-slide {
+  -fx-fill: rgb(228, 49, 56);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-ladder-destination {
+  -fx-fill: rgb(185, 244, 110);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-slide-destination {
+  -fx-fill: rgb(244, 139, 76);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.save-button {
+  -fx-background-color: #007AFF;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-padding: 8 16;
+  -fx-background-radius: 5;
+}
+
+.header-menu-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #000000;
+  -fx-font-size: 20px;
+  -fx-padding: 0 0 0 10;
+}
+
+.component-item-header {
+  -fx-alignment: center;
+  -fx-spacing: 10;
+}
+
+.from-to-field {
+  -fx-max-width: 60px;
+  -fx-alignment: center;
+}
+
+.delete-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #FF3B30;
+  -fx-padding: 0;
+}
+
+.board-config-spinner {
+  -fx-max-width: 100px;
+}
+
+.board-config-spinner .spinner {
+  -fx-pref-height: 32px;
+}
+
+.component-list-content {
+  -fx-padding: 10;
+  -fx-spacing: 10;
+}
+
+.component-item {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-spacing: 10;
+}
+
+.component-item-header {
+  -fx-alignment: center;
+  -fx-spacing: 10;
+}
+
+.from-to-field {
+  -fx-max-width: 60px;
+  -fx-alignment: center;
+  -fx-background-color: #F5F5F5;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 5;
+  -fx-padding: 5;
+}
+
+.delete-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #FF3B30;
+  -fx-font-size: 18px;
+  -fx-padding: 0;
+}
+
+.delete-button:hover {
+  -fx-scale-x: 1.2;
+  -fx-scale-y: 1.2;
+}
+
+.ludo-board-cell-pane {
+  -fx-background-color: black;
+}
+
+.ludo-board-track-cell {
+  -fx-stroke: black;
+  -fx-stroke-width: 1;
+  -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 3, 0, 0, 0);
 }

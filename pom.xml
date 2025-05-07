@@ -15,6 +15,26 @@
   </properties>
 
   <dependencies>
+    <!-- SLF4J API dependency -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.36</version>
+    </dependency>
+
+    <!-- Logback dependencies -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.2.12</version>
+    </dependency>
+
     <!-- JavaFX framework -->
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -60,6 +80,14 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources/config</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources/</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -92,10 +120,12 @@
         <version>0.0.8</version>
         <configuration>
           <!-- https://github.com/openjfx/javafx-maven-plugin -->
-          <mainClass>edu.ntnu.idi.idatt.App</mainClass>
+          <mainClass>edu.ntnu.idi.idatt.MainApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+
 
 </project>
