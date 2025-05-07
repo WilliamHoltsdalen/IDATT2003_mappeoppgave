@@ -1,12 +1,13 @@
 package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
+
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
  * <h3>PortalAction class</h3>
@@ -15,6 +16,7 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSet
  * random tile. It contains a destination tile ID and a description.
  */
 public class PortalAction implements TileAction {
+
   private String identifier;
   private int destinationTileId;
   private String description;
@@ -22,9 +24,9 @@ public class PortalAction implements TileAction {
   /**
    * Constructor for PortalAction class.
    *
-   * @param identifier The identifier of the action.
+   * @param identifier        The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
-   * @param description The description of the action.
+   * @param description       The description of the action.
    */
   public PortalAction(String identifier, int destinationTileId, String description) {
     setIdentifier(identifier);
@@ -102,7 +104,7 @@ public class PortalAction implements TileAction {
    * Performs the action on the given player and board.
    *
    * @param player The player to perform the action on.
-   * @param board The board to perform the action on.
+   * @param board  The board to perform the action on.
    */
   @Override
   public void perform(Player player, Board board) {

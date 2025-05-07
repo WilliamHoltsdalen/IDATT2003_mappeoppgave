@@ -1,9 +1,5 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
@@ -12,9 +8,12 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameStackPane;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LadderGameController extends GameController {
-  
+
   public LadderGameController(LadderGameView ladderGameView, Board board, List<Player> players) {
     super(ladderGameView, board, players);
   }
@@ -24,7 +23,7 @@ public class LadderGameController extends GameController {
    * initializes the game by placing all players on the 0th tile and setting the current player to
    * the first player in the list.
    *
-   * @param board the board to use in the game
+   * @param board   the board to use in the game
    * @param players the list of players to use in the game
    */
   @Override
@@ -36,7 +35,7 @@ public class LadderGameController extends GameController {
       e.printStackTrace();
     }
   }
-  
+
   @Override
   protected void handleRollDiceButtonAction() {
     if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
@@ -69,12 +68,12 @@ public class LadderGameController extends GameController {
     do {
       performPlayerTurn();
     } while (!boardGame.getCurrentPlayer().equals(boardGame.getPlayers().getFirst()));
-  }  
+  }
 
   /**
    * Sets the tile number of the player in the players box.
    *
-   * @param player the player
+   * @param player    the player
    * @param newTileId the new tile id
    */
   private void setPlayerTileNumber(Player player, int newTileId) {
@@ -83,14 +82,14 @@ public class LadderGameController extends GameController {
   }
 
   /**
-    * Restarts the game by initializing a new BoardGame instance with the same board and players.
-    */
+   * Restarts the game by initializing a new BoardGame instance with the same board and players.
+   */
   @Override
   protected void restartGame() {
     List<Player> players = new ArrayList<>();
     boardGame.getPlayers().forEach(player -> players.add(new LadderGamePlayer(player.getName(),
-    player.getColorHex(), player.getPlayerTokenType())));
-    
+        player.getColorHex(), player.getPlayerTokenType())));
+
     initializeBoardGame(boardGame.getBoard(), players);
     initializeGameView();
   }
@@ -98,16 +97,18 @@ public class LadderGameController extends GameController {
   /**
    * Handles the player moved event.
    *
-   * @param player the player
-   * @param diceRoll the dice roll
+   * @param player    the player
+   * @param diceRoll  the dice roll
    * @param newTileId the new tile id
    */
   public void onPlayerMoved(Player player, int diceRoll, int newTileId) {
-    gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
+    gameView.getGameMenuBox().addGameLogRoundBoxEntry(
+        player.getName() + " rolled " + diceRoll + " and moved to tile " + newTileId);
 
     setPlayerTileNumber(player, newTileId);
 
-    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player, getBoard().getTile(newTileId), false);
+    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player,
+        getBoard().getTile(newTileId), false);
   }
 
   /**
@@ -140,14 +141,16 @@ public class LadderGameController extends GameController {
   /**
    * Handles the tile action performed event.
    *
-   * @param player the player
+   * @param player     the player
    * @param tileAction the tile action
    */
   public void onTileActionPerformed(Player player, TileAction tileAction) {
-    gameView.getGameMenuBox().addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
+    gameView.getGameMenuBox()
+        .addGameLogRoundBoxEntry(player.getName() + " activated " + tileAction.getDescription());
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
 
-    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player, getBoard().getTile(tileAction.getDestinationTileId()), true);
+    ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player,
+        getBoard().getTile(tileAction.getDestinationTileId()), true);
   }
 
   /**
@@ -181,7 +184,7 @@ public class LadderGameController extends GameController {
    * Handles button click events with parameters.
    *
    * @param buttonId the button id for the clicked button.
-   * @param params the map of parameters for the clicked button.
+   * @param params   the map of parameters for the clicked button.
    */
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {

@@ -1,10 +1,5 @@
 package edu.ntnu.idi.idatt.navigation;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.BoardCreatorController;
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.controller.common.GameSelectionController;
@@ -28,9 +23,14 @@ import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 import edu.ntnu.idi.idatt.view.ludo.LudoBoardCreatorView;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameMenuView;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.scene.Node;
 
 public class ViewNavigator implements ButtonClickObserver {
+
   private final AppView appView;
 
   public ViewNavigator(AppView appView) {

@@ -1,14 +1,13 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -32,8 +31,8 @@ public abstract class GameView extends HBox implements ButtonClickSubject {
     this.gameStackPane = createGameStackPane(board, players);
     this.gameMenuBox = createGameMenuBox();
 
-    this.getChildren().setAll(playersBox, createInfiniteSpacer(), gameStackPane, createInfiniteSpacer(),
-    gameMenuBox);
+    this.getChildren().setAll(playersBox, createInfiniteSpacer(), gameStackPane,
+        createInfiniteSpacer(), gameMenuBox);
   }
 
   public abstract GamePlayersBox createPlayersBox(List<Player> players, int roundNumber);

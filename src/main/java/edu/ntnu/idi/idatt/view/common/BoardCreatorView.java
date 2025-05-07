@@ -1,34 +1,34 @@
 package edu.ntnu.idi.idatt.view.common;
 
+import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
+import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
-import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <h3>BoardCreatorView</h3>
- * 
- * <p>Abstract class for all board creator views. This class has a name field, a description field, and a board stack pane.
- * It also provides methods for showing alerts and handling import and save board operations. 
- * 
+ *
+ * <p>Abstract class for all board creator views. This class has a name field, a description field,
+ * and a board stack pane.
+ * It also provides methods for showing alerts and handling import and save board operations.
+ *
  * <p>This class extends BorderPane and implements ButtonClickSubject.
- * 
+ *
  * @see BorderPane
  * @see ButtonClickSubject
  */
 public abstract class BoardCreatorView extends BorderPane implements ButtonClickSubject {
+
   protected static final Logger logger = LoggerFactory.getLogger(BoardCreatorView.class);
   protected final List<ButtonClickObserver> observers;
 
@@ -50,14 +50,14 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Creates a board stack pane.
-   * 
+   *
    * @return The board stack pane.
    */
   protected abstract BoardStackPane createBoardStackPane();
 
   /**
    * Getter for the observers.
-   * 
+   *
    * @return The list of observers.
    */
   public List<ButtonClickObserver> getObservers() {
@@ -66,7 +66,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Getter for the name field.
-   * 
+   *
    * @return The name field.
    */
   public TextField getNameField() {
@@ -75,7 +75,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Getter for the description field.
-   * 
+   *
    * @return The description field.
    */
   public TextField getDescriptionField() {
@@ -84,7 +84,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Getter for the board stack pane.
-   * 
+   *
    * @return The board stack pane.
    */
   public BoardStackPane getBoardStackPane() {
@@ -93,9 +93,9 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Shows an info alert.
-   * 
+   *
    * @param headerText The header text of the alert.
-   * @param message The message of the alert.
+   * @param message    The message of the alert.
    */
   public void showInfoAlert(String headerText, String message) {
     Alert alert = new Alert(AlertType.INFORMATION);
@@ -107,9 +107,9 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Shows an error alert.
-   * 
+   *
    * @param headerText The header text of the alert.
-   * @param message The message of the alert.
+   * @param message    The message of the alert.
    */
   public void showErrorAlert(String headerText, String message) {
     Alert alert = new Alert(AlertType.ERROR);
@@ -152,7 +152,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Adds an observer to the board creator view.
-   * 
+   *
    * @param observer The observer to add.
    */
   @Override
@@ -163,7 +163,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Removes an observer from the board creator view.
-   * 
+   *
    * @param observer The observer to remove.
    */
   @Override
@@ -174,7 +174,7 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Notifies all observers of a button click.
-   * 
+   *
    * @param buttonId The id of the button that was clicked.
    */
   @Override
@@ -185,9 +185,9 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
 
   /**
    * Notifies all observers of a button click with parameters.
-   * 
+   *
    * @param buttonId The id of the button that was clicked.
-   * @param params The parameters of the button click.
+   * @param params   The parameters of the button click.
    */
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {

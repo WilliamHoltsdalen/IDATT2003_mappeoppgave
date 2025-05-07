@@ -1,12 +1,14 @@
 package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
+
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
+
 /**
  * <h3>SlideAction class</h3>
  *
@@ -14,15 +16,17 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSet
  * different tile. It contains a destination tile ID and a description.
  */
 public class SlideAction implements TileAction {
+
   private String identifier;
   private int destinationTileId;
   private String description;
+
   /**
    * Constructor for SlideAction class.
    *
-   * @param identifier The identifier of the action.
+   * @param identifier        The identifier of the action.
    * @param destinationTileId The ID of the destination tile.
-   * @param description The description of the action.
+   * @param description       The description of the action.
    */
   public SlideAction(String identifier, int destinationTileId, String description) {
     setIdentifier(identifier);
@@ -92,7 +96,7 @@ public class SlideAction implements TileAction {
   @Override
   public void setDescription(String description) {
     tileActionSetDescriptionValidator(description);
-    
+
     this.description = description;
   }
 
@@ -100,12 +104,12 @@ public class SlideAction implements TileAction {
    * Performs the action on the given player and board.
    *
    * @param player The player to perform the action on.
-   * @param board The board to perform the action on.
+   * @param board  The board to perform the action on.
    */
   @Override
   public void perform(Player player, Board board) {
-      tileActionPerformValidator(player, board);
+    tileActionPerformValidator(player, board);
 
-      ((LadderGamePlayer) player).placeOnTile(board.getTile(this.destinationTileId));
+    ((LadderGamePlayer) player).placeOnTile(board.getTile(this.destinationTileId));
   }
 }

@@ -1,12 +1,9 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
-import java.util.Map;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
+import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,18 +28,21 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * <h3>LadderGameBoardCreatorView</h3>
- * 
- * <p>This class extends BoardCreatorView and is used to create a ladder game board creator view. It adds a component list panel, 
- * as well as background and pattern selection ComboBoxes, and rows and columns spinners.
- * 
+ *
+ * <p>This class extends BoardCreatorView and is used to create a ladder game board creator view.
+ * It adds a component list panel, as well as background and pattern selection ComboBoxes, and rows
+ * and columns spinners.
+ *
  * @see BoardCreatorView
  * @see ComboBox
  * @see Spinner
  */
 public class LadderGameBoardCreatorView extends BoardCreatorView {
+
   private final VBox componentListContent;
   private final ComboBox<String> backgroundComboBox;
   private final ComboBox<String> patternComboBox;
@@ -66,7 +66,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Getter for the component list content.
-   * 
+   *
    * @return The component list content.
    */
   public VBox getComponentListContent() {
@@ -75,7 +75,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Getter for the background ComboBox.
-   * 
+   *
    * @return The background ComboBox.
    */
   public ComboBox<String> getBackgroundComboBox() {
@@ -84,7 +84,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Getter for the pattern ComboBox.
-   * 
+   *
    * @return The pattern ComboBox.
    */
   public ComboBox<String> getPatternComboBox() {
@@ -93,7 +93,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Getter for the rows Spinner.
-   * 
+   *
    * @return The rows Spinner.
    */
   public Spinner<Integer> getRowsSpinner() {
@@ -102,7 +102,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Getter for the columns Spinner.
-   * 
+   *
    * @return The columns Spinner.
    */
   public Spinner<Integer> getColumnsSpinner() {
@@ -117,28 +117,29 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   public void setColumnSpinner(int columns) {
     columnsSpinner.valueProperty().removeListener(columnsListener);
-    columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, columns));
+    columnsSpinner.setValueFactory(
+        new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, columns));
     columnsSpinner.valueProperty().addListener(columnsListener);
   }
 
   /**
    * Initializes the view with the given available components and board.
-   * 
+   *
    * @param components The components to display.
-   * @param board The board to display.
+   * @param board      The board to display.
    */
   public void initializeView(Map<String, String[]> components, LadderGameBoard board) {
     logger.debug("Initializing LadderGameBoardCreatorView");
-    VBox leftPanel = createComponentSelectionPanel(components);
+    final VBox leftPanel = createComponentSelectionPanel(components);
 
     super.getBoardStackPane().initialize(board, board.getBackground());
     super.getBoardStackPane().getBackgroundImageView().setFitWidth(500);
-    VBox centerPanel = new VBox(createBoardConfigurationPanel(), super.getBoardStackPane());
+    final VBox centerPanel = new VBox(createBoardConfigurationPanel(), super.getBoardStackPane());
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
-    
-    VBox rightPanel = createComponentListPanel();
-    
+
+    final VBox rightPanel = createComponentListPanel();
+
     this.setLeft(leftPanel);
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
@@ -155,7 +156,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Creates the component selection panel.
-   * 
+   *
    * @param components The components to display.
    * @return The component selection panel.
    */
@@ -177,10 +178,10 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates a component section. This is a section of the component selection panel, 
-   * which contains a title and a list of component images.
-   * 
-   * @param title The title of the section.
+   * Creates a component section. This is a section of the component selection panel, which contains
+   * a title and a list of component images.
+   *
+   * @param title      The title of the section.
    * @param imagePaths The image paths of the components in the section.
    * @return The component section.
    */
@@ -212,8 +213,8 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Sets up the drag and drop functionality for a component image.
-   * 
-   * @param source The component image to set up.
+   *
+   * @param source    The component image to set up.
    * @param imagePath The image path of the component.
    */
   private void setupDragAndDrop(ImageView source, String imagePath) {
@@ -227,9 +228,10 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
       // Center the drag view on the mouse cursor
       db.setDragViewOffsetX(snapshot.getWidth() / 2);
       db.setDragViewOffsetY(snapshot.getHeight() / 2);
-      
+
       ClipboardContent content = new ClipboardContent();
-      String componentIdentifier = imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.lastIndexOf("."));
+      String componentIdentifier = imagePath.substring(imagePath.lastIndexOf("/") + 1,
+          imagePath.lastIndexOf("."));
       content.putString(componentIdentifier);
       db.setContent(content);
       event.consume();
@@ -237,9 +239,10 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates the board configuration panel. This is a panel that contains the board name and description, 
-   * as well as the background and pattern selection ComboBoxes, and rows and columns spinners.
-   * 
+   * Creates the board configuration panel. This is a panel that contains the board name and
+   * description, as well as the background and pattern selection ComboBoxes, and rows and columns
+   * spinners.
+   *
    * @return The board configuration panel.
    */
   private VBox createBoardConfigurationPanel() {
@@ -266,25 +269,26 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     importBoardButton.setOnAction(e -> handleImportBoard());
     nameAndDescriptionBox.getChildren().setAll(nameBox, descriptionBox, importBoardButton);
 
-    HBox boardOptionsBox = new HBox(20);
+    final HBox boardOptionsBox = new HBox(20);
 
-    VBox backgroundSelectionBox = new VBox(5);
-    Label backgroundLabel = new Label("Background");
-    backgroundComboBox.getItems().addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink", "Space");
+    final VBox backgroundSelectionBox = new VBox(5);
+    final Label backgroundLabel = new Label("Background");
+    backgroundComboBox.getItems()
+        .addAll("White", "Gray", "Dark blue", "Green", "Red", "Yellow", "Pink", "Space");
     backgroundComboBox.setValue("White");
     backgroundComboBox.setOnAction(event -> notifyObservers("update_background"));
     backgroundSelectionBox.getChildren().addAll(backgroundLabel, backgroundComboBox);
 
-    VBox patternSelectionBox = new VBox(5);
-    Label patternLabel = new Label("Pattern");
+    final VBox patternSelectionBox = new VBox(5);
+    final Label patternLabel = new Label("Pattern");
     patternComboBox.getItems().addAll("None", "Blue checker", "Yellow checker", "Purple checker");
     patternComboBox.setValue("None");
     patternComboBox.setOnAction(event -> notifyObservers("update_pattern"));
     patternSelectionBox.getChildren().addAll(patternLabel, patternComboBox);
 
-    VBox rowsBox = new VBox(5);
+    final VBox rowsBox = new VBox(5);
     rowsBox.getStyleClass().add("board-config-spinner");
-    Label rowsLabel = new Label("Rows");
+    final Label rowsLabel = new Label("Rows");
     rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, 9));
     rowsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
     rowsSpinner.valueProperty().addListener(rowsListener);
@@ -292,7 +296,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
     VBox colsBox = new VBox(5);
     colsBox.getStyleClass().add("board-config-spinner");
-    Label colsLabel = new Label("Columns");
+    final Label colsLabel = new Label("Columns");
     columnsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, 10));
     columnsListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
     columnsSpinner.valueProperty().addListener(columnsListener);
@@ -304,14 +308,15 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     panel.getChildren().setAll(nameAndDescriptionBox, boardOptionsBox);
     panel.getStyleClass().add("board-creator-panel");
 
-    panel.setMaxWidth(super.getBoardStackPane().getBackgroundImageView().getFitWidth() + 40); // 40px for padding
+    panel.setMaxWidth(
+        super.getBoardStackPane().getBackgroundImageView().getFitWidth() + 40); // 40px for padding
     return panel;
   }
 
   /**
-   * Creates the component list panel. This is a panel that contains the component list, 
-   * as well as a save button and a menu button.
-   * 
+   * Creates the component list panel. This is a panel that contains the component list, as well as
+   * a save button and a menu button.
+   *
    * @return The component list panel.
    */
   private VBox createComponentListPanel() {
@@ -348,14 +353,15 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
   /**
    * Adds a component to the component list.
-   * 
-   * @param displayName The display name of the component.
-   * @param componentImage The image of the component.
-   * @param onDelete The action to perform when the component is deleted.
-   * @param originTileId The origin tile id of the component.
+   *
+   * @param displayName       The display name of the component.
+   * @param componentImage    The image of the component.
+   * @param onDelete          The action to perform when the component is deleted.
+   * @param originTileId      The origin tile id of the component.
    * @param destinationTileId The destination tile id of the component.
    */
-  public void addToComponentList(String displayName, Image componentImage, Runnable onDelete, int originTileId, int destinationTileId) {
+  public void addToComponentList(String displayName, Image componentImage, Runnable onDelete,
+      int originTileId, int destinationTileId) {
     VBox componentBox = new VBox(5);
     componentBox.getStyleClass().add("component-item");
 
@@ -385,17 +391,17 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     TextField fromField = new TextField(String.valueOf(originTileId));
     fromField.getStyleClass().add("from-to-field");
     fromField.setEditable(false);
-    VBox fromVBox = new VBox(10);
-    fromVBox.getChildren().addAll(fromLabel, fromField);
+    VBox fromVbox = new VBox(10);
+    fromVbox.getChildren().addAll(fromLabel, fromField);
 
     Label toLabel = new Label("To");
     TextField toField = new TextField(String.valueOf(destinationTileId));
     toField.getStyleClass().add("from-to-field");
     toField.setEditable(false);
-    VBox toVBox = new VBox(10);
-    toVBox.getChildren().addAll(toLabel, toField);
+    VBox toVbox = new VBox(10);
+    toVbox.getChildren().addAll(toLabel, toField);
 
-    fromToBox.getChildren().addAll(fromVBox, toVBox);
+    fromToBox.getChildren().addAll(fromVbox, toVbox);
 
     HBox contentBox = new HBox(20);
     contentBox.getChildren().addAll(componentImageView, fromToBox);

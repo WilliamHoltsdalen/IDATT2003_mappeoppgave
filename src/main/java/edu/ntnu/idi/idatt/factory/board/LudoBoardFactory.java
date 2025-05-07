@@ -1,11 +1,10 @@
 package edu.ntnu.idi.idatt.factory.board;
 
-import java.io.IOException;
-
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.LudoBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
+import java.io.IOException;
 import javafx.scene.paint.Color;
 
 public class LudoBoardFactory implements BoardFactory {
@@ -32,12 +31,12 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a LudoGameBoard object from an external file.
-   * File handling is delegated to the {@link LudoBoardFileHandlerGson} class.
+   * Creates a LudoGameBoard object from an external file. File handling is delegated to the
+   * {@link LudoBoardFileHandlerGson} class.
    *
-   * @see LudoBoardFileHandlerGson
    * @param filePath The path to the file containing the board data.
    * @return A configured LudoGameBoard object.
+   * @see LudoBoardFileHandlerGson
    */
   @Override
   public Board createBoardFromFile(String filePath) {
@@ -52,13 +51,14 @@ public class LudoBoardFactory implements BoardFactory {
   /**
    * Creates a blank LudoGameBoard object with the given size.
    *
-   * @param rows The size of the board.
+   * @param rows    The size of the board.
    * @param columns The size of the board.
    * @return A configured LudoGameBoard object.
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
-    return new LudoGameBoard("Blank ludo board", "Blank ludo board", "media/boards/whiteBoard.png", rows, new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
+    return new LudoGameBoard("Blank ludo board", "Blank ludo board", "media/boards/whiteBoard.png",
+        rows, new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
   }
 
   /**

@@ -1,17 +1,16 @@
 package edu.ntnu.idi.idatt.controller.common;
 
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.ntnu.idi.idatt.factory.board.BoardFactory;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BoardCreatorController implements ButtonClickObserver {
+
   protected static final Logger logger = LoggerFactory.getLogger(BoardCreatorController.class);
 
   protected final BoardCreatorView view;
@@ -26,17 +25,17 @@ public abstract class BoardCreatorController implements ButtonClickObserver {
     initializeBoard();
     this.boardPane = view.getBoardStackPane();
   }
+
   protected abstract void initializeBoard();
 
   protected abstract void initializeBoardCreatorView();
-  
-  protected abstract void handleUpdateGrid(); 
+
+  protected abstract void handleUpdateGrid();
 
   protected abstract void handleImportBoard(Map<String, Object> params);
 
   protected abstract void handleSaveBoard(Map<String, Object> params);
 
-  
 
   @Override
   public void onButtonClicked(String buttonId) {

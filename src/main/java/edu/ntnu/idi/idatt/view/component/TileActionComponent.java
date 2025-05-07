@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class TileActionComponent extends ImageView {
+
   private final String type;
   private final String imagePath;
   private final Tile tile;
@@ -56,14 +57,16 @@ public class TileActionComponent extends ImageView {
     return portalColorNumber;
   }
 
-  public void updateSizeAndPosition(double tileWidth, double tileHeight, double baseX, double baseY) {
+  public void updateSizeAndPosition(double tileWidth, double tileHeight, double baseX,
+      double baseY) {
     double width = spec.calculateWidth(tileWidth);
     double height = spec.calculateHeight(tileHeight);
 
     setFitWidth(width);
     setFitHeight(height);
 
-    // Adjust offset for components that start from the center of the tile (portals are exceptions as they take up one tile.)
+    // Adjust offset for components that start from the center of the tile (portals are exceptions
+    // as they take up one tile.)
     double offsetX = !type.equals("PORTAL") ? tileWidth / 2 : 0;
     double offsetY = !type.equals("PORTAL") ? -tileHeight / 2 : 0;
 
@@ -72,7 +75,7 @@ public class TileActionComponent extends ImageView {
   }
 
   private void createTileAction() {
-    String typeName = type.substring(0, 1) + type.substring(1).toLowerCase();
+    final String typeName = type.substring(0, 1) + type.substring(1).toLowerCase();
     StringBuilder identifier = new StringBuilder();
     identifier.append(spec.widthTiles());
     identifier.append(spec.widthDirection() == ComponentSpec.Direction.LEFT ? "L" : "R");
@@ -82,16 +85,19 @@ public class TileActionComponent extends ImageView {
     identifier.append("_");
     identifier.append(type.toLowerCase());
     if (type.equals("PORTAL")) {
-        identifier.append("_").append(portalColorNumber); // Add the color number suffix for portals
+      identifier.append("_").append(portalColorNumber); // Add the color number suffix for portals
     }
 
     String description = typeName + " from " + tile.getTileId() + " to " + destinationTileId;
-    
+
     switch (type) {
-        case "LADDER" -> ((LadderGameTile) tile).setLandAction(new LadderAction(identifier.toString(), destinationTileId, description));
-        case "SLIDE" -> ((LadderGameTile) tile).setLandAction(new SlideAction(identifier.toString(), destinationTileId, description));
-        case "PORTAL" -> ((LadderGameTile) tile).setLandAction(new PortalAction(identifier.toString(), destinationTileId, description));
-        default -> throw new IllegalArgumentException("Unknown tile action type: " + type);
+      case "LADDER" -> ((LadderGameTile) tile).setLandAction(
+          new LadderAction(identifier.toString(), destinationTileId, description));
+      case "SLIDE" -> ((LadderGameTile) tile).setLandAction(
+          new SlideAction(identifier.toString(), destinationTileId, description));
+      case "PORTAL" -> ((LadderGameTile) tile).setLandAction(
+          new PortalAction(identifier.toString(), destinationTileId, description));
+      default -> throw new IllegalArgumentException("Unknown tile action type: " + type);
     }
   }
 }

@@ -1,24 +1,24 @@
 package edu.ntnu.idi.idatt.view.ludo;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.MenuView;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class LudoGameMenuView extends MenuView {
-    public LudoGameMenuView() {
-        super(new LudoGameBoardStackPane());
-    }
+
+  public LudoGameMenuView() {
+    super(new LudoGameBoardStackPane());
+  }
 
   /**
-   * Validates the players in the main menu. Disables the start game button if there are not enough players,
-   * or if there are any duplicate colors or token types.
+   * Validates the players in the main menu. Disables the start game button if there are not enough
+   * players, or if there are any duplicate colors or token types.
    */
   @Override
   protected void validatePlayers() {
@@ -29,7 +29,8 @@ public class LudoGameMenuView extends MenuView {
       enableStartGameButton();
     }
 
-    // Find all the unique colors in the main menu, and disable the start game button if there are any duplicates.
+    // Find all the unique colors in the main menu, and disable the start game button if there are
+    // any duplicates.
     Set<Color> uniqueColors = new HashSet<>(
         mainMenuPlayerRows.stream().map(MenuPlayerRow::getColor).toList());
     if (uniqueColors.size() != mainMenuPlayerRows.size()) {
@@ -46,7 +47,8 @@ public class LudoGameMenuView extends MenuView {
   public void setSelectedBoard(Board board) {
     logger.debug("Setting selected board: {}", board.getName());
     selectedBoard = board;
-    boardStackPane.initialize((LudoGameBoard) selectedBoard, ((LudoGameBoard) selectedBoard).getBackground());
+    boardStackPane.initialize((LudoGameBoard) selectedBoard,
+        ((LudoGameBoard) selectedBoard).getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(250);
     boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
     boardTitle.setText(board.getName());

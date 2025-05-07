@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.filehandler;
 
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,11 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.LudoPlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>FileHandler implementation for Player objects.</h3>
@@ -43,9 +42,9 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
         Player player = null;
         if (playerType.equals("ladderGamePlayer")) {
-          player = LadderGamePlayerfromCsvLine(line);
+          player = ladderGamePlayerfromCsvLine(line);
         } else if (playerType.equals("ludoPlayer")) {
-          player = LudoPlayerfromCsvLine(line);
+          player = ludoPlayerfromCsvLine(line);
         }
 
         if (player == null) {
@@ -71,7 +70,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     }
   }
 
-  private Player LadderGamePlayerfromCsvLine(String line) {
+  private Player ladderGamePlayerfromCsvLine(String line) {
     String[] segments = line.split(",");
     if (segments.length != 3) {
       return null;
@@ -80,14 +79,15 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
       String playerName = segments[0].trim();
       String playerColorHex = segments[1].trim();
       String playerTokenType = segments[2].trim();
-      return new LadderGamePlayer(playerName, playerColorHex, PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
+      return new LadderGamePlayer(playerName, playerColorHex,
+          PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
     return null;
   }
 
-  private Player LudoPlayerfromCsvLine(String line) {
+  private Player ludoPlayerfromCsvLine(String line) {
     String[] segments = line.split(",");
     if (segments.length != 2) {
       return null;
@@ -103,7 +103,8 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   private String toCsvLine(Player player) {
-    return String.format("%s,%s,%s", player.getName(), player.getColorHex(), player.getPlayerTokenType().name());
+    return String.format("%s,%s,%s", player.getName(), player.getColorHex(),
+        player.getPlayerTokenType().name());
   }
 
 }
