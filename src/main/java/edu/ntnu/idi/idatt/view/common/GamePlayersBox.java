@@ -1,8 +1,7 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.util.List;
-
 import edu.ntnu.idi.idatt.model.player.Player;
+import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -60,7 +59,8 @@ public abstract class GamePlayersBox extends VBox {
 
   public void setFocusedPlayer(int playerIndex) {
     removeFocusedPlayer();
-    playersBoxRows.get(playerIndex).getStyleClass().add("game-players-box-player-row-current-player");
+    playersBoxRows.get(playerIndex).getStyleClass()
+        .add("game-players-box-player-row-current-player");
   }
 
   public void removeFocusedPlayer() {

@@ -1,13 +1,12 @@
 package edu.ntnu.idi.idatt.model.validator;
 
-import java.util.List;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.model.token.LudoToken.TokenStatus;
+import java.util.List;
 import javafx.scene.paint.Color;
 
 /**
@@ -181,7 +180,8 @@ public class ArgumentValidator {
    * Validates the arguments for the setRowsAndColumns method in LudoGameBoard class.
    *
    * @param rowsAndColumns the rows and columns to set
-   * @throws IllegalArgumentException if rowsAndColumns is null or the rows and columns are not equal
+   * @throws IllegalArgumentException if rowsAndColumns is null or the rows and columns are not
+   *     equal
    */
   public static void ludoGameBoardSetRowsAndColumnsValidator(int[] rowsAndColumns) {
     if (rowsAndColumns == null) {

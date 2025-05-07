@@ -1,11 +1,8 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import java.util.List;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
+import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,8 +19,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MenuPlayerRow extends HBox {
+
   TextField nameTextField;
   Button playerButton;
   Shape playerToken;
@@ -36,7 +35,9 @@ public class MenuPlayerRow extends HBox {
 
   Runnable onUpdate;
 
-  public MenuPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType, List<PlayerTokenType> allowedPlayerTokenTypes, List<String> allowedPlayerColors, boolean removable) {
+  public MenuPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType,
+      List<PlayerTokenType> allowedPlayerTokenTypes, List<String> allowedPlayerColors,
+      boolean removable) {
     this.color = color;
     this.tokenType = playerTokenType;
     this.allowedPlayerTokenTypes = allowedPlayerTokenTypes;
@@ -52,7 +53,8 @@ public class MenuPlayerRow extends HBox {
     playerButton = new Button();
     playerButton.setGraphic(playerToken);
     playerButton.getStyleClass().add("icon-only-button");
-    playerButton.setOnMouseClicked(mouseEvent -> showPlayerColorPickerPopup(mouseEvent.getScreenX(), mouseEvent.getScreenY()));
+    playerButton.setOnMouseClicked(
+        mouseEvent -> showPlayerColorPickerPopup(mouseEvent.getScreenX(), mouseEvent.getScreenY()));
 
     nameTextField = new TextField(defaultName);
     deleteButton = new Button();
@@ -69,7 +71,7 @@ public class MenuPlayerRow extends HBox {
     popup.setAutoHide(true);
     popup.setAutoFix(true);
 
-    Text popupPickColorText = new Text("Pick a color for " + getName());
+    final Text popupPickColorText = new Text("Pick a color for " + getName());
 
     final Node colorPickerNode;
     if (allowedPlayerColors.isEmpty()) {
@@ -95,7 +97,9 @@ public class MenuPlayerRow extends HBox {
           popup.hide();
         });
       });
-      MenuItem initialColorMenuItem = colorMenuButton.getItems().stream().filter(item -> ((Rectangle) item.getGraphic()).getFill().equals(getColor())).findFirst().orElse(colorMenuButton.getItems().get(0));
+      MenuItem initialColorMenuItem = colorMenuButton.getItems().stream()
+          .filter(item -> ((Rectangle) item.getGraphic()).getFill().equals(getColor())).findFirst()
+          .orElse(colorMenuButton.getItems().get(0));
       colorMenuButton.setText(initialColorMenuItem.getText());
       colorMenuButton.setGraphic(initialColorMenuItem.getGraphic());
       colorMenuButton.setOnAction(event -> {
@@ -104,9 +108,9 @@ public class MenuPlayerRow extends HBox {
       colorPickerNode = colorMenuButton;
     }
 
-    HorizontalDivider horizontalDivider = new HorizontalDivider();
+    final HorizontalDivider horizontalDivider = new HorizontalDivider();
 
-    Text popupPickTokenTypeText = new Text("Pick a token for " + getName());
+    final Text popupPickTokenTypeText = new Text("Pick a token for " + getName());
     ComboBox<PlayerTokenType> tokenTypeComboBox = new ComboBox<>();
     tokenTypeComboBox.getItems().addAll(allowedPlayerTokenTypes);
     tokenTypeComboBox.setValue(tokenType);

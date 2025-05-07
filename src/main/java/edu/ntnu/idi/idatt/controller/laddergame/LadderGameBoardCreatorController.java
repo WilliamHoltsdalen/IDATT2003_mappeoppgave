@@ -1,10 +1,5 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.BoardCreatorController;
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.ComponentSpec;
@@ -17,26 +12,31 @@ import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameBoardCreatorView;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 
 public class LadderGameBoardCreatorController extends BoardCreatorController {
+
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
   private static final String SLIDES_PATH_PREFIX = "media/assets/slide/";
   private static final String PORTALS_PATH_PREFIX = "media/assets/portal/";
-  
+
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;
-  
+
   public LadderGameBoardCreatorController(BoardCreatorView view) {
     super(view);
     logger.debug("Constructing LadderGameBoardCreatorController");
-    
+
     this.availableComponents = new HashMap<>();
     this.availableBackgrounds = new HashMap<>();
-    
+
     setAvailableComponents();
     setAvailableBackgrounds();
-    
+
     initializeBoardCreatorView();
   }
 
@@ -45,31 +45,31 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     this.boardFactory = new LadderBoardFactory();
     this.board = (LadderGameBoard) boardFactory.createBlankBoard(9, 10);
   }
-  
+
   private void setAvailableComponents() {
     logger.debug("Setting available components");
     availableComponents.put("Ladder", new String[]{
-      LADDERS_PATH_PREFIX + "1R_1U_ladder.png",
-      LADDERS_PATH_PREFIX + "1L_1U_ladder.png",
-      LADDERS_PATH_PREFIX + "1R_2U_ladder.png",
-      LADDERS_PATH_PREFIX + "1L_2U_ladder.png",
-      LADDERS_PATH_PREFIX + "2R_4U_ladder.png",
-      LADDERS_PATH_PREFIX + "2L_4U_ladder.png"
+        LADDERS_PATH_PREFIX + "1R_1U_ladder.png",
+        LADDERS_PATH_PREFIX + "1L_1U_ladder.png",
+        LADDERS_PATH_PREFIX + "1R_2U_ladder.png",
+        LADDERS_PATH_PREFIX + "1L_2U_ladder.png",
+        LADDERS_PATH_PREFIX + "2R_4U_ladder.png",
+        LADDERS_PATH_PREFIX + "2L_4U_ladder.png"
     });
     availableComponents.put("Slide", new String[]{
-      SLIDES_PATH_PREFIX + "1R_1D_slide.png",
-      SLIDES_PATH_PREFIX + "1L_1D_slide.png",
-      SLIDES_PATH_PREFIX + "1R_2D_slide.png",
-      SLIDES_PATH_PREFIX + "1L_2D_slide.png"
+        SLIDES_PATH_PREFIX + "1R_1D_slide.png",
+        SLIDES_PATH_PREFIX + "1L_1D_slide.png",
+        SLIDES_PATH_PREFIX + "1R_2D_slide.png",
+        SLIDES_PATH_PREFIX + "1L_2D_slide.png"
     });
     availableComponents.put("Portal", new String[]{
-      PORTALS_PATH_PREFIX + "1R_1U_portal_1.png",
-      PORTALS_PATH_PREFIX + "1R_1U_portal_2.png",
-      PORTALS_PATH_PREFIX + "1R_1U_portal_3.png"
+        PORTALS_PATH_PREFIX + "1R_1U_portal_1.png",
+        PORTALS_PATH_PREFIX + "1R_1U_portal_2.png",
+        PORTALS_PATH_PREFIX + "1R_1U_portal_3.png"
     });
     availableComponents.put("Other", new String[]{});
   }
-  
+
   private void setAvailableBackgrounds() {
     logger.debug("Setting available backgrounds");
     availableBackgrounds.put("White", "media/boards/whiteBoard.png");
@@ -98,10 +98,11 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     });
     logger.debug("Board creator view initialized successfully");
   }
-  
+
   private void handleComponentDropped(ComponentDropEventData data) {
     logger.debug("Handling component dropped event");
-    TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap().get(data.cell());
+    TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap()
+        .get(data.cell());
     placeComponent(data.componentIdentifier(), coordinates);
     boardPane.updateBoardVisuals();
   }
@@ -112,7 +113,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
   }
 
   private String getBackgroundImagePath() {
-    return availableBackgrounds.get(((LadderGameBoardCreatorView) view).getBackgroundComboBox().getValue());
+    return availableBackgrounds.get(((LadderGameBoardCreatorView) view).getBackgroundComboBox()
+        .getValue());
   }
 
   public void removeComponentsOutsideGrid() {
@@ -122,17 +124,21 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     LadderGameBoard gameBoard = (LadderGameBoard) board;
     Map<TileCoordinates, TileActionComponent> newPlacedComponents = new HashMap<>();
     boardPane.getComponents().forEach((coordinates, component) -> {
-      if (coordinates.row() < gameBoard.getRowsAndColumns()[0] && coordinates.col() < gameBoard.getRowsAndColumns()[1]) {
-        ComponentSpec spec = ComponentSpec.fromFilename(component.getImagePath().substring(component.getImagePath().lastIndexOf("/") + 1));
+      if (coordinates.row() < gameBoard.getRowsAndColumns()[0]
+          && coordinates.col() < gameBoard.getRowsAndColumns()[1]) {
+        ComponentSpec spec = ComponentSpec.fromFilename(component.getImagePath()
+            .substring(component.getImagePath().lastIndexOf("/") + 1));
         int[] destinationCoords = calculateDestinationCoordinates(coordinates, spec);
 
-        if (destinationCoords[0] >= 0 && destinationCoords[0] < gameBoard.getRowsAndColumns()[0] &&
-            destinationCoords[1] >= 0 && destinationCoords[1] < gameBoard.getRowsAndColumns()[1]) {
-          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0], destinationCoords[1], gameBoard.getRowsAndColumns()[1]);
-          newPlacedComponents.put(coordinates, 
+        if (destinationCoords[0] >= 0 && destinationCoords[0] < gameBoard.getRowsAndColumns()[0]
+            && destinationCoords[1] >= 0
+            && destinationCoords[1] < gameBoard.getRowsAndColumns()[1]) {
+          int destinationTileId = ViewUtils.calculateTileId(destinationCoords[0],
+              destinationCoords[1], gameBoard.getRowsAndColumns()[1]);
+          newPlacedComponents.put(coordinates,
               new TileActionComponent(component.getType(), component.getImagePath(),
-                  gameBoard.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), gameBoard.getRowsAndColumns()[1])), 
-                  destinationTileId));
+                  gameBoard.getTile(ViewUtils.calculateTileId(coordinates.row(), coordinates.col(),
+                      gameBoard.getRowsAndColumns()[1])), destinationTileId));
         }
       }
     });
@@ -144,11 +150,13 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     return switch (spec.type()) {
       case LADDER -> new int[]{
           origin.row() + spec.heightTiles(),
-          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT
+              ? spec.widthTiles() : -spec.widthTiles())
       };
       case SLIDE -> new int[]{
           origin.row() - spec.heightTiles(),
-          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT ? spec.widthTiles() : -spec.widthTiles())
+          origin.col() + (spec.widthDirection() == ComponentSpec.Direction.RIGHT
+              ? spec.widthTiles() : -spec.widthTiles())
       };
       case PORTAL -> {
         // Portals get a new random destination every time.
@@ -158,7 +166,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
         List<Integer> occupiedTiles = boardPane.getComponents().values().stream()
             .map(TileActionComponent::getDestinationTileId)
             .toList();
-        int destinationTileId = ViewUtils.randomPortalDestination(originTileId, rows * columns, occupiedTiles);
+        int destinationTileId = ViewUtils.randomPortalDestination(originTileId,
+            rows * columns, occupiedTiles);
         int[] coords = board.getTile(destinationTileId).getCoordinates();
         yield new int[]{coords[0], coords[1]};
       }
@@ -171,7 +180,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
       boardPane.addComponent(componentIdentifier, coordinates);
       updateViewComponentList();
     } catch (IllegalArgumentException e) {
-      Platform.runLater(() -> view.showErrorAlert("Could not place component", e.getMessage()));
+      Platform.runLater(() -> view.showErrorAlert("Could not place component",
+          e.getMessage()));
       logger.warn("Could not place component: {}", componentIdentifier);
     }
   }
@@ -186,19 +196,25 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     logger.debug("Updating view component list");
     ((LadderGameBoardCreatorView) view).getComponentListContent().getChildren().clear();
     boardPane.getComponents().forEach((coordinates, component) -> {
-      String displayName = component.getType().substring(0, 1).toUpperCase() + component.getType().substring(1);
-      int originTileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(), ((LadderGameBoard) board).getRowsAndColumns()[1]);
+      String displayName = component.getType().substring(0, 1).toUpperCase()
+          + component.getType().substring(1);
+      int originTileId = ViewUtils.calculateTileId(coordinates.row(), coordinates.col(),
+          ((LadderGameBoard) board).getRowsAndColumns()[1]);
       int destinationTileId = component.getDestinationTileId();
-      ((LadderGameBoardCreatorView) view).addToComponentList(displayName, component.getImage(), () -> removeComponent(coordinates), originTileId, destinationTileId);
+      ((LadderGameBoardCreatorView) view).addToComponentList(displayName, component.getImage(),
+          () -> removeComponent(coordinates), originTileId, destinationTileId);
     });
-    logger.debug("Added {} components to view component list", ((LadderGameBoardCreatorView) view).getComponentListContent().getChildren().size());
+    logger.debug("Added {} components to view component list", ((LadderGameBoardCreatorView) view)
+        .getComponentListContent().getChildren().size());
   }
 
-  
+
   @Override
   protected void handleUpdateGrid() {
     logger.debug("Handling update grid");
-    ((LadderGameBoard) board).setRowsAndColumns(new int[]{((LadderGameBoardCreatorView) view).getRowsSpinner().getValue(), ((LadderGameBoardCreatorView) view).getColumnsSpinner().getValue()});
+    ((LadderGameBoard) board).setRowsAndColumns(new int[]{((LadderGameBoardCreatorView) view)
+        .getRowsSpinner().getValue(),
+        ((LadderGameBoardCreatorView) view).getColumnsSpinner().getValue()});
     boardPane.setBoard(board);
     boardPane.updateGrid();
     updateViewComponentList();
@@ -206,7 +222,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
 
   private void handleUpdatePattern() {
     logger.debug("Handling update pattern");
-    ((LadderGameBoard) boardPane.getBoard()).setPattern(((LadderGameBoardCreatorView) view).getPatternComboBox().getValue());
+    ((LadderGameBoard) boardPane.getBoard()).setPattern(((LadderGameBoardCreatorView) view)
+        .getPatternComboBox().getValue());
     boardPane.applyPattern();
   }
 
@@ -216,7 +233,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     String path = (String) params.get("path");
     Board importedBoard = boardFactory.createBoardFromFile(path);
     if (importedBoard == null) {
-      Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
+      Platform.runLater(() -> view.showErrorAlert("Failed to import board",
+          "The board file is empty or invalid."));
       return;
     }
     board = (LadderGameBoard) importedBoard;
@@ -260,7 +278,8 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
           "You can now load the board from the main menu, and start playing!"));
       logger.info("Board saved successfully!");
     } catch (IOException | IllegalArgumentException e) {
-      Platform.runLater(() -> view.showErrorAlert("Failed to save board", e.getMessage()));
+      Platform.runLater(() -> view.showErrorAlert("Failed to save board",
+          e.getMessage()));
       logger.warn("Failed to save board: {}", e.getMessage());
     }
   }

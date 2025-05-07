@@ -1,9 +1,5 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.BoardCreatorController;
 import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
@@ -12,7 +8,11 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.ludo.LudoBoardCreatorView;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
+
 public class LudoBoardCreatorController extends BoardCreatorController {
 
   public LudoBoardCreatorController(BoardCreatorView view) {
@@ -43,7 +43,8 @@ public class LudoBoardCreatorController extends BoardCreatorController {
   @Override
   protected void handleUpdateGrid() {
     logger.debug("Handling update grid");
-    ((LudoGameBoard) board).setBoardSize(((LudoBoardCreatorView) view).getBoardSizeSpinner().getValue());
+    ((LudoGameBoard) board).setBoardSize(
+        ((LudoBoardCreatorView) view).getBoardSizeSpinner().getValue());
     boardPane.setBoard(board);
     boardPane.updateGrid();
   }
@@ -55,26 +56,27 @@ public class LudoBoardCreatorController extends BoardCreatorController {
     try {
       Board importedBoard = boardFactory.createBoardFromFile(path);
       if (importedBoard == null) {
-        Platform.runLater(() -> view.showErrorAlert("Failed to import board", "The board file is empty or invalid."));
+        Platform.runLater(() -> view.showErrorAlert("Failed to import board",
+            "The board file is empty or invalid."));
         return;
-      } 
+      }
       board = (LudoGameBoard) importedBoard;
     } catch (Exception e) {
-      Platform.runLater(() -> view.showErrorAlert("Failed to import board", 
-      "The file does not contain a valid Ludo board."));
+      Platform.runLater(() -> view.showErrorAlert("Failed to import board",
+          "The file does not contain a valid Ludo board."));
       logger.warn("Failed to import board. Check if the file contains a valid Ludo board");
       return;
     }
-    
+
     int boardSize = ((LudoGameBoard) board).getBoardSize();
     ((LudoBoardCreatorView) view).setBoardSizeSpinner(boardSize);
     view.getNameField().setText(board.getName());
     view.getDescriptionField().setText(board.getDescription());
-    
+
     boardPane.initialize(board, board.getBackground());
     Platform.runLater(() -> {
       view.showInfoAlert("Success!",
-        "The board has been imported successfully!");
+          "The board has been imported successfully!");
       logger.info("Board imported successfully");
     });
   }
@@ -86,7 +88,7 @@ public class LudoBoardCreatorController extends BoardCreatorController {
       board = (LudoGameBoard) boardPane.getBoard();
       board.setName(view.getNameField().getText());
       board.setDescription(view.getDescriptionField().getText());
-      
+
       String path = (String) params.get("path");
       FileHandler<Board> fileHandler = new LudoBoardFileHandlerGson();
       fileHandler.writeFile(path, List.of(board));
@@ -99,5 +101,5 @@ public class LudoBoardCreatorController extends BoardCreatorController {
       logger.warn("Failed to save board: {}", e.getMessage());
     }
   }
-  
+
 }

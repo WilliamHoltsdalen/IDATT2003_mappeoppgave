@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.view.ludo;
 
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
@@ -16,14 +14,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class LudoBoardCreatorView extends BoardCreatorView {
+
   private final Spinner<Integer> boardSizeSpinner;
   private ChangeListener<Integer> boardSizeListener;
-  
+
   public LudoBoardCreatorView() {
     super();
-    
+
     this.boardSizeSpinner = new Spinner<>();
   }
 
@@ -33,23 +33,24 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     boardContainer.getStyleClass().add("board-creator-board-container");
     return boardContainer;
   }
-  
+
   public Spinner<Integer> getBoardSizeSpinner() {
     return boardSizeSpinner;
   }
 
   public void setBoardSizeSpinner(int size) {
     boardSizeSpinner.valueProperty().removeListener(boardSizeListener);
-    boardSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(9, 21, size, 2));
+    boardSizeSpinner.setValueFactory(
+        new SpinnerValueFactory.IntegerSpinnerValueFactory(9, 21, size, 2));
     boardSizeSpinner.valueProperty().addListener(boardSizeListener);
   }
-  
+
   public void initializeView(LudoGameBoard board) {
     logger.debug("Initializing LudoBoardCreatorView");
-    
+
     super.getBoardStackPane().initialize(board, board.getBackground());
     super.getBoardStackPane().getBackgroundImageView().setFitWidth(455);
-    
+
     VBox centerPanel = new VBox(createBoardConfigurationPanel(), super.getBoardStackPane());
     centerPanel.setAlignment(Pos.CENTER);
     centerPanel.setSpacing(20);
@@ -57,54 +58,56 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     VBox leftPanel = createLeftInfoPanel();
     VBox rightPanel = createMenuPanel();
     rightPanel.setMaxHeight(Region.USE_PREF_SIZE);
-    
+
     this.setLeft(leftPanel);
     this.setCenter(centerPanel);
     this.setRight(rightPanel);
     this.getStyleClass().add("board-creator-view");
     logger.debug("LudoBoardCreatorView initialized successfully");
   }
-  
+
   private VBox createBoardConfigurationPanel() {
     VBox panel = new VBox(15);
     panel.getStyleClass().add("board-config-section");
     panel.setAlignment(Pos.CENTER_LEFT);
     panel.setPadding(new Insets(20));
-    
+
     HBox nameAndDescriptionBox = new HBox(20);
     nameAndDescriptionBox.setAlignment(Pos.CENTER_LEFT);
-    
+
     VBox nameBox = new VBox(5);
     Label nameLabel = new Label("Board Name");
     super.getNameField().setPromptText("Board Name");
     nameBox.getChildren().addAll(nameLabel, super.getNameField());
-    
+
     VBox descriptionBox = new VBox(5);
     Label descriptionLabel = new Label("Description");
     super.getDescriptionField().setPromptText("Description");
     descriptionBox.getChildren().addAll(descriptionLabel, super.getDescriptionField());
-    
+
     Button importBoardButton = new Button("Import board");
     importBoardButton.getStyleClass().add("import-board-button");
     importBoardButton.setOnAction(e -> handleImportBoard());
     nameAndDescriptionBox.getChildren().setAll(nameBox, descriptionBox, importBoardButton);
-    
-    HBox boardOptionsBox = new HBox(20);
-    
+
+    final HBox boardOptionsBox = new HBox(20);
+
     VBox boardSizeBox = new VBox(5);
     boardSizeBox.getStyleClass().add("board-config-spinner");
-    Label boardSizeLabel = new Label("Board Size");
-    boardSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(9, 21, 15, 2));
+    final Label boardSizeLabel = new Label("Board Size");
+    boardSizeSpinner.setValueFactory(
+        new SpinnerValueFactory.IntegerSpinnerValueFactory(9, 21, 15, 2));
     boardSizeListener = (obs, oldVal, newVal) -> notifyObservers("update_grid");
     boardSizeSpinner.valueProperty().addListener(boardSizeListener);
     boardSizeBox.getChildren().addAll(boardSizeLabel, boardSizeSpinner);
-    
+
     boardOptionsBox.getChildren().addAll(boardSizeBox);
-    
+
     panel.getChildren().setAll(nameAndDescriptionBox, boardOptionsBox);
     panel.getStyleClass().add("board-creator-panel");
-    
-    panel.setMaxWidth(super.getBoardStackPane().getBackgroundImageView().getFitWidth() + 40); // 40px for padding
+
+    panel.setMaxWidth(
+        super.getBoardStackPane().getBackgroundImageView().getFitWidth() + 40); // 40px for padding
     return panel;
   }
 

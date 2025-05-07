@@ -1,21 +1,16 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -32,20 +27,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <h3>Abstract class for all menu views.</h3>
- * 
+ *
  * <p>This class provides a base implementation for all menu views.
  * It contains common functionality for all menu views, such as adding and removing player rows,
- * disabling and enabling the start game button, and creating the header box. 
- * 
+ * disabling and enabling the start game button, and creating the header box.
+ *
  * <p>This class extends {@link VBox}, and implements {@link ButtonClickSubject}.
- * 
+ *
  * @see VBox
  * @see ButtonClickSubject
  */
 public abstract class MenuView extends VBox implements ButtonClickSubject {
+
   protected static final Logger logger = LoggerFactory.getLogger(MenuView.class);
   protected final List<ButtonClickObserver> observers;
   protected final List<PlayerTokenType> allowedPlayerTokenTypes;
@@ -103,8 +102,8 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
   /**
    * Initializes the menu view.
-   * 
-   * @param title The title of the menu view.
+   *
+   * @param title                   The title of the menu view.
    * @param allowedPlayerTokenTypes The allowed player token types.
    */
   public void initialize(String title, List<PlayerTokenType> allowedPlayerTokenTypes,
@@ -136,7 +135,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   }
 
   /**
-   * Creates a start game button that notifies the observers when clicked. 
+   * Creates a start game button that notifies the observers when clicked.
    *
    * @return The start game button.
    */
@@ -149,7 +148,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   /**
    * Creates a header box with a title, and buttons.
    *
-   * @return The header HBox. 
+   * @return The header HBox.
    */
   protected HBox createHeaderBox(String title) {
     Button backButton = new Button("Game selection");
@@ -169,7 +168,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
     return headerBox;
   }
-  
+
   /**
    * Creates a player selection box with a title, options, and player list.
    *
@@ -205,7 +204,8 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
       addPlayerRow("Player 2", Color.GREEN, true);
     }
 
-    Supplier<Color> getPlayerRowDefaultColor = () -> allowedPlayerColors.isEmpty() ? Color.BLUE : Color.web(allowedPlayerColors.get(mainMenuPlayerRows.size()));
+    Supplier<Color> getPlayerRowDefaultColor = () -> allowedPlayerColors.isEmpty() ? Color.BLUE
+        : Color.web(allowedPlayerColors.get(mainMenuPlayerRows.size()));
 
     Button addPlayerButton = new Button("Add Player");
     addPlayerButton.setOnAction(event -> addPlayerRow(
@@ -233,8 +233,8 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    */
   protected VBox createBoardSelectionBox() {
     Text boardSelectionTitle = new Text("Select a board");
-    boardSelectionTitle.getStyleClass().add("main-menu-selection-box-title"); 
-    
+    boardSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
+
     MenuButton boardOptionsMenu = new MenuButton("Options");
     boardOptionsMenu.getStyleClass().add("main-menu-options-menu");
 
@@ -279,7 +279,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     vBox.getStyleClass().add("main-menu-board-selection");
     return vBox;
   }
-  
+
   /**
    * Sets the players in the menu to the given list of players.
    *
@@ -289,26 +289,30 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     logger.debug("Setting players: {}", players);
     mainMenuPlayerRows.clear();
     playerListBox.getChildren().clear();
-    players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()), !mainMenuPlayerRows.isEmpty()));
+    players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()),
+        !mainMenuPlayerRows.isEmpty()));
   }
 
   /**
-   * Adds a new player row to the main menu with the given name, color, and removable status. 
+   * Adds a new player row to the main menu with the given name, color, and removable status.
    *
    * @param defaultName The default name of the player.
-   * @param color The color of the player.
-   * @param removable The removable status of the player.
+   * @param color       The color of the player.
+   * @param removable   The removable status of the player.
    */
   protected void addPlayerRow(String defaultName, Color color, boolean removable) {
-    PlayerTokenType playerToken = allowedPlayerTokenTypes.size() >= minimumPlayers ? allowedPlayerTokenTypes.get(playerListBox.getChildren().size()) : allowedPlayerTokenTypes.get(0);
-    MenuPlayerRow mainMenuPlayerRow = new MenuPlayerRow(defaultName, color, playerToken, allowedPlayerTokenTypes, allowedPlayerColors, removable);
+    PlayerTokenType playerToken =
+        allowedPlayerTokenTypes.size() >= minimumPlayers ? allowedPlayerTokenTypes.get(
+            playerListBox.getChildren().size()) : allowedPlayerTokenTypes.get(0);
+    MenuPlayerRow mainMenuPlayerRow = new MenuPlayerRow(defaultName, color, playerToken,
+        allowedPlayerTokenTypes, allowedPlayerColors, removable);
     mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
     mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);
     playerListBox.getChildren().add(mainMenuPlayerRow);
 
     logger.debug("Added player row: {}", mainMenuPlayerRow);
-  
+
     updateControls();
   }
 
@@ -326,24 +330,25 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   }
 
   /**
-   * Updates the controls of the main menu view based on the number of players in the main menu,
-   * and disables the start game button if there are not enough players. The button is also disabled
-   * if there are any players with the same color and token type.
+   * Updates the controls of the main menu view based on the number of players in the main menu, and
+   * disables the start game button if there are not enough players. The button is also disabled if
+   * there are any players with the same color and token type.
    */
   protected void updateControls() {
     // Hide / show the add player buttons box based on the number of players in the main menu.
     if (mainMenuPlayerRows.size() == maximumPlayers) {
       playerSelectionBox.getChildren().remove(addPlayerButtonsBox);
     } else if (mainMenuPlayerRows.size() < maximumPlayers) {
-      playerSelectionBox.getChildren().setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
+      playerSelectionBox.getChildren()
+          .setAll(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
     }
 
     validatePlayers();
   }
 
   /**
-   * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum
-   * of two players are required to start the game.
+   * Disables the 'start game' button and shows a tooltip when hovering over it that a minimum of
+   * two players are required to start the game.
    */
   protected void disableStartGameButton(String toolTipText) {
     startGameButton.setOnAction(null);
@@ -397,7 +402,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
       return;
     }
     notifyObserversWithParams("import_board", Map.of("file", file));
-  } 
+  }
 
   protected void handleCreateBoard() {
     notifyObservers("create_board");
@@ -457,7 +462,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    * Notifies the observers of a button click with params.
    *
    * @param buttonId The id of the button that was clicked.
-   * @param params The params of the button that was clicked.
+   * @param params   The params of the button that was clicked.
    */
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {

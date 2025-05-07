@@ -14,7 +14,7 @@ import javafx.scene.shape.Shape;
  */
 public class PlayerTokenFactory {
 
-  /** Private constructor to prevent instantiation */
+  /** Private constructor to prevent instantiation. */
   private PlayerTokenFactory() {}
 
   /**

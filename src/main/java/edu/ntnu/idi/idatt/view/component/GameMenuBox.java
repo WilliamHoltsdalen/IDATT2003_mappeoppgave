@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
  */
 public class GameMenuBox extends VBox {
   private final ScrollPane gameLogScrollPane;
-  private final VBox gameLogRoundBoxesVBox;
+  private final VBox gameLogRoundBoxesVbox;
   private final CheckBox rollForAllPlayersCheckBox;
   private final CheckBox animatedDiceCheckBox;
   private final AnimatedDie[] dice;
@@ -37,7 +37,7 @@ public class GameMenuBox extends VBox {
    */
   public GameMenuBox(int diceCount) {
     gameLogScrollPane = new ScrollPane();
-    gameLogRoundBoxesVBox = new VBox();
+    gameLogRoundBoxesVbox = new VBox();
     rollForAllPlayersCheckBox = new CheckBox();
     animatedDiceCheckBox = new CheckBox();
     animatedDiceCheckBox.setSelected(true); // Default to animated
@@ -84,26 +84,23 @@ public class GameMenuBox extends VBox {
       }
     });
 
-    HBox buttonsHBox = new HBox(restartGameButton, quitGameButton);
-    buttonsHBox.getStyleClass().add("game-menu-buttons-h-box");
+    HBox buttonsHbox = new HBox(restartGameButton, quitGameButton);
+    buttonsHbox.getStyleClass().add("game-menu-buttons-h-box");
 
     HorizontalDivider horizontalDividerTop = new HorizontalDivider();
 
-    VBox menuTopBox = new VBox(buttonsHBox, horizontalDividerTop);
+    VBox menuTopBox = new VBox(buttonsHbox, horizontalDividerTop);
     menuTopBox.getStyleClass().add("game-menu-top-box");
 
     // Middle part of the menu, containing the game log
-    gameLogRoundBoxesVBox.getStyleClass().add("game-menu-game-log-round-boxes-vbox");
-    gameLogScrollPane.setContent(gameLogRoundBoxesVBox);
+    gameLogRoundBoxesVbox.getStyleClass().add("game-menu-game-log-round-boxes-vbox");
+    gameLogScrollPane.setContent(gameLogRoundBoxesVbox);
     gameLogScrollPane.getStyleClass().add("game-menu-game-log-scroll-pane");
     gameLogScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     gameLogScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    gameLogRoundBoxesVBox.heightProperty().addListener(observable ->
+    gameLogRoundBoxesVbox.heightProperty().addListener(observable ->
         gameLogScrollPane.setVvalue(1.0));
     addGameLogRoundBox(1);
-
-    // Lower part of the menu, containing the controls for rolling the dice
-    HorizontalDivider horizontalDividerBottom = new HorizontalDivider();
 
     Button rollDiceButton = new Button("Roll dice");
     rollDiceButton.getStyleClass().add("game-menu-roll-dice-button");
@@ -132,13 +129,18 @@ public class GameMenuBox extends VBox {
     optionsGrid.add(animatedDiceText, 0, 2);
     optionsGrid.add(animatedDiceCheckBox, 1, 2);
 
-    VBox menuBottomBox = new VBox(horizontalDividerBottom, diceContainer, rollDiceButton, optionsGrid);
+    // Lower part of the menu, containing the controls for rolling the dice
+    HorizontalDivider horizontalDividerBottom = new HorizontalDivider();
+
+    VBox menuBottomBox = new VBox(horizontalDividerBottom, diceContainer, rollDiceButton,
+        optionsGrid);
     menuBottomBox.getStyleClass().add("game-menu-bottom-box");
 
     this.getChildren().setAll(menuTopBox, gameLogScrollPane, menuBottomBox);
 
     // Hide dice and animation option when 'Roll for all players' is checked
-    rollForAllPlayersCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+    rollForAllPlayersCheckBox.selectedProperty().addListener((obs,
+        wasSelected, isSelected) -> {
       diceContainer.setVisible(!isSelected);
       diceContainer.setManaged(!isSelected);
       animatedDiceCheckBox.setVisible(!isSelected);
@@ -170,7 +172,7 @@ public class GameMenuBox extends VBox {
     VBox gameLogRoundBox = new VBox(roundBoxRoundNumberText);
     HBox.setHgrow(gameLogRoundBox, Priority.ALWAYS);
     gameLogRoundBox.getStyleClass().add("game-menu-game-log-round-box");
-    gameLogRoundBoxesVBox.getChildren().add(gameLogRoundBox);
+    gameLogRoundBoxesVbox.getChildren().add(gameLogRoundBox);
   }
 
   /**
@@ -184,7 +186,7 @@ public class GameMenuBox extends VBox {
     entryText.getStyleClass().add("game-menu-game-log-round-box-entry");
     entryText.setWrappingWidth(200);
 
-    VBox roundBox = (VBox) gameLogRoundBoxesVBox.getChildren().getLast();
+    VBox roundBox = (VBox) gameLogRoundBoxesVbox.getChildren().getLast();
     roundBox.getChildren().add(entryText);
   }
 

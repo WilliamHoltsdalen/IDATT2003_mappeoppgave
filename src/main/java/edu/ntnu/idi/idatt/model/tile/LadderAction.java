@@ -1,12 +1,13 @@
 package edu.ntnu.idi.idatt.model.tile;
 
-import edu.ntnu.idi.idatt.model.board.Board;
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionPerformValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDescriptionValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetDestinationTileIdValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileActionSetIdentifierValidator;
+
+import edu.ntnu.idi.idatt.model.board.Board;
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
  * <h3>LadderAction class</h3>

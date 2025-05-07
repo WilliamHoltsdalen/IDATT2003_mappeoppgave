@@ -1,15 +1,16 @@
 package edu.ntnu.idi.idatt.view.util;
-import java.util.List;
-import java.util.Random;
 
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
+import java.util.List;
+import java.util.Random;
 
 /**
- * Utility class containing helper methods for view-related operations. This
- * class provides static methods for common view calculations and conversions.
+ * Utility class containing helper methods for view-related operations. This class provides static
+ * methods for common view calculations and conversions.
  */
 public class ViewUtils {
+
   private static final Random random = new Random();
 
   /**
@@ -19,14 +20,13 @@ public class ViewUtils {
   }
 
   /**
-   * Converts ladder board coordinates (row, column) to screen coordinates (x, y).
-   * The ladder board uses a coordinate system with origin at the bottom left, while
-   * the screen uses a coordinate system with origin at the top left.
+   * Converts ladder board coordinates (row, column) to screen coordinates (x, y). The ladder board
+   * uses a coordinate system with origin at the bottom left, while the screen uses a coordinate
+   * system with origin at the top left.
    *
-   * @param coordinates the array of coordinates (in the board's coordinate
-   * system (row, column))
-   * @param board the game board containing dimension information
-   * @param boardWidth the visual width of the board on screen
+   * @param coordinates the array of coordinates (in the board's coordinate system (row, column))
+   * @param board       the game board containing dimension information
+   * @param boardWidth  the visual width of the board on screen
    * @param boardHeight the visual height of the board on screen
    * @return the array of coordinates in the screen's coordinate system (x, y)
    */
@@ -47,10 +47,9 @@ public class ViewUtils {
   /**
    * Converts ludo board coordinates (row, column) to screen coordinates (x, y).
    *
-   * @param coordinates the array of coordinates (in the board's coordinate
-   * system (row, column))
-   * @param board the game board containing dimension information
-   * @param boardWidth the visual width of the board on screen
+   * @param coordinates the array of coordinates (in the board's coordinate system (row, column))
+   * @param board       the game board containing dimension information
+   * @param boardWidth  the visual width of the board on screen
    * @param boardHeight the visual height of the board on screen
    * @return the array of coordinates in the screen's coordinate system (x, y)
    */
@@ -66,11 +65,11 @@ public class ViewUtils {
   }
 
   /**
-   * Calculates the tile ID for a given row and column in a snake pattern
-   * board. The pattern starts from bottom left and snakes upward.
+   * Calculates the tile ID for a given row and column in a snake pattern board. The pattern starts
+   * from bottom left and snakes upward.
    *
-   * @param row the row number (0-based, from bottom)
-   * @param col the column number (0-based, from left)
+   * @param row     the row number (0-based, from bottom)
+   * @param col     the column number (0-based, from left)
    * @param columns total number of columns
    * @return the tile ID for the given position
    */

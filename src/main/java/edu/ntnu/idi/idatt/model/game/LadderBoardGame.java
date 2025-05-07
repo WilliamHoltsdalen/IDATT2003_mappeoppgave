@@ -1,7 +1,5 @@
 package edu.ntnu.idi.idatt.model.game;
 
-import java.util.List;
-
 import edu.ntnu.idi.idatt.controller.laddergame.LadderGameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
@@ -9,6 +7,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
+import java.util.List;
 
 /**
  * <h3>LadderBoardGame class</h3>
@@ -39,6 +38,7 @@ public class LadderBoardGame extends BoardGame {
 
   /**
    * Gets the winner of the game.
+   *
    * @return The winning player, or null if there is no winner
    */
   @Override
@@ -68,7 +68,8 @@ public class LadderBoardGame extends BoardGame {
    * Handles tile actions for the current player.
    */
   protected void handleTileAction() {
-    TileAction landAction = ((LadderGameTile) ((LadderGamePlayer) currentPlayer).getCurrentTile()).getLandAction();
+    TileAction landAction = ((LadderGameTile) ((LadderGamePlayer) currentPlayer).getCurrentTile())
+        .getLandAction();
     if (landAction == null) {
       return;
     }
@@ -119,15 +120,17 @@ public class LadderBoardGame extends BoardGame {
 
   /**
    * Notifies the observers that a tile action has been performed.
-   * 
+   *
    * @param player the player that performed the action
    * @param tileAction the tile action
    */
   public void notifyTileActionPerformed(Player player, TileAction tileAction) {
-    observers.forEach(observer -> ((LadderGameController) observer).onTileActionPerformed(player, tileAction));
+    observers.forEach(observer -> ((LadderGameController) observer)
+        .onTileActionPerformed(player, tileAction));
   }
 
   private void notifyPlayerMoved(Player player, int diceRoll, int newTileId) {
-    observers.forEach(observer -> ((LadderGameController) observer).onPlayerMoved(player, diceRoll, newTileId));
+    observers.forEach(observer -> ((LadderGameController) observer)
+        .onPlayerMoved(player, diceRoll, newTileId));
   }
 } 

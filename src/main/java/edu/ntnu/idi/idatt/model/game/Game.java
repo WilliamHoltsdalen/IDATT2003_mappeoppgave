@@ -1,10 +1,9 @@
 package edu.ntnu.idi.idatt.model.game;
 
-import java.util.List;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
+import java.util.List;
 
 /**
  * <h3>Game interface</h3>

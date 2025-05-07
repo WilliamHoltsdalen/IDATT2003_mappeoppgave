@@ -1,23 +1,21 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BoardStackPane extends StackPane {
   protected static final Logger logger = LoggerFactory.getLogger(BoardStackPane.class);
@@ -62,6 +60,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the image path for the component.
+   *
    * @param componentIdentifier the identifier of the component
    * @return the image path for the component
    */
@@ -69,7 +68,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Adds a component to the board.
-   * 
+   *
    * @param componentIdentifier the identifier of the component
    * @param coordinates the coordinates of the component
    */
@@ -86,7 +85,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Creates a row cell for the board.
-   * 
+   *
    * @param cellWidth the width of the cell
    * @param cellHeight the height of the cell
    * @param row the row of the cell
@@ -97,7 +96,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Initializes the board stack pane.
-   * 
+   *
    * @param board the board
    * @param backgroundImagePath the background image path
    */
@@ -110,7 +109,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the cell to coordinates map.
-   * 
+   *
    * @return the cell to coordinates map
    */
   public Map<Rectangle, TileCoordinates> getCellToCoordinatesMap() {
@@ -119,7 +118,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the components.
-   * 
+   *
    * @return the components
    */
   public Map<TileCoordinates, TileActionComponent> getComponents() {
@@ -128,7 +127,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the board dimensions.
-   * 
+   *
    * @return the board dimensions
    */
   public double[] getBoardDimensions() {
@@ -137,7 +136,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the board.
-   * 
+   *
    * @return the board
    */
   public Board getBoard() {
@@ -146,7 +145,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the background image view.
-   * 
+   *
    * @return the background image view
    */
   public ImageView getBackgroundImageView() {
@@ -155,7 +154,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the components pane.
-   * 
+   *
    * @return the components pane
    */
   public Pane getComponentsPane() {
@@ -164,7 +163,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Gets the grid container.
-   * 
+   *
    * @return the grid container
    */
   public VBox getGridContainer() {
@@ -173,7 +172,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Sets the background.
-   * 
+   *
    * @param backgroundImagePath the background image path
    */
   public void setBackground(String backgroundImagePath) {
@@ -185,7 +184,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Sets the board.
-   * 
+   *
    * @param board the board
    */
   public void setBoard(Board board) {
@@ -195,7 +194,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Sets the board dimensions.
-   * 
+   *
    * @param boardDimensions the board dimensions
    */
   public void setBoardDimensions(double[] boardDimensions) {
@@ -205,7 +204,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Sets the on component dropped.
-   * 
+   *
    * @param onComponentDropped the on component dropped
    */
   public void setOnComponentDropped(Consumer<ComponentDropEventData> onComponentDropped) {
@@ -214,7 +213,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Sets the on remove components outside grid.
-   * 
+   *
    * @param onRemoveComponentsOutsideGrid the on remove components outside grid
    */
   public void setOnRemoveComponentsOutsideGrid(Runnable onRemoveComponentsOutsideGrid) {
@@ -250,7 +249,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Removes a component from the board.
-   * 
+   *
    * @param coordinates the coordinates of the component
    */
   public void removeComponent(TileCoordinates coordinates) {
@@ -261,7 +260,7 @@ public abstract class BoardStackPane extends StackPane {
 
   /**
    * Finds a cell by coordinates.
-   * 
+   *
    * @param coordinates the coordinates of the cell
    * @return the cell
    */

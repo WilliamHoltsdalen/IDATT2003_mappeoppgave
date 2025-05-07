@@ -1,11 +1,10 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
-import java.util.List;
-
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.view.common.GamePlayerRow;
 import edu.ntnu.idi.idatt.view.common.GamePlayersBox;
 import edu.ntnu.idi.idatt.view.component.HorizontalDivider;
+import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;

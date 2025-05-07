@@ -1,11 +1,10 @@
 package edu.ntnu.idi.idatt.factory.board;
 
-import java.io.IOException;
-
-import edu.ntnu.idi.idatt.filehandler.LadderGameBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
+import edu.ntnu.idi.idatt.filehandler.LadderGameBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
+import java.io.IOException;
 
 /**
  * <h3>Factory class for creating LadderGameBoard objects.</h3>
@@ -41,7 +40,7 @@ public class LadderBoardFactory implements BoardFactory {
    * @return A Board object constructed from the file data.
    */
   @Override
-  public Board createBoardFromFile(String filePath){
+  public Board createBoardFromFile(String filePath) {
     FileHandler<Board> boardFileHandler = new LadderGameBoardFileHandlerGson();
     try {
       return (Board) boardFileHandler.readFile(filePath);
@@ -55,12 +54,14 @@ public class LadderBoardFactory implements BoardFactory {
    *
    * @param rows The number of rows in the board.
    * @param columns The number of columns in the board.
-   * @return A LadderGameBoard object with the given number of rows and columns, that has no tile actions.
+   * @return A LadderGameBoard object with the given number of rows and columns, that has no tile
+   *     actions.
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
-    return new LadderGameBoard("Blank Board", "Blank board with " + rows + " rows and " + columns + " columns.",
-        new int[]{rows, columns}, "media/boards/whiteBoard.png", "None");
+    return new LadderGameBoard("Blank Board", "Blank board with " + rows
+        + " rows and " + columns + " columns.", new int[]{rows, columns},
+        "media/boards/whiteBoard.png", "None");
   }
 
   /**
