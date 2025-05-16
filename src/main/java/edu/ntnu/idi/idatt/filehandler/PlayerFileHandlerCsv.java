@@ -1,9 +1,5 @@
 package edu.ntnu.idi.idatt.filehandler;
 
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.LudoPlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -12,6 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>FileHandler implementation for Player objects.</h3>
@@ -32,10 +33,10 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         if (playerType.equals("ludoPlayer") && players.size() == 4) {
           break;
         }
-        if (line.equals("name, colorHex, playerTokenType")) {
+        if (line.equals("name, colorHex, playerTokenType, isBot")) {
           playerType = "ladderGamePlayer";
           continue;
-        } else if (line.equals("name, colorHex")) {
+        } else if (line.equals("name, colorHex, playerTokenType, isBot")) {
           playerType = "ludoPlayer";
           continue;
         }
@@ -71,40 +72,26 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   }
 
   private Player ladderGamePlayerfromCsvLine(String line) {
-    String[] segments = line.split(",");
-    if (segments.length != 3) {
+    String[] parts = line.split(",");
+    if (parts.length != 4) {
       return null;
     }
-    try {
-      String playerName = segments[0].trim();
-      String playerColorHex = segments[1].trim();
-      String playerTokenType = segments[2].trim();
-      return new LadderGamePlayer(playerName, playerColorHex,
-          PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return new LadderGamePlayer(parts[0].trim(), parts[1].trim(), 
+        PlayerTokenType.valueOf(parts[2].trim()), Boolean.parseBoolean(parts[3].trim()));
   }
 
   private Player ludoPlayerfromCsvLine(String line) {
-    String[] segments = line.split(",");
-    if (segments.length != 2) {
+    String[] parts = line.split(",");
+    if (parts.length != 4) {
       return null;
     }
-    try {
-      String playerName = segments[0].trim();
-      String playerColorHex = segments[1].trim();
-      return new LudoPlayer(playerName, playerColorHex, PlayerTokenType.CIRCLE);
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return new LudoPlayer(parts[0].trim(), parts[1].trim(), 
+        PlayerTokenType.valueOf(parts[2].trim()), Boolean.parseBoolean(parts[3].trim()));
   }
 
   private String toCsvLine(Player player) {
-    return String.format("%s,%s,%s", player.getName(), player.getColorHex(),
-        player.getPlayerTokenType().name());
+    return String.format("%s,%s,%s,%s", player.getName(), player.getColorHex(),
+        player.getPlayerTokenType().name(), player.isBot());
   }
 
 }

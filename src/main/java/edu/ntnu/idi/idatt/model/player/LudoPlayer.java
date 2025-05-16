@@ -1,19 +1,19 @@
 package edu.ntnu.idi.idatt.model.player;
 
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.model.token.LudoToken.TokenStatus;
-import java.util.ArrayList;
-import java.util.List;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
 
 public class LudoPlayer extends Player {
 
   private final List<LudoToken> tokens;
 
-  public LudoPlayer(String name, String colorHex, PlayerTokenType playerTokenType) {
-    super(name, colorHex, playerTokenType);
+  public LudoPlayer(String name, String colorHex, PlayerTokenType playerTokenType, boolean isBot) {
+    super(name, colorHex, playerTokenType, isBot);
     this.tokens = new ArrayList<>();
     for (int i = 1; i <= 4; i++) {
       tokens.add(new LudoToken(i));

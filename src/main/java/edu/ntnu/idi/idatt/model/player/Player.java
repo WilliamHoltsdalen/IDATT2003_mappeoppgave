@@ -14,17 +14,21 @@ public abstract class Player {
   private String name;
   private String colorHex;
   private PlayerTokenType playerTokenType;
+  private boolean isBot;
 
   /**
    * Constructor for Player class.
    *
    * @param name The name of the player.
    * @param colorHex The color of the player in hex format.
+   * @param playerTokenType The type of player token to use for the player.
+   * @param isBot Whether the player is a bot or not.
    */
-  public Player(String name, String colorHex, PlayerTokenType playerTokenType) {
+  public Player(String name, String colorHex, PlayerTokenType playerTokenType, boolean isBot) {
     setName(name);
     setColorHex(colorHex);
     setPlayerTokenType(playerTokenType);
+    this.isBot = isBot;
   }
 
   /**
@@ -52,6 +56,15 @@ public abstract class Player {
    */
   public PlayerTokenType getPlayerTokenType() {
     return playerTokenType;
+  }
+
+  /**
+   * Returns whether the player is a bot or not.
+   *
+   * @return true if the player is a bot, false otherwise.
+   */
+  public boolean isBot() {
+    return isBot;
   }
 
   /**
@@ -85,5 +98,14 @@ public abstract class Player {
     playerSetPlayerTokenTypeValidator(playerTokenType);
 
     this.playerTokenType = playerTokenType;
+  }
+
+  /**
+   * Sets whether the player is a bot or not.
+   *
+   * @param isBot Whether the player is a bot or not.
+   */
+  public void setBot(boolean isBot) {
+    this.isBot = isBot;
   }
 }

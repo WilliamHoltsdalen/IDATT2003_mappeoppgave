@@ -25,7 +25,8 @@ public class GameMenuBox extends VBox {
   private final CheckBox animatedDiceCheckBox;
   private final AnimatedDie[] dice;
   private final HBox diceContainer;
-
+  private Button rollDiceButton;
+  
   private Runnable onRestartGame = null;
   private Runnable onQuitGame = null;
   private Runnable onRollDice = null;
@@ -102,7 +103,7 @@ public class GameMenuBox extends VBox {
         gameLogScrollPane.setVvalue(1.0));
     addGameLogRoundBox(1);
 
-    Button rollDiceButton = new Button("Roll dice");
+    rollDiceButton = new Button("Roll dice");
     rollDiceButton.getStyleClass().add("game-menu-roll-dice-button");
     rollDiceButton.setOnAction(event -> {
       if (onRollDice != null) {
@@ -233,6 +234,14 @@ public class GameMenuBox extends VBox {
    */
   public boolean isAnimatedDiceEnabled() {
     return animatedDiceCheckBox.isSelected();
+  }
+
+  public void disableRollDiceButton() {
+    rollDiceButton.setDisable(true);
+  }
+
+  public void enableRollDiceButton() {
+    rollDiceButton.setDisable(false);
   }
 
   /**
