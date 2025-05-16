@@ -36,7 +36,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         if (line.equals("name, colorHex, playerTokenType, isBot")) {
           playerType = "ladderGamePlayer";
           continue;
-        } else if (line.equals("name, colorHex, playerTokenType, isBot")) {
+        } else if (line.equals("name, colorHex, isBot")) {
           playerType = "ludoPlayer";
           continue;
         }
