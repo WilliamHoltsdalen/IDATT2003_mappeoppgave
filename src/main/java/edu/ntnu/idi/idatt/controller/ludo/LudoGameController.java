@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LudoBoardGame;
@@ -8,9 +12,6 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameStackPane;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class LudoGameController extends GameController {
 
@@ -29,15 +30,6 @@ public class LudoGameController extends GameController {
   }
 
   @Override
-  protected void handleRollDiceButtonAction() {
-    if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
-      performPlayerTurnForAllPlayers();
-      return;
-    }
-    performPlayerTurn();
-  }
-
-  @Override
   protected void performPlayerTurnForAllPlayers() {
     do {
       performPlayerTurn();
@@ -46,9 +38,11 @@ public class LudoGameController extends GameController {
 
   @Override
   protected void performPlayerTurn() {
+    disableRollDiceButton();
     int diceRoll = ((LudoBoardGame) boardGame).rollDice();
     gameView.getGameMenuBox().animateDiceRoll(new int[]{diceRoll}, () -> {
       ((LudoBoardGame) boardGame).performPlayerTurn(diceRoll);
+      enableRollDiceButton();
     });
   }
 
@@ -86,7 +80,7 @@ public class LudoGameController extends GameController {
   protected void restartGame() {
     List<Player> players = new ArrayList<>();
     boardGame.getPlayers().forEach(player -> players.add(new LudoPlayer(player.getName(),
-        player.getColorHex(), player.getPlayerTokenType())));
+        player.getColorHex(), player.getPlayerTokenType(), player.isBot())));
 
     initializeBoardGame(boardGame.getBoard(), players);
     initializeGameView();
@@ -111,9 +105,16 @@ public class LudoGameController extends GameController {
 
   @Override
   public void onCurrentPlayerChanged(Player player) {
-    gameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
-    gameView.getGameMenuBox()
-        .addGameLogRoundBoxEntry(player.getName() + " is now the current player");
+    if (!gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+      gameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
+      
+      // If it's a bot's turn and "roll for all" is not selected, automatically perform the turn.
+      if (player.isBot() && !gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+        performPlayerTurn();
+      }
+      return;
+    }
+    gameView.getPlayersBox().removeFocusedPlayer();
   }
 
   @Override

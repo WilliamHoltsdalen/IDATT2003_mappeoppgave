@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
@@ -8,9 +12,6 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameStackPane;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class LadderGameController extends GameController {
 
@@ -36,26 +37,19 @@ public class LadderGameController extends GameController {
     }
   }
 
-  @Override
-  protected void handleRollDiceButtonAction() {
-    if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
-      performPlayerTurnForAllPlayers();
-      return;
-    }
-    performPlayerTurn();
-  }
-
   /**
    * Performs a player move by calling the player turn method in the board game.
    */
   @Override
   protected void performPlayerTurn() {
+    disableRollDiceButton();
     int diceRoll = ((LadderBoardGame) boardGame).rollDice();
     int[] diceValues = ((LadderBoardGame) boardGame).getDice().getDiceList().stream()
         .mapToInt(die -> die.getValue())
         .toArray();
     gameView.getGameMenuBox().animateDiceRoll(diceValues, () -> {
       ((LadderBoardGame) boardGame).performPlayerTurn(diceRoll);
+      enableRollDiceButton();
     });
   }
 
@@ -88,7 +82,7 @@ public class LadderGameController extends GameController {
   protected void restartGame() {
     List<Player> players = new ArrayList<>();
     boardGame.getPlayers().forEach(player -> players.add(new LadderGamePlayer(player.getName(),
-        player.getColorHex(), player.getPlayerTokenType())));
+        player.getColorHex(), player.getPlayerTokenType(), player.isBot())));
 
     initializeBoardGame(boardGame.getBoard(), players);
     initializeGameView();
@@ -132,10 +126,14 @@ public class LadderGameController extends GameController {
   public void onCurrentPlayerChanged(Player player) {
     if (!gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
       gameView.getPlayersBox().setFocusedPlayer(getPlayers().indexOf(player));
+      
+      // If it's a bot's turn and "roll for all" is not selected, automatically perform the turn.
+      if (player.isBot() && !gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+        performPlayerTurn();
+      }
       return;
     }
     gameView.getPlayersBox().removeFocusedPlayer();
-
   }
 
   /**

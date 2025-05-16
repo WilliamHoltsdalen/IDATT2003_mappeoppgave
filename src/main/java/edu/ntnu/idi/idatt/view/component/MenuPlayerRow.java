@@ -1,8 +1,11 @@
 package edu.ntnu.idi.idatt.view.component;
 
+import java.util.List;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
-import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -19,7 +22,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class MenuPlayerRow extends HBox {
 
@@ -32,17 +34,19 @@ public class MenuPlayerRow extends HBox {
   List<PlayerTokenType> allowedPlayerTokenTypes;
   List<String> allowedPlayerColors;
   boolean removable;
+  boolean isBot;
 
   Runnable onUpdate;
 
   public MenuPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType,
       List<PlayerTokenType> allowedPlayerTokenTypes, List<String> allowedPlayerColors,
-      boolean removable) {
+      boolean removable, boolean isBot) {
     this.color = color;
     this.tokenType = playerTokenType;
     this.allowedPlayerTokenTypes = allowedPlayerTokenTypes;
     this.allowedPlayerColors = allowedPlayerColors;
     this.removable = removable;
+    this.isBot = isBot;
     this.getStyleClass().add("main-menu-player-row");
     initialize(defaultName, playerTokenType);
   }
@@ -170,5 +174,9 @@ public class MenuPlayerRow extends HBox {
 
   public Color getColor() {
     return color;
+  }
+
+  public boolean isBot() {
+    return isBot;
   }
 }

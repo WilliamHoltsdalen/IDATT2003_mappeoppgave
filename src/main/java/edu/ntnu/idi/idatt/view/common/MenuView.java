@@ -1,16 +1,21 @@
 package edu.ntnu.idi.idatt.view.common;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -27,9 +32,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <h3>Abstract class for all menu views.</h3>
@@ -197,11 +199,11 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
     playerListBox.getStyleClass().add("main-menu-player-list-box");
     if (!allowedPlayerColors.isEmpty() && allowedPlayerColors.size() <= maximumPlayers) {
-      addPlayerRow("Player 1", Color.web(allowedPlayerColors.get(0)), false);
-      addPlayerRow("Player 2", Color.web(allowedPlayerColors.get(1)), true);
+      addPlayerRow("Player 1", Color.web(allowedPlayerColors.get(0)), false, false);
+      addPlayerRow("Player 2", Color.web(allowedPlayerColors.get(1)), true, false);
     } else if (allowedPlayerColors.isEmpty()) {
-      addPlayerRow("Player 1", Color.RED, false);
-      addPlayerRow("Player 2", Color.GREEN, true);
+      addPlayerRow("Player 1", Color.RED, false, false);
+      addPlayerRow("Player 2", Color.GREEN, true, false);
     }
 
     Supplier<Color> getPlayerRowDefaultColor = () -> allowedPlayerColors.isEmpty() ? Color.BLUE
@@ -209,11 +211,11 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
     Button addPlayerButton = new Button("Add Player");
     addPlayerButton.setOnAction(event -> addPlayerRow(
-        "Player " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true));
+        "Player " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true, false));
 
     Button addBotButton = new Button("Add Bot");
     addBotButton.setOnAction(event -> addPlayerRow(
-        "Bot " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true));
+        "Bot " + (mainMenuPlayerRows.size() + 1), getPlayerRowDefaultColor.get(), true, true));
 
     addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
     addPlayerButtonsBox.getChildren().forEach(button -> button.getStyleClass()
@@ -290,7 +292,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     mainMenuPlayerRows.clear();
     playerListBox.getChildren().clear();
     players.forEach(player -> addPlayerRow(player.getName(), Color.web(player.getColorHex()),
-        !mainMenuPlayerRows.isEmpty()));
+        !mainMenuPlayerRows.isEmpty(), player.isBot()));
   }
 
   /**
@@ -300,12 +302,12 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    * @param color       The color of the player.
    * @param removable   The removable status of the player.
    */
-  protected void addPlayerRow(String defaultName, Color color, boolean removable) {
+  protected void addPlayerRow(String defaultName, Color color, boolean removable, boolean isBot) {
     PlayerTokenType playerToken =
         allowedPlayerTokenTypes.size() >= minimumPlayers ? allowedPlayerTokenTypes.get(
             playerListBox.getChildren().size()) : allowedPlayerTokenTypes.get(0);
     MenuPlayerRow mainMenuPlayerRow = new MenuPlayerRow(defaultName, color, playerToken,
-        allowedPlayerTokenTypes, allowedPlayerColors, removable);
+        allowedPlayerTokenTypes, allowedPlayerColors, removable, isBot);
     mainMenuPlayerRow.setOnDelete(() -> removePlayerRow(mainMenuPlayerRow));
     mainMenuPlayerRow.setOnUpdate(this::updateControls);
     mainMenuPlayerRows.add(mainMenuPlayerRow);

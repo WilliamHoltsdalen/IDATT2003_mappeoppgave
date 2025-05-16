@@ -1,13 +1,14 @@
 package edu.ntnu.idi.idatt.controller.common;
 
+import java.util.List;
+import java.util.Map;
+
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.BoardGame;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
-import java.util.List;
-import java.util.Map;
 
 public abstract class GameController implements ButtonClickObserver, BoardGameObserver  {
   protected final GameView gameView;
@@ -23,8 +24,6 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
   }
 
   public abstract void initializeBoardGame(Board board, List<Player> players);
-
-  protected abstract void handleRollDiceButtonAction();
 
   protected abstract void performPlayerTurnForAllPlayers();
 
@@ -79,6 +78,23 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
     if (onQuitGame != null) {
       onQuitGame.run();
     }
+  }
+
+  protected void handleRollDiceButtonAction() {
+    gameView.getGameMenuBox().disableRollDiceButton();
+    if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+      performPlayerTurnForAllPlayers();
+      return;
+    }
+    performPlayerTurn();
+  }
+
+  protected void enableRollDiceButton() {
+    gameView.getGameMenuBox().enableRollDiceButton();
+  }
+
+  protected void disableRollDiceButton() {
+    gameView.getGameMenuBox().disableRollDiceButton();
   }
 
 

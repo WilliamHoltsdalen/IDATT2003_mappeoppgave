@@ -1,13 +1,14 @@
 package edu.ntnu.idi.idatt.factory.player;
 
+import java.io.IOException;
+import java.util.List;
+
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
 import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * <h3>Factory class for creating Player objects.</h3>
@@ -44,15 +45,17 @@ public class PlayerFactory {
    *
    * @param name     The player's name.
    * @param colorHex The player's color in hex (e.g. "#FF0000").
+   * @param playerTokenType The type of player token to use.
+   * @param isBot Whether the player is a bot or not.
    * @return A new LadderGamePlayer instance with the given attributes.
    */
   public static Player createLadderGamePlayer(String name, String colorHex,
-      PlayerTokenType playerTokenType) {
+      PlayerTokenType playerTokenType, boolean isBot) {
     if (!validatePlayer(name, colorHex, playerTokenType)) {
       throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new LadderGamePlayer(name, colorHex, playerTokenType);
+    return new LadderGamePlayer(name, colorHex, playerTokenType, isBot);
   }
 
   /**
@@ -60,15 +63,17 @@ public class PlayerFactory {
    *
    * @param name     The player's name.
    * @param colorHex The player's color in hex (e.g. "#FF0000").
+   * @param playerTokenType The type of player token to use.
+   * @param isBot Whether the player is a bot or not.
    * @return A new LudoPlayer instance with the given attributes.
    */
   public static Player createLudoPlayer(String name, String colorHex,
-      PlayerTokenType playerTokenType) {
+      PlayerTokenType playerTokenType, boolean isBot) {
     if (!validatePlayer(name, colorHex, playerTokenType)) {
       throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new LudoPlayer(name, colorHex, playerTokenType);
+    return new LudoPlayer(name, colorHex, playerTokenType, isBot);
   }
 
   private static boolean validatePlayer(String name, String colorHex,

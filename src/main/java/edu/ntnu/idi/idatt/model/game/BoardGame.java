@@ -1,18 +1,19 @@
 package edu.ntnu.idi.idatt.model.game;
 
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.BoardGameSubject;
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <h3>BoardGame class</h3>
@@ -151,6 +152,7 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     int currentIndex = players.indexOf(currentPlayer);
     int nextIndex = (currentIndex + 1) % players.size();
     setCurrentPlayer(players.get(nextIndex));
+    notifyCurrentPlayerChanged(currentPlayer);
   }
 
   /**
