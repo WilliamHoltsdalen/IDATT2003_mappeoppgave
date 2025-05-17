@@ -25,7 +25,7 @@ public abstract class GameStackPane extends StackPane {
     this.players = players;
 
     this.playersPane = new Pane();
-
+    this.getStylesheets().add("stylesheets/gameBoardStyles.css");
     this.getStyleClass().add("game-board");
   }
 

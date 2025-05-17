@@ -87,7 +87,8 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     this.boardSelectionBox = new VBox();
     this.boardStackPane = boardStackPane;
 
-    this.getStyleClass().add("main-menu-view");
+    this.getStylesheets().add("stylesheets/menuStyles.css");
+    this.getStyleClass().add("menu-view");
   }
 
   /**
@@ -116,13 +117,13 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     this.maximumPlayers = maximumPlayers;
 
     Region menuSpacer = new Region();
-    menuSpacer.getStyleClass().add("main-menu-spacer");
+    menuSpacer.getStyleClass().add("menu-spacer");
 
     this.playerSelectionBox = createPlayerSelectionBox();
     this.boardSelectionBox = createBoardSelectionBox();
 
     HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
-    hBox.getStyleClass().add("main-menu-h-box");
+    hBox.getStyleClass().add("menu-h-box");
     this.getChildren().setAll(createHeaderBox(title), hBox, startGameButton);
     logger.debug("MenuView initialized successfully");
   }
@@ -155,18 +156,18 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
   protected HBox createHeaderBox(String title) {
     Button backButton = new Button("Game selection");
     backButton.setGraphic(new FontIcon("fas-chevron-left"));
-    backButton.getStyleClass().add("main-menu-back-button");
+    backButton.getStyleClass().add("back-button");
     backButton.setOnAction(event -> notifyObservers("back_to_game_selection"));
 
     Text headerTitle = new Text(title);
-    headerTitle.getStyleClass().add("main-menu-title");
+    headerTitle.getStyleClass().add("menu-title");
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
     Platform.runLater(() -> spacer.setMaxWidth(backButton.getWidth()));
 
     HBox headerBox = new HBox(backButton, headerTitle, spacer);
-    headerBox.getStyleClass().add("main-menu-header-box");
+    headerBox.getStyleClass().add("header-box");
 
     return headerBox;
   }
@@ -178,10 +179,10 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    */
   protected VBox createPlayerSelectionBox() {
     Text playerSelectionTitle = new Text("Select players");
-    playerSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
+    playerSelectionTitle.getStyleClass().add("selection-box-title");
 
     MenuButton playerOptionsMenu = new MenuButton("Options");
-    playerOptionsMenu.getStyleClass().add("main-menu-options-menu");
+    playerOptionsMenu.getStyleClass().add("menu-options-menu");
 
     MenuItem importPlayersMenuItem = new MenuItem("Import players");
     importPlayersMenuItem.setGraphic(new FontIcon("fas-file-import"));
@@ -197,7 +198,7 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     playerSelectionHeader.setSpacing(10);
     playerSelectionHeader.setAlignment(Pos.CENTER);
 
-    playerListBox.getStyleClass().add("main-menu-player-list-box");
+    playerListBox.getStyleClass().add("player-list-box");
     if (!allowedPlayerColors.isEmpty() && allowedPlayerColors.size() <= maximumPlayers) {
       addPlayerRow("Player 1", Color.web(allowedPlayerColors.get(0)), false, false);
       addPlayerRow("Player 2", Color.web(allowedPlayerColors.get(1)), true, false);
@@ -219,11 +220,11 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
     addPlayerButtonsBox.getChildren().addAll(addPlayerButton, addBotButton);
     addPlayerButtonsBox.getChildren().forEach(button -> button.getStyleClass()
-        .add("main-menu-add-player-button"));
-    addPlayerButtonsBox.getStyleClass().add("main-menu-add-player-buttons-box");
+        .add("add-player-button"));
+    addPlayerButtonsBox.getStyleClass().add("add-player-buttons-box");
 
     VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
-    vBox.getStyleClass().add("main-menu-player-selection");
+    vBox.getStyleClass().add("player-selection");
 
     return vBox;
   }
@@ -235,10 +236,10 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
    */
   protected VBox createBoardSelectionBox() {
     Text boardSelectionTitle = new Text("Select a board");
-    boardSelectionTitle.getStyleClass().add("main-menu-selection-box-title");
+    boardSelectionTitle.getStyleClass().add("selection-box-title");
 
     MenuButton boardOptionsMenu = new MenuButton("Options");
-    boardOptionsMenu.getStyleClass().add("main-menu-options-menu");
+    boardOptionsMenu.getStyleClass().add("menu-options-menu");
 
     MenuItem importBoardMenuItem = new MenuItem("Import board");
     importBoardMenuItem.setGraphic(new FontIcon("fas-file-import"));
@@ -265,20 +266,19 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     nextButton.setOnAction(event -> notifyObservers("next_board"));
 
     HBox carouselControls = new HBox(previousButton, boardTitle, nextButton);
-    carouselControls.getStyleClass().add("main-menu-board-selection-carousel-controls");
+    carouselControls.getStyleClass().add("board-carousel-controls");
 
     boardDescription.setText(selectedBoard.getDescription());
-    boardDescription.getStyleClass().add("main-menu-board-selection-description");
+    boardDescription.getStyleClass().add("board-description");
     boardDescription.prefWidthProperty().bind(carouselControls.widthProperty().multiply(0.8));
     boardDescription.setMinHeight(Region.USE_PREF_SIZE);
     boardDescription.setWrapText(true);
 
     VBox carousel = new VBox(boardStackPane, carouselControls, boardDescription);
-    carousel.getStyleClass().add("main-menu-board-selection-carousel");
+    carousel.getStyleClass().add("board-carousel");
 
     VBox vBox = new VBox(boardSelectionHeader, carousel);
-    vBox.getStyleClass().add("main-menu-board-selection-v-box");
-    vBox.getStyleClass().add("main-menu-board-selection");
+    vBox.getStyleClass().add("board-selection");
     return vBox;
   }
 

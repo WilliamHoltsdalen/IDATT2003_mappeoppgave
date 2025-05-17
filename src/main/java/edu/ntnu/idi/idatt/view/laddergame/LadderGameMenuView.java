@@ -60,7 +60,7 @@ public class LadderGameMenuView extends MenuView {
     boardStackPane.initialize(selectedBoard,
         selectedBoard.getBackground());
     boardStackPane.getBackgroundImageView().setFitWidth(250);
-    boardStackPane.getStyleClass().add("main-menu-board-selection-board-view");
+    boardStackPane.getStyleClass().add("menu-board-selection-board-view");
     boardTitle.setText(board.getName());
     boardDescription.setText(board.getDescription());
     Platform.runLater(() -> {

@@ -58,6 +58,7 @@ public class GameMenuBox extends VBox {
       diceContainer.getChildren().add(die);
     }
 
+    this.getStylesheets().add("stylesheets/gameViewStyles.css");
     this.getStyleClass().add("game-menu-box");
     VBox.setVgrow(gameLogScrollPane, Priority.ALWAYS);
     VBox.setVgrow(this, Priority.ALWAYS);

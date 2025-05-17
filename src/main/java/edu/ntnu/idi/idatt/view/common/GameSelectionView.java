@@ -38,6 +38,8 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
   public GameSelectionView() {
     this.observers = new ArrayList<>();
     this.contentBox = new VBox();
+
+    this.getStylesheets().add("stylesheets/gameSelectionStyles.css");
   }
 
   /**
@@ -47,7 +49,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    */
   public void initialize(List<Pair<String, Image>> availableGames) {
     contentBox = createGameSelectionBox(availableGames);
-    contentBox.getStyleClass().add("game-selection-box");
+    contentBox.getStyleClass().add("content-box");
 
     this.setCenter(contentBox);
     logger.debug("GameSelectionView initialized successfully");
@@ -64,11 +66,11 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
     gameSelectionBox.setAlignment(Pos.CENTER);
     gameSelectionBox.setSpacing(30);
     Label gameSelectionTitle = new Label("Select a game");
-    gameSelectionTitle.getStyleClass().add("game-selection-title");
+    gameSelectionTitle.getStyleClass().add("title");
 
     availableGames.forEach(game -> {
       VBox gameBox = new VBox();
-      gameBox.getStyleClass().add("game-selection-game-box");
+      gameBox.getStyleClass().add("game-box");
       gameBox.setAlignment(Pos.CENTER);
       gameBox.setSpacing(15);
       gameBox.setOnMouseClicked(event -> notifyObservers(game.getKey()));
@@ -78,7 +80,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
       gameImageView.setPreserveRatio(true);
 
       Label gameNameLabel = new Label(game.getKey());
-      gameNameLabel.getStyleClass().add("game-selection-game-name");
+      gameNameLabel.getStyleClass().add("game-name");
 
       gameBox.getChildren().addAll(gameImageView, gameNameLabel);
       gameSelectionBox.getChildren().add(gameBox);

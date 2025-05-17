@@ -1,0 +1,98 @@
+.game-board-stack-pane {
+  -fx-background-color: #8B8780;
+  -fx-background-radius: 25;
+  -fx-border-color: black;
+  -fx-border-width: 2;
+  -fx-border-radius: 25;
+  -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+  -fx-padding: 25;
+  -fx-alignment: center;
+}
+
+.game-board-image-view {
+  -fx-fit-height: 520px;
+  -fx-preserve-ratio: true;
+}
+
+.game-board-player-token {
+  -fx-effect: dropshadow(three-pass-box, black, 3, 0, 0, 0);
+}
+
+.grid-cell {
+  -fx-fill: transparent;
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 8, 0, 0, 0);
+}
+
+.grid-cell.blue-checker {
+  -fx-fill: rgba(112, 192, 236, 0.82);
+}
+
+.grid-cell.yellow-checker {
+  -fx-fill: rgba(228, 236, 112, 0.78);
+}
+
+.grid-cell.purple-checker {
+  -fx-fill: rgba(162, 112, 236, 0.85);
+}
+
+.grid-cell-label {
+  -fx-font-size: 8px;
+  -fx-font-weight: bold;
+  -fx-padding: 0 3 1 0;
+  -fx-text-fill: black;
+}
+
+.grid-cell-drag-preview {
+  -fx-fill: #939393;
+  -fx-stroke: blue;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-ladder {
+  -fx-fill: rgb(10, 183, 96);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-portal {
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-has-slide {
+  -fx-fill: rgb(228, 49, 56);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-ladder-destination {
+  -fx-fill: rgb(185, 244, 110);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.grid-cell-slide-destination {
+  -fx-fill: rgb(244, 139, 76);
+  -fx-stroke: black;
+  -fx-stroke-width: 1.5;
+  -fx-stroke-type: inside;
+}
+
+.ludo-board-cell-pane {
+  -fx-background-color: black;
+}
+
+.ludo-board-track-cell {
+  -fx-stroke: black;
+  -fx-stroke-width: 1;
+  -fx-stroke-type: inside;
+  -fx-effect: innershadow(gaussian, rgba(0,0,0,0.8), 3, 0, 0, 0);
+}
