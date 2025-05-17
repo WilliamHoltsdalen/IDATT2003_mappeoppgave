@@ -11,6 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.slf4j.Logger;
@@ -62,31 +65,58 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    * @return The game selection box.
    */
   private VBox createGameSelectionBox(List<Pair<String, Image>> availableGames) {
-    HBox gameSelectionBox = new HBox();
-    gameSelectionBox.setAlignment(Pos.CENTER);
-    gameSelectionBox.setSpacing(30);
+    VBox mainBox = new VBox();
+    mainBox.setAlignment(Pos.CENTER);
+    mainBox.setSpacing(30);
+    mainBox.setMinSize(0, 0);
+
     Label gameSelectionTitle = new Label("Select a game");
     gameSelectionTitle.getStyleClass().add("title");
 
+    HBox gameSelectionBox = new HBox();
+    gameSelectionBox.setAlignment(Pos.CENTER);
+    gameSelectionBox.setSpacing(30);
+    gameSelectionBox.setMinSize(0, 0);
+    VBox.setVgrow(gameSelectionBox, Priority.ALWAYS);
+
     availableGames.forEach(game -> {
       VBox gameBox = new VBox();
+      gameBox.setOnMouseClicked(event -> notifyObservers(game.getKey()));
       gameBox.getStyleClass().add("game-box");
       gameBox.setAlignment(Pos.CENTER);
       gameBox.setSpacing(15);
-      gameBox.setOnMouseClicked(event -> notifyObservers(game.getKey()));
+      gameBox.setMinSize(120, 120);
+      gameBox.prefWidthProperty().bind(gameSelectionBox.widthProperty().divide(availableGames.size()).subtract(mainBox.getSpacing() / 2));
+      gameBox.prefHeightProperty().bind(gameSelectionBox.heightProperty()); 
+
+      Pane imagePane = new StackPane();
+      imagePane.setMinSize(0, 0);
+      imagePane.prefWidthProperty().bind(gameBox.prefWidthProperty().multiply(0.95));
+      imagePane.prefHeightProperty().bind(gameBox.prefHeightProperty().multiply(0.75));
 
       ImageView gameImageView = new ImageView(game.getValue());
-      gameImageView.setFitHeight(250);
       gameImageView.setPreserveRatio(true);
+      gameImageView.fitHeightProperty().bind(imagePane.prefHeightProperty());
+
+      imagePane.widthProperty().addListener((obs, oldVal, newVal) -> {
+        double imgAspectRatio = gameImageView.getImage().getWidth() / gameImageView.getImage().getHeight();
+        double paneAspectRatio = newVal.doubleValue() / imagePane.getPrefHeight();
+        if (paneAspectRatio < imgAspectRatio) {
+          gameImageView.setFitWidth(newVal.doubleValue());
+        }
+      });
+
+      imagePane.getChildren().add(gameImageView); 
 
       Label gameNameLabel = new Label(game.getKey());
       gameNameLabel.getStyleClass().add("game-name");
 
-      gameBox.getChildren().addAll(gameImageView, gameNameLabel);
+      gameBox.getChildren().addAll(imagePane, gameNameLabel);
       gameSelectionBox.getChildren().add(gameBox);
     });
 
-    return new VBox(gameSelectionTitle, gameSelectionBox);
+    mainBox.getChildren().addAll(gameSelectionTitle, gameSelectionBox);
+    return mainBox;
   }
 
   /**
