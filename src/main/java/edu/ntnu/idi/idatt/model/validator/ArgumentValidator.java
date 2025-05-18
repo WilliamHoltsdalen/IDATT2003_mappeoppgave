@@ -437,6 +437,9 @@ public class ArgumentValidator {
     if (coordinates == null) {
       throw new IllegalArgumentException("Coordinates cannot be null");
     }
+    if (coordinates.length != 2) {
+      throw new IllegalArgumentException("Coordinates must be an array of length 2");
+    }
   }
 
   /**
@@ -461,6 +464,9 @@ public class ArgumentValidator {
   public static void tileSetNextTileIdValidator(int currentTileId, int nextTileId) {
     if (nextTileId < 0) {
       throw new IllegalArgumentException("Next tile id must be equal to or greater than 0");
+    }
+    if (nextTileId == currentTileId) {
+      throw new IllegalArgumentException("Next tile id cannot be the same as the current tile id");
     }
   }
 
