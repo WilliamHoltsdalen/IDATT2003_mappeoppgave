@@ -79,7 +79,7 @@ public class ArgumentValidator {
     if (tileId < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
     }
-    if (tileId >= tileCount) {
+    if (tileId > tileCount) {
       throw new IllegalArgumentException("Tile id must be less than the number of tiles on the "
           + "board");
     }
@@ -162,6 +162,34 @@ public class ArgumentValidator {
     if (rowsAndColumns == null) {
       throw new IllegalArgumentException("Rows and columns cannot be null");
     }
+    if (rowsAndColumns.length != 2) {
+      throw new IllegalArgumentException("Rows and columns must be an array of length 2");
+    }
+    if (rowsAndColumns[0] <= 0 || rowsAndColumns[1] <= 0) {
+      throw new IllegalArgumentException("Rows and columns must be greater than 0");
+    }
+    if (rowsAndColumns[0] < 5 || rowsAndColumns[1] < 5) {
+      throw new IllegalArgumentException("Rows and columns must be at least 5x5");
+    }
+    if (rowsAndColumns[0] > 12 || rowsAndColumns[1] > 12) {
+      throw new IllegalArgumentException("Rows and columns must be at most 12x12");
+    }
+  }
+
+  /**
+   * Validates the arguments for the createTiles method in LadderGameBoard class.
+   *
+   * @param rows the number of rows
+   * @param columns the number of columns
+   * @throws IllegalArgumentException if rows or columns is less than 1
+   */
+  public static void ladderGameBoardCreateTilesValidator(int rows, int columns) {
+    if (rows < 5 || columns < 5) {
+      throw new IllegalArgumentException("Board must be at least 5x5");
+    }
+    if (rows > 12 || columns > 12) {
+      throw new IllegalArgumentException("Board must be at most 12x12");
+    }
   }
 
   /** 
@@ -230,6 +258,8 @@ public class ArgumentValidator {
     if (boardSize < 9) {
       throw new IllegalArgumentException("Board size must be at least 9");
     }
+
+
   }
 
   /**
