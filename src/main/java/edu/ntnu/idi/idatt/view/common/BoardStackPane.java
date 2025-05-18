@@ -4,20 +4,27 @@ import edu.ntnu.idi.idatt.dto.ComponentDropEventData;
 import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.beans.binding.DoubleBinding;
+
 public abstract class BoardStackPane extends StackPane {
+
   protected static final Logger logger = LoggerFactory.getLogger(BoardStackPane.class);
 
   protected final Map<Rectangle, TileCoordinates> cellToCoordinatesMap;
@@ -32,7 +39,7 @@ public abstract class BoardStackPane extends StackPane {
   protected Consumer<ComponentDropEventData> onComponentDropped;
   protected Runnable onRemoveComponentsOutsideGrid;
 
-  public BoardStackPane() {
+  protected BoardStackPane() {
     this.cellToCoordinatesMap = new HashMap<>();
     this.components = new HashMap<>();
     this.boardDimensions = new double[2];
@@ -40,17 +47,17 @@ public abstract class BoardStackPane extends StackPane {
     this.backgroundImageView = new ImageView();
     this.componentsPane = new Pane();
     this.gridContainer = new VBox();
+    this.gridContainer.setSpacing(0);
 
     this.componentsPane.setPickOnBounds(false); // Allow mouse events on grid beneath the pane
     this.componentsPane.setMouseTransparent(false);
-    
+
     this.onComponentDropped = null;
     this.onRemoveComponentsOutsideGrid = null;
     this.board = null;
 
     setNodeListeners();
     this.getChildren().addAll(backgroundImageView, gridContainer, componentsPane);
-    this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
 
     this.getStylesheets().add("stylesheets/gameBoardStyles.css");
   }
@@ -72,26 +79,32 @@ public abstract class BoardStackPane extends StackPane {
    * Adds a component to the board.
    *
    * @param componentIdentifier the identifier of the component
-   * @param coordinates the coordinates of the component
+   * @param coordinates         the coordinates of the component
    */
   public abstract void addComponent(String componentIdentifier, TileCoordinates coordinates);
 
-  /** Updates the visuals of the board. */
+  /**
+   * Updates the visuals of the board.
+   */
   public abstract void updateBoardVisuals();
 
-  /** Applies the pattern to the board. */
+  /**
+   * Applies the pattern to the board.
+   */
   public abstract void applyPattern();
 
-  /** Updates the grid of the board. */
+  /**
+   * Updates the grid of the board.
+   */
   public abstract void updateGrid();
 
   /**
    * Creates a row cell for the board.
    *
-   * @param cellWidth the width of the cell
+   * @param cellWidth  the width of the cell
    * @param cellHeight the height of the cell
-   * @param row the row of the cell
-   * @param col the column of the cell
+   * @param row        the row of the cell
+   * @param col        the column of the cell
    * @return the row cell
    */
   public abstract StackPane createRowCell(double cellWidth, double cellHeight, int row, int col);
@@ -99,7 +112,7 @@ public abstract class BoardStackPane extends StackPane {
   /**
    * Initializes the board stack pane.
    *
-   * @param board the board
+   * @param board               the board
    * @param backgroundImagePath the background image path
    */
   public void initialize(Board board, String backgroundImagePath) {
@@ -227,13 +240,34 @@ public abstract class BoardStackPane extends StackPane {
    */
   protected void setNodeListeners() {
     logger.debug("Setting node listeners");
-    // Bind boardDimensions to the gridContainer's layoutBounds
-    // boardDimensions is used to calculate the positions of the tiles in the grid
     backgroundImageView.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
-      if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
-        logger.debug("Board dimensions updated to: {}x{}", newVal.getWidth(), newVal.getHeight());
-        boardDimensions = new double[]{newVal.getWidth(), newVal.getHeight()};
-        updateBoardVisuals();
+      double newBoardWidth = newVal.getWidth();
+      double newBoardHeight = newVal.getHeight();
+
+      if (newBoardWidth > 0 && newBoardHeight > 0) {
+        boardDimensions = new double[]{newBoardWidth, newBoardHeight};
+
+        /* gridContainer.setMinSize(newBoardWidth, newBoardHeight);
+        gridContainer.setPrefSize(newBoardWidth, newBoardHeight);
+        gridContainer.setMaxSize(newBoardWidth, newBoardHeight); */
+
+        componentsPane.setMinSize(newBoardWidth, newBoardHeight);
+        componentsPane.setPrefSize(newBoardWidth, newBoardHeight);
+        componentsPane.setMaxSize(newBoardWidth, newBoardHeight);
+
+        updateBoardVisuals(); // Update visuals after size changes
+      } else {
+        boardDimensions = new double[]{0, 0};
+        gridContainer.getChildren().clear();
+        componentsPane.getChildren().clear();
+
+        gridContainer.setMinSize(0, 0);
+        gridContainer.setPrefSize(0, 0);
+        gridContainer.setMaxSize(0, 0);
+
+        componentsPane.setMinSize(0, 0);
+        componentsPane.setPrefSize(0, 0);
+        componentsPane.setMaxSize(0, 0);
       }
     });
   }

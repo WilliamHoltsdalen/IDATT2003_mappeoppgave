@@ -1,27 +1,30 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Insets;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
-public abstract class GameView extends HBox implements ButtonClickSubject {
+public abstract class GameView extends BorderPane implements ButtonClickSubject {
+  private static final double GAME_BOARD_PADDING = 25;
   protected final List<ButtonClickObserver> observers;
   
   protected GamePlayersBox playersBox;
+  protected Pane centerStackPane;
   protected GameStackPane gameStackPane;
   protected GameMenuBox gameMenuBox;
 
-  public GameView() {
+  protected GameView() {
     this.observers = new ArrayList<>();
 
     this.getStylesheets().add("stylesheets/gameViewStyles.css");
@@ -30,16 +33,27 @@ public abstract class GameView extends HBox implements ButtonClickSubject {
 
   public void initialize(List<Player> players, int roundNumber, Board board) {
     this.playersBox = createPlayersBox(players, roundNumber);
-    this.gameStackPane = createGameStackPane(board, players);
+
+    this.centerStackPane = new StackPane();
+    this.centerStackPane.maxWidthProperty().bind(this.widthProperty().multiply(0.55));
+    this.centerStackPane.setPadding(new Insets(GAME_BOARD_PADDING));
+    DoubleBinding centerContentWidthProperty = Bindings.createDoubleBinding(() -> {
+      double paneWidth = centerStackPane.widthProperty().get();
+      return Math.max(0, paneWidth - (GAME_BOARD_PADDING * 2));
+    }, centerStackPane.widthProperty());
+    this.gameStackPane = createGameStackPane(board, players, centerContentWidthProperty);
+    this.centerStackPane.getChildren().add(gameStackPane);
+
     this.gameMenuBox = createGameMenuBox();
 
-    this.getChildren().setAll(playersBox, createInfiniteSpacer(), gameStackPane,
-        createInfiniteSpacer(), gameMenuBox);
+    this.setLeft(playersBox);
+    this.setCenter(centerStackPane);
+    this.setRight(gameMenuBox);
   }
 
   public abstract GamePlayersBox createPlayersBox(List<Player> players, int roundNumber);
 
-  public abstract GameStackPane createGameStackPane(Board board, List<Player> players);
+  public abstract GameStackPane createGameStackPane(Board board, List<Player> players, DoubleBinding observableWidth);
 
   public GamePlayersBox getPlayersBox() {
     return playersBox;
@@ -51,13 +65,6 @@ public abstract class GameView extends HBox implements ButtonClickSubject {
 
   public GameMenuBox getGameMenuBox() {
     return gameMenuBox;
-  }
-
-  protected Region createInfiniteSpacer() {
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-    VBox.setVgrow(spacer, Priority.ALWAYS);
-    return spacer;
   }
 
   public GameMenuBox createGameMenuBox() {

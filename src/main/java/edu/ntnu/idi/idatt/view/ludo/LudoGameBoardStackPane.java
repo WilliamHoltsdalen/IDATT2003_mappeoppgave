@@ -23,6 +23,9 @@ public class LudoGameBoardStackPane extends BoardStackPane {
   public LudoGameBoardStackPane() {
     super();
     this.patternStackPane = new StackPane();
+    this.patternStackPane.maxHeightProperty().bind(super.gridContainer.heightProperty());
+    this.patternStackPane.maxWidthProperty().bind(super.gridContainer.widthProperty());
+
     super.getChildren().add(patternStackPane);
   }
 
@@ -31,10 +34,7 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     logger.debug("Initializing LudoGameBoardStackPane");
     super.initialize(board, backgroundImagePath);
 
-    Platform.runLater(() -> {
-      updateGrid();
-      loadComponents();
-    });
+    Platform.runLater(this::updateGrid);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class LudoGameBoardStackPane extends BoardStackPane {
 
     int boardSize = ((LudoGameBoard) board).getBoardSize();
 
-    double cellWidth = backgroundImageView.getFitWidth() / boardSize;
+    double cellWidth = boardDimensions[0] / boardSize;
     double cellHeight = cellWidth;
 
     for (int row = 0; row < boardSize; row++) {
@@ -63,7 +63,6 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     }
 
     applyPattern();
-    updateBoardVisuals();
   }
 
   @Override
@@ -199,6 +198,7 @@ public class LudoGameBoardStackPane extends BoardStackPane {
 
   @Override
   public void updateBoardVisuals() {
+    updateGrid();
   }
 
   @Override

@@ -35,12 +35,8 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   @Override
   public void initialize(Board board, String backgroundImagePath) {
     super.initialize(board, backgroundImagePath);
-
-    Platform.runLater(() -> {
-      setPattern(((LadderGameBoard) board).getPattern());
-      updateGrid();
-      loadComponents();
-    });
+    // Defer grid and component loading until the stage is shown and layout has occurred.
+    Platform.runLater(this::loadComponents); // Loads components and clal updateBoardVisuals
   }
 
   /**
@@ -60,7 +56,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   public void setPattern(String pattern) {
     logger.debug("Setting pattern to: {}", pattern);
     ((LadderGameBoard) board).setPattern(pattern);
-    applyPattern();
+    applyPattern(); // Apply pattern immediately, will later be updated via updateBoardVisuals if needed
   }
 
   /**
@@ -96,7 +92,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
       }
     });
     logger.debug("Loaded {} components", components.size());
-    updateBoardVisuals();
+    updateBoardVisuals(); // Update visuals after loading new components
   }
 
   /**
@@ -222,28 +218,6 @@ public class LadderGameBoardStackPane extends BoardStackPane {
       onRemoveComponentsOutsideGrid.run();
     }
 
-    double cellWidth =
-        backgroundImageView.getFitWidth() / ((LadderGameBoard) board).getRowsAndColumns()[1];
-    double cellHeight =
-        (backgroundImageView.getFitWidth() / backgroundImageView.getImage().getWidth()
-            * backgroundImageView.getImage().getHeight())
-            / ((LadderGameBoard) board).getRowsAndColumns()[0];
-
-    // Making the cells in the grid
-    for (int i = ((LadderGameBoard) board).getRowsAndColumns()[0] - 1; i >= 0;
-        i--) { // Filling rows from top to bottom
-      HBox row = new HBox();
-      row.setAlignment(Pos.CENTER);
-      for (int j = 0; j < ((LadderGameBoard) board).getRowsAndColumns()[1];
-          j++) { // Filling columns from left to right
-        row.getChildren().add(
-            createRowCell(cellWidth, cellHeight, i, j)
-        );
-      }
-      gridContainer.getChildren().add(row); // Adding row to grid container
-    }
-
-    applyPattern();
     updateBoardVisuals();
   }
 
@@ -259,6 +233,12 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   @Override
   public StackPane createRowCell(double cellWidth, double cellHeight, int row, int col) {
     final StackPane cellPane = new StackPane();
+    // Ensure cellPane itself doesn't block shrinking if its content (Rectangle) is small.
+    cellPane.setMinWidth(0); 
+    cellPane.setMinHeight(0);
+    cellPane.setPrefSize(cellWidth, cellHeight); // Hint its preferred size
+    cellPane.setMaxSize(cellWidth, cellHeight); // Strictly set its max size
+
     Rectangle cellRect = new Rectangle(cellWidth, cellHeight);
     cellRect.getStyleClass().add("grid-cell");
     cellToCoordinatesMap.put(cellRect, new TileCoordinates(row, col));
@@ -308,6 +288,7 @@ public class LadderGameBoardStackPane extends BoardStackPane {
       if (db.hasString() && onComponentDropped != null) {
         String componentIdentifier = db.getString();
         onComponentDropped.accept(new ComponentDropEventData(componentIdentifier, cell));
+        success = true; // Assume success if handler is called
       }
 
       event.setDropCompleted(success);
@@ -367,6 +348,8 @@ public class LadderGameBoardStackPane extends BoardStackPane {
     logger.debug("Updating board visuals");
     // Clear all existing visual components
     componentsPane.getChildren().clear();
+    
+    buildGrid();
 
     applyPattern();
 
@@ -399,13 +382,12 @@ public class LadderGameBoardStackPane extends BoardStackPane {
       double[] screenCoords = ViewUtils.ladderBoardToScreenCoordinates(
           new int[]{coordinates.row(), coordinates.col()},
           ((LadderGameBoard) board),
-          boardDimensions[0],
-          boardDimensions[1]
+          this.boardDimensions[0],
+          this.boardDimensions[1]
       );
 
       // Update component size and position based on tile dimensions and base position
-      component.updateSizeAndPosition(originCell.getWidth(), originCell.getHeight(),
-          screenCoords[0], screenCoords[1]);
+      component.updateSizeAndPosition(originCell.getWidth(), originCell.getHeight(), screenCoords[0], screenCoords[1]);
 
       // Add style classes based on component type
       switch (component.getType()) {
@@ -418,13 +400,46 @@ public class LadderGameBoardStackPane extends BoardStackPane {
           originCell.getStyleClass().add("grid-cell-has-slide");
           destinationCell.getStyleClass().add("grid-cell-slide-destination");
         }
-        default -> {
-          break;
-        }
+        default -> { /* No special styling for unknown types */ }
       }
-
       componentsPane.getChildren().add(component);
     });
-    logger.debug("Updated board visuals for {} components", components.size());
+    logger.debug("Updated board visuals for {} components.", componentsPane.getChildren().size());
+  }
+
+  private void buildGrid() {
+    gridContainer.getChildren().clear();
+    cellToCoordinatesMap.clear();
+
+    if (onRemoveComponentsOutsideGrid != null) {
+      onRemoveComponentsOutsideGrid.run();
+    }
+
+    if (boardDimensions[0] <= 0 || boardDimensions[1] <= 0) {
+        logger.warn("Cannot build grid with zero or negative board dimensions.");
+        return;
+    }
+
+    LadderGameBoard ladderBoard = (LadderGameBoard) board;
+    int numCols = ladderBoard.getRowsAndColumns()[1];
+    int numRows = ladderBoard.getRowsAndColumns()[0];
+
+    double cellWidth = this.boardDimensions[0] / numCols;
+    double cellHeight = this.boardDimensions[1] / numRows;
+
+    for (int i = numRows - 1; i >= 0; i--) { // Filling rows from top to bottom
+      HBox rowBox = new HBox();
+      rowBox.setAlignment(Pos.CENTER);
+      // Constrain rowBox size to prevent it from influencing VBox (gridContainer) size
+      rowBox.setMinWidth(0); // Allow shrinking
+      rowBox.setPrefWidth(this.boardDimensions[0]); // Try to fill available width
+      rowBox.setMaxWidth(this.boardDimensions[0]); // Don't exceed available width
+
+      for (int j = 0; j < numCols; j++) { // Filling columns from left to right
+        StackPane cell = createRowCell(cellWidth, cellHeight, i, j);
+        rowBox.getChildren().add(cell);
+      }
+      gridContainer.getChildren().add(rowBox);
+    }
   }
 }

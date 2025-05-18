@@ -9,11 +9,6 @@
   -fx-alignment: center;
 }
 
-.game-board-image-view {
-  -fx-fit-height: 520px;
-  -fx-preserve-ratio: true;
-}
-
 .game-board-player-token {
   -fx-effect: dropshadow(three-pass-box, black, 3, 0, 0, 0);
 }

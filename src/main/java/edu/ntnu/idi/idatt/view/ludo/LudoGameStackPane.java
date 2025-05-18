@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.PathTransition;
+import javafx.beans.binding.DoubleBinding;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -22,12 +23,14 @@ import javafx.scene.shape.Shape;
 public class LudoGameStackPane extends GameStackPane {
 
   protected final Map<LudoToken, Shape> tokenShapeMap;
+  protected Map<LudoToken, double[]> tokenRelativePosMap;
   protected double tileOffset;
 
-  public LudoGameStackPane(LudoGameBoard board, List<Player> players) {
+  public LudoGameStackPane(LudoGameBoard board, List<Player> players, DoubleBinding observableWidth) {
     super(board, players);
     this.tokenShapeMap = new HashMap<>();
-    initialize(new LudoGameBoardStackPane());
+    this.tokenRelativePosMap = new HashMap<>();
+    initialize(new LudoGameBoardStackPane(), observableWidth);
   }
 
   @Override
@@ -38,11 +41,13 @@ public class LudoGameStackPane extends GameStackPane {
         this.tileSizeX = boardDimensions[0] / ((LudoGameBoard) board).getBoardSize();
         this.tileSizeY = boardDimensions[1] / ((LudoGameBoard) board).getBoardSize();
 
-        this.tileOffset = (tileSizeX / 2);
+        updatePerPlayerTileOffsets();
 
         if (playersPane.getChildren().isEmpty()) {
           addGamePieces(players);
         }
+
+        refreshPlayersPane();
       }
     });
   }
@@ -68,6 +73,8 @@ public class LudoGameStackPane extends GameStackPane {
     Shape playerToken = tokenShapeMap.get(token);
     playerToken.setTranslateX(startAreaPos[0]);
     playerToken.setTranslateY(startAreaPos[1]);
+
+    updateTokenRelativePosMap(token);
   }
 
   public void releaseToken(LudoPlayer player, int tokenId) {
@@ -88,6 +95,9 @@ public class LudoGameStackPane extends GameStackPane {
     pathTransition.setDuration(TRANSITION_DURATION);
     pathTransition.setNode(tokenShapeMap.get(token));
     pathTransition.setPath(path);
+    pathTransition.setOnFinished(event -> {
+      updateTokenRelativePosMap(token);
+    });
     pathTransition.play();
   }
 
@@ -108,6 +118,9 @@ public class LudoGameStackPane extends GameStackPane {
     pathTransition.setDuration(TRANSITION_DURATION);
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
+    pathTransition.setOnFinished(event -> {
+      updateTokenRelativePosMap(token);
+    });
     pathTransition.play();
   }
 
@@ -145,6 +158,9 @@ public class LudoGameStackPane extends GameStackPane {
     pathTransition.setDuration(TRANSITION_DURATION);
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
+    pathTransition.setOnFinished(event -> {
+      updateTokenRelativePosMap(token);
+    });
     pathTransition.play();
   }
 
@@ -219,5 +235,32 @@ public class LudoGameStackPane extends GameStackPane {
       }
     }
     return pathTiles;
+  }
+
+  private void updateTokenRelativePosMap(LudoToken token) {
+    double[] relativePos = new double[]{
+      tokenShapeMap.get(token).getTranslateX() / boardDimensions[0], 
+      tokenShapeMap.get(token).getTranslateY() / boardDimensions[1]
+    };
+    tokenRelativePosMap.put(token, relativePos);
+  }
+
+  @Override
+  protected void updatePerPlayerTileOffsets() {
+    this.tileOffset = (tileSizeX / 2);
+  }
+
+  @Override
+  protected void refreshPlayersPane() {
+    updatePerPlayerTileOffsets();
+
+    for (Map.Entry<LudoToken, Shape> entry : tokenShapeMap.entrySet()) {
+      LudoToken token = entry.getKey();
+      Shape tokenShape = entry.getValue();
+
+      double[] relativePos = tokenRelativePosMap.get(token);
+      tokenShape.setTranslateX(relativePos[0] * boardDimensions[0]);
+      tokenShape.setTranslateY(relativePos[1] * boardDimensions[1]);
+    }
   }
 }

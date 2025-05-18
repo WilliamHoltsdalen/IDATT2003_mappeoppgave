@@ -1,21 +1,16 @@
 package edu.ntnu.idi.idatt.view.common;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickSubject;
 import edu.ntnu.idi.idatt.view.component.MenuPlayerRow;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -32,6 +27,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <h3>Abstract class for all menu views.</h3>
@@ -89,6 +87,8 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
 
     this.getStylesheets().add("stylesheets/menuStyles.css");
     this.getStyleClass().add("menu-view");
+    this.setMinSize(0, 0);
+    VBox.setVgrow(this, Priority.ALWAYS);
   }
 
   /**

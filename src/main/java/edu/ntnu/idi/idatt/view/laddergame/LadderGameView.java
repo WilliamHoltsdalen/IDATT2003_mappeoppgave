@@ -8,6 +8,7 @@ import edu.ntnu.idi.idatt.view.common.GameStackPane;
 import edu.ntnu.idi.idatt.view.common.GameView;
 import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 import java.util.List;
+import javafx.beans.binding.DoubleBinding;
 
 public class LadderGameView extends GameView {
 
@@ -21,8 +22,8 @@ public class LadderGameView extends GameView {
   }
 
   @Override
-  public GameStackPane createGameStackPane(Board board, List<Player> players) {
-    return new LadderGameStackPane((LadderGameBoard) board, players);
+  public GameStackPane createGameStackPane(Board board, List<Player> players, DoubleBinding observableWidth) {
+    return new LadderGameStackPane((LadderGameBoard) board, players, observableWidth);
   }
 
   @Override

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.animation.PathTransition;
+import javafx.beans.binding.DoubleBinding;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -29,6 +30,8 @@ public class LadderGameStackPane extends GameStackPane {
 
   protected final Map<Player, Tile> playerTileMap;
   protected final Map<Player, Shape> playerTokenMap;
+  protected double[] tilePlayerPosX;
+  protected double[] tilePlayerPosY;
 
   /**
    * Constructor for GameBoardStackPane class.
@@ -36,13 +39,13 @@ public class LadderGameStackPane extends GameStackPane {
    * @param board   the board to display
    * @param players the list of players to display
    */
-  public LadderGameStackPane(LadderGameBoard board, List<Player> players) {
+  public LadderGameStackPane(LadderGameBoard board, List<Player> players, DoubleBinding observableWidth) {
     super(board, players);
 
     this.playerTileMap = new HashMap<>();
     this.playerTokenMap = new HashMap<>();
 
-    initialize(new LadderGameBoardStackPane());
+    initialize(new LadderGameBoardStackPane(), observableWidth);
   }
 
   @Override
@@ -53,12 +56,9 @@ public class LadderGameStackPane extends GameStackPane {
         this.tileSizeX = boardDimensions[0] / ((LadderGameBoard) board).getRowsAndColumns()[1];
         this.tileSizeY = boardDimensions[1] / ((LadderGameBoard) board).getRowsAndColumns()[0];
 
-        this.tilePositionX = new double[]{(tileSizeX / 4), (tileSizeX / 2), (tileSizeX / 4) * 3,
-            (tileSizeX / 4), (tileSizeX / 4) * 3};
-        this.tilePositionY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4),
-            (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
+        refreshPlayersPane();
 
-        if (playersPane.getChildren().isEmpty()) {
+        if (playersPane.getChildren().isEmpty() && !players.isEmpty()) {
           addGamePieces(players);
         }
       }
@@ -77,8 +77,8 @@ public class LadderGameStackPane extends GameStackPane {
 
       Tile playerTile = ((LadderGamePlayer) player).getCurrentTile();
 
-      double posX = tilePositionX[players.indexOf(player)];
-      double posY = tilePositionY[players.indexOf(player)];
+      double posX = tilePlayerPosX[players.indexOf(player)];
+      double posY = tilePlayerPosY[players.indexOf(player)];
 
       Shape playerToken = PlayerTokenFactory.create(7, Color.web(player.getColorHex()),
           player.getPlayerTokenType());
@@ -112,8 +112,8 @@ public class LadderGameStackPane extends GameStackPane {
     Shape playerToken = playerTokenMap.get(player);
     playerToken.setCache(true);
 
-    double posX = tilePositionX[players.indexOf(player)];
-    double posY = tilePositionY[players.indexOf(player)];
+    double posX = tilePlayerPosX[players.indexOf(player)];
+    double posY = tilePlayerPosY[players.indexOf(player)];
 
     double[] currentPaneCoordinates = convertCoordinates(
         playerTileMap.get(player).getCoordinates());
@@ -124,16 +124,14 @@ public class LadderGameStackPane extends GameStackPane {
     double newXpos = posX + newPaneCoordinates[0];
     double newYpos = newPaneCoordinates[1] - posY;
 
-    /* Using a sequential transition with a pause transition (if straightLine is true) to delay the
-       transition to allow normal player movement to finish before a tile action movement begins. */
-
     PathTransition pathTransition = new PathTransition();
     Path path = new Path();
     path.getElements().add(new MoveTo(currentXpos, currentYpos));
 
     if (straightLine) {
       path.getElements().add(new LineTo(newXpos, newYpos));
-      pathTransition.setDelay(TRANSITION_DURATION);
+      // Delay the transition to allow normal player movement to finish before a tile action movement begins.
+      pathTransition.setDelay(TRANSITION_DURATION); 
     } else {
       getPathTiles(playerTileMap.get(player), newTile).forEach(tile -> {
         double[] tilePaneCoordinates = convertCoordinates(tile.getCoordinates());
@@ -186,5 +184,38 @@ public class LadderGameStackPane extends GameStackPane {
       }
     }
     return pathTiles;
+  }
+
+  @Override
+  protected void updatePerPlayerTileOffsets() {
+    if (tileSizeX > 0 && tileSizeY > 0) {
+        this.tilePlayerPosX = new double[]{(tileSizeX / 4), (tileSizeX / 2), (tileSizeX / 4) * 3,
+            (tileSizeX / 4), (tileSizeX / 4) * 3};
+        this.tilePlayerPosY = new double[]{(tileSizeY / 4), (tileSizeY / 2), (tileSizeY / 4),
+            (tileSizeY / 4) * 3, (tileSizeY / 4) * 3};
+    } else {
+        this.tilePlayerPosX = new double[5]; 
+        this.tilePlayerPosY = new double[5];
+      }
+  }
+
+  @Override
+  protected void refreshPlayersPane() {
+    updatePerPlayerTileOffsets();
+
+    for (Map.Entry<Player, Shape> entry : playerTokenMap.entrySet()) {
+        Player player = entry.getKey();
+        Shape token = entry.getValue();
+        Tile currentTile = playerTileMap.get(player);
+
+        int playerIndex = players.indexOf(player);
+        double offsetX = tilePlayerPosX[playerIndex];
+        double offsetY = tilePlayerPosY[playerIndex];
+        
+        double[] baseCoords = convertCoordinates(currentTile.getCoordinates());
+        
+        token.setTranslateX(baseCoords[0] + offsetX);
+        token.setTranslateY(baseCoords[1] - offsetY);
+    }
   }
 }

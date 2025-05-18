@@ -90,11 +90,6 @@
   -fx-spacing: 10;
 }
 
-.from-to-field {
-  -fx-max-width: 60px;
-  -fx-alignment: center;
-}
-
 .board-config-spinner {
   -fx-max-width: 100px;
 }
