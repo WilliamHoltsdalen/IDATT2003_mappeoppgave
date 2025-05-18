@@ -384,8 +384,8 @@ public class ArgumentValidator {
     if (colorHex == null || colorHex.isBlank()) {
       throw new IllegalArgumentException("Color hex cannot be null or blank");
     }
-    if (!colorHex.matches("#[0-9a-fA-F]{6}")) {
-      throw new IllegalArgumentException("Color hex must be a valid hex string");
+    if (Color.valueOf(colorHex) == null) {
+      throw new IllegalArgumentException("Color is not valid");
     }
   }
 

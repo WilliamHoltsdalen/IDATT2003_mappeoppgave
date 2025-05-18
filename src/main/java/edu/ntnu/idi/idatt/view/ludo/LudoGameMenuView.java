@@ -25,6 +25,8 @@ public class LudoGameMenuView extends MenuView {
     // Disable the start game button if there are not enough players.
     if (mainMenuPlayerRows.size() < minimumPlayers) {
       disableStartGameButton("You need at least " + minimumPlayers + " players.");
+    } else if (mainMenuPlayerRows.size() > maximumPlayers) {
+      disableStartGameButton("You can't have more than " + maximumPlayers + " players.");
     } else {
       enableStartGameButton();
     }

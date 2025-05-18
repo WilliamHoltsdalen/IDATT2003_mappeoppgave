@@ -43,9 +43,9 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
         Player player = null;
         if (playerType.equals("ladderGamePlayer")) {
-          player = ladderGamePlayerfromCsvLine(line);
+          player = ladderGamePlayerFromCsvLine(line);
         } else if (playerType.equals("ludoPlayer")) {
-          player = ludoPlayerfromCsvLine(line);
+          player = ludoPlayerFromCsvLine(line);
         }
 
         if (player == null) {
@@ -61,7 +61,15 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
   @Override
   public void writeFile(String path, List<Player> players) throws IOException {
+    String header;
+    if (players.getFirst() instanceof LudoPlayer) {
+      header = "name, colorHex, isBot";
+    } else {
+      header = "name, colorHex, playerTokenType, isBot";
+    }
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      writer.write(header);
+      writer.newLine();
       for (Player player : players) {
         writer.write(toCsvLine(player));
         writer.newLine();
@@ -71,7 +79,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     }
   }
 
-  private Player ladderGamePlayerfromCsvLine(String line) {
+  public Player ladderGamePlayerFromCsvLine(String line) {
     String[] parts = line.split(",");
     if (parts.length != 4) {
       return null;
@@ -80,18 +88,21 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         PlayerTokenType.valueOf(parts[2].trim()), Boolean.parseBoolean(parts[3].trim()));
   }
 
-  private Player ludoPlayerfromCsvLine(String line) {
+  public Player ludoPlayerFromCsvLine(String line) {
     String[] parts = line.split(",");
-    if (parts.length != 4) {
+    if (parts.length != 3) {
       return null;
     }
     return new LudoPlayer(parts[0].trim(), parts[1].trim(), 
-        PlayerTokenType.valueOf(parts[2].trim()), Boolean.parseBoolean(parts[3].trim()));
+        PlayerTokenType.CIRCLE, Boolean.parseBoolean(parts[2].trim()));
   }
 
-  private String toCsvLine(Player player) {
-    return String.format("%s,%s,%s,%s", player.getName(), player.getColorHex(),
-        player.getPlayerTokenType().name(), player.isBot());
+  public String toCsvLine(Player player) {
+    if (player instanceof LudoPlayer) {
+      return String.format("%s,%s,%s", player.getName(), player.getColorHex(), player.isBot());
+    } else {
+      return String.format("%s,%s,%s,%s", player.getName(), player.getColorHex(),
+          player.getPlayerTokenType().name(), player.isBot());
+    }
   }
-
 }
