@@ -45,6 +45,8 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
     this.nameField = new TextField();
     this.descriptionField = new TextField();
     this.boardStackPane = createBoardStackPane();
+
+    this.getStylesheets().add("stylesheets/boardCreatorStyles.css");
   }
 
 

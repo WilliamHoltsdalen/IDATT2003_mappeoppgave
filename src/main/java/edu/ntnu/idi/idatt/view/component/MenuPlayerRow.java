@@ -47,7 +47,9 @@ public class MenuPlayerRow extends HBox {
     this.allowedPlayerColors = allowedPlayerColors;
     this.removable = removable;
     this.isBot = isBot;
-    this.getStyleClass().add("main-menu-player-row");
+
+    this.getStylesheets().add("stylesheets/menuStyles.css");
+    this.getStyleClass().add("menu-player-row");
     initialize(defaultName, playerTokenType);
   }
 
@@ -142,7 +144,7 @@ public class MenuPlayerRow extends HBox {
     innerPopupContent.setSpacing(10);
 
     HBox popupContent = new HBox(innerPopupContent, closePopupButton);
-    popupContent.getStyleClass().add("main-menu-player-color-picker-popup");
+    popupContent.getStyleClass().add("color-picker-popup");
     popup.getContent().setAll(popupContent);
     popup.show(this.getScene().getWindow(), xPos, yPos);
   }

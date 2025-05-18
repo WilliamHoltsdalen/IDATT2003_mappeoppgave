@@ -42,7 +42,7 @@ public class MainApp extends Application {
     showGameSelection();
 
     Scene scene = new Scene(root, 1280, 720);
-    scene.getStylesheets().add("stylesheets/styles.css");
+    scene.getStylesheets().add("stylesheets/globalStyles.css");
 
     primaryStage.setTitle(APP_NAME);
     primaryStage.setScene(scene);

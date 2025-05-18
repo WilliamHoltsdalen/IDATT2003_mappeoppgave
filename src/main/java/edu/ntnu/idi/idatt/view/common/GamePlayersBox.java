@@ -26,12 +26,14 @@ public abstract class GamePlayersBox extends VBox {
    * @param players the plays to add to the box
    * @param initialRoundNumber the initial round number to set when the box is created
    */
-  public GamePlayersBox(List<Player> players, int initialRoundNumber) {
+  protected GamePlayersBox(List<Player> players, int initialRoundNumber) {
     playersBoxRows = new java.util.ArrayList<>();
     roundNumberText = new Text();
 
     HBox.setHgrow(this, Priority.NEVER);
     this.setAlignment(Pos.TOP_LEFT);
+
+    this.getStylesheets().add("stylesheets/gameViewStyles.css");
 
     initialize(players);
     setRoundNumber(initialRoundNumber);
@@ -60,12 +62,12 @@ public abstract class GamePlayersBox extends VBox {
   public void setFocusedPlayer(int playerIndex) {
     removeFocusedPlayer();
     playersBoxRows.get(playerIndex).getStyleClass()
-        .add("game-players-box-player-row-current-player");
+        .add("players-box-current-player-row");
   }
 
   public void removeFocusedPlayer() {
     for (GamePlayerRow playerRow : playersBoxRows) {
-      playerRow.getStyleClass().remove("game-players-box-player-row-current-player");
+      playerRow.getStyleClass().remove("players-box-current-player-row");
     }
   }
 }

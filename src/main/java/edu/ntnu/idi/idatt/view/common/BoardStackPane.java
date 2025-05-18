@@ -51,6 +51,8 @@ public abstract class BoardStackPane extends StackPane {
     setNodeListeners();
     this.getChildren().addAll(backgroundImageView, gridContainer, componentsPane);
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
+
+    this.getStylesheets().add("stylesheets/gameBoardStyles.css");
   }
 
   /**

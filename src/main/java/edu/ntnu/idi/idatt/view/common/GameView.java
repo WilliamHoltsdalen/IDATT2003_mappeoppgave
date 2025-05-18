@@ -24,6 +24,7 @@ public abstract class GameView extends HBox implements ButtonClickSubject {
   public GameView() {
     this.observers = new ArrayList<>();
 
+    this.getStylesheets().add("stylesheets/gameViewStyles.css");
     this.getStyleClass().add("game-view");
   }
 

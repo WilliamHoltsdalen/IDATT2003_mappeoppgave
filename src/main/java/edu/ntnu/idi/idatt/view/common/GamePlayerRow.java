@@ -9,7 +9,7 @@ public abstract class GamePlayerRow extends HBox {
   protected Label playerTile;
 
   public GamePlayerRow(Player player) {
-    this.getStyleClass().add("game-players-box-player-row");
+    this.getStyleClass().add("players-box-player-row");
     initialize(player);
   }
 

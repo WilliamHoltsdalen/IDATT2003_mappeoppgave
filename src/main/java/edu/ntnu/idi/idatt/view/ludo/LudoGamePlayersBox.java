@@ -23,12 +23,12 @@ public class LudoGamePlayersBox extends GamePlayersBox {
    */
   @Override
   protected void initialize(List<Player> players) {
-    roundNumberText.getStyleClass().add("game-players-box-round-number");
+    roundNumberText.getStyleClass().add("players-box-round-number");
 
     HorizontalDivider horizontalDivider = new HorizontalDivider();
 
     VBox playersBoxVbox = new VBox(roundNumberText, horizontalDivider);
-    playersBoxVbox.getStyleClass().add("game-players-box");
+    playersBoxVbox.getStyleClass().add("players-box");
     playersBoxVbox.maxHeightProperty().bind(playersBoxVbox.heightProperty());
 
     players.forEach(player -> {

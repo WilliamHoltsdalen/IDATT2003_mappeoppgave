@@ -1,0 +1,122 @@
+
+.menu-view {
+  -fx-background-color: -gray-background;
+  -fx-padding: 20;
+  -fx-spacing: 20;
+  -fx-alignment: center;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
+  -fx-background-radius: 18;
+}
+
+.menu-h-box {
+  -fx-alignment: center;
+  -fx-spacing: 35;
+  -fx-padding: 20, 0, 0, 0;
+}
+
+.header-box {
+  -fx-alignment: center;
+  -fx-spacing: 30;
+}
+
+.menu-spacer {
+  -fx-pref-width: 3px;
+  -fx-background-color: -gray-border;
+  -fx-min-height: 370px;
+}
+
+.back-button {
+  -fx-background-color: transparent;
+  -fx-border-color: black;
+  -fx-border-radius: 5;
+  -fx-text-fill: black;
+  -fx-font-size: 20px;
+  -fx-padding: 5;
+}
+
+.menu-title {
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+}
+
+.selection-box-title {
+  -fx-font-size: 20px;
+  -fx-alignment: center;
+}
+
+.menu-options-menu {
+  -fx-background-color: white;
+  -fx-border-color: #D9D9D9;
+  -fx-border-width: 1;
+  -fx-border-radius: 5;
+  -fx-background-radius: 5;
+}
+
+.menu-options-menu:hover {
+  -fx-background-color: #F5F5F5;
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+}
+
+.player-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+}
+
+.player-list-box {
+  -fx-alignment: center;
+  -fx-spacing: 10;
+  -fx-min-width: 280px;
+}
+
+.menu-player-row {
+  -fx-alignment: center-right;
+  -fx-spacing: 10;
+}
+
+.add-player-buttons-box {
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.add-player-button {
+  -fx-background-color: -button-dark;
+}
+
+.add-player-button:hover {
+  -fx-background-color: -button-dark-hover;
+}
+
+.board-selection {
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+  -fx-max-width: 250px;
+}
+
+.board-carousel {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: -gray-border;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-padding: 15 15 10 15;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+}
+
+.menu-board-selection-board-view {
+  -fx-fit-width: 250px;
+  -fx-preserve-ratio: true;
+}
+
+.board-carousel-controls {
+  -fx-font-size: 16px;
+  -fx-alignment: center;
+  -fx-spacing: 10;
+}
+
+.board-description {
+  -fx-font-size: 12px;
+  -fx-text-fill: gray;
+}
