@@ -4,7 +4,7 @@ import edu.ntnu.idi.idatt.model.tile.Tile;
 import java.util.List;
 
 /**
- * <h3>Board interface</h3>
+ * Board interface
  *
  * <p>Interface defining common operations for all board game boards.
  */

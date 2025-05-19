@@ -1,18 +1,16 @@
 package edu.ntnu.idi.idatt.model.board;
 
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardCreateTilesValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetPatternValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetRowsAndColumnsValidator;
 
 import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardCreateTilesValidator;
-
 /**
- * <h3>LadderGameBoard class</h3>
+ * LadderGameBoard class
  *
  * <p>Concrete implementation of the Board interface for the Chutes and Ladders game.
  * This class extends BaseBoard and implements game-specific board functionality.

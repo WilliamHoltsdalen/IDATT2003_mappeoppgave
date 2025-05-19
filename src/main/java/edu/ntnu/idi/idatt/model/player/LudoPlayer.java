@@ -1,17 +1,40 @@
 package edu.ntnu.idi.idatt.model.player;
 
-import java.util.ArrayList;
-import java.util.List;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.model.token.LudoToken.TokenStatus;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * LudoPlayer.
+ *
+ * <p>Extends the {@link Player} class to represent a player in a Ludo game.
+ * Each Ludo player has a set of four {@link LudoToken}s. This class provides
+ * methods to access these tokens and to move them on the game board, updating
+ * their status accordingly.</p>
+ *
+ * @see Player
+ * @see LudoToken
+ * @see Tile
+ * @see TokenStatus
+ */
 public class LudoPlayer extends Player {
 
   private final List<LudoToken> tokens;
 
+  /**
+   * Constructs a {@code LudoPlayer} with the specified name, color, token type, and bot status.
+   * Initializes the player with four {@link LudoToken}s, each with a unique ID from 1 to 4.
+   *
+   * @param name            The name of the player.
+   * @param colorHex        The hexadecimal string representation of the player's color.
+   * @param playerTokenType The type of token the player uses.
+   * @param isBot           A boolean indicating whether the player is a "robot" or not.
+   */
   public LudoPlayer(String name, String colorHex, PlayerTokenType playerTokenType, boolean isBot) {
     super(name, colorHex, playerTokenType, isBot);
     this.tokens = new ArrayList<>();
@@ -20,10 +43,22 @@ public class LudoPlayer extends Player {
     }
   }
 
+  /**
+   * Returns the list of {@link LudoToken}s belonging to this player.
+   *
+   * @return A list of {@link LudoToken}s.
+   */
   public List<LudoToken> getTokens() {
     return tokens;
   }
 
+  /**
+   * Retrieves a specific {@link LudoToken} by its ID.
+   *
+   * @param tokenId The ID of the token to retrieve (1-4).
+   * @return The {@link LudoToken} with the specified ID.
+   * @throws IllegalArgumentException if no token with the given ID is found.
+   */
   public LudoToken getToken(int tokenId) {
     return tokens.stream()
         .filter(token -> token.getTokenId() == tokenId)

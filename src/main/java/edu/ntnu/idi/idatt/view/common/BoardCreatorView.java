@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardCreatorView</h3>
+ * BoardCreatorView
  *
  * <p>Abstract class for all board creator views. This class has a name field, a description field,
  * and a board stack pane.

@@ -10,24 +10,34 @@ import edu.ntnu.idi.idatt.model.tile.TileAction;
 import java.util.List;
 
 /**
- * <h3>LadderBoardGame class</h3>
+ * LadderBoardGame.
  *
- * <p>Implementation of the Chutes and Ladders game. This class extends BoardGame and implements
- * game-specific logic.
+ * <p>Represents the game logic for a Chutes and Ladders type game.
+ * This class extends {@link BoardGame} and implements game-specific rules for player movement,
+ * tile actions (ladders/slides), and win conditions.</p>
+ *
+ * @see BoardGame
+ * @see LadderGamePlayer
+ * @see LadderGameTile
+ * @see LadderGameController
  */
 public class LadderBoardGame extends BoardGame {
 
   /**
-   * Constructor for LadderBoardGame.
+   * Constructs a LadderBoardGame.
    *
-   * @param board The game board
-   * @param players The list of players
-   * @param diceCount The number of dice to use
+   * @param board The {@link Board} instance for this game.
+   * @param players A list of {@link Player}s (expected to be {@link LadderGamePlayer} instances).
+   * @param diceCount The number of dice to be used in the game.
    */
   public LadderBoardGame(Board board, List<Player> players, int diceCount) {
     super(board, players, diceCount);
   }
 
+  /**
+   * Initializes the game state. Places all players on the starting tile (tile 0)
+   * and sets the first player in the list as the current player.
+   */
   @Override
   public void initializeGame() {
     logger.info("Game started!");
@@ -37,9 +47,10 @@ public class LadderBoardGame extends BoardGame {
   }
 
   /**
-   * Gets the winner of the game.
+   * Determines the winner of the game.
+   * A player wins if their current tile ID is equal to the total number of tiles on the board.
    *
-   * @return The winning player, or null if there is no winner
+   * @return The winning {@link Player}, or null if no player has won yet.
    */
   @Override
   public Player getWinner() {
@@ -51,11 +62,23 @@ public class LadderBoardGame extends BoardGame {
     return null;
   }
 
+  /**
+   * Rolls all dice in the game and returns their total value.
+   *
+   * @return The sum of values from all rolled dice.
+   */
   public int rollDice() {
     dice.rollDice();
     return dice.getTotalValue();
   }
 
+  /**
+   * Performs a complete turn for the current player based on a dice roll.
+   * This involves moving the player, handling any tile action (ladder/slide),
+   * checking for a win condition, updating to the next player, and handling the round number.
+   *
+   * @param diceRoll The total value rolled on the dice.
+   */
   public void performPlayerTurn(int diceRoll) {
     movePlayer(diceRoll);
     handleTileAction();
@@ -65,7 +88,8 @@ public class LadderBoardGame extends BoardGame {
   }
 
   /**
-   * Handles tile actions for the current player.
+   * Checks if the current player has landed on a tile with a {@link TileAction} (ladder or slide).
+   * If an action exists, it is performed, and observers are notified.
    */
   protected void handleTileAction() {
     TileAction landAction = ((LadderGameTile) ((LadderGamePlayer) currentPlayer).getCurrentTile())
@@ -79,23 +103,13 @@ public class LadderBoardGame extends BoardGame {
   }
 
   /**
-   * Finds the next tile for the given player based on the dice roll. There are two unique cases
-   * for calculating the next tile.
+   * Calculates the destination tile for a player based on their current tile and a dice roll.
+   * Implements the "exact landing" rule: if a roll overshoots the final tile,
+   * the player moves back by the number of overshoot steps.
    *
-   * <p>In the following cases, the term 'expected tile' refers to the tile that the player is on,
-   * plus the dice roll. (e.g. the player is on tile 20, with a dice roll of 3, the expected tile
-   * is 23).
-   * <ul>
-   *   <li>If the id of the 'expected tile' is less than or equal to the board's tile count, the
-   *       next tile is the 'expected tile'.
-   *   <li>If the id of the 'expected tile' is greater than the board's tile count, the next tile
-   *       is set as (tileCount - overshoot). E.g. if the player is on tile 85 with a dice roll of
-   *       9 and the board has a tile count of 90, the next tile is 86.
-   * </ul>
-   *
-   * @param player The player to find the next tile for
-   * @param diceRoll The value of the dice roll to use in the calculation.
-   * @return The next tile for the player, meaning the tile the specified player will move to.
+   * @param player The {@link Player} (expected to be a {@link LadderGamePlayer}) making the move.
+   * @param diceRoll The value of the dice roll.
+   * @return The destination {@link Tile}.
    */
   private Tile findNextTile(Player player, int diceRoll) {
     int currentTileId = ((LadderGamePlayer) player).getCurrentTile().getTileId();
@@ -110,7 +124,11 @@ public class LadderBoardGame extends BoardGame {
   }
 
   /**
-   * Rolls the dice for the current player and moves them to the new tile.
+   * Moves the current player based on the provided dice roll value.
+   * Finds the next tile using {@link #findNextTile(Player, int)} and updates the player's position.
+   * Notifies observers of the player movement.
+   *
+   * @param diceRoll The total value rolled on the dice.
    */
   public void movePlayer(int diceRoll) {
     Tile nextTile = findNextTile(currentPlayer, diceRoll);
@@ -119,16 +137,25 @@ public class LadderBoardGame extends BoardGame {
   }
 
   /**
-   * Notifies the observers that a tile action has been performed.
+   * Notifies registered observers (specifically {@link LadderGameController} instances)
+   * that a tile action has been performed.
    *
-   * @param player the player that performed the action
-   * @param tileAction the tile action
+   * @param player The {@link Player} who triggered the action.
+   * @param tileAction The {@link TileAction} that was performed.
    */
   public void notifyTileActionPerformed(Player player, TileAction tileAction) {
     observers.forEach(observer -> ((LadderGameController) observer)
         .onTileActionPerformed(player, tileAction));
   }
 
+  /**
+   * Notifies registered observers (specifically {@link LadderGameController} instances)
+   * that a player has moved.
+   *
+   * @param player The {@link Player} who moved.
+   * @param diceRoll The dice roll value that caused the movement.
+   * @param newTileId The ID of the tile the player moved to.
+   */
   private void notifyPlayerMoved(Player player, int diceRoll, int newTileId) {
     observers.forEach(observer -> ((LadderGameController) observer)
         .onPlayerMoved(player, diceRoll, newTileId));

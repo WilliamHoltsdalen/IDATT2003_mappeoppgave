@@ -1,22 +1,21 @@
 package edu.ntnu.idi.idatt.model.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.dice.Dice;
 import edu.ntnu.idi.idatt.model.player.Player;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameCreateDiceValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetCurrentPlayerValidator;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.boardGameSetPlayersValidator;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.BoardGameSubject;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardGame class</h3>
+ * BoardGame class
  *
  * <p>Abstract class implementing common functionality for board games.
  * This class provides the base implementation for both Chutes and Ladders and Ludo games.
@@ -50,7 +49,9 @@ public abstract class BoardGame implements Game, BoardGameSubject {
 
   /**
    * Initializes the game by setting the initial state of the game.
-   * This method is implemented by the subclasses.
+   * This method is implemented by the subclasses to define game-specific setup,
+   * such as placing pieces, determining the starting player, or configuring initial game
+   * parameters.
    */
   public abstract void initializeGame();
 
@@ -80,11 +81,21 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     return roundNumber;
   }
 
+  /**
+   * Sets the game board.
+   *
+   * @param board The {@link Board} to be used for the game.
+   */
   @Override
   public void setBoard(Board board) {
     this.board = board;
   }
 
+  /**
+   * Sets the list of players for the game.
+   *
+   * @param players A list of {@link Player} objects participating in the game.
+   */
   @Override
   public void setPlayers(List<Player> players) {
     boardGameSetPlayersValidator(players);
@@ -105,18 +116,29 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     logger.debug("Set current player to: {}", currentPlayer.getName());
   }
 
+  /**
+   * Adds an observer to be notified of game events.
+   *
+   * @param observer The {@link BoardGameObserver} to add.
+   */
   @Override
   public void addObserver(BoardGameObserver observer) {
     observers.add(observer);
   }
 
+  /**
+   * Removes an observer from the list of observers.
+   *
+   * @param observer The {@link BoardGameObserver} to remove.
+   */
   @Override
   public void removeObserver(BoardGameObserver observer) {
     observers.remove(observer);
   }
 
   /**
-   * Checks if round number should be incremented, and if so, increments it.
+   * Handles the progression of game rounds. This involves checking if the current player
+   * is the first player in the turn order, and if so, incrementing the round number.
    */
   @Override
   public void handleRoundNumber() {
@@ -126,7 +148,7 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   /**
-   * Increments the round number.
+   * Increments the round number and notifies observers.
    */
   protected void incrementRoundNumber() {
     roundNumber++;
@@ -135,9 +157,9 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   /**
-   * Creates the given number of dice and adds them to the game.
+   * Creates the dice to be used in the game.
    *
-   * @param diceCount The number of dice to create
+   * @param diceCount The number of dice to create.
    */
   protected void createDice(int diceCount) {
     boardGameCreateDiceValidator(diceCount);
@@ -146,7 +168,8 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   /**
-   * Updates the current player to the next player in the list.
+   * Updates the current player to the next player in the turn order
+   * and notifies observers of the change.
    */
   protected void updateCurrentPlayer() {
     int currentIndex = players.indexOf(currentPlayer);
@@ -156,7 +179,8 @@ public abstract class BoardGame implements Game, BoardGameSubject {
   }
 
   /**
-   * Checks if the game has a winner and notifies observers if it does.
+   * Checks if a win condition has been met. If a winner is found,
+   * it notifies observers that the game has finished.
    */
   protected void checkWinCondition() {
     Player winner = getWinner();
@@ -166,16 +190,31 @@ public abstract class BoardGame implements Game, BoardGameSubject {
     }
   }
 
+  /**
+   * Notifies all registered observers that the round number has incremented.
+   *
+   * @param roundNumber The new round number.
+   */
   @Override
   public void notifyRoundNumberIncremented(int roundNumber) {
     observers.forEach(observer -> observer.onRoundNumberIncremented(roundNumber));
   }
 
+  /**
+   * Notifies all registered observers that the current player has changed.
+   *
+   * @param player The new current {@link Player}.
+   */
   @Override
   public void notifyCurrentPlayerChanged(Player player) {
     observers.forEach(observer -> observer.onCurrentPlayerChanged(player));
   }
 
+  /**
+   * Notifies all registered observers that the game has finished.
+   *
+   * @param winner The {@link Player} who won the game.
+   */
   @Override
   public void notifyGameFinished(Player winner) {
     observers.forEach(observer -> observer.onGameFinished(winner));

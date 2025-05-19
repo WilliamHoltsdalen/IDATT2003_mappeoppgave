@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.observer;
 import java.util.Map;
 
 /**
- * <h3>ButtonClickObserver interface</h3>
+ * ButtonClickObserver interface
  *
  * <p>This interface defines methods for observing button click events, such as when a button is
  * clicked in a view.

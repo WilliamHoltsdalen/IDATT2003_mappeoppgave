@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>GameSelectionView</h3>
+ * GameSelectionView
  *
  * <p>This class is responsible for displaying the game selection view. It displays a list of games
  * and allows the user to select one by clicking on it.
@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @see ButtonClickSubject
  */
 public class GameSelectionView extends BorderPane implements ButtonClickSubject {
+
   private static final Logger logger = LoggerFactory.getLogger(GameSelectionView.class);
   private final List<ButtonClickObserver> observers;
   private VBox contentBox;
@@ -86,8 +87,9 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
       gameBox.setAlignment(Pos.CENTER);
       gameBox.setSpacing(15);
       gameBox.setMinSize(120, 120);
-      gameBox.prefWidthProperty().bind(gameSelectionBox.widthProperty().divide(availableGames.size()).subtract(mainBox.getSpacing() / 2));
-      gameBox.prefHeightProperty().bind(gameSelectionBox.heightProperty()); 
+      gameBox.prefWidthProperty().bind(gameSelectionBox.widthProperty()
+          .divide(availableGames.size()).subtract(mainBox.getSpacing() / 2));
+      gameBox.prefHeightProperty().bind(gameSelectionBox.heightProperty());
 
       Pane imagePane = new StackPane();
       imagePane.setMinSize(0, 0);
@@ -98,15 +100,17 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
       gameImageView.setPreserveRatio(true);
       gameImageView.fitHeightProperty().bind(imagePane.prefHeightProperty());
 
-      imagePane.widthProperty().addListener((obs, oldVal, newVal) -> {
-        double imgAspectRatio = gameImageView.getImage().getWidth() / gameImageView.getImage().getHeight();
-        double paneAspectRatio = newVal.doubleValue() / imagePane.getPrefHeight();
-        if (paneAspectRatio < imgAspectRatio) {
-          gameImageView.setFitWidth(newVal.doubleValue());
-        }
-      });
+      imagePane.widthProperty()
+          .addListener((obs, oldVal, newVal) -> {
+            double imgAspectRatio =
+                gameImageView.getImage().getWidth() / gameImageView.getImage().getHeight();
+            double paneAspectRatio = newVal.doubleValue() / imagePane.getPrefHeight();
+            if (paneAspectRatio < imgAspectRatio) {
+              gameImageView.setFitWidth(newVal.doubleValue());
+            }
+          });
 
-      imagePane.getChildren().add(gameImageView); 
+      imagePane.getChildren().add(gameImageView);
 
       Label gameNameLabel = new Label(game.getKey());
       gameNameLabel.getStyleClass().add("game-name");
@@ -153,7 +157,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    * Notifies all observers of a button click with parameters.
    *
    * @param buttonId The id of the button that was clicked.
-   * @param params The parameters of the button click.
+   * @param params   The parameters of the button click.
    */
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {
