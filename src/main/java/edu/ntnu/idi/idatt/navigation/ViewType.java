@@ -24,6 +24,9 @@ public enum ViewType {
   LUDO_GAME,
   /** The view for creating or editing Ludo game boards. */
   LUDO_GAME_BOARD_CREATOR,
-  /** The screen displayed when a game is over, showing results or options to restart/exit. */
-  GAME_OVER,
+  /**
+   * Represents the view displayed when a game (Ludo or Ladder Game) has finished,
+   * showing rankings and options to restart or go to the main menu.
+   */
+  GAME_FINISHED
 }

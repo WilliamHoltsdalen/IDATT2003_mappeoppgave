@@ -8,6 +8,7 @@ import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * GameController.
@@ -32,6 +33,11 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * Runnable action to execute when the game is quit.
    */
   protected Runnable onQuitGame;
+
+  /**
+   * Consumer action to execute when the game is finished.
+   */
+  protected Consumer<Map<String, Object>> onNavigateToGameFinished;
 
   /**
    * Constructs a GameController.
@@ -128,6 +134,26 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
   protected void quitGame() {
     if (onQuitGame != null) {
       onQuitGame.run();
+    }
+  }
+
+  /**
+   * Sets the {@link Consumer} action to be executed when the game is finished.
+   *
+   * @param onNavigateToGameFinished The action to perform on navigating to the game finished view.
+   */
+  public void setOnNavigateToGameFinished(Consumer<Map<String, Object>> onNavigateToGameFinished) {
+    this.onNavigateToGameFinished = onNavigateToGameFinished;
+  }
+
+  /**
+   * Navigates to the game finished view.
+   *
+   * @param params A map of parameters to pass to the game finished view.
+   */
+  protected void navigateToGameFinished(Map<String, Object> params) {
+    if (onNavigateToGameFinished != null) {
+      onNavigateToGameFinished.accept(params);
     }
   }
 

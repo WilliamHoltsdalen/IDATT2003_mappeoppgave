@@ -10,6 +10,8 @@ import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameStackPane;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -234,8 +236,17 @@ public class LudoGameController extends GameController {
    */
   @Override
   public void onGameFinished(Player winner) {
-    gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: "
-        + winner.getName());
+    gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
+    disableRollDiceButton();
+
+    List<Player> rankedPlayers = getPlayers().stream().sorted(Comparator.comparingInt(
+        (Player p) -> (int) ((LudoPlayer) p).getTokens().stream()
+        .filter(t -> ((LudoToken) t).getStatus() == LudoToken.TokenStatus.FINISHED)
+        .count()).reversed()).toList();
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("rankedPlayers", rankedPlayers);
+    navigateToGameFinished(params);
   }
 
   /**
