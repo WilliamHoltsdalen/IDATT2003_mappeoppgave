@@ -15,8 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class MenuController implements ButtonClickObserver {
+
+  protected final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
   protected static final int DEFAULT_BOARD_INDEX = 1;
   protected final MenuView menuView;
@@ -29,6 +33,7 @@ public abstract class MenuController implements ButtonClickObserver {
   protected Runnable onBackToGameSelection;
 
   protected MenuController(MenuView menuView) {
+    logger.debug("MenuController initialized with default board index");
     this.menuView = menuView;
     this.boardVariants = new HashMap<>();
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
@@ -50,6 +55,7 @@ public abstract class MenuController implements ButtonClickObserver {
    * @param boardFactory the board factory to set
    */
   protected void setBoardFactory(BoardFactory boardFactory) {
+    logger.debug("board factory set");
     this.boardFactory = boardFactory;
   }
 
@@ -83,6 +89,7 @@ public abstract class MenuController implements ButtonClickObserver {
 
   @Override
   public void onButtonClicked(String buttonId) {
+    logger.debug("button clicked: {}", buttonId);
     switch (buttonId) {
       case "next_board" -> handleNextBoard();
       case "previous_board" -> handlePreviousBoard();
@@ -97,6 +104,7 @@ public abstract class MenuController implements ButtonClickObserver {
 
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
+    logger.debug("button clicked with params: {}", buttonId);
     switch (buttonId) {
       case "import_players" -> handleImportPlayers(params);
       case "save_players" -> handleSavePlayers(params);
@@ -111,6 +119,7 @@ public abstract class MenuController implements ButtonClickObserver {
    * Handles the action of the 'start game' button in the main menu.
    */
   private void handleStartGame() {
+    logger.debug("start game with board index {}", currentBoardIndex);
     Board board = boardVariants.get(currentBoardIndex);
     List<Player> players = getPlayers();
 
@@ -119,11 +128,13 @@ public abstract class MenuController implements ButtonClickObserver {
 
   public void handleNextBoard() {
     currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
+    logger.debug("switched to next board, current board index: {}", currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
   public void handlePreviousBoard() {
     currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
+    logger.debug("switched to previous board, current board index: {}", currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
@@ -137,27 +148,33 @@ public abstract class MenuController implements ButtonClickObserver {
 
   private void handleImportPlayers(Map<String, Object> params) {
     File file = (File) params.get("file");
+    logger.debug("attempting import players from file: {}", file.getAbsolutePath());
     try {
       loadPlayersFromFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
+      logger.error("Failed to import players - invalid file path", e);
       menuView.showErrorAlert("Failed to import players", "Invalid file path");
     }
   }
 
   private void handleSavePlayers(Map<String, Object> params) {
     File file = (File) params.get("file");
+    logger.debug("attempting save players from file: {}", file.getAbsolutePath());
     try {
       savePlayersToFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
+      logger.error("Failed to save players - invalid file path", e);
       menuView.showErrorAlert("Error", "Could not save players");
     }
   }
 
   private void handleImportBoard(Map<String, Object> params) {
     File file = (File) params.get("file");
+    logger.debug("attempting import board from file: {}", file.getAbsolutePath());
     try {
       loadBoardFromFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
+      logger.error("Failed to import board - invalid file path", e);
       menuView.showErrorAlert("Failed to import board", "Invalid file path");
     }
   }
@@ -174,20 +191,26 @@ public abstract class MenuController implements ButtonClickObserver {
    * @see PlayerFactory#createPlayersFromFile(String)
    */
   public void loadPlayersFromFile(String filePath) {
+    logger.debug("attempting to load players from file: {}", filePath);
     try {
       menuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
       menuView.showInfoAlert("Success", "Players loaded successfully");
+      logger.debug("successfully loaded players");
     } catch (IOException e) {
+      logger.error("Failed to load players - invalid file path", e);
       menuView.showErrorAlert("Error", "Could not load players");
     }
   }
 
   public void savePlayersToFile(String filePath) {
+    logger.debug("attempting to save players to file: {}", filePath);
     try {
       FileHandler<Player> fileHandler = new PlayerFileHandlerCsv();
       fileHandler.writeFile(filePath, getPlayers());
       menuView.showInfoAlert("Success", "Players saved successfully");
+      logger.debug("successfully saved players");
     } catch (IOException e) {
+      logger.error("Failed to save players - invalid file path", e);
       menuView.showErrorAlert("Error", "Could not save players");
     }
   }
@@ -199,9 +222,11 @@ public abstract class MenuController implements ButtonClickObserver {
    * @see LadderBoardFactory#createBoardFromFile(String)
    */
   private void loadBoardFromFile(String filePath) {
+    logger.debug("attempting to load board from file: {}", filePath);
     try {
       Board board = boardFactory.createBoardFromFile(filePath);
       if (boardVariants.values().stream().anyMatch(b -> b.getName().equals(board.getName()))) {
+        logger.warn("Attempted to load board from file with duplicate name: {}", filePath);
         menuView.showErrorAlert("An error occured",
             "Board with name " + board.getName() + " already exists");
         return;
@@ -210,8 +235,10 @@ public abstract class MenuController implements ButtonClickObserver {
       currentBoardIndex = boardVariants.size();
       showBoardVariant(currentBoardIndex);
       menuView.showInfoAlert("Success", "Board imported successfully");
+      logger.debug("successfully loaded board");
     } catch (IllegalArgumentException e) {
-      menuView.showErrorAlert("An error occured", "Could not load board");
+      logger.error("Failed to load board - invalid file path", e);
+      menuView.showErrorAlert("An error occurred", "Could not load board");
     }
   }
 

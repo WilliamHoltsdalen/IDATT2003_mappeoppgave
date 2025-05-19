@@ -9,16 +9,18 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class GameController implements ButtonClickObserver, BoardGameObserver  {
   protected final GameView gameView;
-
+  protected final Logger logger = LoggerFactory.getLogger(GameController.class);
   protected BoardGame boardGame;
   protected Runnable onQuitGame;
 
   public GameController(GameView gameView, Board board, List<Player> players) {
     this.gameView = gameView;
-
+    logger.debug("GameController initialized");
     initializeBoardGame(board, players);
     initializeGameView();
   }
@@ -33,6 +35,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
 
   public void initializeGameView() {
     gameView.initialize(getPlayers(), getRoundNumber(), (Board) getBoard());
+    logger.debug("initialize game view");
   }
 
   /**
@@ -68,32 +71,40 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * @param onQuitGame the on quit game event
    */
   public void setOnQuitGame(Runnable onQuitGame) {
+    logger.debug("setting quit game callback");
     this.onQuitGame = onQuitGame;
+
   }
 
   /**
    * Quits the game by running the on quit game event.
    */
   protected void quitGame() {
+    logger.info("quitting the game");
     if (onQuitGame != null) {
       onQuitGame.run();
     }
   }
 
   protected void handleRollDiceButtonAction() {
+    logger.debug("roll dice button clicked");
     gameView.getGameMenuBox().disableRollDiceButton();
     if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+      logger.debug("performing turn for all players");
       performPlayerTurnForAllPlayers();
       return;
     }
+    logger.debug("performing turn for current player");
     performPlayerTurn();
   }
 
   protected void enableRollDiceButton() {
+    logger.debug("enable roll dice button");
     gameView.getGameMenuBox().enableRollDiceButton();
   }
 
   protected void disableRollDiceButton() {
+    logger.debug("disable roll dice button");
     gameView.getGameMenuBox().disableRollDiceButton();
   }
 

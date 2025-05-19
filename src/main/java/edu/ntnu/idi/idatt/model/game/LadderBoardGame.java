@@ -75,7 +75,7 @@ public class LadderBoardGame extends BoardGame {
     }
     landAction.perform(currentPlayer, board);
     notifyTileActionPerformed(currentPlayer, landAction);
-    logger.info("Performed tile action: {}", landAction.getDescription());
+    logger.info("{} performed tile action: {}", currentPlayer.getName(), landAction.getDescription());
   }
 
   /**

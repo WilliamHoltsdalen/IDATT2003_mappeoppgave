@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 
+
 public class LadderGameBoardCreatorController extends BoardCreatorController {
 
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
