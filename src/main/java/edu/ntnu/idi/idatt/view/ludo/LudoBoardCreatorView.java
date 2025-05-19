@@ -16,17 +16,51 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+/**
+ * <h3>LudoBoardCreatorView.</h3>
+ *
+ * <p>This class extends {@link BoardCreatorView} to provide a specialized UI for creating
+ * and configuring {@link LudoGameBoard}s. It allows users to set the board's name,
+ * description, and size (which determines the dimensions of the Ludo board.
+ *
+ * <p>The view includes:
+ * <ul>
+ *   <li>Input fields for board name and description.</li>
+ *   <li>A {@link Spinner} to adjust the Ludo board size (e.g., 9, 11, 13, ..., 21).</li>
+ *   <li>Buttons to import an existing board, save the current board, or return to the menu.</li>
+ *   <li>A central display area ({@link LudoGameBoardStackPane}) to show the Ludo board.</li>
+ *   <li>An informational panel, as Ludo tile actions are noted as under development.</li>
+ * </ul>
+ * </p>
+ *
+ * @see BoardCreatorView
+ * @see LudoGameBoard
+ * @see LudoBoardCreatorController
+ * @see LudoGameBoardStackPane
+ * @see Spinner
+ */
 public class LudoBoardCreatorView extends BoardCreatorView {
 
   private final Spinner<Integer> boardSizeSpinner;
   private ChangeListener<Integer> boardSizeListener;
 
+  /**
+   * Constructs a new {@code LudoBoardCreatorView}.
+   * Initializes the board size spinner.
+   */
   public LudoBoardCreatorView() {
     super();
 
     this.boardSizeSpinner = new Spinner<>();
   }
 
+  /**
+   * Creates and returns a {@link LudoGameBoardStackPane} instance to be used as the
+   * central area for displaying the Ludo board being created. This method overrides the
+   * parent class's method to provide a Ludo-specific board container.
+   *
+   * @return A new {@link LudoGameBoardStackPane} for the board display.
+   */
   @Override
   protected BoardStackPane createBoardStackPane() {
     LudoGameBoardStackPane boardContainer = new LudoGameBoardStackPane();
@@ -34,10 +68,24 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     return boardContainer;
   }
 
+  /**
+   * Returns the {@link Spinner} used for adjusting the size of the Ludo board.
+   * The board size typically refers to the number of tiles along one side of the board.
+   *
+   * @return The {@link Spinner} for board size selection.
+   */
   public Spinner<Integer> getBoardSizeSpinner() {
     return boardSizeSpinner;
   }
 
+  /**
+   * Sets the value of the board size spinner and re-attaches its change listener.
+   * This is typically used when loading an existing Ludo board configuration to update
+   * the spinner to the loaded board's size. The spinner is configured for typical Ludo
+   * board sizes (e.g., odd numbers from 9 to 21).
+   *
+   * @param size The board size to set
+   */
   public void setBoardSizeSpinner(int size) {
     boardSizeSpinner.valueProperty().removeListener(boardSizeListener);
     boardSizeSpinner.setValueFactory(
@@ -45,6 +93,14 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     boardSizeSpinner.valueProperty().addListener(boardSizeListener);
   }
 
+  /**
+   * Initializes the main view components of the Ludo board creator.
+   * This method sets up the board configuration panel (for name, description, size),
+   * the central board display area, an informational left panel, and a right menu panel
+   * with save/back buttons. It configures the overall layout and styling of the view.
+   *
+   * @param board The {@link LudoGameBoard} instance to be displayed and configured.
+   */
   public void initializeView(LudoGameBoard board) {
     logger.debug("Initializing LudoBoardCreatorView");
 
@@ -66,6 +122,17 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     logger.debug("LudoBoardCreatorView initialized successfully");
   }
 
+  /**
+   * Creates the central panel located above the board display, used for configuring
+   * general Ludo board properties. This panel includes:
+   * <ul>
+   *   <li>Input fields for the board's name and description.</li>
+   *   <li>An "Import board" button.</li>
+   *   <li>A {@link Spinner} for adjusting the Ludo board size.</li>
+   * </ul>
+   *
+   * @return A {@link VBox} containing the board configuration controls.
+   */
   private VBox createBoardConfigurationPanel() {
     VBox panel = new VBox(15);
     panel.getStyleClass().add("board-config-section");
@@ -111,6 +178,12 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     return panel;
   }
 
+  /**
+   * Creates the left informational panel of the view. This panel currently displays a message
+   * indicating that tile actions for Ludo are still under development, along with a tools icon.
+   *
+   * @return A {@link VBox} containing the informational content.
+   */
   private VBox createLeftInfoPanel() {
     VBox panel = new VBox(15);
     panel.setPadding(new Insets(20));
@@ -129,6 +202,12 @@ public class LudoBoardCreatorView extends BoardCreatorView {
     return panel;
   }
 
+  /**
+   * Creates the right menu panel of the view. This panel contains buttons for saving the
+   * currently configured Ludo board and for returning to the main menu.
+   *
+   * @return A {@link VBox} containing the save and back buttons.
+   */
   private VBox createMenuPanel() {
     VBox panel = new VBox(20);
     panel.setPadding(new Insets(10));

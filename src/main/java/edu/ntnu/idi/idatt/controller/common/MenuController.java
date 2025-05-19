@@ -21,8 +21,9 @@ import java.util.function.BiConsumer;
  * <p>Abstract controller for handling the logic of menu views.</p>
  *
  * <p>It manages interactions between a {@link MenuView} and the underlying game setup components,
- * such as {@link BoardFactory} and {@link PlayerFactory}. It handles board selection, player configuration,
- * and navigation to other parts of the application (e.g., starting a game, creating a board).</p>
+ * such as {@link BoardFactory} and {@link PlayerFactory}. It handles board selection, player
+ * configuration, and navigation to other parts of the application (e.g., starting a game, creating
+ * a board).</p>
  *
  * @see MenuView
  * @see BoardFactory
@@ -62,21 +63,20 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Loads available board variants using the configured {@link #boardFactory}.
-   * Subclasses must implement this to populate the {@link #boardVariants} map.
+   * Loads available board variants using the configured {@link #boardFactory}. Subclasses must
+   * implement this to populate the {@link #boardVariants} map.
    */
   protected abstract void loadBoardsFromFactory();
 
   /**
-   * Initializes the menu view.
-   * Subclasses should implement this to set up UI elements, display initial data (like boards),
-   * and configure event handlers within the {@link #menuView}.
+   * Initializes the menu view. Subclasses should implement this to set up UI elements, display
+   * initial data (like boards), and configure event handlers within the {@link #menuView}.
    */
   protected abstract void initializeMenuView();
 
   /**
-   * Retrieves the list of players configured in the menu.
-   * Subclasses must implement this to get player data, typically from the {@link #menuView}.
+   * Retrieves the list of players configured in the menu. Subclasses must implement this to get
+   * player data, typically from the {@link #menuView}.
    *
    * @return A list of {@link Player}s.
    */
@@ -94,7 +94,8 @@ public abstract class MenuController implements ButtonClickObserver {
   /**
    * Sets the action to be performed when the game is started.
    *
-   * @param onStartGame A {@link BiConsumer} that accepts the selected {@link Board} and list of {@link Player}s.
+   * @param onStartGame A {@link BiConsumer} that accepts the selected {@link Board} and list of
+   *                    {@link Player}s.
    */
   public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
     this.onStartGame = onStartGame;
@@ -119,8 +120,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles button click events without parameters from the {@link MenuView}.
-   * Delegates to specific handlers based on the button ID.
+   * Handles button click events without parameters from the {@link MenuView}. Delegates to specific
+   * handlers based on the button ID.
    *
    * @param buttonId The ID of the button that was clicked.
    */
@@ -139,11 +140,11 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles button click events with parameters from the {@link MenuView}.
-   * Delegates to specific handlers based on the button ID.
+   * Handles button click events with parameters from the {@link MenuView}. Delegates to specific
+   * handlers based on the button ID.
    *
    * @param buttonId The ID of the button that was clicked.
-   * @param params A map of parameters associated with the button click.
+   * @param params   A map of parameters associated with the button click.
    */
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
@@ -158,8 +159,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the action to start the game.
-   * Retrieves the currently selected board and configured players, then triggers the {@link #onStartGame} action.
+   * Handles the action to start the game. Retrieves the currently selected board and configured
+   * players, then triggers the {@link #onStartGame} action.
    */
   private void handleStartGame() {
     Board board = boardVariants.get(currentBoardIndex);
@@ -169,8 +170,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the action to display the next available board variant.
-   * Updates {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
+   * Handles the action to display the next available board variant. Updates
+   * {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
    */
   public void handleNextBoard() {
     currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
@@ -178,8 +179,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the action to display the previous available board variant.
-   * Updates {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
+   * Handles the action to display the previous available board variant. Updates
+   * {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
    */
   public void handlePreviousBoard() {
     currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
@@ -194,15 +195,16 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the action to navigate back to the game selection screen by running {@link #onBackToGameSelection}.
+   * Handles the action to navigate back to the game selection screen by running
+   * {@link #onBackToGameSelection}.
    */
   private void handleBackToGameSelection() {
     onBackToGameSelection.run();
   }
 
   /**
-   * Handles the import of players from a file.
-   * Retrieves the file from parameters and calls {@link #loadPlayersFromFile(String)}.
+   * Handles the import of players from a file. Retrieves the file from parameters and calls
+   * {@link #loadPlayersFromFile(String)}.
    *
    * @param params A map containing the "file" ({@link File}) to import from.
    */
@@ -216,8 +218,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles saving the current list of players to a file.
-   * Retrieves the file from parameters and calls {@link #savePlayersToFile(String)}.
+   * Handles saving the current list of players to a file. Retrieves the file from parameters and
+   * calls {@link #savePlayersToFile(String)}.
    *
    * @param params A map containing the "file" ({@link File}) to save to.
    */
@@ -231,8 +233,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the import of a board from a file.
-   * Retrieves the file from parameters and calls {@link #loadBoardFromFile(String)}.
+   * Handles the import of a board from a file. Retrieves the file from parameters and calls
+   * {@link #loadBoardFromFile(String)}.
    *
    * @param params A map containing the "file" ({@link File}) to import from.
    */
@@ -256,9 +258,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Loads players from a specified file path using {@link PlayerFactory}
-   * and updates the {@link #menuView}.
-   * Shows appropriate alerts on success or failure.
+   * Loads players from a specified file path using {@link PlayerFactory} and updates the
+   * {@link #menuView}. Shows appropriate alerts on success or failure.
    *
    * @param filePath The path to the file containing player data.
    */
@@ -273,8 +274,7 @@ public abstract class MenuController implements ButtonClickObserver {
 
   /**
    * Saves the current list of players (obtained via {@link #getPlayers()}) to a specified file path
-   * using a {@link PlayerFileHandlerCsv}.
-   * Shows appropriate alerts on success or failure.
+   * using a {@link PlayerFileHandlerCsv}. Shows appropriate alerts on success or failure.
    *
    * @param filePath The path to the file where players should be saved.
    */
@@ -289,10 +289,9 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Loads a board from a specified file path using the {@link #boardFactory}.
-   * Adds the loaded board to {@link #boardVariants} if a board with the same name doesn't already exist.
-   * Updates the view to show the newly imported board.
-   * Shows appropriate alerts on success or failure.
+   * Loads a board from a specified file path using the {@link #boardFactory}. Adds the loaded board
+   * to {@link #boardVariants} if a board with the same name doesn't already exist. Updates the view
+   * to show the newly imported board. Shows appropriate alerts on success or failure.
    *
    * @param filePath The path to the file containing board data.
    */

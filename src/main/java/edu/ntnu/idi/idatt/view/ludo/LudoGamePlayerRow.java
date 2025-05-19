@@ -15,15 +15,39 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
+/**
+ * <h3>LudoGamePlayerRow.</h3>
+ *
+ * <p>Extends {@link GamePlayerRow} to represent a single player's row in the Ludo game's
+ * players list. This class displays the player's token, name, and the number of their tokens
+ * that have reached the finished state (e.g., "2/4").</p>
+ *
+ * @see GamePlayerRow
+ * @see LudoPlayer
+ * @see PlayerTokenFactory
+ */
 public class LudoGamePlayerRow extends GamePlayerRow {
 
+  /**
+   * Constructs a {@code LudoGamePlayerRow} for the given player.
+   *
+   * @param player The {@link Player} (expected to be a {@link LudoPlayer}) to display.
+   */
   public LudoGamePlayerRow(Player player) {
     super(player);
   }
 
+  /**
+   * Initializes the visual components of the player row for a Ludo game.
+   * This includes creating the player's colored token, their name label, a spacer,
+   * and a label showing the count of finished tokens out of the total.
+   *
+   * @param player The {@link Player} (expected to be a {@link LudoPlayer}) whose information
+   *               is being displayed.
+   */
   @Override
   protected void initialize(Player player) {
-    Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
+    final Shape playerToken = PlayerTokenFactory.create(10, Color.web(player.getColorHex()),
         player.getPlayerTokenType());
 
     Text playerName = new Text(player.getName());
@@ -46,6 +70,13 @@ public class LudoGamePlayerRow extends GamePlayerRow {
     this.getChildren().addAll(playerToken, playerName, spacer, playerTile);
   }
 
+  /**
+   * Updates the text displaying the number of finished tokens for the player.
+   * The text is formatted as "finishedTokens/totalTokens" (e.g., "text/4").
+   *
+   * @param player The {@link Player} whose token count is being updated.
+   * @param text   The string representing the number of finished tokens.
+   */
   @Override
   public void setTileNumber(Player player, String text) {
     playerTile.setText(text + "/4");

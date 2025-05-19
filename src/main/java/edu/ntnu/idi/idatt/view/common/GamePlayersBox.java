@@ -12,8 +12,8 @@ import javafx.scene.text.Text;
  * <h3>GamePlayersBox.</h3>
  *
  * <p>Abstract JavaFX {@link VBox} that displays a list of players in an active game,
- * typically showing their names, tokens, and current status (e.g., tile number).
- * It also displays the current round number.</p>
+ * typically showing their names, tokens, and current status (e.g., tile number). It also displays
+ * the current round number.</p>
  *
  * <p>Subclasses are responsible for creating specific {@link GamePlayerRow} instances
  * and adding them to this container.</p>
@@ -23,6 +23,7 @@ import javafx.scene.text.Text;
  * @see Player
  */
 public abstract class GamePlayersBox extends VBox {
+
   protected static final String ROUND_NUMBER_TEXT = "Round ";
 
   protected final List<GamePlayerRow> playersBoxRows;
@@ -31,7 +32,7 @@ public abstract class GamePlayersBox extends VBox {
   /**
    * Constructs a GamePlayersBox.
    *
-   * @param players A list of {@link Player}s to display initially.
+   * @param players            A list of {@link Player}s to display initially.
    * @param initialRoundNumber The starting round number to display.
    */
   protected GamePlayersBox(List<Player> players, int initialRoundNumber) {
@@ -48,9 +49,9 @@ public abstract class GamePlayersBox extends VBox {
   }
 
   /**
-   * Initializes the player box by creating and adding {@link GamePlayerRow}s for each player
-   * and setting up the round number display.
-   * Subclasses must implement this to populate {@link #playersBoxRows} and add them to the VBox children.
+   * Initializes the player box by creating and adding {@link GamePlayerRow}s for each player and
+   * setting up the round number display. Subclasses must implement this to populate
+   * {@link #playersBoxRows} and add them to the VBox children.
    *
    * @param players A list of {@link Player}s to display.
    */
@@ -75,8 +76,8 @@ public abstract class GamePlayersBox extends VBox {
   }
 
   /**
-   * Applies a visual focus style to the player row at the specified index
-   * and removes it from any previously focused row.
+   * Applies a visual focus style to the player row at the specified index and removes it from any
+   * previously focused row.
    *
    * @param playerIndex The 0-based index of the player row to focus.
    */

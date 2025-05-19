@@ -111,10 +111,10 @@ public class MenuPlayerRow extends HBox {
    * Shows a popup dialog for picking the player's token color and type.
    * The popup is positioned near the mouse click that triggered it.
    *
-   * @param xPos The screen x-coordinate for positioning the popup.
-   * @param yPos The screen y-coordinate for positioning the popup.
+   * @param xpos The screen x-coordinate for positioning the popup.
+   * @param ypos The screen y-coordinate for positioning the popup.
    */
-  private void showPlayerColorPickerPopup(double xPos, double yPos) {
+  private void showPlayerColorPickerPopup(double xpos, double ypos) {
     Popup popup = new Popup();
     popup.setHideOnEscape(true);
     popup.setAutoHide(true);
@@ -189,12 +189,12 @@ public class MenuPlayerRow extends HBox {
     HBox popupContent = new HBox(innerPopupContent, closePopupButton);
     popupContent.getStyleClass().add("color-picker-popup");
     popup.getContent().setAll(popupContent);
-    popup.show(this.getScene().getWindow(), xPos, yPos);
+    popup.show(this.getScene().getWindow(), xpos, ypos);
   }
 
   /**
-   * Updates the player's token appearance based on the current {@link #color} and {@link #tokenType}.
-   * Also triggers the {@link #onUpdate} runnable if it is set.
+   * Updates the player's token appearance based on the current {@link #color} and
+   * {@link #tokenType}. Also triggers the {@link #onUpdate} runnable if it is set.
    */
   private void updatePlayerToken() {
     playerToken = PlayerTokenFactory.create(7, color, tokenType);

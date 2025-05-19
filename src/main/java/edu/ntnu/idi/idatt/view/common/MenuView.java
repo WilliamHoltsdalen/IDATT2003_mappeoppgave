@@ -132,9 +132,9 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     this.playerSelectionBox = createPlayerSelectionBox();
     this.boardSelectionBox = createBoardSelectionBox();
 
-    HBox hBox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
-    hBox.getStyleClass().add("menu-h-box");
-    this.getChildren().setAll(createHeaderBox(title), hBox, startGameButton);
+    HBox hbox = new HBox(playerSelectionBox, menuSpacer, boardSelectionBox);
+    hbox.getStyleClass().add("menu-h-box");
+    this.getChildren().setAll(createHeaderBox(title), hbox, startGameButton);
     logger.debug("MenuView initialized successfully");
   }
 
@@ -235,10 +235,10 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
         .add("add-player-button"));
     addPlayerButtonsBox.getStyleClass().add("add-player-buttons-box");
 
-    VBox vBox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
-    vBox.getStyleClass().add("player-selection");
+    VBox vbox = new VBox(playerSelectionHeader, playerListBox, addPlayerButtonsBox);
+    vbox.getStyleClass().add("player-selection");
 
-    return vBox;
+    return vbox;
   }
 
   /**
@@ -290,9 +290,9 @@ public abstract class MenuView extends VBox implements ButtonClickSubject {
     VBox carousel = new VBox(boardStackPane, carouselControls, boardDescription);
     carousel.getStyleClass().add("board-carousel");
 
-    VBox vBox = new VBox(boardSelectionHeader, carousel);
-    vBox.getStyleClass().add("board-selection");
-    return vBox;
+    VBox vbox = new VBox(boardSelectionHeader, carousel);
+    vbox.getStyleClass().add("board-selection");
+    return vbox;
   }
 
   /**

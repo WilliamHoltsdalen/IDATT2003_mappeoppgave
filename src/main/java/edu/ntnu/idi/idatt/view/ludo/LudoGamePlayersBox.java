@@ -10,14 +10,34 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+/**
+ * <h3>LudoGamePlayersBox.</h3>
+ *
+ * <p>Extends {@link GamePlayersBox} to create a specialized container for displaying player
+ * information in a Ludo game. It arranges multiple {@link LudoGamePlayerRow} instances vertically,
+ * showing each player's status, and also displays the current round number of the game.</p>
+ *
+ * @see GamePlayersBox
+ * @see LudoGamePlayerRow
+ * @see Player
+ */
 public class LudoGamePlayersBox extends GamePlayersBox {
 
+  /**
+   * Constructs a {@code LudoGamePlayersBox} with the given list of players and initial
+   * round number.
+   *
+   * @param players            The list of {@link Player}s participating in the game.
+   * @param initialRoundNumber The starting round number for the game.
+   */
   public LudoGamePlayersBox(List<Player> players, int initialRoundNumber) {
     super(players, initialRoundNumber);
   }
 
   /**
    * Initializes the players box by creating all the components and adding the players to the box.
+   * For each player, a {@link LudoGamePlayerRow} is created and added. A round number display
+   * and a horizontal divider are also included.
    *
    * @param players the list of players to add to the box
    */
@@ -38,11 +58,11 @@ public class LudoGamePlayersBox extends GamePlayersBox {
       playersBoxVbox.getChildren().add(playerRow);
     });
 
-    VBox vBox = new VBox(playersBoxVbox);
+    VBox vbox = new VBox(playersBoxVbox);
     VBox.setVgrow(playersBoxVbox, Priority.ALWAYS);
-    HBox.setHgrow(vBox, Priority.NEVER);
-    vBox.setAlignment(Pos.TOP_LEFT);
+    HBox.setHgrow(vbox, Priority.NEVER);
+    vbox.setAlignment(Pos.TOP_LEFT);
 
-    this.getChildren().add(vBox);
+    this.getChildren().add(vbox);
   }
 }

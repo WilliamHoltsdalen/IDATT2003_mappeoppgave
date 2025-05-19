@@ -20,17 +20,48 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * <h3>LadderGameBoardStackPane.</h3>
+ *
+ * <p>This class extends {@link BoardStackPane} to provide a specialized view for displaying
+ * {@link LadderGameBoard}s. It handles the visual representation of the game board, including its
+ * background, grid, placed components (ladders, slides, portals), and tile numbering.</p>
+ *
+ * <p>Key functionalities include:
+ * <ul>
+ *   <li>Initialization with a {@link LadderGameBoard} and background image.</li>
+ *   <li>Management of board patterns (e.g., checkers).</li>
+ *   <li>Loading and displaying {@link TileActionComponent}s based on the board state.</li>
+ *   <li>Dynamically updating the grid when rows or columns change.</li>
+ *   <li>Handling drag-and-drop events for placing components onto grid cells.</li>
+ *   <li>Applying visual styles to cells based on placed components or patterns.</li>
+ *   <li>Converting board coordinates to screen coordinates for component placement.</li>
+ * </ul>
+ * </p>
+ *
+ * @see BoardStackPane
+ * @see LadderGameBoard
+ * @see TileActionComponent
+ * @see ComponentSpec
+ * @see ComponentDropEventData
+ */
 public class LadderGameBoardStackPane extends BoardStackPane {
 
+  /**
+   * Constructs a new {@code LadderGameBoardStackPane}. Calls the superclass constructor.
+   */
   public LadderGameBoardStackPane() {
     super();
   }
 
   /**
-   * Initializes the board stack pane with the given board and background image path.
+   * Initializes the board stack pane with the given {@link Board} (expected to be a
+   * {@link LadderGameBoard}) and the path to its background image. This method calls the superclass
+   * initialization and then, on the JavaFX application thread, sets the board pattern, updates the
+   * grid display, and loads any existing components from the board model.
    *
-   * @param board               the board
-   * @param backgroundImagePath the background image path
+   * @param board               The {@link Board} instance (must be a {@link LadderGameBoard}).
+   * @param backgroundImagePath The file path to the background image for the board.
    */
   @Override
   public void initialize(Board board, String backgroundImagePath) {
@@ -44,18 +75,18 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Gets the pattern of the board.
+   * Gets the current visual pattern applied to the board (e.g., "Blue checker").
    *
-   * @return the pattern
+   * @return The string representation of the current pattern.
    */
   public String getPattern() {
     return ((LadderGameBoard) board).getPattern();
   }
 
   /**
-   * Sets the pattern of the board.
+   * Sets the visual pattern for the board and applies it to the grid display.
    *
-   * @param pattern the pattern
+   * @param pattern The name of the pattern to apply (e.g., "Blue checker", "None").
    */
   public void setPattern(String pattern) {
     logger.debug("Setting pattern to: {}", pattern);
@@ -64,7 +95,11 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Loads the components for the board.
+   * Loads {@link TileActionComponent}s onto the board based on the {@link TileAction}s associated
+   * with each {@link LadderGameTile} in the current {@link LadderGameBoard}. For each tile with a
+   * land action, it creates a corresponding visual component (e.g., ladder, slide, portal image)
+   * and places it on the board. Portal components may also have a color number set based on their
+   * identifier. After loading, it updates the overall board visuals.
    */
   @Override
   protected void loadComponents() {
@@ -100,10 +135,11 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Gets the image path for the given component identifier.
+   * Constructs the image file path for a given component identifier. The path is built assuming a
+   * structure like.
    *
-   * @param componentIdentifier the component identifier
-   * @return the image path
+   * @param componentIdentifier The unique identifier of the component.
+   * @return The full string path to the component's image file.
    */
   @Override
   protected String getImagePath(String componentIdentifier) {
@@ -112,10 +148,16 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Adds a component with the given identifier and coordinates to the board.
+   * Adds a new visual component to the board at the specified coordinates, based on the provided
+   * component identifier. It calculates the destination tile for components like ladders and
+   * slides, or a random valid destination for portals. It also checks for tile occupancy to prevent
+   * overlapping placements. If the placement is valid, a {@link TileActionComponent} is created and
+   * added to the internal collection of components, and the board visuals are updated.
    *
-   * @param componentIdentifier the component identifier
-   * @param coordinates         the coordinates of the component
+   * @param componentIdentifier The string identifier of the component to add.
+   * @param coordinates         The {@link TileCoordinates} (row, column) where the component
+   *                            originates.
+   * @throws IllegalArgumentException if the target tile or destination tile is already occupied.
    */
   @Override
   public void addComponent(String componentIdentifier, TileCoordinates coordinates) {
@@ -210,7 +252,12 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Updates the grid of the board.
+   * Updates the visual grid display of the board. This involves clearing the existing grid,
+   * removing any components that are now outside the grid boundaries (if dimensions changed), and
+   * then recreating the grid cells based on the current number of rows and columns in the
+   * {@link LadderGameBoard}. Each cell is created with a label showing its tile ID and is
+   * configured for drag-and-drop operations. After recreating the grid, the current pattern and
+   * component visuals are reapplied.
    */
   @Override
   public void updateGrid() {
@@ -248,13 +295,16 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Creates a row cell for the board.
+   * Creates a single visual cell (a {@link StackPane}) for the grid display. Each cell consists of
+   * a {@link Rectangle} for its visual appearance and a {@link Label} displaying its tile ID. The
+   * cell is also mapped to its board coordinates and set up to handle drag-and-drop events for
+   * component placement.
    *
-   * @param cellWidth  the width of the cell
-   * @param cellHeight the height of the cell
-   * @param row        the row of the cell
-   * @param col        the column of the cell
-   * @return the row cell as a StackPane
+   * @param cellWidth  The width of the cell in pixels.
+   * @param cellHeight The height of the cell in pixels.
+   * @param row        The zero-indexed row number of the cell on the board.
+   * @param col        The zero-indexed column number of the cell on the board.
+   * @return A {@link StackPane} representing the created grid cell.
    */
   @Override
   public StackPane createRowCell(double cellWidth, double cellHeight, int row, int col) {
@@ -275,9 +325,18 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Sets up the cell drop handling for the given cell.
+   * Configures drag-and-drop event handlers for a given grid cell {@link Rectangle}.
+   * <ul>
+   *   <li>{@code setOnDragOver}: Accepts {@link TransferMode#COPY} if the dragboard has a
+   *   string.</li>
+   *   <li>{@code setOnDragEntered}: Adds a preview style class to the cell.</li>
+   *   <li>{@code setOnDragExited}: Removes the preview style class.</li>
+   *   <li>{@code setOnDragDropped}: If the dragboard contains a string (component identifier)
+   *       and a drop handler ({@code onComponentDropped}) is set, it invokes the handler with
+   *       the component identifier and the target cell.</li>
+   * </ul>
    *
-   * @param cell the cell to set up
+   * @param cell The {@link Rectangle} representing the grid cell to set up.
    */
   private void setupCellDropHandling(Rectangle cell) {
     cell.setOnDragOver(event -> {
@@ -316,7 +375,10 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Applies the board pattern to the board.
+   * Applies the currently selected visual pattern (e.g., "Blue checker") to the grid cells. It
+   * iterates through each cell in the grid. If a cell corresponds to an even-numbered tile ID and
+   * is not occupied by a non-portal component (origin or destination), the appropriate CSS style
+   * class for the pattern is added to the cell's {@link Rectangle}.
    */
   @Override
   public void applyPattern() {
@@ -360,7 +422,17 @@ public class LadderGameBoardStackPane extends BoardStackPane {
   }
 
   /**
-   * Updates the visuals of the board.
+   * Updates the visual representation of all components (ladders, slides, portals) on the board.
+   * This method first clears any existing visual components from the {@code componentsPane}. It
+   * then reapplies the board pattern. For each {@link TileActionComponent} stored:
+   * <ul>
+   *   <li>It finds the origin and destination {@link Rectangle} cells on the grid.</li>
+   *   <li>Calculates the screen coordinates for the component based on its origin cell.</li>
+   *   <li>Updates the component's size and position.</li>
+   *   <li>Applies specific CSS style classes to the origin and destination cells based on the
+   *       component type (e.g., "grid-cell-has-ladder", "grid-cell-ladder-destination").</li>
+   *   <li>Adds the updated visual component to the {@code componentsPane}.</li>
+   * </ul>
    */
   @Override
   public void updateBoardVisuals() {

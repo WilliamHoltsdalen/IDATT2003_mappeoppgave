@@ -6,29 +6,38 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Utility class containing helper methods for view-related operations. This class provides static
- * methods for common view calculations and conversions.
+ * <h3>ViewUtils.</h3>
+ *
+ * <p>A utility class providing static helper methods for various view-related operations.
+ * This includes coordinate transformations between board-specific coordinate systems
+ * and screen coordinates, as well as other common calculations useful for rendering
+ * game boards and their elements.</p>
+ *
+ * <p>This class is not meant to be instantiated; all its methods are static.</p>
  */
 public class ViewUtils {
 
   private static final Random random = new Random();
 
   /**
-   * Private constructor to prevent instantiation of utility class.
+   * Private constructor to prevent instantiation of this utility class.
    */
   private ViewUtils() {
   }
 
   /**
-   * Converts ladder board coordinates (row, column) to screen coordinates (x, y). The ladder board
-   * uses a coordinate system with origin at the bottom left, while the screen uses a coordinate
-   * system with origin at the top left.
+   * Converts ladder board coordinates (row, column) to screen coordinates (x, y).
+   * The ladder board typically uses a coordinate system with the origin (0,0) at the
+   * bottom-left, while the screen's origin (0,0) is at the top-left.
+   * This method performs the necessary transformation.
    *
-   * @param coordinates the array of coordinates (in the board's coordinate system (row, column))
-   * @param board       the game board containing dimension information
-   * @param boardWidth  the visual width of the board on screen
-   * @param boardHeight the visual height of the board on screen
-   * @return the array of coordinates in the screen's coordinate system (x, y)
+   * @param coordinates An integer array {@code [row, col]} representing the coordinates in the
+   *                    ladder board's system.
+   * @param board       The {@link LadderGameBoard} instance, used to get total rows and columns.
+   * @param boardWidth  The visual width of the board as displayed on the screen.
+   * @param boardHeight The visual height of the board as displayed on the screen.
+   * @return A double array {@code [x, y]} representing the corresponding coordinates in the
+   *         screen's system.
    */
   public static double[] ladderBoardToScreenCoordinates(int[] coordinates, LadderGameBoard board,
       double boardWidth, double boardHeight) {
@@ -45,13 +54,17 @@ public class ViewUtils {
   }
 
   /**
-   * Converts ludo board coordinates (row, column) to screen coordinates (x, y).
+   * Converts Ludo board coordinates (row, column) to screen coordinates (x, y).
+   * For Ludo, both the board coordinate system and the screen coordinate system typically
+   * have their origin (0,0) at the top-left, so this is a direct scaling.
    *
-   * @param coordinates the array of coordinates (in the board's coordinate system (row, column))
-   * @param board       the game board containing dimension information
-   * @param boardWidth  the visual width of the board on screen
-   * @param boardHeight the visual height of the board on screen
-   * @return the array of coordinates in the screen's coordinate system (x, y)
+   * @param coordinates An integer array {@code [row, col]} representing the coordinates in the
+   *                    Ludo board's system.
+   * @param board       The {@link LudoGameBoard} instance, used to get the board size.
+   * @param boardWidth  The visual width of the board as displayed on the screen.
+   * @param boardHeight The visual height of the board as displayed on the screen.
+   * @return A double array {@code [x, y]} representing the corresponding coordinates in the
+   *         screen's system.
    */
   public static double[] ludoBoardToScreenCoordinates(int[] coordinates, LudoGameBoard board,
       double boardWidth, double boardHeight) {
@@ -65,13 +78,14 @@ public class ViewUtils {
   }
 
   /**
-   * Calculates the tile ID for a given row and column in a snake pattern board. The pattern starts
-   * from bottom left and snakes upward.
+   * Calculates the tile ID for a given row and column on a board with a "snake" 
+   * numbering pattern. The pattern starts from tile 1 at the bottom-left
+   * (row 0, col 0), proceeds right on even rows (0, 2, ...), and left on odd rows (1, 3, ...).
    *
-   * @param row     the row number (0-based, from bottom)
-   * @param col     the column number (0-based, from left)
-   * @param columns total number of columns
-   * @return the tile ID for the given position
+   * @param row     The row number (0-indexed from the bottom).
+   * @param col     The column number (0-indexed from the left).
+   * @param columns The total number of columns in the grid.
+   * @return The calculated tile ID (1-indexed).
    */
   public static int calculateTileId(int row, int col, int columns) {
     if (row % 2 == 0) { // Even rows (0-based) go left to right
@@ -80,6 +94,17 @@ public class ViewUtils {
     return row * columns + (columns - col); // Odd rows go right to left
   }
 
+  /**
+   * Generates a random destination tile ID for a portal (e.g., a snake or ladder).
+   * The destination will be different from the portal's own ID, not already occupied by
+   * another portal, and not the very last tile of the game.
+   *
+   * @param portalId      The ID of the tile where the portal starts.
+   * @param tiles         The total number of tiles on the board.
+   * @param occupiedTiles A list of tile IDs that are already occupied by other portals
+   *                      (either as starts or ends).
+   * @return A randomly selected, valid tile ID for the portal's destination.
+   */
   public static int randomPortalDestination(int portalId, int tiles, List<Integer> occupiedTiles) {
     int id;
     do {

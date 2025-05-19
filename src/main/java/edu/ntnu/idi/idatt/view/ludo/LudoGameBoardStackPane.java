@@ -16,16 +16,57 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * <h3>LudoGameBoardStackPane.</h3>
+ *
+ * <p>This class extends {@link BoardStackPane} to provide a specialized visual representation
+ * for a {@link LudoGameBoard}. It is responsible for rendering the Ludo board's grid, cells,
+ * background, and decorative patterns such as start areas and the central finish area.</p>
+ *
+ * <p>Key functionalities include:
+ * <ul>
+ *   <li>Initializing the board display with a {@link LudoGameBoard} instance and a background
+ *       image.</li>
+ *   <li>Updating the grid layout based on the Ludo board's size.</li>
+ *   <li>Creating individual cells ({@link #createRowCell(double, double, int, int)}) and styling
+ *       them based on their type (e.g., track, start, finish path) and associated player color
+ *       from the {@code LudoGameBoard}.</li>
+ *   <li>Applying a decorative pattern ({@link #applyPattern()}) which draws the four colored
+ *       start areas with their token placeholders (circles) and the central colored triangles
+ *       representing the finish zone.</li>
+ * </ul>
+ * </p>
+ *
+ * <p>Methods like {@code addComponent}, {@code updateBoardVisuals}, {@code loadComponents}, and
+ * {@code getImagePath} are inherited from {@code BoardStackPane} but are not currently utilized
+ * or are placeholders in this Ludo-specific implementation.</p>
+ *
+ * @see BoardStackPane
+ * @see LudoGameBoard
+ * @see LudoTile
+ */
 public class LudoGameBoardStackPane extends BoardStackPane {
 
   private final StackPane patternStackPane;
 
+  /**
+   * Constructs a new {@code LudoGameBoardStackPane}.
+   * Initializes the pattern stack pane that will hold decorative elements like start areas.
+   */
   public LudoGameBoardStackPane() {
     super();
     this.patternStackPane = new StackPane();
     super.getChildren().add(patternStackPane);
   }
 
+  /**
+   * Initializes the Ludo game board display.
+   * Calls the superclass initialization and then updates the grid and loads components on the
+   * JavaFX application thread.
+   *
+   * @param board             The {@link Board} (expected to be a {@link LudoGameBoard}) to display.
+   * @param backgroundImagePath The path to the background image for the board.
+   */
   @Override
   public void initialize(Board board, String backgroundImagePath) {
     logger.debug("Initializing LudoGameBoardStackPane");
@@ -37,6 +78,12 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     });
   }
 
+  /**
+   * Updates the grid display for the Ludo board.
+   * Clears existing children, recalculates cell dimensions based on the background image view's
+   * size and the board's size, and recreates the grid cells. After creating the grid, it applies
+   * the Ludo-specific pattern and updates board visuals.
+   */
   @Override
   public void updateGrid() {
     logger.debug("Updating grid");
@@ -66,6 +113,17 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     updateBoardVisuals();
   }
 
+  /**
+   * Creates a single cell {@link StackPane} for the Ludo board grid.
+   * The cell is styled based on the {@link LudoTile} type (e.g., track, start, finish) and the
+   * player color associated with specific track or finish tiles.
+   *
+   * @param cellWidth  The calculated width for the cell.
+   * @param cellHeight The calculated height for the cell.
+   * @param row        The row index of the cell in the grid.
+   * @param col        The column index of the cell in the grid.
+   * @return A {@link StackPane} representing the styled grid cell.
+   */
   @Override
   public StackPane createRowCell(double cellWidth, double cellHeight, final int row,
       final int col) {
@@ -109,6 +167,14 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     return cellPane;
   }
 
+  /**
+   * Applies a decorative pattern to the Ludo board, drawing the start areas and the central
+   * finish area. This pattern is overlaid on top of the grid.
+   *
+   * <p>The start areas are colored rectangles with inner white rectangles and four circles
+   * (placeholders for tokens). The central area consists of four colored triangles pointing
+   * inwards.</p>
+   */
   @Override
   public void applyPattern() {
     patternStackPane.getChildren().clear();
@@ -192,20 +258,38 @@ public class LudoGameBoardStackPane extends BoardStackPane {
     patternStackPane.getChildren().add(middleAreaPane);
   }
 
+  /**
+   * Placeholder method. Currently not used for Ludo game board components.
+   *
+   * @param componentIdentifier The identifier of the component to add.
+   * @param coordinates         The {@link TileCoordinates} where the component should be added.
+   */
   @Override
   public void addComponent(String componentIdentifier, TileCoordinates coordinates) {
     // Not needed
   }
 
+  /**
+   * Placeholder method. Currently not used for updating Ludo board visuals directly through here.
+   */
   @Override
   public void updateBoardVisuals() {
   }
 
+  /**
+   * Placeholder method. Currently not used for loading Ludo game components through here.
+   */
   @Override
   public void loadComponents() {
     // Not needed
   }
 
+  /**
+   * Placeholder method. Currently not used for getting image paths for Ludo components.
+   *
+   * @param componentIdentifier The identifier of the component.
+   * @return {@code null} as it's not implemented.
+   */
   @Override
   public String getImagePath(String componentIdentifier) {
     return null;

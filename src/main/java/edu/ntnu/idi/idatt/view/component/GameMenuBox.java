@@ -14,14 +14,16 @@ import javafx.scene.text.Text;
  * <h3>GameMenuBox.</h3>
  *
  * <p>A JavaFX {@link VBox} component that serves as the in-game menu.
- * It provides controls for game actions such as restarting, quitting, and rolling dice.
- * It also includes a game log display and options like toggling dice animation or rolling for all players.</p>
+ * It provides controls for game actions such as restarting, quitting, and rolling dice. It also
+ * includes a game log display and options like toggling dice animation or rolling for all
+ * players.</p>
  *
  * @see VBox
  * @see AnimatedDie
  * @see HorizontalDivider
  */
 public class GameMenuBox extends VBox {
+
   private final ScrollPane gameLogScrollPane;
   private final VBox gameLogRoundBoxesVbox;
   private final CheckBox rollForAllPlayersCheckBox;
@@ -29,7 +31,7 @@ public class GameMenuBox extends VBox {
   private final AnimatedDie[] dice;
   private final HBox diceContainer;
   private Button rollDiceButton;
-  
+
   private Runnable onRestartGame = null;
   private Runnable onQuitGame = null;
   private Runnable onRollDice = null;
@@ -45,14 +47,14 @@ public class GameMenuBox extends VBox {
     rollForAllPlayersCheckBox = new CheckBox();
     animatedDiceCheckBox = new CheckBox();
     animatedDiceCheckBox.setSelected(true); // Default to animated
-    
+
     // Create dice array with specified count (max 2)
     diceCount = Math.min(diceCount, 2);
     dice = new AnimatedDie[diceCount];
     for (int i = 0; i < diceCount; i++) {
       dice[i] = new AnimatedDie(70);
     }
-    
+
     // Create container for dice
     diceContainer = new HBox(10); // 10 pixels spacing between dice
     diceContainer.getStyleClass().add("game-menu-dice-container");
@@ -69,8 +71,8 @@ public class GameMenuBox extends VBox {
   }
 
   /**
-   * Initializes the components of the game menu box, including buttons, game log area,
-   * dice display, and options checkboxes.
+   * Initializes the components of the game menu box, including buttons, game log area, dice
+   * display, and options checkboxes.
    */
   private void initialize() {
     // Upper part of the menu, containing the buttons
@@ -166,8 +168,8 @@ public class GameMenuBox extends VBox {
   }
 
   /**
-   * Adds a new round section to the game log.
-   * Each round section is a {@link VBox} titled with the round number.
+   * Adds a new round section to the game log. Each round section is a {@link VBox} titled with the
+   * round number.
    *
    * @param roundNumber The number of the round to add.
    */
@@ -255,12 +257,12 @@ public class GameMenuBox extends VBox {
   }
 
   /**
-   * Triggers the dice roll animation (if enabled) or directly sets the dice values.
-   * Executes the {@code onFinished} callback once all dice have completed their roll
-   * (or immediately if animation is disabled).
+   * Triggers the dice roll animation (if enabled) or directly sets the dice values. Executes the
+   * {@code onFinished} callback once all dice have completed their roll (or immediately if
+   * animation is disabled).
    *
-   * @param values An array of integer values to display on the dice.
-   *               The length of this array should not exceed the number of dice in this GameMenuBox.
+   * @param values     An array of integer values to display on the dice. The length of this array
+   *                   should not exceed the number of dice in this GameMenuBox.
    * @param onFinished A {@link Runnable} to be executed after all dice have finished rolling.
    * @throws IllegalArgumentException if the length of {@code values} exceeds the number of dice.
    */
@@ -280,7 +282,7 @@ public class GameMenuBox extends VBox {
 
     // Create a counter to track completed animations
     final int[] completedAnimations = {0};
-    
+
     // Animate each die
     for (int i = 0; i < values.length; i++) {
       final int index = i;
