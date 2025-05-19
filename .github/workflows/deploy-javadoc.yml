@@ -2,7 +2,8 @@ name: Deploy JavaDoc to GitHub Pages
 
 on:
   push:
-    branches: [main]  # or your default branch
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,6 +16,7 @@ concurrency:
 
 jobs:
   build:
+    name: Generate JavaDoc
     runs-on: ubuntu-latest
 
     steps:
@@ -35,6 +37,7 @@ jobs:
           path: ./target/site/apidocs
 
   deploy:
+    name: Deploy JavaDoc to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     environment:
