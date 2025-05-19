@@ -10,6 +10,8 @@ import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameStackPane;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -220,14 +222,23 @@ public class LadderGameController extends GameController {
   }
 
   /**
-   * Handles the {@code gameFinished} event from the {@link LadderBoardGame} model. Adds an entry to
-   * the game log in the view announcing the winner.
+   * Handles the {@code gameFinished} event from the {@link LadderBoardGame} model.
+   * Navigates to the GameFinishedView, passing the winner and other ranked players.
    *
    * @param winner The {@link Player} who won the game.
    */
   @Override
   public void onGameFinished(Player winner) {
     gameView.getGameMenuBox().addGameLogRoundBoxEntry("Game finished! Winner: " + winner.getName());
+    disableRollDiceButton();
+
+    List<Player> rankedPlayers = getPlayers().stream()
+        .sorted(Comparator.comparingInt((Player p) -> ((LadderGamePlayer) p).getCurrentTile()
+            .getTileId()).reversed()).toList();
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("rankedPlayers", rankedPlayers);
+    navigateToGameFinished(params);
   }
 
   /**
