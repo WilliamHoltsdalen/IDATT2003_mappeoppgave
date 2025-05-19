@@ -2,10 +2,12 @@ package edu.ntnu.idi.idatt.controller.ludo;
 
 import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
+import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,30 @@ public class LudoMenuController extends MenuController {
     menuView.setSelectedBoard(boardFactory.createBoard("Classic"));
     menuView.initialize("Ludo Game Menu", ALLOWED_PLAYER_TOKEN_TYPES, ALLOWED_PLAYER_COLORS,
         MIN_PLAYERS, MAX_PLAYERS);
+  }
+
+  /**
+   * Loads the players from the file at the given path and adds them to the main menu. Only allows
+   * ludo players to be imported.
+   *
+   * @param filePath The path to the file containing the players.
+   * @see PlayerFactory#createPlayersFromFile(String)
+   */
+  @Override
+  public void loadPlayersFromFile(String filePath) {
+    try {
+      List<Player> players = PlayerFactory.createPlayersFromFile(filePath);
+      for (Player player : players) {
+        if (player instanceof LudoPlayer) {
+          menuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
+        } else {
+          throw new IOException("You can only import ludo players.");
+        }
+      }
+      menuView.showInfoAlert("Success", "Players loaded successfully");
+    } catch (IOException e) {
+      menuView.showErrorAlert("Error", "Could not load players");
+    }
   }
 
   @Override
