@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * <h3>Factory class for creating Player objects.</h3>
+ * Factory class for creating Player objects.
  *
  * <p>This class provides methods for creating Player objects based on predefined variants.
  * Player objects can be loaded/created from an external file, or from hardcoded variants in this

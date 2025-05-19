@@ -23,7 +23,7 @@ import javafx.stage.Popup;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
- * <h3>MenuPlayerRow.</h3>
+ * MenuPlayerRow.
  *
  * <p>A JavaFX component representing a single player's configuration row in a menu.</p>
  *

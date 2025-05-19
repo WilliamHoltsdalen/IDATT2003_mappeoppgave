@@ -4,7 +4,7 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
- * <h3>TileAction interface</h3>
+ * TileAction interface
  *
  * <p>This interface defines methods for performing actions on tiles.
  */

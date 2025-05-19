@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h3>GameController.</h3>
+ * GameController.
  *
  * <p>Abstract controller for managing game logic and interactions between the model
  * ({@link BoardGame})

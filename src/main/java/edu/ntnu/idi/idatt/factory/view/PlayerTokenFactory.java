@@ -7,7 +7,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
 /**
- * <h3>PlayerTokenCreator class</h3>
+ * PlayerTokenCreator class
  *
  * <p>This class is responsible for creating player tokens of different types. It takes in a radius,
  * color, and player token type, and returns a {@link Shape} object representing the player token.

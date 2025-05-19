@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.common;
 
+import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
@@ -32,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>MenuView.</h3>
+ * MenuView.
  *
  * <p>Abstract base class for game menu views, providing common UI structure and functionality
  * for player selection, board selection, and navigation controls.</p>

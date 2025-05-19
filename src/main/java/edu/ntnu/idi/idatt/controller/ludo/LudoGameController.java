@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h3>LudoGameController.</h3>
+ * LudoGameController.
  *
  * <p>This class extends {@link GameController} to manage the specific logic and interactions
  * for a {@link LudoBoardGame}. It acts as a controller in the MVC pattern, mediating between the
@@ -43,7 +43,7 @@ import java.util.Map;
  *       or "quit game" buttons.</li>
  *   <li>Managing automatic turns for bot players if "roll for all players" is not selected.</li>
  * </ul>
- * </p>
+ *
  *
  * @see GameController
  * @see LudoBoardGame

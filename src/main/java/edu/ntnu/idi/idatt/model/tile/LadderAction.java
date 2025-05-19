@@ -10,7 +10,7 @@ import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
- * <h3>LadderAction class</h3>
+ * LadderAction class
  *
  * <p>This class represents a ladder action, which is a tile action that moves the player to a
  * different tile. It contains a destination tile ID and a description.

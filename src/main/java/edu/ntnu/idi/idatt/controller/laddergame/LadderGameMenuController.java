@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h3>LadderGameMenuController.</h3>
+ * LadderGameMenuController.
  *
  * <p>This class extends {@link MenuController} to manage the specific setup and logic for the
  * Ladder Game main menu. It is responsible for initializing the menu view with Ladder Game specific
@@ -29,7 +29,7 @@ import java.util.List;
  *   <li>Loading predefined/hardcoded ladder board variants (e.g., "Classic", "Teleporting") using
  *       the board factory.</li>
  * </ul>
- * </p>
+ *
  *
  * @see MenuController
  * @see LadderBoardFactory

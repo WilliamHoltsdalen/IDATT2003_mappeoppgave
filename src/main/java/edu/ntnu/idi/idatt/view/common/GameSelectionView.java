@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>GameSelectionView</h3>
+ * GameSelectionView
  *
  * <p>This class is responsible for displaying the game selection view. It displays a list of games
  * and allows the user to select one by clicking on it.

@@ -15,7 +15,7 @@ import javafx.scene.paint.Stop;
 import javafx.util.Duration;
 
 /**
- * <h3>AnimatedDie.</h3>
+ * AnimatedDie.
  *
  * <p>A JavaFX component that represents a single die with rolling animation.</p>
  *

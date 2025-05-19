@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <h3>LadderGameBoard class</h3>
+ * LadderGameBoard class
  *
  * <p>Concrete implementation of the Board interface for the Chutes and Ladders game.
  * This class extends BaseBoard and implements game-specific board functionality.

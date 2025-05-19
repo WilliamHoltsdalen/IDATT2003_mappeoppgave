@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <h3>PlayerFileHandlerCsv.</h3>
+ * PlayerFileHandlerCsv.
  *
  * <p>Implements the {@link FileHandler} interface for {@link Player} objects, providing
  * functionality to read player data from and write player data to CSV (Comma Separated Values)

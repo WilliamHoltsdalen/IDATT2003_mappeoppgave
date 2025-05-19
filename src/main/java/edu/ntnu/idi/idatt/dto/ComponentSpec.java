@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.dto;
 
 /**
- * <h3>ComponentSpec.</h3>
+ * ComponentSpec.
  *
  * <p>A record that defines the specifications for a game board component (e.g., Ladder, Slide,
  * Portal).</p>
@@ -10,6 +10,11 @@ package edu.ntnu.idi.idatt.dto;
  * This class also provides utility methods to parse specifications from a filename and calculate
  * actual pixel dimensions and translations based on tile sizes.</p>
  *
+ * @param widthTiles The width of the component in tiles.
+ * @param widthDirection The direction of the width (e.g., RIGHT, LEFT).
+ * @param heightTiles The height of the component in tiles.
+ * @param heightDirection The direction of the height (e.g., UP, DOWN).
+ * @param type The type of the component (e.g., LADDER, SLIDE, PORTAL).
  * @see Direction
  * @see ComponentType
  */
@@ -24,9 +29,13 @@ public record ComponentSpec(
    * Enum representing the direction of a component's dimension (width or height).
    */
   public enum Direction {
+    /** Up direction. */
     UP('U'),
+    /** Down direction. */
     DOWN('D'),
+    /** Left direction. */
     LEFT('L'),
+    /** Right direction. */
     RIGHT('R');
 
     Direction(char code) {
@@ -54,8 +63,11 @@ public record ComponentSpec(
    * Enum representing the type of game board component.
    */
   public enum ComponentType {
+    /** Ladder component type. */
     LADDER,
+    /** Slide component type. */
     SLIDE,
+    /** Portal component type. */
     PORTAL;
 
     /**

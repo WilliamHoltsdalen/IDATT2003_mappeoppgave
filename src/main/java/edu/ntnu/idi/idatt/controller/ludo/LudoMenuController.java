@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h3>LudoMenuController.</h3>
+ * LudoMenuController.
  *
  * <p>Extends {@link MenuController} to manage the Ludo game setup menu. It is responsible for
  * initializing the menu view with Ludo-specific options, such as allowed player token types
@@ -88,7 +88,6 @@ public class LudoMenuController extends MenuController {
    * player types are found, an error is shown.
    *
    * @param filePath The path to the file containing player data.
-   * @throws IOException if there is an error reading the file or if non-Ludo players are found.
    * @see PlayerFactory#createPlayersFromFile(String)
    */
   @Override

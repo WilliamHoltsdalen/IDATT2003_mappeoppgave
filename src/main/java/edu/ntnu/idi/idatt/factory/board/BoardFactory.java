@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.factory.board;
 import edu.ntnu.idi.idatt.model.board.Board;
 
 /**
- * <h3>BoardFactory Interface.</h3>
+ * BoardFactory Interface.
  *
  * <p>Defines the necessary methods for factories that create game boards.</p>
  *

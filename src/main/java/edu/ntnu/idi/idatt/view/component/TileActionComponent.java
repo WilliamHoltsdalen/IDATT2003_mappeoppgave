@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * <h3>TileActionComponent.</h3>
+ * TileActionComponent.
  *
  * <p>A JavaFX {@link ImageView} used to display visual representations of tile actions
  * (like ladders, slides, or portals) on a game board.</p>

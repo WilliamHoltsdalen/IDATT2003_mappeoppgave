@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.navigation;
 
 /**
- * <h3>ViewType.</h3>
+ * ViewType.
  *
  * <p>Enumerates the different types of views or screens that can be displayed within the
  * application. This is used by the {@link ViewNavigator} to switch between different parts

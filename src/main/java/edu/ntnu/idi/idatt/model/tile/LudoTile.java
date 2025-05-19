@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.model.tile;
 
 /**
- * <h3>LudoTile.</h3>
+ * LudoTile.
  *
  * <p>Extends the {@link Tile} class to represent a tile in a Ludo game.
  * In addition to the properties inherited from {@link Tile} (ID, coordinates, next tile ID),

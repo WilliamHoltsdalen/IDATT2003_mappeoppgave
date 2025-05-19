@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * <h3>MenuController.</h3>
+ * MenuController.
  *
  * <p>Abstract controller for handling the logic of menu views.</p>
  *

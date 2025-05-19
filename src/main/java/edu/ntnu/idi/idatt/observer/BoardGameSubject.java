@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.observer;
 import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
- * <h3>BoardGameSubject interface</h3>
+ * BoardGameSubject interface
  * 
  * <p>This interface defines the methods for a board game subject in the observer pattern.
  */

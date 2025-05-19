@@ -11,7 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * <h3>LudoGamePlayersBox.</h3>
+ * LudoGamePlayersBox.
  *
  * <p>Extends {@link GamePlayersBox} to create a specialized container for displaying player
  * information in a Ludo game. It arranges multiple {@link LudoGamePlayerRow} instances vertically,

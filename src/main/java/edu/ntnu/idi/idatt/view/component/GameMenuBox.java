@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * <h3>GameMenuBox.</h3>
+ * GameMenuBox.
  *
  * <p>A JavaFX {@link VBox} component that serves as the in-game menu.
  * It provides controls for game actions such as restarting, quitting, and rolling dice. It also

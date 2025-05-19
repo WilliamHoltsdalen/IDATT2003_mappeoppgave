@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.model.token;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 
 /**
- * <h3>LudoToken.</h3>
+ * LudoToken.
  *
  * <p>Represents a single game piece (token) in a Ludo game. Each token has a unique ID
  * (within its player's set of tokens), a {@link TokenStatus} indicating its current state (e.g., in

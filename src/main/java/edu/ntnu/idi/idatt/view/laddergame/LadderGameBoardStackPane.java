@@ -6,6 +6,7 @@ import edu.ntnu.idi.idatt.dto.TileCoordinates;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
+import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
 import edu.ntnu.idi.idatt.view.component.TileActionComponent;
 import edu.ntnu.idi.idatt.view.util.ViewUtils;
@@ -21,7 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * <h3>LadderGameBoardStackPane.</h3>
+ *  LadderGameBoardStackPane.
  *
  * <p>This class extends {@link BoardStackPane} to provide a specialized view for displaying
  * {@link LadderGameBoard}s. It handles the visual representation of the game board, including its
@@ -37,7 +38,7 @@ import javafx.scene.shape.Rectangle;
  *   <li>Applying visual styles to cells based on placed components or patterns.</li>
  *   <li>Converting board coordinates to screen coordinates for component placement.</li>
  * </ul>
- * </p>
+ *
  *
  * @see BoardStackPane
  * @see LadderGameBoard

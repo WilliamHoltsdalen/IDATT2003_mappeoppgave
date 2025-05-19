@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * <h3>Interface for handling files.</h3>
+ * Interface for handling files.
  *
  * <p>This interface defines methods for reading from and writing to a file. It uses a generic
  * type T to represent the type of the file contents (e.g. Player, Board, etc.).

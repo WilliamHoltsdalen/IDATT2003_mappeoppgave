@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardGame class</h3>
+ * BoardGame class
  *
  * <p>Abstract class implementing common functionality for board games.
  * This class provides the base implementation for both Chutes and Ladders and Ludo games.

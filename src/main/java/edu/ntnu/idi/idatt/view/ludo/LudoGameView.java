@@ -9,7 +9,7 @@ import edu.ntnu.idi.idatt.view.common.GameView;
 import java.util.List;
 
 /**
- * <h3>LudoGameView.</h3>
+ * LudoGameView.
  *
  * <p>Extends {@link GameView} to provide the main view for a Ludo game. This class is responsible
  * for creating and assembling the Ludo-specific UI components, namely the

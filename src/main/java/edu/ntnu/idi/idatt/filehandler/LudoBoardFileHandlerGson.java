@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import org.apache.commons.io.FileUtils;
 
 /**
- * <h3>LudoBoardFileHandlerGson.</h3>
+ * LudoBoardFileHandlerGson.
  *
  * <p>This class implements the {@link FileHandler} interface for {@link Board} objects,
  * specifically tailored for {@link LudoGameBoard} instances. It uses the Gson library to serialize

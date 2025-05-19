@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>GameSelectionController</h3>
+ * GameSelectionController
  *
  * <p>This class is responsible for controlling the game selection view. It implements
  * {@link ButtonClickObserver}.

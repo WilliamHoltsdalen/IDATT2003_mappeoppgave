@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * <h3>LadderGameMenuView.</h3>
+ * LadderGameMenuView.
  *
  * <p>This class extends {@link MenuView} to provide a specialized main menu view for setting up
  * Ladder Games. It utilizes a {@link LadderGameBoardStackPane} for displaying board previews and
@@ -27,7 +27,7 @@ import javafx.scene.paint.Color;
  *   <li>Updating the displayed board preview ({@link #setSelectedBoard(Board)}) when a new board is
  *       chosen, including its visual representation, title, and description.</li>
  * </ul>
- * </p>
+ *
  *
  * @see MenuView
  * @see LadderGameBoardStackPane

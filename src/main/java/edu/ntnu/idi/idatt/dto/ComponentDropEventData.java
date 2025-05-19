@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.dto;
 import javafx.scene.shape.Rectangle;
 
 /**
- * <h3>ComponentDropEventData.</h3>
+ * ComponentDropEventData.
  *
  * <p>A record to encapsulate data related to a component drop event, typically in a board creator
  * view.</p>

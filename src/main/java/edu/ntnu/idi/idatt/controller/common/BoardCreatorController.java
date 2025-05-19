@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardCreatorController.</h3>
+ * BoardCreatorController.
  *
  * <p>Abstract controller responsible for handling the logic of board creation views.
  * It manages interactions between the {@link BoardCreatorView} and the underlying

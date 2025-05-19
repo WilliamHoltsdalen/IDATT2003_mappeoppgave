@@ -16,7 +16,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
 /**
- * <h3>LudoGamePlayerRow.</h3>
+ * LudoGamePlayerRow.
  *
  * <p>Extends {@link GamePlayerRow} to represent a single player's row in the Ludo game's
  * players list. This class displays the player's token, name, and the number of their tokens

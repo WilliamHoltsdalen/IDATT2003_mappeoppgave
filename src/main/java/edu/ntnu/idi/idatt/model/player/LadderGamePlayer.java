@@ -6,7 +6,7 @@ import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
 
 /**
- * <h3>LadderGamePlayer.</h3>
+ * LadderGamePlayer.
  *
  * <p>Represents a player specifically in a Ladder Game. This class extends the general
  * {@link Player} class and adds functionality relevant to ladder games, primarily tracking

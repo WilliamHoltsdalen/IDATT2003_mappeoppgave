@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h3>LadderGameController.</h3>
+ * LadderGameController.
  *
  * <p>This class extends {@link GameController} to manage the specific logic and interactions
  * for a {@link LadderBoardGame}. It acts as a controller in the MVC pattern, mediating between the
@@ -33,7 +33,7 @@ import java.util.Map;
  *       or "quit game" buttons.</li>
  *   <li>Managing the display of player information (e.g., current tile) and game log entries.</li>
  * </ul>
- * </p>
+ *
  *
  * @see GameController
  * @see LadderBoardGame

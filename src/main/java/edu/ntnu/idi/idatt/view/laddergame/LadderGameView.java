@@ -11,7 +11,7 @@ import edu.ntnu.idi.idatt.view.component.GameMenuBox;
 import java.util.List;
 
 /**
- * <h3>LadderGameView.</h3>
+ * LadderGameView.
  *
  * <p>This class extends {@link GameView} to provide the specific user interface structure
  * for a Ladder Game. It is responsible for creating and assembling the main UI components tailored
@@ -28,7 +28,7 @@ import java.util.List;
  *       observers (typically a {@link LadderGameController})
  *       of actions like restart, quit, or roll dice.</li>
  * </ul>
- * </p>
+ *
  *
  * @see GameView
  * @see LadderGamePlayersBox

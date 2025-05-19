@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.view.component;
 import javafx.scene.layout.Region;
 
 /**
- * <h3>HorizontalDivider.</h3>
+ * HorizontalDivider.
  *
  * <p>A simple JavaFX {@link Region} styled to act as a horizontal visual divider.</p>
  *

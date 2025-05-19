@@ -19,7 +19,7 @@ import java.util.Map;
 import javafx.application.Platform;
 
 /**
- * <h3>LadderGameBoardCreatorController.</h3>
+ * LadderGameBoardCreatorController.
  *
  * <p>Controller responsible for the logic behind creating and editing {@link LadderGameBoard}s.
  * It extends {@link BoardCreatorController} and manages interactions with a

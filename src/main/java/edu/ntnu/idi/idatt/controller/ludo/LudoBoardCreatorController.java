@@ -14,7 +14,7 @@ import java.util.Map;
 import javafx.application.Platform;
 
 /**
- * <h3>LudoBoardCreatorController.</h3>
+ * LudoBoardCreatorController.
  *
  * <p>Controller responsible for the logic behind creating and editing {@link LudoGameBoard}s.
  * It extends {@link BoardCreatorController} and manages interactions with a

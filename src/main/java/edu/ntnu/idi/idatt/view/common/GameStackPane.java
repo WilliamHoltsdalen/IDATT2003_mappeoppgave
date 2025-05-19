@@ -8,7 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 /**
- * <h3>GameStackPane.</h3>
+ * GameStackPane.
  *
  * <p>Abstract JavaFX {@link StackPane} designed to display the main game area, typically including
  * a {@link BoardStackPane} for the board visuals and a {@link Pane} for player tokens/pieces on 

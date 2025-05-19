@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * <h3>GamePlayersBox.</h3>
+ * GamePlayersBox.
  *
  * <p>Abstract JavaFX {@link VBox} that displays a list of players in an active game,
  * typically showing their names, tokens, and current status (e.g., tile number). It also displays

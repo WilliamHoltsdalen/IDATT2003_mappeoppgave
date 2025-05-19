@@ -15,7 +15,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
- * <h3>GameView.</h3>
+ * GameView.
  *
  * <p>Abstract JavaFX {@link HBox} serving as the main container for an active game screen.
  * It typically arranges three main sections: a {@link GamePlayersBox} for player information,

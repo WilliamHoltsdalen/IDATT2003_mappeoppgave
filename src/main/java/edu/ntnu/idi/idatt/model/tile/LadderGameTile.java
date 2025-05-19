@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.model.tile;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetLandActionValidator;
 
 /**
- * <h3>LadderGameTile.</h3>
+ * LadderGameTile.
  *
  * <p>Represents a specialized {@link Tile} for a ladder game. In addition to the standard
  * tile properties, a {@code LadderGameTile} can have a specific {@link TileAction}

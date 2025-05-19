@@ -11,7 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * <h3>LadderGamePlayersBox.</h3>
+ * LadderGamePlayersBox.
  *
  * <p>This class extends {@link GamePlayersBox} to display a list of {@link Player}s
  * specifically for a ladder game. It arranges {@link LadderGamePlayerRow} instances

@@ -10,7 +10,7 @@ import edu.ntnu.idi.idatt.model.token.LudoToken;
 import java.util.List;
 
 /**
- * <h3>LudoBoardGame.</h3>
+ * LudoBoardGame.
  *
  * <p>This class extends {@link BoardGame} to implement the specific rules and logic for a Ludo
  * game. It manages the game state, player turns, token movements, and win conditions for Ludo.</p>
@@ -31,7 +31,7 @@ import java.util.List;
  *   <li>Notifying observers (like {@link LudoGameController}) of game events such as token
  *   release, movement, capture, finish, and turn skips.</li>
  * </ul>
- * </p>
+ *
  *
  * @see BoardGame
  * @see LudoGameBoard

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <h3>ViewUtils.</h3>
+ * ViewUtils.
  *
  * <p>A utility class providing static helper methods for various view-related operations.
  * This includes coordinate transformations between board-specific coordinate systems

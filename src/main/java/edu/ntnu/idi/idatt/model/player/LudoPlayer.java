@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.model.player;
 
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h3>LudoPlayer.</h3>
+ * LudoPlayer.
  *
  * <p>Extends the {@link Player} class to represent a player in a Ludo game.
  * Each Ludo player has a set of four {@link LudoToken}s. This class provides
@@ -68,8 +69,6 @@ public class LudoPlayer extends Player {
 
   /**
    * Moves the token with the given id to a new tile and updates its status.
-   * Input parameters are validated by
-   * {@link ArgumentValidator#ludoPlayerMoveTokenValidator(int, Tile, TokenStatus)}.
    *
    * @param pieceId the ID of the token to move
    * @param tile    the new tile to move the token to

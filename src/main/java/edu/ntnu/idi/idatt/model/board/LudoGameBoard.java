@@ -14,7 +14,7 @@ import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
- * <h3>LudoGameBoard.</h3>
+ * LudoGameBoard.
  *
  * <p>This class extends {@link BaseBoard} to represent the specific structure and properties of a
  * Ludo game board. It is responsible for creating and organizing the {@link LudoTile}s that form
@@ -45,7 +45,7 @@ import javafx.scene.paint.Color;
  *       This involves complex calculations and rotations to form the characteristic cross shape of
  *       a Ludo board.</li>
  * </ul>
- * </p>
+ *
  *
  * @see BaseBoard
  * @see LudoTile

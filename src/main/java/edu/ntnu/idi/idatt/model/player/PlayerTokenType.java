@@ -1,7 +1,7 @@
 package edu.ntnu.idi.idatt.model.player;
 
 /**
- * <h3>PlayerTokenType.</h3>
+ * PlayerTokenType.
  *
  * <p>Enumerates the different visual shapes that a player's game token can take.
  * This is used to customize the appearance of tokens in games that support different

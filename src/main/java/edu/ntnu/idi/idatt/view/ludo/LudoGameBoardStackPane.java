@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
 /**
- * <h3>LudoGameBoardStackPane.</h3>
+ * LudoGameBoardStackPane.
  *
  * <p>This class extends {@link BoardStackPane} to provide a specialized visual representation
  * for a {@link LudoGameBoard}. It is responsible for rendering the Ludo board's grid, cells,
@@ -35,7 +35,7 @@ import javafx.scene.shape.StrokeType;
  *       start areas with their token placeholders (circles) and the central colored triangles
  *       representing the finish zone.</li>
  * </ul>
- * </p>
+ *
  *
  * <p>Methods like {@code addComponent}, {@code updateBoardVisuals}, {@code loadComponents}, and
  * {@code getImagePath} are inherited from {@code BoardStackPane} but are not currently utilized

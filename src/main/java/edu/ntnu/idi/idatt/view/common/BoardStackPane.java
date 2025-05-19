@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardStackPane.</h3>
+ * BoardStackPane.
  *
  * <p>Abstract JavaFX {@link StackPane} that serves as the base for displaying game boards.
  * It manages a background image, a grid overlay, and a pane for draggable/interactive

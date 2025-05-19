@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
+import edu.ntnu.idi.idatt.controller.laddergame.LadderGameBoardCreatorController;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
@@ -31,7 +32,7 @@ import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
- * <h3>LadderGameBoardCreatorView.</h3>
+ * LadderGameBoardCreatorView.
  *
  * <p>This class extends {@link BoardCreatorView} and is responsible for presenting the UI
  * for creating and customizing {@link LadderGameBoard}s. It allows users to drag and drop

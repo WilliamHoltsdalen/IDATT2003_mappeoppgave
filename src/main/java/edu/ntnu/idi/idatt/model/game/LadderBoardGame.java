@@ -10,7 +10,7 @@ import edu.ntnu.idi.idatt.model.tile.TileAction;
 import java.util.List;
 
 /**
- * <h3>LadderBoardGame.</h3>
+ * LadderBoardGame.
  *
  * <p>Represents the game logic for a Chutes and Ladders type game.
  * This class extends {@link BoardGame} and implements game-specific rules for player movement,

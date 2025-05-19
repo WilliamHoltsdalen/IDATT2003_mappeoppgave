@@ -10,7 +10,7 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 /**
- * <h3> Validator class for arguments passed to model constructors and methods.</h3>
+ *  Validator class for arguments passed to model constructors and methods.
  */
 public class ArgumentValidator {
 

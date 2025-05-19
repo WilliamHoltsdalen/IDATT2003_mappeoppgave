@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>MainApp.</h3>
+ * MainApp.
  *
  * <p>The main entry point for the board game application. This class extends
  * {@link Application} and is responsible for initializing the primary stage,
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * <p>Upon starting, it configures the main window, loads the initial game selection screen,
  * and makes the application visible.</p>
  *
- * @see javafx.application.Application
+ * @see Application
  * @see ViewNavigator
  * @see AppView
  * @see Scene

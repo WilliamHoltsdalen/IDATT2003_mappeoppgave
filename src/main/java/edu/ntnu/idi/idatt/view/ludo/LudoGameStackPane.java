@@ -20,7 +20,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 
 /**
- * <h3>LudoGameStackPane.</h3>
+ * LudoGameStackPane.
  *
  * <p>Extends {@link GameStackPane} to manage the visual representation of a Ludo game board,
  * including the tokens and their movements. It handles placing tokens in their start areas,

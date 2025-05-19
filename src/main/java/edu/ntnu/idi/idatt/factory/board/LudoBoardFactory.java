@@ -8,7 +8,7 @@ import java.io.IOException;
 import javafx.scene.paint.Color;
 
 /**
- * <h3>LudoBoardFactory.</h3>
+ * LudoBoardFactory.
  *
  * <p>This class implements the {@link BoardFactory} interface to create Ludo game boards.
  * It provides methods to create Ludo boards based on predefined variants (e.g., "Classic",

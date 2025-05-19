@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 /**
- * <h3>AppView.</h3>
+ * AppView.
  *
  * <p>The main view container for the application.</p>
  *

@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.ludo;
 
+import edu.ntnu.idi.idatt.controller.ludo.LudoBoardCreatorController;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
@@ -17,7 +18,7 @@ import javafx.scene.paint.Color;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
- * <h3>LudoBoardCreatorView.</h3>
+ * LudoBoardCreatorView.
  *
  * <p>This class extends {@link BoardCreatorView} to provide a specialized UI for creating
  * and configuring {@link LudoGameBoard}s. It allows users to set the board's name,
@@ -31,7 +32,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
  *   <li>A central display area ({@link LudoGameBoardStackPane}) to show the Ludo board.</li>
  *   <li>An informational panel, as Ludo tile actions are noted as under development.</li>
  * </ul>
- * </p>
+ *
  *
  * @see BoardCreatorView
  * @see LudoGameBoard

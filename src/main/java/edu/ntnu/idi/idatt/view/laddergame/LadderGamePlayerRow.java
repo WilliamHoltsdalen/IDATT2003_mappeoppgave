@@ -14,7 +14,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
 /**
- * <h3>LadderGamePlayerRow.</h3>
+ * LadderGamePlayerRow.
  *
  * <p>Represents a single row in the {@link LadderGamePlayersBox}, displaying information
  * for a specific {@link LadderGamePlayer}. This includes the player's token, name,

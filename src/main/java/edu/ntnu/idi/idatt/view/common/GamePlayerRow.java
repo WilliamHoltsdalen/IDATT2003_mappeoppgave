@@ -6,7 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
 /**
- * <h3>GamePlayerRow.</h3>
+ * GamePlayerRow.
  *
  * <p>Abstract JavaFX {@link HBox} representing a single player's information row
  * within an in-game player list (e.g., {@link GamePlayersBox}).</p>

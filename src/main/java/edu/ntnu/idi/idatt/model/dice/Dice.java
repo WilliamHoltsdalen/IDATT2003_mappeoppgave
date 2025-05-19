@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h3>Dice class</h3>
+ * Dice class
  *
  * <p>This class represents a collection of dice. It contains a list of Die objects, which are
  * rolled when the dice are rolled.

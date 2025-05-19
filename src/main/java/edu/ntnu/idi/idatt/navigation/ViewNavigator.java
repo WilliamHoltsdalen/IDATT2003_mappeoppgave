@@ -30,7 +30,7 @@ import java.util.Map;
 import javafx.scene.Node;
 
 /**
- * <h3>ViewNavigator.</h3>
+ * ViewNavigator.
  *
  * <p>Handles navigation between different views/screens within the application.</p>
  *
