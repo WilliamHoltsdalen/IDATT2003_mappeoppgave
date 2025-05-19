@@ -59,9 +59,10 @@ public class MenuPlayerRow extends HBox {
     playerButton = new Button();
     playerButton.setGraphic(playerToken);
     playerButton.getStyleClass().add("icon-only-button");
-    playerButton.setOnMouseClicked(
-        mouseEvent -> showPlayerColorPickerPopup(mouseEvent.getScreenX(), mouseEvent.getScreenY()));
-
+    if (allowedPlayerTokenTypes.size() > 1) {
+      playerButton.setOnMouseClicked(mouseEvent ->
+          showPlayerColorPickerPopup(mouseEvent.getScreenX(), mouseEvent.getScreenY()));
+    }
     nameTextField = new TextField(defaultName);
     deleteButton = new Button();
     deleteButton.setGraphic(new FontIcon("fas-trash"));
@@ -105,7 +106,7 @@ public class MenuPlayerRow extends HBox {
       });
       MenuItem initialColorMenuItem = colorMenuButton.getItems().stream()
           .filter(item -> ((Rectangle) item.getGraphic()).getFill().equals(getColor())).findFirst()
-          .orElse(colorMenuButton.getItems().get(0));
+          .orElse(colorMenuButton.getItems().getFirst());
       colorMenuButton.setText(initialColorMenuItem.getText());
       colorMenuButton.setGraphic(initialColorMenuItem.getGraphic());
       colorMenuButton.setOnAction(event -> {
