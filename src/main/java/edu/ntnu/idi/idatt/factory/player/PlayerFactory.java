@@ -1,14 +1,13 @@
 package edu.ntnu.idi.idatt.factory.player;
 
-import java.io.IOException;
-import java.util.List;
-
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
 import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * <h3>Factory class for creating Player objects.</h3>

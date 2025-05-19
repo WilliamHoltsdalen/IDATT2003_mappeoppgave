@@ -1,12 +1,12 @@
 package edu.ntnu.idi.idatt.model.player;
 
-import java.util.ArrayList;
-import java.util.List;
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
 
 import edu.ntnu.idi.idatt.model.tile.Tile;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.model.token.LudoToken.TokenStatus;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ludoPlayerMoveTokenValidator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LudoPlayer extends Player {
 

@@ -1,5 +1,9 @@
 package edu.ntnu.idi.idatt.filehandler;
 
+import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
+import edu.ntnu.idi.idatt.model.player.LudoPlayer;
+import edu.ntnu.idi.idatt.model.player.Player;
+import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,11 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
-import edu.ntnu.idi.idatt.model.player.LudoPlayer;
-import edu.ntnu.idi.idatt.model.player.Player;
-import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 
 /**
  * <h3>FileHandler implementation for Player objects.</h3>

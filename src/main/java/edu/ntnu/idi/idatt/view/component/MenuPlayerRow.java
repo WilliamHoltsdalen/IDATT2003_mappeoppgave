@@ -1,11 +1,9 @@
 package edu.ntnu.idi.idatt.view.component;
 
-import java.util.List;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import edu.ntnu.idi.idatt.factory.view.PlayerTokenFactory;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
+import edu.ntnu.idi.idatt.view.common.MenuView;
+import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,7 +20,21 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
+import org.kordamp.ikonli.javafx.FontIcon;
 
+/**
+ * <h3>MenuPlayerRow.</h3>
+ *
+ * <p>A JavaFX component representing a single player's configuration row in a menu.</p>
+ *
+ * <p>It displays the player's name (editable), their token (clickable to change color/type),
+ * and an optional delete button. This component is typically used within a {@link MenuView}.</p>
+ *
+ * @see HBox
+ * @see PlayerTokenFactory
+ * @see PlayerTokenType
+ * @see MenuView
+ */
 public class MenuPlayerRow extends HBox {
 
   TextField nameTextField;
@@ -36,8 +48,24 @@ public class MenuPlayerRow extends HBox {
   boolean removable;
   boolean isBot;
 
+  /**
+   * Runnable action to execute when player details (color, token type) are updated.
+   */
   Runnable onUpdate;
 
+  /**
+   * Constructs a MenuPlayerRow.
+   *
+   * @param defaultName The initial name for the player.
+   * @param color The initial color for the player's token.
+   * @param playerTokenType The initial token type for the player.
+   * @param allowedPlayerTokenTypes A list of {@link PlayerTokenType}s that the player can choose
+   *                                from.
+   * @param allowedPlayerColors A list of hex color strings that the player can choose from. If
+   *                            empty, a full ColorPicker is shown.
+   * @param removable Whether this player row can be deleted.
+   * @param isBot Whether this player is a bot.
+   */
   public MenuPlayerRow(String defaultName, Color color, PlayerTokenType playerTokenType,
       List<PlayerTokenType> allowedPlayerTokenTypes, List<String> allowedPlayerColors,
       boolean removable, boolean isBot) {
@@ -53,6 +81,13 @@ public class MenuPlayerRow extends HBox {
     initialize(defaultName, playerTokenType);
   }
 
+  /**
+   * Initializes the components of the player row, including the token, name field, and delete
+   * button.
+   *
+   * @param defaultName The default name to display in the text field.
+   * @param playerTokenType The initial {@link PlayerTokenType} for the player's token.
+   */
   private void initialize(String defaultName, PlayerTokenType playerTokenType) {
     playerToken = PlayerTokenFactory.create(7, color, playerTokenType);
 
@@ -71,6 +106,13 @@ public class MenuPlayerRow extends HBox {
     this.getChildren().addAll(playerButton, nameTextField, deleteButton);
   }
 
+  /**
+   * Shows a popup dialog for picking the player's token color and type.
+   * The popup is positioned near the mouse click that triggered it.
+   *
+   * @param xPos The screen x-coordinate for positioning the popup.
+   * @param yPos The screen y-coordinate for positioning the popup.
+   */
   private void showPlayerColorPickerPopup(double xPos, double yPos) {
     Popup popup = new Popup();
     popup.setHideOnEscape(true);
@@ -149,6 +191,10 @@ public class MenuPlayerRow extends HBox {
     popup.show(this.getScene().getWindow(), xPos, yPos);
   }
 
+  /**
+   * Updates the player's token appearance based on the current {@link #color} and {@link #tokenType}.
+   * Also triggers the {@link #onUpdate} runnable if it is set.
+   */
   private void updatePlayerToken() {
     playerToken = PlayerTokenFactory.create(7, color, tokenType);
     playerButton.setGraphic(playerToken);
@@ -158,26 +204,56 @@ public class MenuPlayerRow extends HBox {
     }
   }
 
+  /**
+   * Sets the action to be performed when the delete button for this row is clicked.
+   *
+   * @param deleteRowAction The {@link Runnable} to execute on delete.
+   */
   public void setOnDelete(Runnable deleteRowAction) {
     deleteButton.setOnAction(event -> deleteRowAction.run());
   }
 
+  /**
+   * Sets a callback to be executed when the player's details (color or token type) are updated.
+   *
+   * @param onUpdate The {@link Runnable} to execute on update.
+   */
   public void setOnUpdate(Runnable onUpdate) {
     this.onUpdate = onUpdate;
   }
 
+  /**
+   * Gets the current name of the player from the text field.
+   *
+   * @return The player's name.
+   */
   public String getName() {
     return nameTextField.getText();
   }
 
+  /**
+   * Gets the currently selected {@link PlayerTokenType} for this player.
+   *
+   * @return The player's token type.
+   */
   public PlayerTokenType getPlayerTokenType() {
     return tokenType;
   }
 
+  /**
+   * Gets the current {@link Color} selected for this player's token.
+   *
+   * @return The player's token color.
+   */
   public Color getColor() {
     return color;
   }
 
+  /**
+   * Checks if this player is configured as a bot.
+   *
+   * @return True if the player is a bot, false otherwise.
+   */
   public boolean isBot() {
     return isBot;
   }

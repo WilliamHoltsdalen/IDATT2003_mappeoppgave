@@ -401,6 +401,14 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates arguments for the moveToken method in LudoPlayer class.
+   *
+   * @param pieceId The ID of the token/piece (1-4).
+   * @param tile The target {@link Tile} (must not be null).
+   * @param status The new {@link TokenStatus} (must not be null).
+   * @throws IllegalArgumentException if any argument is invalid.
+   */
   public static void ludoPlayerMoveTokenValidator(int pieceId, Tile tile, TokenStatus status) {
     if (pieceId < 1 || pieceId > 4) {
       throw new IllegalArgumentException("Piece id must be between 1 and 4");
@@ -424,8 +432,6 @@ public class ArgumentValidator {
       throw new IllegalArgumentException("Player token type cannot be null");
     }
   }
-
-
 
   /**
    * Validates the arguments for the setCoordinates method in Tile class.

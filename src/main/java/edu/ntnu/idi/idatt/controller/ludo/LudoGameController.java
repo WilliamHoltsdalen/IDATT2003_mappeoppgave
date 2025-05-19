@@ -1,9 +1,5 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LudoBoardGame;
@@ -12,6 +8,9 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.token.LudoToken;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameStackPane;
 import edu.ntnu.idi.idatt.view.ludo.LudoGameView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LudoGameController extends GameController {
 

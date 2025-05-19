@@ -1,14 +1,13 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LadderGameMenuController extends MenuController {
 

@@ -1,9 +1,5 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.game.LadderBoardGame;
@@ -12,6 +8,9 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.tile.TileAction;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameStackPane;
 import edu.ntnu.idi.idatt.view.laddergame.LadderGameView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LadderGameController extends GameController {
 

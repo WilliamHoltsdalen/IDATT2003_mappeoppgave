@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.model.player;
 
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGamePlayerPlaceOnTileValidator;
+
 import edu.ntnu.idi.idatt.model.tile.LadderGameTile;
 import edu.ntnu.idi.idatt.model.tile.Tile;
-import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGamePlayerPlaceOnTileValidator;
 
 public class LadderGamePlayer extends Player {
   private LadderGameTile currentTile;

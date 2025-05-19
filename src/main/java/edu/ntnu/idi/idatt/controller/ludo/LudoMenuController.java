@@ -1,14 +1,13 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.ntnu.idi.idatt.controller.common.MenuController;
 import edu.ntnu.idi.idatt.factory.board.LudoBoardFactory;
 import edu.ntnu.idi.idatt.model.player.LudoPlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.model.player.PlayerTokenType;
 import edu.ntnu.idi.idatt.view.common.MenuView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LudoMenuController extends MenuController {
 
