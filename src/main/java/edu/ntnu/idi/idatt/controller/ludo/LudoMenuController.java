@@ -95,12 +95,11 @@ public class LudoMenuController extends MenuController {
     try {
       List<Player> players = PlayerFactory.createPlayersFromFile(filePath);
       for (Player player : players) {
-        if (player instanceof LudoPlayer) {
-          menuView.setPlayers(PlayerFactory.createPlayersFromFile(filePath));
-        } else {
+        if (!(player instanceof LudoPlayer)) {
           throw new IOException("You can only import ludo players.");
         }
       }
+      menuView.setPlayers(players);
       menuView.showInfoAlert("Success", "Players loaded successfully");
     } catch (IOException e) {
       menuView.showErrorAlert("Error", "Could not load players");
