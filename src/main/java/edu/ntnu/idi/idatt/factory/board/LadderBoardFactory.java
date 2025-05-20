@@ -7,7 +7,7 @@ import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.io.IOException;
 
 /**
- * <h3>Factory class for creating LadderGameBoard objects.</h3>
+ * Factory class for creating LadderGameBoard objects.
  *
  * <p>This class provides methods for creating LadderGameBoard objects based on predefined variants.
  * LadderGameBoard objects can also be created from an external file.

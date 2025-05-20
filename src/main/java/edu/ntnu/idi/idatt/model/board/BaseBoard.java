@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h3>BaseBoard class</h3>
+ * BaseBoard class
  *
  * <p>Abstract class implementing common functionality for board game boards.
  * This class provides the base implementation for both Chutes and Ladders and Ludo boards.
@@ -22,7 +22,6 @@ public abstract class BaseBoard implements Board {
 
   protected String name;
   protected String description;
-  protected int[] rowsAndColumns;
   protected Map<Integer, Tile> tiles;
   protected String background;
 
@@ -32,7 +31,6 @@ public abstract class BaseBoard implements Board {
    * @param name        The name of the board
    * @param description The description of the board
    * @param background  The background of the board
-   * @param pattern     The pattern of the board
    */
   protected BaseBoard(String name, String description, String background) {
     this.tiles = new HashMap<>();
@@ -101,7 +99,7 @@ public abstract class BaseBoard implements Board {
    */
   @Override
   public int getTileCount() {
-    return tiles.size() - 1;
+    return tiles.size();
   }
 
   /**

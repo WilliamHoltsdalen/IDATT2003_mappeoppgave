@@ -17,6 +17,23 @@ import javafx.scene.shape.Rectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * BoardStackPane.
+ *
+ * <p>Abstract JavaFX {@link StackPane} that serves as the base for displaying game boards.
+ * It manages a background image, a grid overlay, and a pane for draggable/interactive
+ * {@link TileActionComponent}s (like ladders or slides), if enabled.</p>
+ *
+ * <p>This class handles the visual representation of the board, mapping grid cells to coordinates,
+ * and managing the placement and removal of board components. Subclasses are responsible for
+ * specific implementations of grid creation, component loading, and visual updates.</p>
+ *
+ * @see StackPane
+ * @see Board
+ * @see TileActionComponent
+ * @see TileCoordinates
+ * @see ComponentDropEventData
+ */
 public abstract class BoardStackPane extends StackPane {
   protected static final Logger logger = LoggerFactory.getLogger(BoardStackPane.class);
 
@@ -29,9 +46,19 @@ public abstract class BoardStackPane extends StackPane {
   protected final VBox gridContainer;
   protected final Pane componentsPane;
 
+  /**
+   * Consumer for handling events when a component is dropped onto the board.
+   */
   protected Consumer<ComponentDropEventData> onComponentDropped;
+  /**
+   * Runnable action for removing components that are placed outside the valid grid area.
+   */
   protected Runnable onRemoveComponentsOutsideGrid;
 
+  /**
+   * Constructs a BoardStackPane, initializing its internal maps and visual layers
+   * (background, grid, components pane).
+   */
   public BoardStackPane() {
     this.cellToCoordinatesMap = new HashMap<>();
     this.components = new HashMap<>();
@@ -51,54 +78,71 @@ public abstract class BoardStackPane extends StackPane {
     setNodeListeners();
     this.getChildren().addAll(backgroundImageView, gridContainer, componentsPane);
     this.setMaxWidth(backgroundImageView.getFitWidth() + 40); // 40px for padding (20px each side)
+
+    this.getStylesheets().add("stylesheets/gameBoardStyles.css");
   }
 
   /**
-   * Loads the components for the board.
+   * Loads visual components (e.g., ladders, slides) onto the board based on the current
+   * {@link #board} model. Subclasses must implement this to populate the {@link #componentsPane}
+   * with {@link TileActionComponent}s.
    */
   protected abstract void loadComponents();
 
   /**
-   * Gets the image path for the component.
+   * Retrieves the image path for a given component identifier.
+   * This is used to find the visual asset for a {@link TileActionComponent}.
    *
-   * @param componentIdentifier the identifier of the component
-   * @return the image path for the component
+   * @param componentIdentifier The unique identifier of the component (e.g., "ladder_1R_2U").
+   * @return The file path to the component's image.
    */
   protected abstract String getImagePath(String componentIdentifier);
 
   /**
-   * Adds a component to the board.
+   * Adds a new {@link TileActionComponent} to the board at the specified coordinates.
+   * Subclasses must implement the logic for creating and placing the component visually.
    *
-   * @param componentIdentifier the identifier of the component
-   * @param coordinates the coordinates of the component
+   * @param componentIdentifier The identifier for the type of component to add.
+   * @param coordinates The {@link TileCoordinates} where the component should be placed.
    */
   public abstract void addComponent(String componentIdentifier, TileCoordinates coordinates);
 
-  /** Updates the visuals of the board. */
+  /**
+   * Updates all visual aspects of the board, including the grid and component placements.
+   * This is often called after changes to board dimensions or component configurations.
+   */
   public abstract void updateBoardVisuals();
 
-  /** Applies the pattern to the board. */
+  /**
+   * Applies a specific visual pattern or layout to the board's grid cells.
+   * Subclasses define what a "pattern" means in their context (e.g., alternating colors,
+   * numbering).
+   */
   public abstract void applyPattern();
 
-  /** Updates the grid of the board. */
+  /**
+   * Updates or recreates the grid display based on the current board dimensions and configuration.
+   */
   public abstract void updateGrid();
 
   /**
-   * Creates a row cell for the board.
+   * Creates a single cell (typically a {@link StackPane} containing a {@link Rectangle})
+   * for the board grid at the specified row and column.
    *
-   * @param cellWidth the width of the cell
-   * @param cellHeight the height of the cell
-   * @param row the row of the cell
-   * @param col the column of the cell
-   * @return the row cell
+   * @param cellWidth The calculated width for the cell.
+   * @param cellHeight The calculated height for the cell.
+   * @param row The row index of the cell.
+   * @param col The column index of the cell.
+   * @return The created {@link StackPane} representing the grid cell.
    */
   public abstract StackPane createRowCell(double cellWidth, double cellHeight, int row, int col);
 
   /**
-   * Initializes the board stack pane.
+   * Initializes the BoardStackPane with a specific {@link Board} model and a background image.
+   * This involves resetting the pane, setting the board, and applying the background.
    *
-   * @param board the board
-   * @param backgroundImagePath the background image path
+   * @param board The game {@link Board} model to display.
+   * @param backgroundImagePath The file path to the background image.
    */
   public void initialize(Board board, String backgroundImagePath) {
     logger.debug("Initializing BoardStackPane");
@@ -108,72 +152,73 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Gets the cell to coordinates map.
+   * Gets the map that links visual grid cells ({@link Rectangle}) to their {@link TileCoordinates}.
    *
-   * @return the cell to coordinates map
+   * @return The cell-to-coordinates map.
    */
   public Map<Rectangle, TileCoordinates> getCellToCoordinatesMap() {
     return cellToCoordinatesMap;
   }
 
   /**
-   * Gets the components.
+   * Gets the map of placed {@link TileActionComponent}s, keyed by their {@link TileCoordinates}.
    *
-   * @return the components
+   * @return The map of components.
    */
   public Map<TileCoordinates, TileActionComponent> getComponents() {
     return components;
   }
 
   /**
-   * Gets the board dimensions.
+   * Gets the current dimensions (width, height) of the board area in pixels.
    *
-   * @return the board dimensions
+   * @return An array containing [width, height].
    */
   public double[] getBoardDimensions() {
     return boardDimensions;
   }
 
   /**
-   * Gets the board.
+   * Gets the underlying {@link Board} model associated with this display.
    *
-   * @return the board
+   * @return The board model.
    */
   public Board getBoard() {
     return board;
   }
 
   /**
-   * Gets the background image view.
+   * Gets the {@link ImageView} used to display the board's background.
    *
-   * @return the background image view
+   * @return The background image view.
    */
   public ImageView getBackgroundImageView() {
     return backgroundImageView;
   }
 
   /**
-   * Gets the components pane.
+   * Gets the {@link Pane} used as a layer for displaying {@link TileActionComponent}s.
    *
-   * @return the components pane
+   * @return The components pane.
    */
   public Pane getComponentsPane() {
     return componentsPane;
   }
 
   /**
-   * Gets the grid container.
+   * Gets the {@link VBox} container that holds the grid rows.
    *
-   * @return the grid container
+   * @return The grid container.
    */
   public VBox getGridContainer() {
     return gridContainer;
   }
 
   /**
-   * Sets the background.
+   * Sets the background image for the board.
+   * Updates both the model's background property and the {@link #backgroundImageView}.
    *
-   * @param backgroundImagePath the background image path
+   * @param backgroundImagePath The file path to the background image.
    */
   public void setBackground(String backgroundImagePath) {
     logger.debug("Setting background to: {}", backgroundImagePath);
@@ -183,9 +228,9 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Sets the board.
+   * Sets the {@link Board} model for this display.
    *
-   * @param board the board
+   * @param board The board model to use.
    */
   public void setBoard(Board board) {
     logger.debug("Setting board to: {}", board.getName());
@@ -193,9 +238,9 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Sets the board dimensions.
+   * Sets the pixel dimensions (width, height) for the board display area.
    *
-   * @param boardDimensions the board dimensions
+   * @param boardDimensions An array containing [width, height].
    */
   public void setBoardDimensions(double[] boardDimensions) {
     logger.debug("Setting board dimensions to: {}", Arrays.toString(boardDimensions));
@@ -203,29 +248,31 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Sets the on component dropped.
+   * Sets a callback {@link Consumer} to be executed when a component is dropped onto the board.
+   * The consumer receives {@link ComponentDropEventData} with details about the drop.
    *
-   * @param onComponentDropped the on component dropped
+   * @param onComponentDropped The consumer to handle component drop events.
    */
   public void setOnComponentDropped(Consumer<ComponentDropEventData> onComponentDropped) {
     this.onComponentDropped = onComponentDropped;
   }
 
   /**
-   * Sets the on remove components outside grid.
+   * Sets a {@link Runnable} action to be executed when components placed outside the grid
+   * need to be removed.
    *
-   * @param onRemoveComponentsOutsideGrid the on remove components outside grid
+   * @param onRemoveComponentsOutsideGrid The runnable action.
    */
   public void setOnRemoveComponentsOutsideGrid(Runnable onRemoveComponentsOutsideGrid) {
     this.onRemoveComponentsOutsideGrid = onRemoveComponentsOutsideGrid;
   }
 
   /**
-   * Sets the node listeners.
+   * Sets up listeners, particularly for changes in the {@link #backgroundImageView} layout bounds,
+   * to update {@link #boardDimensions} and trigger {@link #updateBoardVisuals()}.
    */
   protected void setNodeListeners() {
     logger.debug("Setting node listeners");
-    // Bind boardDimensions to the gridContainer's layoutBounds
     // boardDimensions is used to calculate the positions of the tiles in the grid
     backgroundImageView.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
       if (newVal.getWidth() > 0 && newVal.getHeight() > 0) {
@@ -237,7 +284,8 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Resets the board stack pane.
+   * Resets the BoardStackPane by clearing all internal maps (cells, components)
+   * and removing children from the grid and components panes.
    */
   protected void reset() {
     logger.debug("Resetting BoardStackPane");
@@ -248,9 +296,10 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Removes a component from the board.
+   * Removes a {@link TileActionComponent} from the board at the specified coordinates.
+   * Updates the visual display after removal.
    *
-   * @param coordinates the coordinates of the component
+   * @param coordinates The {@link TileCoordinates} of the component to remove.
    */
   public void removeComponent(TileCoordinates coordinates) {
     logger.debug("Removing component from: {}", coordinates);
@@ -259,10 +308,11 @@ public abstract class BoardStackPane extends StackPane {
   }
 
   /**
-   * Finds a cell by coordinates.
+   * Finds and returns the visual grid cell ({@link Rectangle}) that corresponds
+   * to the given {@link TileCoordinates}.
    *
-   * @param coordinates the coordinates of the cell
-   * @return the cell
+   * @param coordinates The coordinates to search for.
+   * @return The matching {@link Rectangle} cell, or null if not found.
    */
   protected Rectangle findCellByCoordinates(TileCoordinates coordinates) {
     return cellToCoordinatesMap.entrySet().stream()

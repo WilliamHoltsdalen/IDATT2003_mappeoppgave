@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model.board;
 
+import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardCreateTilesValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetPatternValidator;
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.ladderGameBoardSetRowsAndColumnsValidator;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <h3>LadderGameBoard class</h3>
+ * LadderGameBoard class
  *
  * <p>Concrete implementation of the Board interface for the Chutes and Ladders game.
  * This class extends BaseBoard and implements game-specific board functionality.
@@ -83,6 +84,14 @@ public class LadderGameBoard extends BaseBoard {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getTileCount() {
+    return tiles.size() - 1;
+  }
+
+  /**
    * Creates a list of Tile objects that are arranged in a grid pattern with alternating directions
    * in each row. The first tile is in the lower left corner of the grid, and the direction of the
    * first row is left to right. This is the standard way to create a board for the Chutes and
@@ -96,6 +105,8 @@ public class LadderGameBoard extends BaseBoard {
    */
   @Override
   public void createTiles(int rows, int columns) {
+    ladderGameBoardCreateTilesValidator(rows, columns);
+    
     Map<Integer, Tile> newTiles = new HashMap<>();
     // Add 0th tile outside of board
     newTiles.put(0, new LadderGameTile(0, new int[]{0, -2}, 1));

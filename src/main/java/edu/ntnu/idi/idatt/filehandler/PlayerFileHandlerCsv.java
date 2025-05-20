@@ -14,13 +14,38 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <h3>FileHandler implementation for Player objects.</h3>
+ * PlayerFileHandlerCsv.
  *
- * <p>This class provides methods for reading and writing Player objects to and from csv formatted
- * files.
+ * <p>Implements the {@link FileHandler} interface for {@link Player} objects, providing
+ * functionality to read player data from and write player data to CSV (Comma Separated Values)
+ * formatted files. This handler can distinguish between {@link LadderGamePlayer} and
+ * {@link LudoPlayer} types based on the CSV header and structure.</p>
+ *
+ * <p>When reading, it determines the player type from the header line and parses subsequent lines
+ * accordingly. For Ludo players, it expects "name, colorHex, isBot". For Ladder Game players,
+ * it expects "name, colorHex, playerTokenType, isBot".</p>
+ *
+ * <p>When writing, it generates the appropriate header based on the type of the first player in
+ * the list and then formats each player object into a CSV line.</p>
+ *
+ * @see FileHandler
+ * @see Player
+ * @see LudoPlayer
+ * @see LadderGamePlayer
  */
 public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
+  /**
+   * Reads a list of {@link Player} objects from a CSV file at the specified path.
+   * The method automatically detects if the players are {@link LudoPlayer}s or
+   * {@link LadderGamePlayer}s based on the header row in the CSV file.
+   *
+   * @param path The path to the CSV file.
+   * @return A list of {@link Player} objects deserialized from the file. Returns an empty list
+   *         if a player line is malformed or if an I/O error (other than file not found) occurs.
+   * @throws IOException if the file cannot be found or if an I/O error occurs during reading that
+   *                     prevents processing (e.g., permissions issues).
+   */
   @Override
   public List<Player> readFile(String path) throws IOException {
     List<Player> players = new ArrayList<>();
@@ -32,19 +57,19 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         if (playerType.equals("ludoPlayer") && players.size() == 4) {
           break;
         }
-        if (line.equals("name, colorHex, playerTokenType")) {
+        if (line.equals("name, colorHex, playerTokenType, isBot")) {
           playerType = "ladderGamePlayer";
           continue;
-        } else if (line.equals("name, colorHex")) {
+        } else if (line.equals("name, colorHex, isBot")) {
           playerType = "ludoPlayer";
           continue;
         }
 
         Player player = null;
         if (playerType.equals("ladderGamePlayer")) {
-          player = ladderGamePlayerfromCsvLine(line);
+          player = ladderGamePlayerFromCsvLine(line);
         } else if (playerType.equals("ludoPlayer")) {
-          player = ludoPlayerfromCsvLine(line);
+          player = ludoPlayerFromCsvLine(line);
         }
 
         if (player == null) {
@@ -58,9 +83,26 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     return players;
   }
 
+  /**
+   * Writes a list of {@link Player} objects to a CSV file at the specified path.
+   * The CSV header and line format are determined by the type of the first player in the list
+   * (either {@link LudoPlayer} or {@link LadderGamePlayer}).
+   *
+   * @param path    The path to the CSV file where players will be written.
+   * @param players The list of {@link Player} objects to serialize.
+   * @throws IOException if an error occurs during file writing (e.g., path not found, permissions).
+   */
   @Override
   public void writeFile(String path, List<Player> players) throws IOException {
+    String header;
+    if (players.getFirst() instanceof LudoPlayer) {
+      header = "name, colorHex, isBot";
+    } else {
+      header = "name, colorHex, playerTokenType, isBot";
+    }
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      writer.write(header);
+      writer.newLine();
       for (Player player : players) {
         writer.write(toCsvLine(player));
         writer.newLine();
@@ -70,41 +112,53 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
     }
   }
 
-  private Player ladderGamePlayerfromCsvLine(String line) {
-    String[] segments = line.split(",");
-    if (segments.length != 3) {
+  /**
+   * Parses a line from a CSV file, expecting {@link LadderGamePlayer} data format.
+   * The expected format is: "name,colorHex,playerTokenType,isBot".
+   *
+   * @param line The CSV line string.
+   * @return A {@link LadderGamePlayer} object, or {@code null} if the line is malformed.
+   */
+  public Player ladderGamePlayerFromCsvLine(String line) {
+    String[] parts = line.split(",");
+    if (parts.length != 4) {
       return null;
     }
-    try {
-      String playerName = segments[0].trim();
-      String playerColorHex = segments[1].trim();
-      String playerTokenType = segments[2].trim();
-      return new LadderGamePlayer(playerName, playerColorHex,
-          PlayerTokenType.valueOf(playerTokenType.toUpperCase()));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return new LadderGamePlayer(parts[0].trim(), parts[1].trim(), 
+        PlayerTokenType.valueOf(parts[2].trim()), Boolean.parseBoolean(parts[3].trim()));
   }
 
-  private Player ludoPlayerfromCsvLine(String line) {
-    String[] segments = line.split(",");
-    if (segments.length != 2) {
+  /**
+   * Parses a line from a CSV file, expecting {@link LudoPlayer} data format.
+   * The expected format is: "name,colorHex,isBot". {@link PlayerTokenType#CIRCLE} is assumed.
+   *
+   * @param line The CSV line string.
+   * @return A {@link LudoPlayer} object, or {@code null} if the line is malformed.
+   */
+  public Player ludoPlayerFromCsvLine(String line) {
+    String[] parts = line.split(",");
+    if (parts.length != 3) {
       return null;
     }
-    try {
-      String playerName = segments[0].trim();
-      String playerColorHex = segments[1].trim();
-      return new LudoPlayer(playerName, playerColorHex, PlayerTokenType.CIRCLE);
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
+    return new LudoPlayer(parts[0].trim(), parts[1].trim(), 
+        PlayerTokenType.CIRCLE, Boolean.parseBoolean(parts[2].trim()));
+  }
+
+  /**
+   * Converts a {@link Player} object to its CSV string representation.
+   * The format depends on whether the player is an instance of {@link LudoPlayer}
+   * (name,colorHex,isBot) or another {@link Player} type, assumed to be {@link LadderGamePlayer}
+   * (name,colorHex,playerTokenType,isBot).
+   *
+   * @param player The {@link Player} object to convert.
+   * @return A string representing the player in CSV format.
+   */
+  public String toCsvLine(Player player) {
+    if (player instanceof LudoPlayer) {
+      return String.format("%s,%s,%s", player.getName(), player.getColorHex(), player.isBot());
+    } else {
+      return String.format("%s,%s,%s,%s", player.getName(), player.getColorHex(),
+          player.getPlayerTokenType().name(), player.isBot());
     }
-    return null;
   }
-
-  private String toCsvLine(Player player) {
-    return String.format("%s,%s,%s", player.getName(), player.getColorHex(),
-        player.getPlayerTokenType().name());
-  }
-
 }

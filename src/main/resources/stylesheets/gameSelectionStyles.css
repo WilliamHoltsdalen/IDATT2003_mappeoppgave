@@ -1,0 +1,37 @@
+.content-box {
+  -fx-background-color: -gray-background;
+  -fx-padding: 20;
+  -fx-spacing: 30;
+  -fx-alignment: center;
+  -fx-max-height: 35em;
+  -fx-max-width: 55em;
+  -fx-background-radius: 18;
+}
+
+.title {
+  -fx-font-size: 36px;
+  -fx-font-weight: bold;
+}
+
+.game-name {
+  -fx-font-size: 20px;
+}
+
+.game-box {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-padding: 15;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 10;
+  -fx-border-width: 1;
+  -fx-spacing: 10;
+  -fx-alignment: center;
+  -fx-effect: dropshadow(three-pass-box, black, 6, 0, 0, 0);
+  -fx-cursor: hand;
+}
+
+.game-box:hover {
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-effect: dropshadow(three-pass-box, #007AFF, 10, 0, 0, 0);
+}

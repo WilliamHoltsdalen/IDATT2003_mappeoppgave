@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>BoardCreatorView</h3>
+ * BoardCreatorView
  *
  * <p>Abstract class for all board creator views. This class has a name field, a description field,
  * and a board stack pane.
@@ -45,6 +45,8 @@ public abstract class BoardCreatorView extends BorderPane implements ButtonClick
     this.nameField = new TextField();
     this.descriptionField = new TextField();
     this.boardStackPane = createBoardStackPane();
+
+    this.getStylesheets().add("stylesheets/boardCreatorStyles.css");
   }
 
 

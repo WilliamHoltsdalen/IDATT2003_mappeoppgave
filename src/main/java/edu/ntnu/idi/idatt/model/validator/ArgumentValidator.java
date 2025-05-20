@@ -10,7 +10,7 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 /**
- * <h3> Validator class for arguments passed to model constructors and methods.</h3>
+ *  Validator class for arguments passed to model constructors and methods.
  */
 public class ArgumentValidator {
 
@@ -79,7 +79,7 @@ public class ArgumentValidator {
     if (tileId < 0) {
       throw new IllegalArgumentException("Tile id must be greater than 0");
     }
-    if (tileId >= tileCount) {
+    if (tileId > tileCount) {
       throw new IllegalArgumentException("Tile id must be less than the number of tiles on the "
           + "board");
     }
@@ -162,6 +162,34 @@ public class ArgumentValidator {
     if (rowsAndColumns == null) {
       throw new IllegalArgumentException("Rows and columns cannot be null");
     }
+    if (rowsAndColumns.length != 2) {
+      throw new IllegalArgumentException("Rows and columns must be an array of length 2");
+    }
+    if (rowsAndColumns[0] <= 0 || rowsAndColumns[1] <= 0) {
+      throw new IllegalArgumentException("Rows and columns must be greater than 0");
+    }
+    if (rowsAndColumns[0] < 5 || rowsAndColumns[1] < 5) {
+      throw new IllegalArgumentException("Rows and columns must be at least 5x5");
+    }
+    if (rowsAndColumns[0] > 12 || rowsAndColumns[1] > 12) {
+      throw new IllegalArgumentException("Rows and columns must be at most 12x12");
+    }
+  }
+
+  /**
+   * Validates the arguments for the createTiles method in LadderGameBoard class.
+   *
+   * @param rows the number of rows
+   * @param columns the number of columns
+   * @throws IllegalArgumentException if rows or columns is less than 1
+   */
+  public static void ladderGameBoardCreateTilesValidator(int rows, int columns) {
+    if (rows < 5 || columns < 5) {
+      throw new IllegalArgumentException("Board must be at least 5x5");
+    }
+    if (rows > 12 || columns > 12) {
+      throw new IllegalArgumentException("Board must be at most 12x12");
+    }
   }
 
   /** 
@@ -230,6 +258,8 @@ public class ArgumentValidator {
     if (boardSize < 9) {
       throw new IllegalArgumentException("Board size must be at least 9");
     }
+
+
   }
 
   /**
@@ -354,6 +384,9 @@ public class ArgumentValidator {
     if (colorHex == null || colorHex.isBlank()) {
       throw new IllegalArgumentException("Color hex cannot be null or blank");
     }
+    if (Color.valueOf(colorHex) == null) {
+      throw new IllegalArgumentException("Color is not valid");
+    }
   }
 
   /**
@@ -368,6 +401,14 @@ public class ArgumentValidator {
     }
   }
 
+  /**
+   * Validates arguments for the moveToken method in LudoPlayer class.
+   *
+   * @param pieceId The ID of the token/piece (1-4).
+   * @param tile The target {@link Tile} (must not be null).
+   * @param status The new {@link TokenStatus} (must not be null).
+   * @throws IllegalArgumentException if any argument is invalid.
+   */
   public static void ludoPlayerMoveTokenValidator(int pieceId, Tile tile, TokenStatus status) {
     if (pieceId < 1 || pieceId > 4) {
       throw new IllegalArgumentException("Piece id must be between 1 and 4");
@@ -392,8 +433,6 @@ public class ArgumentValidator {
     }
   }
 
-
-
   /**
    * Validates the arguments for the setCoordinates method in Tile class.
    *
@@ -403,6 +442,9 @@ public class ArgumentValidator {
   public static void tileSetCoordinatesValidator(int[] coordinates) {
     if (coordinates == null) {
       throw new IllegalArgumentException("Coordinates cannot be null");
+    }
+    if (coordinates.length != 2) {
+      throw new IllegalArgumentException("Coordinates must be an array of length 2");
     }
   }
 
@@ -428,6 +470,9 @@ public class ArgumentValidator {
   public static void tileSetNextTileIdValidator(int currentTileId, int nextTileId) {
     if (nextTileId < 0) {
       throw new IllegalArgumentException("Next tile id must be equal to or greater than 0");
+    }
+    if (nextTileId == currentTileId) {
+      throw new IllegalArgumentException("Next tile id cannot be the same as the current tile id");
     }
   }
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * <h3>Factory class for creating Player objects.</h3>
+ * Factory class for creating Player objects.
  *
  * <p>This class provides methods for creating Player objects based on predefined variants.
  * Player objects can be loaded/created from an external file, or from hardcoded variants in this
@@ -44,15 +44,17 @@ public class PlayerFactory {
    *
    * @param name     The player's name.
    * @param colorHex The player's color in hex (e.g. "#FF0000").
+   * @param playerTokenType The type of player token to use.
+   * @param isBot Whether the player is a bot or not.
    * @return A new LadderGamePlayer instance with the given attributes.
    */
   public static Player createLadderGamePlayer(String name, String colorHex,
-      PlayerTokenType playerTokenType) {
+      PlayerTokenType playerTokenType, boolean isBot) {
     if (!validatePlayer(name, colorHex, playerTokenType)) {
       throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new LadderGamePlayer(name, colorHex, playerTokenType);
+    return new LadderGamePlayer(name, colorHex, playerTokenType, isBot);
   }
 
   /**
@@ -60,15 +62,17 @@ public class PlayerFactory {
    *
    * @param name     The player's name.
    * @param colorHex The player's color in hex (e.g. "#FF0000").
+   * @param playerTokenType The type of player token to use.
+   * @param isBot Whether the player is a bot or not.
    * @return A new LudoPlayer instance with the given attributes.
    */
   public static Player createLudoPlayer(String name, String colorHex,
-      PlayerTokenType playerTokenType) {
+      PlayerTokenType playerTokenType, boolean isBot) {
     if (!validatePlayer(name, colorHex, playerTokenType)) {
       throw new IllegalArgumentException("Invalid player parameters.");
     }
 
-    return new LudoPlayer(name, colorHex, playerTokenType);
+    return new LudoPlayer(name, colorHex, playerTokenType, isBot);
   }
 
   private static boolean validatePlayer(String name, String colorHex,

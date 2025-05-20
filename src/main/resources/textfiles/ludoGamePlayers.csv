@@ -1,0 +1,5 @@
+name, colorHex, isBot
+Player 1,0xff0000ff,false
+Player 2,0x0000ffff,false
+Player 3,0x008000ff,false
+Bot 1,0xffff00ff,true

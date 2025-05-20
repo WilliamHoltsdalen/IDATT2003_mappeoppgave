@@ -19,7 +19,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 
 /**
- * <h3>GameBoardStackPane class</h3>
+ * GameBoardStackPane class
  *
  * <p>This class extends the StackPane class. It is used to display the game board in the game
  * view.

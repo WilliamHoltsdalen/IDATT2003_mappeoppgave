@@ -11,13 +11,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>GameSelectionView</h3>
+ * GameSelectionView
  *
  * <p>This class is responsible for displaying the game selection view. It displays a list of games
  * and allows the user to select one by clicking on it.
@@ -28,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @see ButtonClickSubject
  */
 public class GameSelectionView extends BorderPane implements ButtonClickSubject {
+
   private static final Logger logger = LoggerFactory.getLogger(GameSelectionView.class);
   private final List<ButtonClickObserver> observers;
   private VBox contentBox;
@@ -38,6 +42,8 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
   public GameSelectionView() {
     this.observers = new ArrayList<>();
     this.contentBox = new VBox();
+
+    this.getStylesheets().add("stylesheets/gameSelectionStyles.css");
   }
 
   /**
@@ -47,7 +53,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    */
   public void initialize(List<Pair<String, Image>> availableGames) {
     contentBox = createGameSelectionBox(availableGames);
-    contentBox.getStyleClass().add("game-selection-box");
+    contentBox.getStyleClass().add("content-box");
 
     this.setCenter(contentBox);
     logger.debug("GameSelectionView initialized successfully");
@@ -60,31 +66,61 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    * @return The game selection box.
    */
   private VBox createGameSelectionBox(List<Pair<String, Image>> availableGames) {
+    VBox mainBox = new VBox();
+    mainBox.setAlignment(Pos.CENTER);
+    mainBox.setSpacing(30);
+    mainBox.setMinSize(0, 0);
+
+    Label gameSelectionTitle = new Label("Select a game");
+    gameSelectionTitle.getStyleClass().add("title");
+
     HBox gameSelectionBox = new HBox();
     gameSelectionBox.setAlignment(Pos.CENTER);
     gameSelectionBox.setSpacing(30);
-    Label gameSelectionTitle = new Label("Select a game");
-    gameSelectionTitle.getStyleClass().add("game-selection-title");
+    gameSelectionBox.setMinSize(0, 0);
+    VBox.setVgrow(gameSelectionBox, Priority.ALWAYS);
 
     availableGames.forEach(game -> {
       VBox gameBox = new VBox();
-      gameBox.getStyleClass().add("game-selection-game-box");
+      gameBox.setOnMouseClicked(event -> notifyObservers(game.getKey()));
+      gameBox.getStyleClass().add("game-box");
       gameBox.setAlignment(Pos.CENTER);
       gameBox.setSpacing(15);
-      gameBox.setOnMouseClicked(event -> notifyObservers(game.getKey()));
+      gameBox.setMinSize(120, 120);
+      gameBox.prefWidthProperty().bind(gameSelectionBox.widthProperty()
+          .divide(availableGames.size()).subtract(mainBox.getSpacing() / 2));
+      gameBox.prefHeightProperty().bind(gameSelectionBox.heightProperty());
+
+      Pane imagePane = new StackPane();
+      imagePane.setMinSize(0, 0);
+      imagePane.prefWidthProperty().bind(gameBox.prefWidthProperty().multiply(0.95));
+      imagePane.prefHeightProperty().bind(gameBox.prefHeightProperty().multiply(0.75));
 
       ImageView gameImageView = new ImageView(game.getValue());
-      gameImageView.setFitHeight(250);
       gameImageView.setPreserveRatio(true);
+      gameImageView.fitHeightProperty().bind(imagePane.prefHeightProperty());
+
+      imagePane.widthProperty()
+          .addListener((obs, oldVal, newVal) -> {
+            double imgAspectRatio =
+                gameImageView.getImage().getWidth() / gameImageView.getImage().getHeight();
+            double paneAspectRatio = newVal.doubleValue() / imagePane.getPrefHeight();
+            if (paneAspectRatio < imgAspectRatio) {
+              gameImageView.setFitWidth(newVal.doubleValue());
+            }
+          });
+
+      imagePane.getChildren().add(gameImageView);
 
       Label gameNameLabel = new Label(game.getKey());
-      gameNameLabel.getStyleClass().add("game-selection-game-name");
+      gameNameLabel.getStyleClass().add("game-name");
 
-      gameBox.getChildren().addAll(gameImageView, gameNameLabel);
+      gameBox.getChildren().addAll(imagePane, gameNameLabel);
       gameSelectionBox.getChildren().add(gameBox);
     });
 
-    return new VBox(gameSelectionTitle, gameSelectionBox);
+    mainBox.getChildren().addAll(gameSelectionTitle, gameSelectionBox);
+    return mainBox;
   }
 
   /**
@@ -121,7 +157,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
    * Notifies all observers of a button click with parameters.
    *
    * @param buttonId The id of the button that was clicked.
-   * @param params The parameters of the button click.
+   * @param params   The parameters of the button click.
    */
   @Override
   public void notifyObserversWithParams(String buttonId, Map<String, Object> params) {

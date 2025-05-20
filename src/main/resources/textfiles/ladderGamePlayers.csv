@@ -1,0 +1,6 @@
+name, colorHex, playerTokenType, isBot
+Player 1, #FF5733, TRIANGLE, false
+Player 2, #FFE802, DIAMOND, false
+Player 3, #FF00FF, CIRCLE, false
+Player 4, #03FF24, SQUARE, false
+Bot 1, #123456, HEXAGON, true

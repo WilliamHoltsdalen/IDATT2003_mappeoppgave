@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 /**
- * <h3>FileHandler implementation for Board objects.</h3>
+ * FileHandler implementation for Board objects.
  *
  * <p>This class provides methods for reading and writing Board objects to and from JSON files.
  * It uses the Gson library for serialization and deserialization.

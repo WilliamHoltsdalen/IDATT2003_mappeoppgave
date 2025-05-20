@@ -5,7 +5,7 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.dieSetValueVa
 import java.util.Random;
 
 /**
- * <h3>Die class</h3>
+ * Die class
  *
  * <p>This class represents a single die. It has a value and can be rolled to get a new value.
  */
