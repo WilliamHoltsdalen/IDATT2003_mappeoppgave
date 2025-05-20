@@ -32,7 +32,7 @@ jobs:
         run: mvn javadoc:javadoc
 
       - name: Upload JavaDoc artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./target/site/apidocs
 
