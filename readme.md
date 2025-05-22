@@ -1,8 +1,12 @@
+[![Java CI with Maven](https://github.com/WilliamHoltsdalen/IDATT2003_mappeoppgave/actions/workflows/maven.yml/badge.svg)](https://github.com/WilliamHoltsdalen/IDATT2003_mappeoppgave/actions/workflows/maven.yml)
+[![Deploy JavaDoc to GitHub Pages](https://github.com/WilliamHoltsdalen/IDATT2003_mappeoppgave/actions/workflows/deploy-javadoc.yml/badge.svg)](https://github.com/WilliamHoltsdalen/IDATT2003_mappeoppgave/actions/workflows/deploy-javadoc.yml)
+
+
 # IDATT2003 - BoardGame Application
 This project is developed as part of the IDATx2003 (Programming 2) course at NTNU. It focuses on creating a digital board game framework where players can load game boards, create or import players, and simulate classic board games like Snakes and Ladders.
 
-## V3.2.0 Features
-In this V3.2.0 release, the following core functionalities are implemented:
+## V3.3.0 Features
+In this V3.3.0 release, the following core functionalities are implemented:
 - **JavaFX GUI**: A modern and interactive graphical user interface.
 - **MVC Architecture**: Clearly structured Model-View-Controller pattern for separation of concerns.
 - **Modular Game Design**: Supports multiple game types (currently Chutes and Ladders, and Ludo).
