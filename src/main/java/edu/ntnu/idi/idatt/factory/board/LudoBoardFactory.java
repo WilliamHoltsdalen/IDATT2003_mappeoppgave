@@ -6,6 +6,8 @@ import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
 import java.io.IOException;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LudoBoardFactory.
@@ -22,6 +24,7 @@ import javafx.scene.paint.Color;
  * @see LudoBoardFileHandlerGson
  */
 public class LudoBoardFactory implements BoardFactory {
+  private static final Logger logger = LoggerFactory.getLogger(LudoBoardFactory.class);
 
   /**
    * Constructs a new {@code LudoBoardFactory}.
@@ -41,11 +44,15 @@ public class LudoBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBoard(String variant) {
+    logger.debug("creating ludo board with variant: {}", variant);
     return switch (variant) {
       case "Classic" -> createClassicBoard();
       case "Small" -> createSmallBoard();
       case "Large" -> createLargeBoard();
-      default -> throw new IllegalArgumentException("Invalid board variant: " + variant);
+      default -> {
+        logger.error("Invalid ludo board variant type: {}", variant);
+        throw new IllegalArgumentException("Invalid board variant: " + variant);
+      }
     };
   }
 
@@ -60,10 +67,13 @@ public class LudoBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBoardFromFile(String filePath) {
+    logger.debug("attempting to create ludo board from file: {}", filePath);
     FileHandler<Board> fileHandler = new LudoBoardFileHandlerGson();
     try {
+      logger.info("successfully loaded ludo board from file: {}", filePath);
       return (Board) fileHandler.readFile(filePath);
     } catch (IOException e) {
+      logger.error("failed to load ludo board from file: {}", filePath);
       return null;
     }
   }
@@ -77,6 +87,7 @@ public class LudoBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
+    logger.debug("Creating blank board with size: {}x{}", rows, columns);
     return new LudoGameBoard("Blank ludo board", "Blank ludo board", "media/boards/whiteBoard.png",
         rows, new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW});
   }
@@ -91,7 +102,7 @@ public class LudoBoardFactory implements BoardFactory {
   private Board createClassicBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/ClassicLudoBoard.json");
     if (board == null) {
-      // TODO: Do something in case of null board, even if its just logging.
+      logger.error("failed to create classic board from file");
     }
     return board;
   }
@@ -105,7 +116,7 @@ public class LudoBoardFactory implements BoardFactory {
   private Board createSmallBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/SmallLudoBoard.json");
     if (board == null) {
-      // TODO: Do something in case of null board, even if its just logging.
+      logger.error("failed to create small board from file");
     }
     return board;
   }
@@ -119,7 +130,7 @@ public class LudoBoardFactory implements BoardFactory {
   private Board createLargeBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/XlLudoBoard.json");
     if (board == null) {
-      // TODO: Do something in case of null board, even if its just logging.
+      logger.error("failed to create large board from file");
     }
     return board;
   }

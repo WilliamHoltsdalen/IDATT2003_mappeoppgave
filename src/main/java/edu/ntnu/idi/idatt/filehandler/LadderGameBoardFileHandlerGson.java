@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FileHandler implementation for Board objects.
@@ -26,6 +28,8 @@ import org.apache.commons.io.FileUtils;
  * It uses the Gson library for serialization and deserialization.
  */
 public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
+
+  private static final Logger logger = LoggerFactory.getLogger(LadderGameBoardFileHandlerGson.class);
 
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
@@ -53,10 +57,13 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
    */
   @Override
   public Board readFile(String path) throws IOException {
+    logger.debug("Reading board file {}", path);
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
+      logger.debug("Successfully read JSON string from file {}", path);
       return deserializeBoard(jsonString);
     } catch (IOException e) {
+      logger.error("Could not read board file {}", path);
       throw new IOException("Could not read board from file: " + path);
     }
   }
@@ -71,10 +78,12 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
   @Override
   public void writeFile(String path, List<Board> boards) throws IOException {
     if (boards == null || boards.isEmpty()) {
+      logger.error("Attempted to write empty board list");
       throw new IllegalArgumentException("Board list is null or empty.");
     }
     JsonObject boardJson = serializeBoard((LadderGameBoard) boards.getFirst());
     if (boardJson == null) {
+      logger.error("Failed to serialize board. Board JSON was null");
       // Todo: Handle null boardJson, perhaps by throwing a ( custom ? ) exception
       return;
     }
@@ -85,9 +94,11 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
     File file = new File(path);
 
     if (!file.createNewFile()) {
+      logger.error("File with the same name already exists: {}", path);
       throw new IOException("A file with the same name already exists");
     }
     FileUtils.writeStringToFile(file, prettyJson, StandardCharsets.UTF_8, false);
+    logger.info("Board saved successfully");
   }
 
   /**
@@ -148,6 +159,7 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
    */
   private Board deserializeBoard(String jsonString) {
     if (jsonString == null || jsonString.isEmpty()) {
+      logger.error("Cannot deserialize a null or empty JSON string");
       return null;
     }
 
@@ -190,6 +202,7 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
         tileAction = createTileAction(actionIdentifier, destinationTileId, actionDescription);
       } catch (NullPointerException e) {
         // Todo: Handle null pointer exception if any of the tile properties are missing
+        logger.error("Missing tile properties while parsing tile. Tile JSON: {}", tileJsonObject);
       }
 
       if (tileAction != null) {
@@ -198,12 +211,13 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
       }
       board.addTile(new LadderGameTile(tileId, coordinates, nextTileId));
     });
-
+    logger.debug("Deserializing board from JSON");
     return board;
   }
 
   private static TileAction createTileAction(String actionIdentifier, int destinationTileId,
       String actionDescription) {
+    logger.debug("Creating tile action with identifier: {}", actionIdentifier);
     TileAction tileAction;
     switch (actionIdentifier.split("_")[2]) {
       case "ladder" ->

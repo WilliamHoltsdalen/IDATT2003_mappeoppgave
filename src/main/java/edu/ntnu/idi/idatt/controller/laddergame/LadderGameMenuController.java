@@ -56,6 +56,7 @@ public class LadderGameMenuController extends MenuController {
     super(menuView);
 
     super.setBoardFactory(new LadderBoardFactory());
+    logger.debug("LadderBoardFactory set in LadderGameMenuController");
     initializeMenuView();
   }
 
@@ -72,6 +73,7 @@ public class LadderGameMenuController extends MenuController {
     menuView.getPlayerRows().forEach(playerRow ->
         players.add(new LadderGamePlayer(playerRow.getName(), playerRow.getColor().toString(),
             playerRow.getPlayerTokenType(), playerRow.isBot())));
+    logger.debug("Created {} player(s) from menu input", players.size());
     return players;
   }
 
@@ -87,6 +89,7 @@ public class LadderGameMenuController extends MenuController {
     menuView.setSelectedBoard(boardFactory.createBoard("Classic"));
     menuView.initialize("Ladder Game Menu", ALLOWED_PLAYER_TOKEN_TYPES, ALLOWED_PLAYER_COLORS,
         MIN_PLAYERS, MAX_PLAYERS);
+    logger.info("Ladder Game Menu initialized with board 'Classic'");
   }
 
   /**
@@ -100,5 +103,6 @@ public class LadderGameMenuController extends MenuController {
   protected void loadBoardsFromFactory() {
     super.boardVariants.put(1, boardFactory.createBoard("Classic"));
     super.boardVariants.put(2, boardFactory.createBoard("Teleporting"));
+    logger.debug("Loaded boards: Classic and Teleporting into boardVariants");
   }
 }

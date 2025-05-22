@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * PlayerFileHandlerCsv.
@@ -35,6 +38,9 @@ import java.util.List;
  */
 public class PlayerFileHandlerCsv implements FileHandler<Player> {
 
+  private static final Logger logger = LoggerFactory.getLogger(PlayerFileHandlerCsv.class);
+
+
   /**
    * Reads a list of {@link Player} objects from a CSV file at the specified path.
    * The method automatically detects if the players are {@link LudoPlayer}s or
@@ -48,8 +54,8 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
    */
   @Override
   public List<Player> readFile(String path) throws IOException {
+    logger.debug("Reading players from CSV file: {}", path);
     List<Player> players = new ArrayList<>();
-
     try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
       String line;
       String playerType = "";
@@ -59,9 +65,11 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         }
         if (line.equals("name, colorHex, playerTokenType, isBot")) {
           playerType = "ladderGamePlayer";
+          logger.debug("Detected ladder game player type.");
           continue;
         } else if (line.equals("name, colorHex, isBot")) {
           playerType = "ludoPlayer";
+          logger.debug("Detected ludo game player type.");
           continue;
         }
 
@@ -73,11 +81,14 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         }
 
         if (player == null) {
+          logger.debug("Failed to parse player from line: '{}'", line);
           return Collections.emptyList();
         }
         players.add(player);
       }
+      logger.info("Successfully read {} player(s) from file: {}", players.size(), path);
     } catch (IOException e) {
+      logger.error("Could not read players from file: {}", path);
       throw new IOException("Could not read players from file: " + path);
     }
     return players;
@@ -94,6 +105,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
    */
   @Override
   public void writeFile(String path, List<Player> players) throws IOException {
+    logger.debug("Writing {} players to CSV file: {}", players.size(), path);
     String header;
     if (players.getFirst() instanceof LudoPlayer) {
       header = "name, colorHex, isBot";
@@ -107,7 +119,9 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         writer.write(toCsvLine(player));
         writer.newLine();
       }
+      logger.info("Successfully wrote {} player(s) to file: {}", players.size(), path);
     } catch (IOException e) {
+      logger.error("Could not write players to file: {}", path);
       throw new IOException("Could not write players to file: " + path);
     }
   }
@@ -122,6 +136,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   public Player ladderGamePlayerFromCsvLine(String line) {
     String[] parts = line.split(",");
     if (parts.length != 4) {
+      logger.debug("Invalid ladder game player CSV line: '{}'", line);
       return null;
     }
     return new LadderGamePlayer(parts[0].trim(), parts[1].trim(), 
@@ -138,6 +153,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
   public Player ludoPlayerFromCsvLine(String line) {
     String[] parts = line.split(",");
     if (parts.length != 3) {
+      logger.debug("Invalid ludo player CSV line: '{}'", line);
       return null;
     }
     return new LudoPlayer(parts[0].trim(), parts[1].trim(), 
