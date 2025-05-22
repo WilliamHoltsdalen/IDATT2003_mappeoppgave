@@ -7,6 +7,7 @@
   -fx-max-height: 35em;
   -fx-max-width: 55em;
   -fx-background-radius: 18;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
 }
 
 .menu-h-box {
