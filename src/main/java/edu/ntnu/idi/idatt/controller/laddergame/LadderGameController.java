@@ -34,7 +34,7 @@ public class LadderGameController extends GameController {
       boardGame.addObserver(this);
       logger.info("Game initialized with {} players on board '{}'", players.size(), board.getName());
     } catch (IllegalArgumentException e) {
-      logger.error("Error initializing game with board '{}'", board.getName(), e);
+      logger.error("Error initializing game with board '{}'", board.getName());
       e.printStackTrace();
     }
   }

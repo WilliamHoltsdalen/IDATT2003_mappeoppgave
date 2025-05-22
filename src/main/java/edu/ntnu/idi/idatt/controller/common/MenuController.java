@@ -152,7 +152,7 @@ public abstract class MenuController implements ButtonClickObserver {
     try {
       loadPlayersFromFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
-      logger.error("Failed to import players - invalid file path", e);
+      logger.error("Failed to import players - invalid file path");
       menuView.showErrorAlert("Failed to import players", "Invalid file path");
     }
   }
@@ -163,7 +163,7 @@ public abstract class MenuController implements ButtonClickObserver {
     try {
       savePlayersToFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
-      logger.error("Failed to save players - invalid file path", e);
+      logger.error("Failed to save players - invalid file path");
       menuView.showErrorAlert("Error", "Could not save players");
     }
   }
@@ -174,7 +174,7 @@ public abstract class MenuController implements ButtonClickObserver {
     try {
       loadBoardFromFile(file.getAbsolutePath());
     } catch (NullPointerException e) {
-      logger.error("Failed to import board - invalid file path", e);
+      logger.error("Failed to import board - invalid file path");
       menuView.showErrorAlert("Failed to import board", "Invalid file path");
     }
   }
@@ -197,7 +197,7 @@ public abstract class MenuController implements ButtonClickObserver {
       menuView.showInfoAlert("Success", "Players loaded successfully");
       logger.debug("successfully loaded players");
     } catch (IOException e) {
-      logger.error("Failed to load players - invalid file path", e);
+      logger.error("Failed to load players - invalid file path");
       menuView.showErrorAlert("Error", "Could not load players");
     }
   }
@@ -210,7 +210,7 @@ public abstract class MenuController implements ButtonClickObserver {
       menuView.showInfoAlert("Success", "Players saved successfully");
       logger.debug("successfully saved players");
     } catch (IOException e) {
-      logger.error("Failed to save players - invalid file path", e);
+      logger.error("Failed to save players. Invalid file path");
       menuView.showErrorAlert("Error", "Could not save players");
     }
   }
@@ -237,7 +237,7 @@ public abstract class MenuController implements ButtonClickObserver {
       menuView.showInfoAlert("Success", "Board imported successfully");
       logger.debug("successfully loaded board");
     } catch (IllegalArgumentException e) {
-      logger.error("Failed to load board - invalid file path", e);
+      logger.error("Failed to load board - invalid file path");
       menuView.showErrorAlert("An error occurred", "Could not load board");
     }
   }

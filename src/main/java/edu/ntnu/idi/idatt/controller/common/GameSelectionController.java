@@ -77,7 +77,7 @@ public class GameSelectionController implements ButtonClickObserver {
     switch (buttonId) {
       case "Chutes and Ladders" -> onLadderGame.run();
       case "Ludo" -> onLudoGame.run();
-      default -> logger.debug("Invalid button ID: {}", buttonId);
+      default -> logger.error("Invalid button ID: {}", buttonId);
     }
   }
 

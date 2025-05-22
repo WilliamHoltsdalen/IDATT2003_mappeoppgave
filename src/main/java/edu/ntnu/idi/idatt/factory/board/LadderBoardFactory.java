@@ -5,6 +5,8 @@ import edu.ntnu.idi.idatt.filehandler.LadderGameBoardFileHandlerGson;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <h3>Factory class for creating LadderGameBoard objects.</h3>
@@ -13,6 +15,7 @@ import java.io.IOException;
  * LadderGameBoard objects can also be created from an external file.
  */
 public class LadderBoardFactory implements BoardFactory {
+  private static final Logger logger = LoggerFactory.getLogger(LadderBoardFactory.class);
 
   /**
    * Creates a LadderGameBoard object based on predefined variants stored as json files in the
@@ -24,10 +27,14 @@ public class LadderBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBoard(String variant) {
+    logger.debug("Creating board variant: {}", variant);
     return switch (variant.toLowerCase()) {
       case "classic" -> createClassicBoard();
       case "teleporting" -> createPortalBoard();
-      default -> throw new IllegalArgumentException("Unknown board variant: " + variant);
+      default -> {
+        logger.error("Unknown variant {}", variant);
+        throw new IllegalArgumentException("Unknown board variant: " + variant);
+      }
     };
   }
 
@@ -41,10 +48,13 @@ public class LadderBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBoardFromFile(String filePath) {
+    logger.debug("Attempting to create board variant from file: {}", filePath);
     FileHandler<Board> boardFileHandler = new LadderGameBoardFileHandlerGson();
     try {
+      logger.debug("successfully created board from file: {}", filePath);
       return (Board) boardFileHandler.readFile(filePath);
     } catch (IOException e) {
+      logger.error("Could not create board from file: {}", filePath);
       return null;
     }
   }
@@ -59,6 +69,7 @@ public class LadderBoardFactory implements BoardFactory {
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
+    logger.debug("Attempting to create blank board variant with size {}x{}", rows, columns);
     return new LadderGameBoard("Blank Board", "Blank board with " + rows
         + " rows and " + columns + " columns.", new int[]{rows, columns},
         "media/boards/whiteBoard.png", "None");
@@ -72,7 +83,7 @@ public class LadderBoardFactory implements BoardFactory {
   private Board createClassicBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/ClassicLadderGameBoard.json");
     if (board == null) {
-      // TODO: Do something in case of null board, even if its just logging.
+      logger.error("Could not create classic board from file");
     }
     return board;
   }
@@ -85,7 +96,7 @@ public class LadderBoardFactory implements BoardFactory {
   private Board createPortalBoard()  {
     Board board = createBoardFromFile("src/main/resources/boards/PortalLadderGameBoard.json");
     if (board == null) {
-      // TODO: Do something in case of null board, even if its just logging.
+      logger.error("Could not create portal board from file");
     }
     return board;
   }
