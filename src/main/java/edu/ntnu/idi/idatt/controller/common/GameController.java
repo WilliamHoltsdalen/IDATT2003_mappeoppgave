@@ -6,6 +6,8 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -31,6 +33,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
   protected final GameView gameView;
   protected final Logger logger = LoggerFactory.getLogger(GameController.class);
   protected BoardGame boardGame;
+  protected Map<String, Object> gameFinishedParams;
   /**
    * Runnable action to execute when the game is quit.
    */
@@ -50,6 +53,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    */
   public GameController(GameView gameView, Board board, List<Player> players) {
     this.gameView = gameView;
+    this.gameFinishedParams = new HashMap<>();
     logger.debug("GameController initialized");
     initializeBoardGame(board, players);
     initializeGameView();

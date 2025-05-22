@@ -202,8 +202,8 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
 
         tileAction = createTileAction(actionIdentifier, destinationTileId, actionDescription);
       } catch (NullPointerException e) {
-        // Todo: Handle null pointer exception if any of the tile properties are missing
-        logger.error("Missing tile properties while parsing tile. Tile JSON: {}", tileJsonObject);
+        // This just needs to be caught, as it's not a critical error. It happens when a tile
+        // doesn't have a tile action, which is fine.
       }
 
       if (tileAction != null) {

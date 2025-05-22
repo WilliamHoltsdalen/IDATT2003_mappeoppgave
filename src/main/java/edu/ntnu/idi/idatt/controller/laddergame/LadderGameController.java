@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.controller.laddergame;
 
+import static java.lang.Thread.sleep;
+
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
@@ -97,7 +99,7 @@ public class LadderGameController extends GameController {
   protected void performPlayerTurn() {
     disableRollDiceButton();
     int diceRoll = ((LadderBoardGame) boardGame).rollDice();
-    int[] diceValues = ((LadderBoardGame) boardGame).getDice().getDiceList().stream()
+    int[] diceValues = (boardGame).getDice().getDiceList().stream()
         .mapToInt(die -> die.getValue())
         .toArray();
 
@@ -172,8 +174,9 @@ public class LadderGameController extends GameController {
 
     setPlayerTileNumber(player, newTileId);
 
+    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () -> navigateToGameFinished(gameFinishedParams);
     ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player,
-        getBoard().getTile(newTileId), false);
+        getBoard().getTile(newTileId), false, onFinished);
   }
 
   /**
@@ -232,7 +235,7 @@ public class LadderGameController extends GameController {
     setPlayerTileNumber(player, tileAction.getDestinationTileId());
 
     ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player,
-        getBoard().getTile(tileAction.getDestinationTileId()), true);
+        getBoard().getTile(tileAction.getDestinationTileId()), true, null);
   }
 
   /**
@@ -251,9 +254,7 @@ public class LadderGameController extends GameController {
         .sorted(Comparator.comparingInt((Player p) -> ((LadderGamePlayer) p).getCurrentTile()
             .getTileId()).reversed()).toList();
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("rankedPlayers", rankedPlayers);
-    navigateToGameFinished(params);
+    super.gameFinishedParams.put("rankedPlayers", rankedPlayers);
   }
 
   /**
