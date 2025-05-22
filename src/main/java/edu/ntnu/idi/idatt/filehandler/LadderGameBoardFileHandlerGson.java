@@ -29,7 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
 
-  private static final Logger logger = LoggerFactory.getLogger(LadderGameBoardFileHandlerGson.class);
+  private static final Logger logger = LoggerFactory.getLogger(
+      LadderGameBoardFileHandlerGson.class);
 
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
