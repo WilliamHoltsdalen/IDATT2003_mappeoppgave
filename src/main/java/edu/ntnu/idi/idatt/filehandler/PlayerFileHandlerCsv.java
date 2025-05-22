@@ -88,7 +88,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
       }
       logger.info("Successfully read {} player(s) from file: {}", players.size(), path);
     } catch (IOException e) {
-      logger.error("Could not read players form file: {}", path);
+      logger.error("Could not read players from file: {}", path);
       throw new IOException("Could not read players from file: " + path);
     }
     return players;
