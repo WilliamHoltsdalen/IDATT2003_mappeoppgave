@@ -10,7 +10,7 @@ import edu.ntnu.idi.idatt.model.player.LadderGamePlayer;
 import edu.ntnu.idi.idatt.model.player.Player;
 
 /**
- * <h3>PortalAction class</h3>
+ * PortalAction class
  *
  * <p>This class represents a Portal action, which is a tile action that moves the player to a
  * random tile. It contains a destination tile ID and a description.

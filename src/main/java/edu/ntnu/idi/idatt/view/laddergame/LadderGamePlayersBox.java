@@ -10,16 +10,36 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+/**
+ * LadderGamePlayersBox.
+ *
+ * <p>This class extends {@link GamePlayersBox} to display a list of {@link Player}s
+ * specifically for a ladder game. It arranges {@link LadderGamePlayerRow} instances
+ * vertically, along with the current round number and a visual separator.</p>
+ *
+ * @see GamePlayersBox
+ * @see LadderGamePlayerRow
+ * @see Player
+ */
 public class LadderGamePlayersBox extends GamePlayersBox {
   
+  /**
+   * Constructs a {@code LadderGamePlayersBox}.
+   *
+   * @param players            The list of {@link Player}s to display.
+   * @param initialRoundNumber The initial round number to display.
+   */
   public LadderGamePlayersBox(List<Player> players, int initialRoundNumber) {
     super(players, initialRoundNumber);
   }
   
   /**
   * Initializes the players box by creating all the components and adding the players to the box.
+  * It sets up the round number display, a horizontal divider, and then iterates through the
+  * provided list of players, creating a {@link LadderGamePlayerRow} for each and adding it to
+  * the vertical layout.
   *
-  * @param players the list of players to add to the box
+  * @param players The list of {@link Player}s to add to the box.
   */
   @Override
   protected void initialize(List<Player> players) {
@@ -38,11 +58,11 @@ public class LadderGamePlayersBox extends GamePlayersBox {
       playersBoxVbox.getChildren().add(playerRow);
     });
     
-    VBox vBox = new VBox(playersBoxVbox);
+    VBox vbox = new VBox(playersBoxVbox);
     VBox.setVgrow(playersBoxVbox, Priority.ALWAYS);
-    HBox.setHgrow(vBox, Priority.NEVER);
-    vBox.setAlignment(Pos.TOP_LEFT);
+    HBox.setHgrow(vbox, Priority.NEVER);
+    vbox.setAlignment(Pos.TOP_LEFT);
     
-    this.getChildren().add(vBox);
+    this.getChildren().add(vbox);
   }
 }

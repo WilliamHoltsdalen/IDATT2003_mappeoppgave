@@ -6,7 +6,7 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import java.util.List;
 
 /**
- * <h3>Game interface</h3>
+ * Game interface
  *
  * <p>Interface defining common operations for all board games.
  */

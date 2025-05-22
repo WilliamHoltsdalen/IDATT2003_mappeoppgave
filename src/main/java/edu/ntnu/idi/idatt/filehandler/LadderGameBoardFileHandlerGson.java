@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <h3>FileHandler implementation for Board objects.</h3>
+ * FileHandler implementation for Board objects.
  *
  * <p>This class provides methods for reading and writing Board objects to and from JSON files.
  * It uses the Gson library for serialization and deserialization.

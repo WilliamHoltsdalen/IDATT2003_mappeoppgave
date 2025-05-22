@@ -9,19 +9,38 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * LudoBoardFactory.
+ *
+ * <p>This class implements the {@link BoardFactory} interface to create Ludo game boards.
+ * It provides methods to create Ludo boards based on predefined variants (e.g., "Classic",
+ * "Small", "Large"), from an external file, or as a blank board of a specified size.</p>
+ *
+ * <p>Board variants are typically loaded from JSON files, and file handling for creating
+ * boards from external files is delegated to {@link LudoBoardFileHandlerGson}.</p>
+ *
+ * @see BoardFactory
+ * @see LudoGameBoard
+ * @see LudoBoardFileHandlerGson
+ */
 public class LudoBoardFactory implements BoardFactory {
   private static final Logger logger = LoggerFactory.getLogger(LudoBoardFactory.class);
 
+  /**
+   * Constructs a new {@code LudoBoardFactory}.
+   */
   public LudoBoardFactory() {
     super();
   }
 
   /**
-   * Creates a LudoGameBoard object based on predefined variants stored as json files in the
+   * Creates a {@link LudoGameBoard} object based on predefined variants stored as json files in the
    * "resources/boards" directory.
    *
-   * @param variant A string specifying which board variant to create.
-   * @return A configured LudoGameBoard object.
+   * @param variant A string specifying which board variant to create. Supported variants are
+   *                "Classic", "Small", and "Large".
+   * @return A configured {@link LudoGameBoard} object corresponding to the specified variant.
+   * @throws IllegalArgumentException if the specified variant is not recognized.
    */
   @Override
   public Board createBoard(String variant) {
@@ -38,11 +57,12 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a LudoGameBoard object from an external file. File handling is delegated to the
+   * Creates a {@link LudoGameBoard} object from an external file. File handling is delegated to the
    * {@link LudoBoardFileHandlerGson} class.
    *
    * @param filePath The path to the file containing the board data.
-   * @return A configured LudoGameBoard object.
+   * @return A configured {@link LudoGameBoard} object, or {@code null} if an IOException occurs
+   *         during file reading.
    * @see LudoBoardFileHandlerGson
    */
   @Override
@@ -59,11 +79,11 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a blank LudoGameBoard object with the given size.
+   * Creates a blank {@link LudoGameBoard} object with the given size and default player colors.
    *
-   * @param rows    The size of the board.
-   * @param columns The size of the board.
-   * @return A configured LudoGameBoard object.
+   * @param rows    The number of rows for the board (determines board size).
+   * @param columns The number of columns for the board (typically same as rows for Ludo).
+   * @return A newly configured, blank {@link LudoGameBoard} object.
    */
   @Override
   public Board createBlankBoard(int rows, int columns) {
@@ -73,9 +93,11 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a Classic LudoGameBoard object.
+   * Creates a Classic {@link LudoGameBoard} object by loading its configuration from the
+   * "src/main/resources/boards/ClassicLudoBoard.json" file.
    *
-   * @return A configured LudoGameBoard object.
+   * @return A configured Classic {@link LudoGameBoard} object, or {@code null} if file reading
+   *     fails.
    */
   private Board createClassicBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/ClassicLudoBoard.json");
@@ -86,9 +108,10 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a Small LudoGameBoard object.
+   * Creates a Small {@link LudoGameBoard} object by loading its configuration from the
+   * "src/main/resources/boards/SmallLudoBoard.json" file.
    *
-   * @return A configured LudoGameBoard object.
+   * @return A configured Small {@link LudoGameBoard} object, or {@code null} if file reading fails.
    */
   private Board createSmallBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/SmallLudoBoard.json");
@@ -99,9 +122,10 @@ public class LudoBoardFactory implements BoardFactory {
   }
 
   /**
-   * Creates a Large LudoGameBoard object.
+   * Creates a Large (XL) {@link LudoGameBoard} object by loading its configuration from the
+   * "src/main/resources/boards/XlLudoBoard.json" file.
    *
-   * @return A configured LudoGameBoard object.
+   * @return A configured Large {@link LudoGameBoard} object, or {@code null} if file reading fails.
    */
   private Board createLargeBoard() {
     Board board = createBoardFromFile("src/main/resources/boards/XlLudoBoard.json");

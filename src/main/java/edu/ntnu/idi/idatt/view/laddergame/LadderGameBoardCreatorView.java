@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.view.laddergame;
 
+import edu.ntnu.idi.idatt.controller.laddergame.LadderGameBoardCreatorController;
 import edu.ntnu.idi.idatt.model.board.LadderGameBoard;
 import edu.ntnu.idi.idatt.view.common.BoardCreatorView;
 import edu.ntnu.idi.idatt.view.common.BoardStackPane;
@@ -31,15 +32,30 @@ import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
- * <h3>LadderGameBoardCreatorView</h3>
+ * LadderGameBoardCreatorView.
  *
- * <p>This class extends BoardCreatorView and is used to create a ladder game board creator view.
- * It adds a component list panel, as well as background and pattern selection ComboBoxes, and rows
- * and columns spinners.
+ * <p>This class extends {@link BoardCreatorView} and is responsible for presenting the UI
+ * for creating and customizing {@link LadderGameBoard}s. It allows users to drag and drop
+ * components (ladders, slides, portals) onto a visual representation of the board,
+ * configure board dimensions (rows, columns), select background images and patterns,
+ * and manage the list of placed components.</p>
+ *
+ * <p>The view provides input fields for the board's name and description, controls for
+ * importing existing board configurations, and buttons for saving the created board or
+ * returning to the main menu.</p>
  *
  * @see BoardCreatorView
+ * @see LadderGameBoard
+ * @see LadderGameBoardCreatorController
+ * @see LadderGameBoardStackPane
  * @see ComboBox
  * @see Spinner
+ * @see Button
+ * @see Label
+ * @see TextField
+ * @see ImageView
+ * @see VBox
+ * @see HBox
  */
 public class LadderGameBoardCreatorView extends BoardCreatorView {
 
@@ -52,7 +68,9 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   private ChangeListener<Integer> columnsListener;
 
   /**
-   * Constructor for LadderGameBoardCreatorView.
+   * Constructs a new {@code LadderGameBoardCreatorView} instance.
+   * Initializes the UI elements for component listing, background/pattern selection,
+   * and board dimension controls.
    */
   public LadderGameBoardCreatorView() {
     super();
@@ -65,56 +83,70 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Getter for the component list content.
+   * Returns the VBox container that holds the list of placed components.
+   * Each item in this list typically displays information about a component,
+   * such as its type, image, and origin/destination tiles.
    *
-   * @return The component list content.
+   * @return The {@link VBox} for the component list.
    */
   public VBox getComponentListContent() {
     return componentListContent;
   }
 
   /**
-   * Getter for the background ComboBox.
+   * Returns the ComboBox used for selecting the board's background image.
    *
-   * @return The background ComboBox.
+   * @return The {@link ComboBox} for background selection.
    */
   public ComboBox<String> getBackgroundComboBox() {
     return backgroundComboBox;
   }
 
   /**
-   * Getter for the pattern ComboBox.
+   * Returns the ComboBox used for selecting the visual pattern applied to the board's grid.
    *
-   * @return The pattern ComboBox.
+   * @return The {@link ComboBox} for pattern selection.
    */
   public ComboBox<String> getPatternComboBox() {
     return patternComboBox;
   }
 
   /**
-   * Getter for the rows Spinner.
+   * Returns the Spinner used for adjusting the number of rows on the board.
    *
-   * @return The rows Spinner.
+   * @return The {@link Spinner} for row selection.
    */
   public Spinner<Integer> getRowsSpinner() {
     return rowsSpinner;
   }
 
   /**
-   * Getter for the columns Spinner.
+   * Returns the Spinner used for adjusting the number of columns on the board.
    *
-   * @return The columns Spinner.
+   * @return The {@link Spinner} for column selection.
    */
   public Spinner<Integer> getColumnsSpinner() {
     return columnsSpinner;
   }
 
+  /**
+   * Sets the value of the rows spinner and re-attaches its listener.
+   * This is typically used when loading an existing board configuration.
+   *
+   * @param rows The number of rows to set.
+   */
   public void setRowSpinner(int rows) {
     rowsSpinner.valueProperty().removeListener(rowsListener);
     rowsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 12, rows));
     rowsSpinner.valueProperty().addListener(rowsListener);
   }
 
+  /**
+   * Sets the value of the columns spinner and re-attaches its listener.
+   * This is typically used when loading an existing board configuration.
+   *
+   * @param columns The number of columns to set.
+   */
   public void setColumnSpinner(int columns) {
     columnsSpinner.valueProperty().removeListener(columnsListener);
     columnsSpinner.setValueFactory(
@@ -123,10 +155,14 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Initializes the view with the given available components and board.
+   * Initializes the main view components of the ladder game board creator.
+   * This method sets up the component selection panel, the board configuration panel,
+   * and the central board display area. It also configures the overall layout and
+   * styling of the view.
    *
-   * @param components The components to display.
-   * @param board      The board to display.
+   * @param components A map where keys are component categories (e.g., "Ladder", "Slide")
+   *                   and values are arrays of image paths for the components in that category.
+   * @param board      The {@link LadderGameBoard} instance to be displayed and configured.
    */
   public void initializeView(Map<String, String[]> components, LadderGameBoard board) {
     logger.debug("Initializing LadderGameBoardCreatorView");
@@ -147,6 +183,13 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
     logger.debug("Board creator view initialized successfully");
   }
 
+  /**
+   * Creates and returns a {@link LadderGameBoardStackPane} instance to be used as the
+   * central area for displaying the board being created. This method overrides the
+   * parent class's method to provide a specific type of board container.
+   *
+   * @return A new {@link LadderGameBoardStackPane} for the board display.
+   */
   @Override
   protected BoardStackPane createBoardStackPane() {
     LadderGameBoardStackPane boardContainer = new LadderGameBoardStackPane();
@@ -155,10 +198,12 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates the component selection panel.
+   * Creates the left panel of the view, which allows users to select and drag
+   * game components (like ladders and slides) onto the board.
    *
-   * @param components The components to display.
-   * @return The component selection panel.
+   * @param components A map where keys are component type names (e.g., "Ladder")
+   *                   and values are arrays of image paths for those components.
+   * @return A {@link VBox} containing the component selection UI.
    */
   private VBox createComponentSelectionPanel(Map<String, String[]> components) {
     VBox panel = new VBox(15);
@@ -167,6 +212,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
     Text title = new Text("Drag components onto the board");
     title.getStyleClass().add("panel-title");
+    panel.getChildren().add(title);
 
     components.forEach((key, value) -> {
       VBox section = createComponentSection(key, value);
@@ -178,12 +224,13 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates a component section. This is a section of the component selection panel, which contains
-   * a title and a list of component images.
+   * Creates a section within the component selection panel for a specific type of component.
+   * This section includes a title (e.g., "Ladders") and a horizontal box of draggable
+   * images representing the available components of that type.
    *
-   * @param title      The title of the section.
-   * @param imagePaths The image paths of the components in the section.
-   * @return The component section.
+   * @param title      The title for the component section (e.g., "Ladder", "Slide").
+   * @param imagePaths An array of string paths to the images for the components in this section.
+   * @return A {@link VBox} representing the component section.
    */
   private VBox createComponentSection(String title, String[] imagePaths) {
     VBox section = new VBox(10);
@@ -212,10 +259,17 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Sets up the drag and drop functionality for a component image.
+   * Configures drag-and-drop functionality for a given component {@link ImageView}.
+   * When a drag is detected on the source image:
+   * <ul>
+   *   <li>A dragboard is initiated with {@link TransferMode#COPY}.</li>
+   *   <li>A snapshot of the image is used as the drag view, centered on the cursor.</li>
+   *   <li>The component's identifier (derived from its image filename) is put onto the
+   *       dragboard.</li>
+   * </ul>
    *
-   * @param source    The component image to set up.
-   * @param imagePath The image path of the component.
+   * @param source    The {@link ImageView} that will act as the drag source.
+   * @param imagePath The path to the image file, used to derive the component identifier.
    */
   private void setupDragAndDrop(ImageView source, String imagePath) {
     source.setOnDragDetected(event -> {
@@ -239,11 +293,16 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates the board configuration panel. This is a panel that contains the board name and
-   * description, as well as the background and pattern selection ComboBoxes, and rows and columns
-   * spinners.
+   * Creates the central panel located above the board display, used for configuring
+   * general board properties. This panel includes:
+   * <ul>
+   *   <li>Input fields for the board's name and description.</li>
+   *   <li>An "Import board" button.</li>
+   *   <li>ComboBoxes for selecting the board background and grid pattern.</li>
+   *   <li>Spinners for adjusting the number of rows and columns.</li>
+   * </ul>
    *
-   * @return The board configuration panel.
+   * @return A {@link VBox} containing the board configuration controls.
    */
   private VBox createBoardConfigurationPanel() {
     VBox panel = new VBox(15);
@@ -314,10 +373,11 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Creates the component list panel. This is a panel that contains the component list, as well as
-   * a save button and a menu button.
+   * Creates the right panel of the view, which displays a list of components
+   * currently placed on the board. It also includes buttons for saving the board
+   * and returning to the main menu.
    *
-   * @return The component list panel.
+   * @return A {@link VBox} containing the component list and action buttons.
    */
   private VBox createComponentListPanel() {
     VBox panel = new VBox(10);
@@ -352,13 +412,16 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
   }
 
   /**
-   * Adds a component to the component list.
+   * Adds a visual representation of a placed component to the component list panel
+   * on the right side of the view. Each entry includes the component's display name,
+   * its image, its origin and destination tile IDs, and a delete button.
    *
-   * @param displayName       The display name of the component.
-   * @param componentImage    The image of the component.
-   * @param onDelete          The action to perform when the component is deleted.
-   * @param originTileId      The origin tile id of the component.
-   * @param destinationTileId The destination tile id of the component.
+   * @param displayName       The user-friendly name of the component type.
+   * @param componentImage    The {@link Image} of the component.
+   * @param onDelete          A {@link Runnable} action to be executed when the delete button
+   *                          for this component is clicked.
+   * @param originTileId      The ID of the tile where the component originates.
+   * @param destinationTileId The ID of the tile where the component leads or ends.
    */
   public void addToComponentList(String displayName, Image componentImage, Runnable onDelete,
       int originTileId, int destinationTileId) {

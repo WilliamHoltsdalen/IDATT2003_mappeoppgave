@@ -18,7 +18,24 @@ import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 
-
+/**
+ * LadderGameBoardCreatorController.
+ *
+ * <p>Controller responsible for the logic behind creating and editing {@link LadderGameBoard}s.
+ * It extends {@link BoardCreatorController} and manages interactions with a
+ * {@link LadderGameBoardCreatorView}.</p>
+ *
+ * <p>This controller handles tasks such as initializing the board with default or imported values,
+ * managing available components (ladders, slides, portals) and backgrounds, processing component
+ * placement and removal, updating the grid based on user input (rows, columns, pattern), and
+ * saving/importing board configurations.</p>
+ *
+ * @see BoardCreatorController
+ * @see LadderGameBoard
+ * @see LadderGameBoardCreatorView
+ * @see LadderBoardFactory
+ * @see LadderGameBoardFileHandlerGson
+ */
 public class LadderGameBoardCreatorController extends BoardCreatorController {
 
   private static final String LADDERS_PATH_PREFIX = "media/assets/ladder/";
@@ -28,6 +45,12 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
   private final Map<String, String[]> availableComponents;
   private final Map<String, String> availableBackgrounds;
 
+  /**
+   * Constructs a LadderGameBoardCreatorController.
+   *
+   * @param view The {@link BoardCreatorView} (expected to be a {@link LadderGameBoardCreatorView})
+   *             associated with this controller.
+   */
   public LadderGameBoardCreatorController(BoardCreatorView view) {
     super(view);
     logger.debug("Constructing LadderGameBoardCreatorController");
@@ -41,12 +64,20 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     initializeBoardCreatorView();
   }
 
+  /**
+   * Initializes the {@link #board} instance as a new, blank {@link LadderGameBoard} using a
+   * {@link LadderBoardFactory} with default dimensions.
+   */
   @Override
   protected void initializeBoard() {
     this.boardFactory = new LadderBoardFactory();
     this.board = (LadderGameBoard) boardFactory.createBlankBoard(9, 10);
   }
 
+  /**
+   * Populates the {@link #availableComponents} map with predefined paths to image assets for
+   * ladders, slides, and portals.
+   */
   private void setAvailableComponents() {
     logger.debug("Setting available components");
     availableComponents.put("Ladder", new String[]{
@@ -71,6 +102,10 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     availableComponents.put("Other", new String[]{});
   }
 
+  /**
+   * Populates the {@link #availableBackgrounds} map with names and paths for predefined board
+   * background images.
+   */
   private void setAvailableBackgrounds() {
     logger.debug("Setting available backgrounds");
     availableBackgrounds.put("White", "media/boards/whiteBoard.png");
@@ -83,6 +118,11 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     availableBackgrounds.put("Space", "media/boards/spaceBoard.png");
   }
 
+  /**
+   * Initializes the {@link LadderGameBoardCreatorView}. Sets this controller as an observer to the
+   * view, initializes the view with available components and the current board, and sets up event
+   * handlers for component drops and removal.
+   */
   @Override
   protected void initializeBoardCreatorView() {
     logger.debug("Initializing board creator view");
@@ -100,6 +140,13 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     logger.debug("Board creator view initialized successfully");
   }
 
+  /**
+   * Handles the event when a component is dropped onto the board grid in the view. Retrieves the
+   * target cell's coordinates and calls {@link #placeComponent(String, TileCoordinates)}.
+   *
+   * @param data The {@link ComponentDropEventData} containing the component identifier and target
+   *             cell.
+   */
   private void handleComponentDropped(ComponentDropEventData data) {
     logger.debug("Handling component dropped event");
     TileCoordinates coordinates = view.getBoardStackPane().getCellToCoordinatesMap()
@@ -108,16 +155,30 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     boardPane.updateBoardVisuals();
   }
 
+  /**
+   * Updates the background of the board in the {@link #boardPane} based on the selection in the
+   * view's background combo box.
+   */
   private void updateBackground() {
     boardPane.setBackground(getBackgroundImagePath());
     logger.debug("Updated background");
   }
 
+  /**
+   * Retrieves the file path for the currently selected background image from the view's combo box.
+   *
+   * @return The file path string for the selected background.
+   */
   private String getBackgroundImagePath() {
     return availableBackgrounds.get(((LadderGameBoardCreatorView) view).getBackgroundComboBox()
         .getValue());
   }
 
+  /**
+   * Removes components from the board model and view if their origin or calculated destination
+   * falls outside the current grid boundaries (e.g., after grid dimensions are changed). It
+   * recalculates destinations for remaining valid components.
+   */
   public void removeComponentsOutsideGrid() {
     logger.debug("Removing components outside grid");
     // Recalculate destination tiles for all placed components and remove those that have origin or
@@ -147,6 +208,14 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     boardPane.getComponents().putAll(newPlacedComponents);
   }
 
+  /**
+   * Calculates the destination coordinates for a component based on its origin and specification.
+   * For portals, a random valid destination is chosen.
+   *
+   * @param origin The {@link TileCoordinates} of the component's origin.
+   * @param spec   The {@link ComponentSpec} defining the component's type, size, and direction.
+   * @return An array [row, column] of the destination coordinates.
+   */
   private int[] calculateDestinationCoordinates(TileCoordinates origin, ComponentSpec spec) {
     return switch (spec.type()) {
       case LADDER -> new int[]{
@@ -175,6 +244,13 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     };
   }
 
+  /**
+   * Places a component with the given identifier at the specified coordinates on the board. Updates
+   * the view's component list. Shows an error alert if placement fails.
+   *
+   * @param componentIdentifier The string identifier of the component to place.
+   * @param coordinates         The {@link TileCoordinates} for the component's origin.
+   */
   private void placeComponent(String componentIdentifier, TileCoordinates coordinates) {
     logger.debug("Placing component: {}", componentIdentifier);
     try {
@@ -187,12 +263,23 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     }
   }
 
+  /**
+   * Removes a component from the specified coordinates on the board. Updates the view's component
+   * list.
+   *
+   * @param coordinates The {@link TileCoordinates} of the component to remove.
+   */
   private void removeComponent(TileCoordinates coordinates) {
     logger.debug("Removing component: {}", coordinates);
     boardPane.removeComponent(coordinates);
     updateViewComponentList();
   }
 
+  /**
+   * Updates the list of placed components displayed in the {@link LadderGameBoardCreatorView}.
+   * Clears the existing list and repopulates it based on components currently in
+   * {@link #boardPane}.
+   */
   private void updateViewComponentList() {
     logger.debug("Updating view component list");
     ((LadderGameBoardCreatorView) view).getComponentListContent().getChildren().clear();
@@ -209,7 +296,10 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
         .getComponentListContent().getChildren().size());
   }
 
-
+  /**
+   * Handles the action to update the board's grid dimensions (rows and columns) based on values
+   * from the view's spinners. Updates the board model and refreshes the grid display.
+   */
   @Override
   protected void handleUpdateGrid() {
     logger.debug("Handling update grid");
@@ -221,6 +311,10 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     updateViewComponentList();
   }
 
+  /**
+   * Handles the action to update the visual pattern of the board's grid based on the selection in
+   * the view's pattern combo box.
+   */
   private void handleUpdatePattern() {
     logger.debug("Handling update pattern");
     ((LadderGameBoard) boardPane.getBoard()).setPattern(((LadderGameBoardCreatorView) view)
@@ -228,6 +322,13 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     boardPane.applyPattern();
   }
 
+  /**
+   * Handles the import of a board configuration from a file. Updates the internal {@link #board}
+   * model and refreshes the view's input fields (name, description, rows, columns, background,
+   * pattern) and the board display.
+   *
+   * @param params A map containing the "path" (String) to the board file.
+   */
   @Override
   protected void handleImportBoard(Map<String, Object> params) {
     logger.debug("Handling import board");
@@ -263,6 +364,13 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     });
   }
 
+  /**
+   * Handles saving the current board configuration to a file. Updates the board model with values
+   * from the view's input fields before saving. Uses {@link LadderGameBoardFileHandlerGson} for
+   * serialization.
+   *
+   * @param params A map containing the "path" (String) to save the file to.
+   */
   @Override
   protected void handleSaveBoard(Map<String, Object> params) {
     logger.debug("Handling save board");
@@ -285,6 +393,12 @@ public class LadderGameBoardCreatorController extends BoardCreatorController {
     }
   }
 
+  /**
+   * Handles button click events from the {@link LadderGameBoardCreatorView}. Delegates actions
+   * based on the button ID (e.g., back to menu, update grid, update background, update pattern).
+   *
+   * @param buttonId The ID of the button that was clicked.
+   */
   @Override
   public void onButtonClicked(String buttonId) {
     logger.debug("Button clicked: {}", buttonId);

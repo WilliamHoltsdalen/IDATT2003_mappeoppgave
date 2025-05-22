@@ -1,7 +1,6 @@
 package edu.ntnu.idi.idatt.controller.common;
 
 import edu.ntnu.idi.idatt.factory.board.BoardFactory;
-import edu.ntnu.idi.idatt.factory.board.LadderBoardFactory;
 import edu.ntnu.idi.idatt.factory.player.PlayerFactory;
 import edu.ntnu.idi.idatt.filehandler.FileHandler;
 import edu.ntnu.idi.idatt.filehandler.PlayerFileHandlerCsv;
@@ -18,6 +17,21 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * MenuController.
+ *
+ * <p>Abstract controller for handling the logic of menu views.</p>
+ *
+ * <p>It manages interactions between a {@link MenuView} and the underlying game setup components,
+ * such as {@link BoardFactory} and {@link PlayerFactory}. It handles board selection, player
+ * configuration, and navigation to other parts of the application (e.g., starting a game, creating
+ * a board).</p>
+ *
+ * @see MenuView
+ * @see BoardFactory
+ * @see PlayerFactory
+ * @see ButtonClickObserver
+ */
 public abstract class MenuController implements ButtonClickObserver {
 
   protected final Logger logger = LoggerFactory.getLogger(MenuController.class);
@@ -28,10 +42,24 @@ public abstract class MenuController implements ButtonClickObserver {
   protected final Map<Integer, Board> boardVariants;
   protected int currentBoardIndex;
 
+  /**
+   * Consumer for handling the start game action, taking a Board and a List of Players.
+   */
   protected BiConsumer<Board, List<Player>> onStartGame;
+  /**
+   * Runnable action for navigating to the board creation screen.
+   */
   protected Runnable onCreateBoard;
+  /**
+   * Runnable action for navigating back to the game selection screen.
+   */
   protected Runnable onBackToGameSelection;
 
+  /**
+   * Constructs a MenuController with the specified menu view.
+   *
+   * @param menuView The {@link MenuView} associated with this controller.
+   */
   protected MenuController(MenuView menuView) {
     logger.debug("MenuController initialized with default board index");
     this.menuView = menuView;
@@ -39,20 +67,30 @@ public abstract class MenuController implements ButtonClickObserver {
     this.currentBoardIndex = DEFAULT_BOARD_INDEX;
   }
 
+  /**
+   * Loads available board variants using the configured {@link #boardFactory}. Subclasses must
+   * implement this to populate the {@link #boardVariants} map.
+   */
   protected abstract void loadBoardsFromFactory();
 
   /**
-   * Initializes the main menu view.
+   * Initializes the menu view. Subclasses should implement this to set up UI elements, display
+   * initial data (like boards), and configure event handlers within the {@link #menuView}.
    */
   protected abstract void initializeMenuView();
 
-
+  /**
+   * Retrieves the list of players configured in the menu. Subclasses must implement this to get
+   * player data, typically from the {@link #menuView}.
+   *
+   * @return A list of {@link Player}s.
+   */
   protected abstract List<Player> getPlayers();
 
   /**
-   * Sets the board factory.
+   * Sets the {@link BoardFactory} to be used for creating and loading boards.
    *
-   * @param boardFactory the board factory to set
+   * @param boardFactory The board factory instance.
    */
   protected void setBoardFactory(BoardFactory boardFactory) {
     logger.debug("board factory set");
@@ -60,33 +98,39 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Sets the action to be performed when the start game button is clicked.
+   * Sets the action to be performed when the game is started.
    *
-   * @param onStartGame the action to be performed when the start game button is clicked
+   * @param onStartGame A {@link BiConsumer} that accepts the selected {@link Board} and list of
+   *                    {@link Player}s.
    */
   public void setOnStartGame(BiConsumer<Board, List<Player>> onStartGame) {
     this.onStartGame = onStartGame;
   }
 
   /**
-   * Sets the action to be performed when the back to game selection button is clicked.
+   * Sets the action to be performed when navigating back to the game selection screen.
    *
-   * @param onBackToGameSelection the action to be performed when the back to game selection button
-   *                              is clicked
+   * @param onBackToGameSelection A {@link Runnable} action.
    */
   public void setOnBackToGameSelection(Runnable onBackToGameSelection) {
     this.onBackToGameSelection = onBackToGameSelection;
   }
 
   /**
-   * Sets the action to be performed when the create board button is clicked.
+   * Sets the action to be performed when navigating to the board creation screen.
    *
-   * @param onCreateBoard the action to be performed when the create board button is clicked
+   * @param onCreateBoard A {@link Runnable} action.
    */
   public void setOnCreateBoard(Runnable onCreateBoard) {
     this.onCreateBoard = onCreateBoard;
   }
 
+  /**
+   * Handles button click events without parameters from the {@link MenuView}. Delegates to specific
+   * handlers based on the button ID.
+   *
+   * @param buttonId The ID of the button that was clicked.
+   */
   @Override
   public void onButtonClicked(String buttonId) {
     logger.debug("button clicked: {}", buttonId);
@@ -102,6 +146,13 @@ public abstract class MenuController implements ButtonClickObserver {
     }
   }
 
+  /**
+   * Handles button click events with parameters from the {@link MenuView}. Delegates to specific
+   * handlers based on the button ID.
+   *
+   * @param buttonId The ID of the button that was clicked.
+   * @param params   A map of parameters associated with the button click.
+   */
   @Override
   public void onButtonClickedWithParams(String buttonId, Map<String, Object> params) {
     logger.debug("button clicked with params: {}", buttonId);
@@ -116,7 +167,8 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Handles the action of the 'start game' button in the main menu.
+   * Handles the action to start the game. Retrieves the currently selected board and configured
+   * players, then triggers the {@link #onStartGame} action.
    */
   private void handleStartGame() {
     logger.debug("start game with board index {}", currentBoardIndex);
@@ -126,26 +178,47 @@ public abstract class MenuController implements ButtonClickObserver {
     onStartGame.accept(board, players);
   }
 
+  /**
+   * Handles the action to display the next available board variant. Updates
+   * {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
+   */
   public void handleNextBoard() {
     currentBoardIndex = (currentBoardIndex % boardVariants.size()) + 1;
     logger.debug("switched to next board, current board index: {}", currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
+  /**
+   * Handles the action to display the previous available board variant. Updates
+   * {@link #currentBoardIndex} and calls {@link #showBoardVariant(int)}.
+   */
   public void handlePreviousBoard() {
     currentBoardIndex = (currentBoardIndex - 2 + boardVariants.size()) % boardVariants.size() + 1;
     logger.debug("switched to previous board, current board index: {}", currentBoardIndex);
     showBoardVariant(currentBoardIndex);
   }
 
+  /**
+   * Handles the action to navigate to the board creation screen by running {@link #onCreateBoard}.
+   */
   private void handleCreateBoard() {
     onCreateBoard.run();
   }
 
+  /**
+   * Handles the action to navigate back to the game selection screen by running
+   * {@link #onBackToGameSelection}.
+   */
   private void handleBackToGameSelection() {
     onBackToGameSelection.run();
   }
 
+  /**
+   * Handles the import of players from a file. Retrieves the file from parameters and calls
+   * {@link #loadPlayersFromFile(String)}.
+   *
+   * @param params A map containing the "file" ({@link File}) to import from.
+   */
   private void handleImportPlayers(Map<String, Object> params) {
     File file = (File) params.get("file");
     logger.debug("attempting import players from file: {}", file.getAbsolutePath());
@@ -157,6 +230,12 @@ public abstract class MenuController implements ButtonClickObserver {
     }
   }
 
+  /**
+   * Handles saving the current list of players to a file. Retrieves the file from parameters and
+   * calls {@link #savePlayersToFile(String)}.
+   *
+   * @param params A map containing the "file" ({@link File}) to save to.
+   */
   private void handleSavePlayers(Map<String, Object> params) {
     File file = (File) params.get("file");
     logger.debug("attempting save players from file: {}", file.getAbsolutePath());
@@ -168,6 +247,12 @@ public abstract class MenuController implements ButtonClickObserver {
     }
   }
 
+  /**
+   * Handles the import of a board from a file. Retrieves the file from parameters and calls
+   * {@link #loadBoardFromFile(String)}.
+   *
+   * @param params A map containing the "file" ({@link File}) to import from.
+   */
   private void handleImportBoard(Map<String, Object> params) {
     File file = (File) params.get("file");
     logger.debug("attempting import board from file: {}", file.getAbsolutePath());
@@ -179,16 +264,21 @@ public abstract class MenuController implements ButtonClickObserver {
     }
   }
 
+  /**
+   * Displays the board variant corresponding to the given index in the {@link #menuView}.
+   *
+   * @param boardIndex The index of the board in {@link #boardVariants} to display.
+   */
   private void showBoardVariant(int boardIndex) {
     Board board = boardVariants.get(boardIndex);
     menuView.setSelectedBoard(board);
   }
 
   /**
-   * Loads the players from the file at the given path and adds them to the main menu.
+   * Loads players from a specified file path using {@link PlayerFactory} and updates the
+   * {@link #menuView}. Shows appropriate alerts on success or failure.
    *
-   * @param filePath The path to the file containing the players.
-   * @see PlayerFactory#createPlayersFromFile(String)
+   * @param filePath The path to the file containing player data.
    */
   public void loadPlayersFromFile(String filePath) {
     logger.debug("attempting to load players from file: {}", filePath);
@@ -202,6 +292,12 @@ public abstract class MenuController implements ButtonClickObserver {
     }
   }
 
+  /**
+   * Saves the current list of players (obtained via {@link #getPlayers()}) to a specified file path
+   * using a {@link PlayerFileHandlerCsv}. Shows appropriate alerts on success or failure.
+   *
+   * @param filePath The path to the file where players should be saved.
+   */
   public void savePlayersToFile(String filePath) {
     logger.debug("attempting to save players to file: {}", filePath);
     try {
@@ -216,10 +312,11 @@ public abstract class MenuController implements ButtonClickObserver {
   }
 
   /**
-   * Loads the board from the given file path, and adds it to the {@link #boardVariants} map.
+   * Loads a board from a specified file path using the {@link #boardFactory}. Adds the loaded board
+   * to {@link #boardVariants} if a board with the same name doesn't already exist. Updates the view
+   * to show the newly imported board. Shows appropriate alerts on success or failure.
    *
-   * @param filePath The path to the file containing the board.
-   * @see LadderBoardFactory#createBoardFromFile(String)
+   * @param filePath The path to the file containing board data.
    */
   private void loadBoardFromFile(String filePath) {
     logger.debug("attempting to load board from file: {}", filePath);

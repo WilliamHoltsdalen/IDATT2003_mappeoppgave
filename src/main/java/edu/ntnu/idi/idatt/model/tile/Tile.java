@@ -5,7 +5,7 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetNextTi
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.tileSetTileIdValidator;
 
 /**
- * <h3>Tile class</h3>
+ * Tile class
  *
  * <p>This class represents a tile in the game. It contains a tile ID, a next tile ID, and a tile
  * action.

@@ -1,146 +1,327 @@
 @startuml
 
-top to bottom direction
-skinparam linetype ortho
-
-class ArgumentValidator {
-  - ArgumentValidator():
-  + boardSetnameValidator(String): void
-  + boardGameSetBoardValidator(Board): void
-  + boardGameSetCurrentPlayerValidator(Player): void
-  + diceAddDiceValidator(int): void
-  + playerSetNameValidator(String): void
-  + boardSetDescriptionValidator(String): void
-  + diceRollSingleDieValidator(int, int): void
-  + boardGameSetPlayersValidator(List<Player>): void
-  + tileSetLandActionValidator(TileAction): void
-  + dieSetValueValidator(int): void
-  + playerPlaceOnTileValidator(Tile): void
-  + boardGetTileValidator(int, int): void
-  + boardPopulateTilesValidator(int, int): void
-  + ladderActionPerformValidator(Player, Board): void
-  + boardGameAddPlayersValidator(List<Player>, int): void
-  + playerSetColorHexValidator(String): void
-  + tileSetNextTileIdValidator(int, int): void
-  + boardGameCreateDiceValidator(int): void
-  + tileSetTileIdValidator(int): void
-  + diceGetDieValueValidator(int, int): void
-  + boardAddTileValidator(Tile): void
-  + ladderActionSetDestinationTileIdValidator(int): void
-  + ladderActionSetDescriptionValidator(String): void
+left to right direction
+skinparam {
+    nodesep 10
+    ranksep 260
+    linetype ortho
+    dpi 300
 }
-class Board {
-  + Board(String, String):
-  - name: String
-  - description: String
-  - tiles: Map<Integer, Tile>
-  + getDescription(): String
-  + getTileCount(): int
-  - setName(String): void
+
+class BaseBoard {
+  # BaseBoard(String, String, String):
+  # name: String
+  # description: String
+  # background: String
+  # tiles: Map<Integer, Tile>
+  + getBackground(): String
   + getName(): String
-  + addTile(Tile): void
-  - setDescription(String): void
-  + getTiles(): List<Tile>
+  + setBackground(String): void
   + getTile(int): Tile
+  + getTiles(): List<Tile>
+  + getTileCount(): int
+  + setDescription(String): void
+  + getDescription(): String
+  + setName(String): void
+  + addTile(Tile): void
+}
+interface Board << interface >> {
+  + getDescription(): String
+  + setDescription(String): void
+  + addTile(Tile): void
+  + setBackground(String): void
+  + getName(): String
+  + getTileCount(): int
+  + createTiles(int, int): void
+  + getBackground(): String
+  + getTile(int): Tile
+  + setName(String): void
+  + getTiles(): List<Tile>
 }
 class BoardGame {
-  + BoardGame(Board, List<Player>, int):
-  - board: Board
-  - observers: List<BoardGameObserver>
-  - players: List<Player>
-  - currentPlayer: Player
-  - dice: Dice
-  - roundNumber: int
+  # BoardGame(Board, List<Player>, int):
+  # logger: Logger
+  # roundNumber: int
+  # observers: List<BoardGameObserver>
+  # board: Board
+  # dice: Dice
+  # players: List<Player>
+  # currentPlayer: Player
+  + handleRoundNumber(): void
+  # checkWinCondition(): void
+  + initializeGame(): void
+  + getCurrentPlayer(): Player
+  # updateCurrentPlayer(): void
+  + notifyCurrentPlayerChanged(Player): void
   + getPlayers(): List<Player>
-  + setBoard(Board): void
+  + getBoard(): Board
+  + removeObserver(BoardGameObserver): void
+  + getDice(): Dice
   + setPlayers(List<Player>): void
   + addObserver(BoardGameObserver): void
-  + notifyPlayerMoved(Player, int): void
-  + getBoard(): Board
-  - createDice(int): void
-  + setCurrentPlayer(Player): void
-  + getObservers(): List<BoardGameObserver>
-  + getDice(): Dice
-  + getWinner(): Player
-  + notifyGameStateChanged(String): void
-  + notifyGameFinished(Player): void
-  + getCurrentPlayer(): Player
-  + incrementRoundNumber(): void
-  - addPlayers(List<Player>): void
-  + removeObserver(BoardGameObserver): void
+  # incrementRoundNumber(): void
   + getRoundNumber(): int
+  + setCurrentPlayer(Player): void
+  + setBoard(Board): void
+  # createDice(int): void
+  + notifyGameFinished(Player): void
+  + notifyRoundNumberIncremented(int): void
 }
 class Dice {
   + Dice(int):
   - diceList: List<Die>
   + getDieValue(int): int
-  + getNumberOfDice(): int
   + rollDice(): void
   - addDice(int): void
   + rollSingleDie(int): void
-  + getTotalValue(): int
+  + getNumberOfDice(): int
   + getDiceList(): List<Die>
+  + getTotalValue(): int
 }
 class Die {
   + Die():
   - random: Random
   - lastRolledValue: int
+  + getValue(): int
   + roll(): void
   - setValue(int): void
-  + getValue(): int
+}
+interface Game << interface >> {
+  + getBoard(): Board
+  + setPlayers(List<Player>): void
+  + getRoundNumber(): int
+  + setBoard(Board): void
+  + setCurrentPlayer(Player): void
+  + initializeGame(): void
+  + getDice(): Dice
+  + handleRoundNumber(): void
+  + getPlayers(): List<Player>
+  + getWinner(): Player
+  + getCurrentPlayer(): Player
 }
 class LadderAction {
-  + LadderAction(int, String):
+  + LadderAction(String, int, String):
+  - identifier: String
+  - description: String
+  - destinationTileId: int
+  + perform(Player, Board): void
+  + getDestinationTileId(): int
+  + setIdentifier(String): void
+  + getIdentifier(): String
+  + setDestinationTileId(int): void
+  + setDescription(String): void
+  + getDescription(): String
+}
+class LadderBoardGame {
+  + LadderBoardGame(Board, List<Player>, int):
+  + notifyTileActionPerformed(Player, TileAction): void
+  + performPlayerTurn(int): void
+  + initializeGame(): void
+  + rollDice(): int
+  # handleTileAction(): void
+  - findNextTile(Player, int): Tile
+  - notifyPlayerMoved(Player, int, int): void
+  + movePlayer(int): void
+  + getWinner(): Player
+}
+class LadderGameBoard {
+  + LadderGameBoard(String, String, int[], String, String):
+  # rowsAndColumns: int[]
+  # pattern: String
+  # background: String
+  + setPattern(String): void
+  + getPattern(): String
+  + setRowsAndColumns(int[]): void
+  + getRowsAndColumns(): int[]
+  + createTiles(int, int): void
+  + getTileCount(): int
+}
+class LadderGamePlayer {
+  + LadderGamePlayer(String, String, PlayerTokenType, boolean):
+  - currentTile: LadderGameTile
+  + placeOnTile(Tile): void
+  + getCurrentTile(): Tile
+}
+class LadderGameTile {
+  + LadderGameTile(int, int[], int, TileAction):
+  + LadderGameTile(int, int[], int):
+  - landAction: TileAction
+  + setLandAction(TileAction): void
+  + getLandAction(): TileAction
+}
+class LudoBoardGame {
+  + LudoBoardGame(Board, List<Player>, int):
+  - notifyTokenMoved(Player, LudoToken, int, int, int): void
+  - notifyTokenCaptured(Player, LudoToken, int): void
+  - notifyTurnSkipped(Player, int): void
+  - releaseToken(): void
+  + getWinner(): Player
+  # checkWinCondition(): void
+  - checkCurrentPlayerCanMove(): boolean
+  - notifyTokenReleased(Player, int, int): void
+  + performPlayerTurn(int): void
+  - notifyTokenFinished(Player, LudoToken): void
+  + rollDice(): int
+  - checkTokenFinished(): void
+  + moveToken(int): void
+  - handleTokenCapture(Tile): void
+  + initializeGame(): void
+  - findNextTile(LudoToken, int): Tile
+}
+class LudoGameBoard {
+  + LudoGameBoard(String, String, String, int, Color[]):
+  - playerFinishStartIndexes: int[]
+  # boardSize: int
+  - playerStartIndexes: int[]
+  - colors: Color[]
+  - playerFinishIndexes: int[]
+  - playerTrackStartIndexes: int[]
+  - startAreaSize: int
+  - totalTrackTileCount: int
+  + getPlayerTrackStartIndexes(): int[]
+  + setTotalTrackTileCount(int): void
+  + getPlayerFinishStartIndexes(): int[]
+  + createTiles(int, int): void
+  - createFinishSection(int): List<Tile>
+  + setPlayerStartIndexes(int[]): void
+  + setBoardSize(int): void
+  + getBoardSize(): int
+  + setColors(Color[]): void
+  + getTotalTrackTileCount(): int
+  + getStartAreaSize(): int
+  + setPlayerTrackStartIndexes(int[]): void
+  + getColors(): Color[]
+  + setPlayerFinishIndexes(int[]): void
+  - rotateCoordinates(int[], int, int): int[]
+  + getPlayerStartIndexes(): int[]
+  + setStartAreaSize(int): void
+  + getPlayerFinishIndexes(): int[]
+  + setPlayerFinishStartIndexes(int[]): void
+  - createTrackSection(int, int, int[], int, int): List<Tile>
+}
+class LudoPlayer {
+  + LudoPlayer(String, String, PlayerTokenType, boolean):
+  - tokens: List<LudoToken>
+  + getToken(int): LudoToken
+  + moveToken(int, Tile, TokenStatus): void
+  + getTokens(): List<LudoToken>
+}
+class LudoTile {
+  + LudoTile(int, int[], int, String):
+  - type: String
+  + setType(String): void
+  + getType(): String
+}
+class LudoToken {
+  + LudoToken(int):
+  - tokenId: int
+  - currentTile: Tile
+  - status: TokenStatus
+  + setCurrentTile(Tile): void
+  + getStatus(): TokenStatus
+  + getTokenId(): int
+  + setStatus(TokenStatus): void
+  + getCurrentTile(): Tile
+}
+class Player {
+  + Player(String, String, PlayerTokenType, boolean):
+  - name: String
+  - colorHex: String
+  - isBot: boolean
+  - playerTokenType: PlayerTokenType
+  + getPlayerTokenType(): PlayerTokenType
+  + setPlayerTokenType(PlayerTokenType): void
+  + isBot(): boolean
+  + setName(String): void
+  + getColorHex(): String
+  + setColorHex(String): void
+  + getName(): String
+  + setBot(boolean): void
+}
+enum PlayerTokenType << enumeration >> {
+  + PlayerTokenType():
+  + TRIANGLE:
+  + HEXAGON:
+  + CIRCLE:
+  + SQUARE:
+  + DIAMOND:
+  + values(): PlayerTokenType[]
+  + valueOf(String): PlayerTokenType
+}
+class PortalAction {
+  + PortalAction(String, int, String):
+  - identifier: String
+  - description: String
+  - destinationTileId: int
+  + getIdentifier(): String
+  + setDestinationTileId(int): void
+  + setDescription(String): void
+  + getDestinationTileId(): int
+  + getDescription(): String
+  + setIdentifier(String): void
+  + perform(Player, Board): void
+}
+class SlideAction {
+  + SlideAction(String, int, String):
+  - destinationTileId: int
+  - identifier: String
+  - description: String
+  + setIdentifier(String): void
+  + setDestinationTileId(int): void
+  + setDescription(String): void
+  + perform(Player, Board): void
+  + getIdentifier(): String
+  + getDestinationTileId(): int
+  + getDescription(): String
+}
+class Tile {
+  + Tile(int, int[], int, TileAction):
+  + Tile(int, int[], int):
+  - coordinates: int[]
+  - nextTileId: int
+  - tileId: int
+  + getCoordinates(): int[]
+  + getNextTileId(): int
+  - setNextTileId(int): void
+  + getTileId(): int
+  - setCoordinates(int[]): void
+  - setTileId(int): void
+}
+interface TileAction << interface >> {
+  + setDestinationTileId(int): void
+  + getDescription(): String
+  + setIdentifier(String): void
+  + setDescription(String): void
+  + getIdentifier(): String
+  + perform(Player, Board): void
+  + getDestinationTileId(): int
+}
+class WormholeAction {
+  + WormholeAction(String, int, String):
+  - identifier: String
   - destinationTileId: int
   - description: String
   + getDestinationTileId(): int
-  + setDescription(String): void
   + getDescription(): String
   + setDestinationTileId(int): void
-  + perform(Player, Board): void
-}
-class Player {
-  + Player(String, String):
-  - currentTile: Tile
-  - name: String
-  - colorHex: String
-  + getName(): String
-  + setName(String): void
-  + setColorHex(String): void
-  + getColorHex(): String
-  + move(int): void
-  + getCurrentTile(): Tile
-  + placeOnTile(Tile): void
-}
-class Tile {
-  + Tile(int, int, TileAction):
-  + Tile(int, int):
-  - tileId: int
-  - landAction: TileAction
-  - nextTileId: int
-  + setLandAction(TileAction): void
-  + getTileId(): int
-  + getLandAction(): TileAction
-  - setTileId(int): void
-  - setNextTileId(int): void
-  + getNextTileId(): int
-}
-interface TileAction << interface >> {
-  + perform(Player, Board): void
-  + getDestinationTileId(): int
-  + getDescription(): String
+  + getIdentifier(): String
   + setDescription(String): void
-  + setDestinationTileId(int): void
+  + setIdentifier(String): void
+  + perform(Player, Board): void
 }
 
-Board             "1" *-[#595959,plain]-> "tiles\n*" Tile
-BoardGame         "1" *-[#595959,plain]-> "board\n1" Board
-BoardGame         "1" *-[#595959,plain]-> "dice\n1" Dice
-BoardGame          -[#595959,dashed]->  Dice              : "«create»"
-BoardGame         "1" *-[#595959,plain]-> "players\n*" Player
-Dice              "1" *-[#595959,plain]-> "diceList\n*" Die
-Dice               -[#595959,dashed]->  Die               : "«create»"
-LadderAction       -[#008200,dashed]-^  TileAction
-Player            "1" *-[#595959,plain]-> "currentTile\n1" Tile
-Tile              "1" *-[#595959,plain]-> "landAction\n1" TileAction
+BaseBoard         -[#008200,dashed]-^  Board
+BoardGame         -[#008200,dashed]-^  Game
+LadderAction      -[#008200,dashed]-^  TileAction
+LadderBoardGame   -[#000082,plain]-^  BoardGame
+LadderGameBoard   -[#000082,plain]-^  BaseBoard
+LadderGamePlayer  -[#000082,plain]-^  Player
+LadderGameTile    -[#000082,plain]-^  Tile
+LudoBoardGame     -[#000082,plain]-^  BoardGame
+LudoGameBoard     -[#000082,plain]-^  BaseBoard
+LudoPlayer        -[#000082,plain]-^  Player
+LudoTile          -[#000082,plain]-^  Tile
+PortalAction      -[#008200,dashed]-^  TileAction
+SlideAction       -[#008200,dashed]-^  TileAction
+WormholeAction    -[#008200,dashed]-^  TileAction
 @enduml

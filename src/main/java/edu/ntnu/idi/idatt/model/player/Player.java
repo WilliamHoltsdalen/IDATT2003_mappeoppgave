@@ -5,7 +5,7 @@ import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetName
 import static edu.ntnu.idi.idatt.model.validator.ArgumentValidator.playerSetPlayerTokenTypeValidator;
 
 /**
- * <h3>Player class</h3>
+ * Player class
  *
  * <p>This class represents a player in the game. It contains a name, a color, a player token type,
  * and the current tile of the player.

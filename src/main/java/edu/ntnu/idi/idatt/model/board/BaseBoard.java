@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h3>BaseBoard class</h3>
+ * BaseBoard class
  *
  * <p>Abstract class implementing common functionality for board game boards.
  * This class provides the base implementation for both Chutes and Ladders and Ludo boards.

@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.observer;
 import java.util.Map;
 
 /**
- * <h3>ButtonClickSubject interface</h3>
+ * ButtonClickSubject interface
  *
  * <p>This interface defines the methods for classes that need to notify observers of button click
  * events.

@@ -18,6 +18,28 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * LudoBoardFileHandlerGson.
+ *
+ * <p>This class implements the {@link FileHandler} interface for {@link Board} objects,
+ * specifically tailored for {@link LudoGameBoard} instances. It uses the Gson library to serialize
+ * Ludo game boards to JSON format and deserialize them from JSON files.</p>
+ *
+ * <p>The JSON structure includes properties for the board's name, description, size,
+ * background image, player colors, various tile index arrays (start, track start, finish start,
+ * finish), start area size, total track tile count, and a list of tiles with their respective IDs,
+ * coordinates, next tile IDs, and types.</p>
+ *
+ * <p>Reflection is used internally to set certain fields (like index arrays and integer
+ * properties) on the {@code LudoGameBoard} object during deserialization to avoid overly complex
+ * constructor logic or numerous setter methods for these internal state details.</p>
+ *
+ * @see FileHandler
+ * @see LudoGameBoard
+ * @see Board
+ * @see LudoTile
+ * @see com.google.gson.Gson
+ */
 public class LudoBoardFileHandlerGson implements FileHandler<Board> {
 
   private static final Logger logger = LoggerFactory.getLogger(LudoBoardFileHandlerGson.class);
@@ -39,28 +61,46 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
   private static final String START_AREA_SIZE_PROPERTY = "startAreaSize";
   private static final String TOTAL_TRACK_TILE_COUNT_PROPERTY = "totalTrackTileCount";
 
+  /**
+   * Reads a Ludo game board configuration from a JSON file at the specified path.
+   *
+   * @param path The path to the JSON file.
+   * @return A {@link Board} (specifically a {@link LudoGameBoard}) object deserialized from the
+   *     file.
+   * @throws IOException if an error occurs during file reading or parsing.
+   */
   @Override
   public Board readFile(String path) throws IOException {
     logger.debug("Reading ludo board form file {}", path);
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-      logger.debug("Successfully read ludo board form file {}", path);
       return deserializeBoard(jsonString);
     } catch (IOException e) {
-      logger.error("Failed to read ludo board form file {}", path);
+      logger.error("Failed to read ludo board.");
       throw new IOException("Could not read board from file: " + path);
     }
   }
 
+  /**
+   * Writes a list of Ludo game boards to a JSON file at the specified path.
+   *
+   * @param path   The path to the JSON file.
+   * @param boards A list containing the {@link Board} (expected to be a {@link LudoGameBoard}) to
+   *               be written. Only the first board in the list is processed.
+   * @throws IOException              if an error occurs during file writing, such as if a file with
+   *                                  the same name already exists or if there's a general I/O
+   *                                  issue.
+   * @throws IllegalArgumentException if the provided list of boards is null or empty.
+   */
   @Override
   public void writeFile(String path, List<Board> boards) throws IOException {
     if (boards == null || boards.isEmpty()) {
-      logger.error("Boards is null or empty");
+      logger.error("Boards parameter is null or empty");
       throw new IllegalArgumentException("Board list is null or empty.");
     }
     JsonObject boardJson = serializeBoard((LudoGameBoard) boards.getFirst());
     if (boardJson == null) {
-      logger.error("Board serialization failed. boardJson is null");
+      logger.debug("Could not serialize board. BoardJson is null");
       return;
     }
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -74,6 +114,13 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
     logger.info("Successfully saved ludo board to {}", path);
   }
 
+  /**
+   * Serializes a Ludo game board to a JSON object.
+   *
+   * @param board The {@link LudoGameBoard} to serialize.
+   * @return A {@link JsonObject} representing the serialized board, or {@code null} if the input
+   *     board is {@code null}.
+   */
   private JsonObject serializeBoard(LudoGameBoard board) {
     if (board == null) {
       return null;
@@ -118,6 +165,12 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
     return boardJson;
   }
 
+  /**
+   * Converts an integer array to a JSON array.
+   *
+   * @param arr The integer array to convert.
+   * @return A {@link JsonArray} containing the elements of the input array.
+   */
   private JsonArray intArrayToJson(int[] arr) {
     JsonArray array = new JsonArray();
     if (arr != null) {
@@ -128,6 +181,12 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
     return array;
   }
 
+  /**
+   * Converts a JSON array to an integer array.
+   *
+   * @param arr The {@link JsonArray} to convert.
+   * @return An integer array containing the elements from the input JSON array.
+   */
   private int[] jsonToIntArray(JsonArray arr) {
     int[] result = new int[arr.size()];
     for (int i = 0; i < arr.size(); i++) {
@@ -136,9 +195,16 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
     return result;
   }
 
+  /**
+   * Deserializes a Ludo game board from a JSON string.
+   *
+   * @param jsonString The JSON string representing the Ludo game board.
+   * @return A {@link Board} (specifically a {@link LudoGameBoard}) deserialized from the JSON
+   *     string, or {@code null} if the string is null or empty.
+   */
   private Board deserializeBoard(String jsonString) {
     if (jsonString == null || jsonString.isEmpty()) {
-      logger.error("Failed to deserialize. JSON string is null or empty");
+      logger.debug("Failed to deserialize. JSON string is null or empty");
       return null;
     }
     JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
@@ -158,26 +224,26 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
     LudoGameBoard board = new LudoGameBoard(boardName, boardDescription, boardBackground, boardSize,
         colors);
     if (jsonObject.has(PLAYER_START_INDEXES_PROPERTY)) {
-      setIntArrayField(board, "playerStartIndexes",
+      board.setPlayerStartIndexes(
           jsonToIntArray(jsonObject.getAsJsonArray(PLAYER_START_INDEXES_PROPERTY)));
     }
     if (jsonObject.has(PLAYER_TRACK_START_INDEXES_PROPERTY)) {
-      setIntArrayField(board, "playerTrackStartIndexes",
+      board.setPlayerTrackStartIndexes(
           jsonToIntArray(jsonObject.getAsJsonArray(PLAYER_TRACK_START_INDEXES_PROPERTY)));
     }
     if (jsonObject.has(PLAYER_FINISH_START_INDEXES_PROPERTY)) {
-      setIntArrayField(board, "playerFinishStartIndexes",
+      board.setPlayerFinishStartIndexes(
           jsonToIntArray(jsonObject.getAsJsonArray(PLAYER_FINISH_START_INDEXES_PROPERTY)));
     }
     if (jsonObject.has(PLAYER_FINISH_INDEXES_PROPERTY)) {
-      setIntArrayField(board, "playerFinishIndexes",
+      board.setPlayerFinishIndexes(
           jsonToIntArray(jsonObject.getAsJsonArray(PLAYER_FINISH_INDEXES_PROPERTY)));
     }
     if (jsonObject.has(START_AREA_SIZE_PROPERTY)) {
-      setIntField(board, "startAreaSize", jsonObject.get(START_AREA_SIZE_PROPERTY).getAsInt());
+      board.setStartAreaSize(jsonObject.get(START_AREA_SIZE_PROPERTY).getAsInt());
     }
     if (jsonObject.has(TOTAL_TRACK_TILE_COUNT_PROPERTY)) {
-      setIntField(board, "totalTrackTileCount",
+      board.setTotalTrackTileCount(
           jsonObject.get(TOTAL_TRACK_TILE_COUNT_PROPERTY).getAsInt());
     }
     JsonArray tilesJsonArray = jsonObject.getAsJsonArray(TILES_PROPERTY);
@@ -193,27 +259,6 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
       String type = tileJsonObject.get(TILE_TYPE_PROPERTY).getAsString();
       board.addTile(new LudoTile(tileId, coordinates, nextTileId, type));
     }
-    logger.debug("Deserialize Ludo board from JSON");
     return board;
-  }
-
-  private void setIntArrayField(LudoGameBoard board, String fieldName, int[] value) {
-    try {
-      java.lang.reflect.Field field = LudoGameBoard.class.getDeclaredField(fieldName);
-      field.setAccessible(true);
-      field.set(board, value);
-    } catch (Exception e) {
-      logger.error("Failed to set int[] field '{}' via reflection", fieldName);
-    }
-  }
-
-  private void setIntField(LudoGameBoard board, String fieldName, int value) {
-    try {
-      java.lang.reflect.Field field = LudoGameBoard.class.getDeclaredField(fieldName);
-      field.setAccessible(true);
-      field.setInt(board, value);
-    } catch (Exception e) {
-      logger.error("Failed to set int field '{}' via reflection", fieldName);
-    }
   }
 } 
