@@ -76,7 +76,7 @@ public class GameSelectionView extends BorderPane implements ButtonClickSubject 
 
     HBox gameSelectionBox = new HBox();
     gameSelectionBox.setAlignment(Pos.CENTER);
-    gameSelectionBox.setSpacing(30);
+    gameSelectionBox.setSpacing(40);
     gameSelectionBox.setMinSize(0, 0);
     VBox.setVgrow(gameSelectionBox, Priority.ALWAYS);
 
