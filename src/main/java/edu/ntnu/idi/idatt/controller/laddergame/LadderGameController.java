@@ -174,7 +174,8 @@ public class LadderGameController extends GameController {
 
     setPlayerTileNumber(player, newTileId);
 
-    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () -> navigateToGameFinished(gameFinishedParams);
+    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () ->
+        navigateToGameFinished(gameFinishedParams);
     ((LadderGameStackPane) gameView.getGameStackPane()).movePlayer(player,
         getBoard().getTile(newTileId), false, onFinished);
   }

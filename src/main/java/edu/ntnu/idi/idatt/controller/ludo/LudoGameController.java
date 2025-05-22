@@ -188,7 +188,8 @@ public class LudoGameController extends GameController {
     gameView.getGameMenuBox().addGameLogRoundBoxEntry(
         player.getName() + " rolled " + diceRoll + " and moved token " + (token.getTokenId()));
 
-    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () -> navigateToGameFinished(gameFinishedParams);
+    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () ->
+        navigateToGameFinished(gameFinishedParams);
     ((LudoGameStackPane) gameView.getGameStackPane()).moveToken(token,
         getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false, onFinished);
     setPlayerTileNumber(player);

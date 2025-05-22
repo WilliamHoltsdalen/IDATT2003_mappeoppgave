@@ -6,7 +6,6 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
