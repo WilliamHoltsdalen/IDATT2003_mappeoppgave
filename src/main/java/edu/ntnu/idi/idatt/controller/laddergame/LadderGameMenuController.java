@@ -89,7 +89,7 @@ public class LadderGameMenuController extends MenuController {
     menuView.setSelectedBoard(boardFactory.createBoard("Classic"));
     menuView.initialize("Ladder Game Menu", ALLOWED_PLAYER_TOKEN_TYPES, ALLOWED_PLAYER_COLORS,
         MIN_PLAYERS, MAX_PLAYERS);
-    logger.info("Ladder Game Menu initialized with board 'Classic'");
+    logger.debug("Ladder Game Menu initialized with board 'Classic'");
   }
 
   /**

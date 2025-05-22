@@ -99,7 +99,7 @@ public class LadderGameBoardFileHandlerGson implements FileHandler<Board> {
       throw new IOException("A file with the same name already exists");
     }
     FileUtils.writeStringToFile(file, prettyJson, StandardCharsets.UTF_8, false);
-    logger.info("Board saved successfully");
+    logger.debug("Board saved successfully");
   }
 
   /**

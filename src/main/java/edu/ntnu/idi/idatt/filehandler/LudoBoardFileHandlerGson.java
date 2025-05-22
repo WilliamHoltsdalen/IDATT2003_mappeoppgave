@@ -111,7 +111,7 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
       throw new IOException("A file with the same name already exists");
     }
     FileUtils.writeStringToFile(file, prettyJson, StandardCharsets.UTF_8, false);
-    logger.info("Successfully saved ludo board to {}", path);
+    logger.debug("Successfully saved ludo board to {}", path);
   }
 
   /**

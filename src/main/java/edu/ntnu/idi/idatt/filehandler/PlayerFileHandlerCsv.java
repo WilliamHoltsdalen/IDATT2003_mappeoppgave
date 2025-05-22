@@ -86,7 +86,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         }
         players.add(player);
       }
-      logger.info("Successfully read {} player(s) from file: {}", players.size(), path);
+      logger.debug("Successfully read {} player(s) from file: {}", players.size(), path);
     } catch (IOException e) {
       logger.error("Could not read players from file: {}", path);
       throw new IOException("Could not read players from file: " + path);
@@ -119,7 +119,7 @@ public class PlayerFileHandlerCsv implements FileHandler<Player> {
         writer.write(toCsvLine(player));
         writer.newLine();
       }
-      logger.info("Successfully wrote {} player(s) to file: {}", players.size(), path);
+      logger.debug("Successfully wrote {} player(s) to file: {}", players.size(), path);
     } catch (IOException e) {
       logger.error("Could not write players to file: {}", path);
       throw new IOException("Could not write players to file: " + path);

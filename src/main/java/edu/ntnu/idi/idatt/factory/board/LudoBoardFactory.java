@@ -70,7 +70,7 @@ public class LudoBoardFactory implements BoardFactory {
     logger.debug("attempting to create ludo board from file: {}", filePath);
     FileHandler<Board> fileHandler = new LudoBoardFileHandlerGson();
     try {
-      logger.info("successfully loaded ludo board from file: {}", filePath);
+      logger.debug("Successfully loaded ludo board from file: {}", filePath);
       return (Board) fileHandler.readFile(filePath);
     } catch (IOException e) {
       logger.error("failed to load ludo board from file: {}", filePath);
