@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.controller.ludo;
 
+import static java.lang.Thread.sleep;
+
 import edu.ntnu.idi.idatt.controller.common.GameController;
 import edu.ntnu.idi.idatt.model.board.Board;
 import edu.ntnu.idi.idatt.model.board.LudoGameBoard;
@@ -186,8 +188,10 @@ public class LudoGameController extends GameController {
     gameView.getGameMenuBox().addGameLogRoundBoxEntry(
         player.getName() + " rolled " + diceRoll + " and moved token " + (token.getTokenId()));
 
+    Runnable onFinished = gameFinishedParams.isEmpty() ? null : () ->
+        navigateToGameFinished(gameFinishedParams);
     ((LudoGameStackPane) gameView.getGameStackPane()).moveToken(token,
-        getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false);
+        getBoard().getTile(oldTileId), getBoard().getTile(newTileId), false, onFinished);
     setPlayerTileNumber(player);
   }
 
@@ -241,12 +245,10 @@ public class LudoGameController extends GameController {
 
     List<Player> rankedPlayers = getPlayers().stream().sorted(Comparator.comparingInt(
         (Player p) -> (int) ((LudoPlayer) p).getTokens().stream()
-        .filter(t -> ((LudoToken) t).getStatus() == LudoToken.TokenStatus.FINISHED)
+        .filter(t -> (t).getStatus() == LudoToken.TokenStatus.FINISHED)
         .count()).reversed()).toList();
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("rankedPlayers", rankedPlayers);
-    navigateToGameFinished(params);
+    super.gameFinishedParams.put("rankedPlayers", rankedPlayers);
   }
 
   /**

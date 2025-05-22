@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javafx.scene.paint.Color;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LudoBoardFileHandlerGson.
@@ -39,6 +41,8 @@ import org.apache.commons.io.FileUtils;
  * @see com.google.gson.Gson
  */
 public class LudoBoardFileHandlerGson implements FileHandler<Board> {
+
+  private static final Logger logger = LoggerFactory.getLogger(LudoBoardFileHandlerGson.class);
 
   private static final String NAME_PROPERTY = "name";
   private static final String DESCRIPTION_PROPERTY = "description";
@@ -67,10 +71,12 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
    */
   @Override
   public Board readFile(String path) throws IOException {
+    logger.debug("Reading ludo board from file {}", path);
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
       return deserializeBoard(jsonString);
     } catch (IOException e) {
+      logger.error("Failed to read ludo board.");
       throw new IOException("Could not read board from file: " + path);
     }
   }
@@ -89,19 +95,23 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
   @Override
   public void writeFile(String path, List<Board> boards) throws IOException {
     if (boards == null || boards.isEmpty()) {
+      logger.error("Boards parameter is null or empty");
       throw new IllegalArgumentException("Board list is null or empty.");
     }
     JsonObject boardJson = serializeBoard((LudoGameBoard) boards.getFirst());
     if (boardJson == null) {
+      logger.debug("Could not serialize board. BoardJson is null");
       return;
     }
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String prettyJson = gson.toJson(boardJson);
     File file = new File(path);
     if (!file.createNewFile()) {
+      logger.error("Could not create file {}, a file with the same name already exists", path);
       throw new IOException("A file with the same name already exists");
     }
     FileUtils.writeStringToFile(file, prettyJson, StandardCharsets.UTF_8, false);
+    logger.debug("Successfully saved ludo board to {}", path);
   }
 
   /**
@@ -194,6 +204,7 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
    */
   private Board deserializeBoard(String jsonString) {
     if (jsonString == null || jsonString.isEmpty()) {
+      logger.debug("Failed to deserialize. JSON string is null or empty");
       return null;
     }
     JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();

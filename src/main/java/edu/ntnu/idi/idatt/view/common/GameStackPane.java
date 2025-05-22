@@ -72,6 +72,10 @@ public abstract class GameStackPane extends StackPane {
     initializePlayersPane();
   }
 
+  public Duration getAnimationDuration() {
+    return TRANSITION_DURATION;
+  }
+
   /**
    * Initializes the {@link #playersPane} where player tokens/pieces will be displayed.
    * Subclasses must implement this to prepare the pane, possibly setting its size or properties.

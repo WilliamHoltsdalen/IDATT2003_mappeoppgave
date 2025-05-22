@@ -184,7 +184,8 @@ public class LudoGameStackPane extends GameStackPane {
    * @param newTile      The {@link Tile} the token is moving to.
    * @param straightLine If true, move in a direct line; otherwise, follow the board path.
    */
-  public void moveToken(LudoToken token, Tile oldTile, Tile newTile, boolean straightLine) {
+  public void moveToken(LudoToken token, Tile oldTile, Tile newTile, boolean straightLine,
+      Runnable onFinished) {
     if (oldTile.getTileId() == newTile.getTileId()) {
       return;
     }
@@ -219,6 +220,9 @@ public class LudoGameStackPane extends GameStackPane {
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
     pathTransition.play();
+    if (onFinished != null) {
+      pathTransition.setOnFinished(event -> onFinished.run());
+    }
   }
 
   /**

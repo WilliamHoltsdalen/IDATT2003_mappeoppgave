@@ -102,7 +102,7 @@ public class LadderGameStackPane extends GameStackPane {
    * @param newTile      the new tile to move the player to
    * @param straightLine whether to use a straight line animation or not
    */
-  public void movePlayer(Player player, Tile newTile, boolean straightLine) {
+  public void movePlayer(Player player, Tile newTile, boolean straightLine, Runnable onFinished) {
     /* Prevents the player from moving to the same tile, which would cause a null pointer exception
        when setting the moveTo coordinates in the path. */
     if (playerTileMap.get(player).getTileId() == newTile.getTileId()) {
@@ -145,7 +145,9 @@ public class LadderGameStackPane extends GameStackPane {
     pathTransition.setNode(playerToken);
     pathTransition.setPath(path);
     pathTransition.play();
-
+    if (onFinished != null) {
+      pathTransition.setOnFinished(event -> onFinished.run());
+    }
     // Update the player tile map to reflect the new tile.
     playerTileMap.put(player, newTile);
   }

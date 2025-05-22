@@ -1,0 +1,114 @@
+@startuml
+
+left to right direction
+skinparam {
+    nodesep 20
+    ranksep 400
+    dpi 250
+}
+
+interface BoardFactory << interface >> {
+  + createBoard(String): Board
+  + createBoardFromFile(String): Board
+  + createBlankBoard(int, int): Board
+}
+interface FileHandler<T> << interface >> {
+  + writeFile(String, List<T>): void
+  + readFile(String): Object
+}
+class LadderBoardFactory {
+  + LadderBoardFactory():
+  + createBoard(String): Board
+  - createPortalBoard(): Board
+  + createBoardFromFile(String): Board
+  - createClassicBoard(): Board
+  + createBlankBoard(int, int): Board
+}
+class LadderGameBoardFileHandlerGson {
+  + LadderGameBoardFileHandlerGson():
+  - TILE_ACTION_PROPERTY: String
+  - COLUMNS_PROPERTY: String
+  - TILES_PROPERTY: String
+  - TILE_ACTION_IDENTIFIER_PROPERTY: String
+  - PATTERN_PROPERTY: String
+  - ROWS_PROPERTY: String
+  - TILE_ACTION_DESTINATION_TILE_ID_PROPERTY: String
+  - NAME_PROPERTY: String
+  - BACKGROUND_PROPERTY: String
+  - TILE_ACTION_DESCRIPTION_PROPERTY: String
+  - TILE_ID_PROPERTY: String
+  - TILE_NEXT_TILE_ID_PROPERTY: String
+  - TILE_COORDINATES_PROPERTY: String
+  - DESCRIPTION_PROPERTY: String
+  - deserializeBoard(String): Board
+  + writeFile(String, List<Board>): void
+  + readFile(String): Board
+  - serializeBoard(LadderGameBoard): JsonObject
+  - createTileAction(String, int, String): TileAction
+}
+class LudoBoardFactory {
+  + LudoBoardFactory():
+  - createSmallBoard(): Board
+  + createBlankBoard(int, int): Board
+  - createClassicBoard(): Board
+  + createBoard(String): Board
+  + createBoardFromFile(String): Board
+  - createLargeBoard(): Board
+}
+class LudoBoardFileHandlerGson {
+  + LudoBoardFileHandlerGson():
+  - PLAYER_START_INDEXES_PROPERTY: String
+  - TOTAL_TRACK_TILE_COUNT_PROPERTY: String
+  - TILE_TYPE_PROPERTY: String
+  - TILES_PROPERTY: String
+  - BOARD_SIZE_PROPERTY: String
+  - BACKGROUND_PROPERTY: String
+  - TILE_COORDINATES_PROPERTY: String
+  - TILE_ID_PROPERTY: String
+  - NAME_PROPERTY: String
+  - PLAYER_FINISH_INDEXES_PROPERTY: String
+  - TILE_NEXT_TILE_ID_PROPERTY: String
+  - START_AREA_SIZE_PROPERTY: String
+  - PLAYER_TRACK_START_INDEXES_PROPERTY: String
+  - PLAYER_FINISH_START_INDEXES_PROPERTY: String
+  - DESCRIPTION_PROPERTY: String
+  - COLORS_PROPERTY: String
+  + writeFile(String, List<Board>): void
+  + readFile(String): Board
+  - jsonToIntArray(JsonArray): int[]
+  - deserializeBoard(String): Board
+  - serializeBoard(LudoGameBoard): JsonObject
+  - intArrayToJson(int[]): JsonArray
+}
+class PlayerFactory {
+  - PlayerFactory():
+  + createPlayersFromFile(String): List<Player>
+  - validatePlayer(String, String, PlayerTokenType): boolean
+  + createLadderGamePlayer(String, String, PlayerTokenType, boolean): Player
+  + createLudoPlayer(String, String, PlayerTokenType, boolean): Player
+}
+class PlayerFileHandlerCsv {
+  + PlayerFileHandlerCsv():
+  + writeFile(String, List<Player>): void
+  + ladderGamePlayerFromCsvLine(String): Player
+  + toCsvLine(Player): String
+  + ludoPlayerFromCsvLine(String): Player
+  + readFile(String): List<Player>
+}
+class PlayerTokenFactory {
+  - PlayerTokenFactory():
+  + create(double, Color, PlayerTokenType): Shape
+  - createCircle(double): Shape
+  - createHexagon(double): Shape
+  - createDiamond(double): Shape
+  - createSquare(double): Shape
+  - createTriangle(double): Shape
+  - darken(Color): Color
+}
+
+LadderBoardFactory              -[#008200,dashed]-^  BoardFactory
+LadderGameBoardFileHandlerGson  -[#008200,dashed]-^  FileHandler
+LudoBoardFactory                -[#008200,dashed]-^  BoardFactory
+LudoBoardFileHandlerGson        -[#008200,dashed]-^  FileHandler
+PlayerFileHandlerCsv            -[#008200,dashed]-^  FileHandler
+@enduml

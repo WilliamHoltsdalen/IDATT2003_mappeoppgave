@@ -212,6 +212,7 @@ public class LadderGameBoardCreatorView extends BoardCreatorView {
 
     Text title = new Text("Drag components onto the board");
     title.getStyleClass().add("panel-title");
+    panel.getChildren().add(title);
 
     components.forEach((key, value) -> {
       VBox section = createComponentSection(key, value);

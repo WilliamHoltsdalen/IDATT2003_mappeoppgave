@@ -1,0 +1,106 @@
+@startuml
+
+left to right direction
+skinparam {
+    nodesep 10
+    ranksep 260
+    linetype ortho
+    dpi 300
+}
+
+abstract class GameController {
+  + GameController(GameView, Board, List<Player>):
+  # boardGame: BoardGame
+  # gameView: GameView
+  # onQuitGame: Runnable
+  # onNavigateToGameFinished: Consumer<Map<String, Object>>
+  # restartGame(): void
+  # navigateToGameFinished(Map<String, Object>): void
+  + initializeGameView(): void
+  # getRoundNumber(): int
+  # enableRollDiceButton(): void
+  + onButtonClickedWithParams(String, Map<String, Object>): void
+  # performPlayerTurn(): void
+  # getPlayers(): List<Player>
+  + onRoundNumberIncremented(int): void
+  # getBoard(): Board
+  # disableRollDiceButton(): void
+  + setOnQuitGame(Runnable): void
+  + onButtonClicked(String): void
+  # handleRollDiceButtonAction(): void
+  # quitGame(): void
+  + setOnNavigateToGameFinished(Consumer<Map<String, Object>>): void
+  + onGameFinished(Player): void
+  + onCurrentPlayerChanged(Player): void
+  # performPlayerTurnForAllPlayers(): void
+  + initializeBoardGame(Board, List<Player>): void
+}
+abstract class GameView {
+  + GameView():
+  # gameMenuBox: GameMenuBox
+  # observers: List<ButtonClickObserver>
+  # gameStackPane: GameStackPane
+  # playersBox: GamePlayersBox
+  + getGameStackPane(): GameStackPane
+  + createGameStackPane(Board, List<Player>): GameStackPane
+  + notifyObserversWithParams(String, Map<String, Object>): void
+  + notifyObservers(String): void
+  + getGameMenuBox(): GameMenuBox
+  + createGameMenuBox(): GameMenuBox
+  + initialize(List<Player>, int, Board): void
+  + createPlayersBox(List<Player>, int): GamePlayersBox
+  # createInfiniteSpacer(): Region
+  + removeObserver(ButtonClickObserver): void
+  + getPlayersBox(): GamePlayersBox
+  + addObserver(ButtonClickObserver): void
+}
+class LadderGameController {
+  + LadderGameController(LadderGameView, Board, List<Player>):
+  + onGameFinished(Player): void
+  + onButtonClickedWithParams(String, Map<String, Object>): void
+  + onRoundNumberIncremented(int): void
+  # restartGame(): void
+  + onCurrentPlayerChanged(Player): void
+  + onTileActionPerformed(Player, TileAction): void
+  + onPlayerMoved(Player, int, int): void
+  + onButtonClicked(String): void
+  + initializeBoardGame(Board, List<Player>): void
+  # performPlayerTurn(): void
+  - setPlayerTileNumber(Player, int): void
+  # performPlayerTurnForAllPlayers(): void
+}
+class LadderGameView {
+  + LadderGameView():
+  + createGameStackPane(Board, List<Player>): GameStackPane
+  + createGameMenuBox(): GameMenuBox
+  + createPlayersBox(List<Player>, int): GamePlayersBox
+}
+class LudoGameController {
+  + LudoGameController(LudoGameView, Board, List<Player>):
+  # performPlayerTurnForAllPlayers(): void
+  + onTokenCaptured(Player, LudoToken, int): void
+  # restartGame(): void
+  - setPlayerTileNumber(Player): void
+  + onButtonClickedWithParams(String, Map<String, Object>): void
+  + onGameFinished(Player): void
+  + onTokenReleased(Player, int, int): void
+  + onTokenMoved(Player, LudoToken, int, int, int): void
+  + onCurrentPlayerChanged(Player): void
+  + onTurnSkipped(Player, int): void
+  + initializeBoardGame(Board, List<Player>): void
+  + onButtonClicked(String): void
+  # performPlayerTurn(): void
+  + onTokenFinished(Player, LudoToken): void
+  + onRoundNumberIncremented(int): void
+}
+class LudoGameView {
+  + LudoGameView():
+  + createGameStackPane(Board, List<Player>): GameStackPane
+  + createPlayersBox(List<Player>, int): GamePlayersBox
+}
+
+LadderGameController  -[#000082,plain]-^  GameController
+LadderGameView        -[#000082,plain]-^  GameView
+LudoGameController    -[#000082,plain]-^  GameController
+LudoGameView          -[#000082,plain]-^  GameView
+@enduml

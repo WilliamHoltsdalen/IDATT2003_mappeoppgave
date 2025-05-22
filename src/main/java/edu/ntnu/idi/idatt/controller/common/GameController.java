@@ -6,9 +6,12 @@ import edu.ntnu.idi.idatt.model.player.Player;
 import edu.ntnu.idi.idatt.observer.BoardGameObserver;
 import edu.ntnu.idi.idatt.observer.ButtonClickObserver;
 import edu.ntnu.idi.idatt.view.common.GameView;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * GameController.
@@ -27,8 +30,9 @@ import java.util.function.Consumer;
  */
 public abstract class GameController implements ButtonClickObserver, BoardGameObserver  {
   protected final GameView gameView;
-
+  protected final Logger logger = LoggerFactory.getLogger(GameController.class);
   protected BoardGame boardGame;
+  protected Map<String, Object> gameFinishedParams;
   /**
    * Runnable action to execute when the game is quit.
    */
@@ -48,7 +52,8 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    */
   public GameController(GameView gameView, Board board, List<Player> players) {
     this.gameView = gameView;
-
+    this.gameFinishedParams = new HashMap<>();
+    logger.debug("GameController initialized");
     initializeBoardGame(board, players);
     initializeGameView();
   }
@@ -90,6 +95,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    */
   public void initializeGameView() {
     gameView.initialize(getPlayers(), getRoundNumber(), (Board) getBoard());
+    logger.debug("Initialize game view");
   }
 
   /**
@@ -125,6 +131,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * @param onQuitGame The action to perform on quitting the game.
    */
   public void setOnQuitGame(Runnable onQuitGame) {
+    logger.debug("Setting quit game callback");
     this.onQuitGame = onQuitGame;
   }
 
@@ -133,6 +140,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    */
   protected void quitGame() {
     if (onQuitGame != null) {
+      logger.info("Quitting the game");
       onQuitGame.run();
     }
   }
@@ -143,6 +151,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * @param onNavigateToGameFinished The action to perform on navigating to the game finished view.
    */
   public void setOnNavigateToGameFinished(Consumer<Map<String, Object>> onNavigateToGameFinished) {
+    logger.debug("Setting game finished callback");
     this.onNavigateToGameFinished = onNavigateToGameFinished;
   }
 
@@ -152,6 +161,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * @param params A map of parameters to pass to the game finished view.
    */
   protected void navigateToGameFinished(Map<String, Object> params) {
+    logger.debug("Navigating to game finished view");
     if (onNavigateToGameFinished != null) {
       onNavigateToGameFinished.accept(params);
     }
@@ -163,11 +173,14 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * based on the view's selection.
    */
   protected void handleRollDiceButtonAction() {
+    logger.debug("Roll dice button clicked");
     gameView.getGameMenuBox().disableRollDiceButton();
     if (gameView.getGameMenuBox().getRollForAllPlayersSelected()) {
+      logger.debug("Performing turn for all players");
       performPlayerTurnForAllPlayers();
       return;
     }
+    logger.debug("Performing turn for current player");
     performPlayerTurn();
   }
 
@@ -175,6 +188,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * Enables the roll dice button in the game view.
    */
   protected void enableRollDiceButton() {
+    logger.debug("Enabling roll dice button");
     gameView.getGameMenuBox().enableRollDiceButton();
   }
 
@@ -182,6 +196,7 @@ public abstract class GameController implements ButtonClickObserver, BoardGameOb
    * Disables the roll dice button in the game view.
    */
   protected void disableRollDiceButton() {
+    logger.debug("Disabling roll dice button");
     gameView.getGameMenuBox().disableRollDiceButton();
   }
 

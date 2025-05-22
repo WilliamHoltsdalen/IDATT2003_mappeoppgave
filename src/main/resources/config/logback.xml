@@ -20,7 +20,7 @@
   </appender>
 
   <!-- Root Logger -->
-  <root level="INFO">
+  <root level="INFO">  <!-- Replace INFO with DEBUG to see more detailed logs-->
     <appender-ref ref="CONSOLE" />
     <appender-ref ref="FILE" />
   </root>
