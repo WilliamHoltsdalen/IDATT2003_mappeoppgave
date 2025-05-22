@@ -71,7 +71,7 @@ public class LudoBoardFileHandlerGson implements FileHandler<Board> {
    */
   @Override
   public Board readFile(String path) throws IOException {
-    logger.debug("Reading ludo board form file {}", path);
+    logger.debug("Reading ludo board from file {}", path);
     try {
       String jsonString = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
       return deserializeBoard(jsonString);
